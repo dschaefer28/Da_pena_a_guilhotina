@@ -1,0 +1,533 @@
+fileFormatVersion: 2
+guid: 79b063e6fa087f34e9941dca6e4c871a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 746548753737261674
+    second: Black-Splat-PNG-Transparent_0
+  - first:
+      213: -5068603676071165361
+    second: Black-Splat-PNG-Transparent_1
+  - first:
+      213: -615675107358181266
+    second: Black-Splat-PNG-Transparent_2
+  - first:
+      213: -953255991943169201
+    second: Black-Splat-PNG-Transparent_3
+  - first:
+      213: -6820545914394458092
+    second: Black-Splat-PNG-Transparent_4
+  - first:
+      213: -3105300963922010982
+    second: Black-Splat-PNG-Transparent_5
+  - first:
+      213: 3526478297736274679
+    second: Black-Splat-PNG-Transparent_6
+  - first:
+      213: -3576282470653807930
+    second: Black-Splat-PNG-Transparent_7
+  - first:
+      213: 6726900628277716003
+    second: Black-Splat-PNG-Transparent_8
+  - first:
+      213: 3313068920133531934
+    second: Black-Splat-PNG-Transparent_9
+  - first:
+      213: -1632796001183747306
+    second: Black-Splat-PNG-Transparent_10
+  - first:
+      213: 5639452639341031021
+    second: Black-Splat-PNG-Transparent_11
+  - first:
+      213: 8355738074170819294
+    second: Black-Splat-PNG-Transparent_12
+  - first:
+      213: -5504498043139341026
+    second: Black-Splat-PNG-Transparent_13
+  - first:
+      213: -8579086773595923730
+    second: Black-Splat-PNG-Transparent_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_0
+      rect:
+        serializedVersion: 2
+        x: 3260
+        y: 1680
+        width: 29
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a62250ad2264c5a00800000000000000
+      internalID: 746548753737261674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_1
+      rect:
+        serializedVersion: 2
+        x: 3301
+        y: 1584
+        width: 212
+        height: 199
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f420a8cafc3b8a9b0800000000000000
+      internalID: -5068603676071165361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_2
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1285
+        width: 42
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e687dd870cea477f0800000000000000
+      internalID: -615675107358181266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_3
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 283
+        width: 2730
+        height: 1379
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4bf634d9ba55c2f0800000000000000
+      internalID: -953255991943169201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_4
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 1233
+        width: 42
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 418c64ea0ad8851a0800000000000000
+      internalID: -6820545914394458092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_5
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 1044
+        width: 25
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9c10c4d931c7e4d0800000000000000
+      internalID: -3105300963922010982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_6
+      rect:
+        serializedVersion: 2
+        x: 582
+        y: 690
+        width: 326
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f2e1b4e35190f030800000000000000
+      internalID: 3526478297736274679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_7
+      rect:
+        serializedVersion: 2
+        x: 334
+        y: 137
+        width: 97
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c239387a0e7e5ec0800000000000000
+      internalID: -3576282470653807930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_8
+      rect:
+        serializedVersion: 2
+        x: 1039
+        y: 149
+        width: 48
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32468d31b70ca5d50800000000000000
+      internalID: 6726900628277716003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_9
+      rect:
+        serializedVersion: 2
+        x: 1081
+        y: 136
+        width: 260
+        height: 266
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1932f421a26afd20800000000000000
+      internalID: 3313068920133531934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_10
+      rect:
+        serializedVersion: 2
+        x: 1089
+        y: 60
+        width: 82
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 613b3c610b42759e0800000000000000
+      internalID: -1632796001183747306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_11
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 87
+        width: 71
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6eaf8fdb4c534e40800000000000000
+      internalID: 5639452639341031021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_12
+      rect:
+        serializedVersion: 2
+        x: 1276
+        y: 57
+        width: 38
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed28823028b85f370800000000000000
+      internalID: 8355738074170819294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_13
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 1
+        width: 88
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e15c8df91381c93b0800000000000000
+      internalID: -5504498043139341026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black-Splat-PNG-Transparent_14
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 36
+        width: 24
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eea109a8806f0f880800000000000000
+      internalID: -8579086773595923730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Black-Splat-PNG-Transparent_0: 746548753737261674
+      Black-Splat-PNG-Transparent_1: -5068603676071165361
+      Black-Splat-PNG-Transparent_10: -1632796001183747306
+      Black-Splat-PNG-Transparent_11: 5639452639341031021
+      Black-Splat-PNG-Transparent_12: 8355738074170819294
+      Black-Splat-PNG-Transparent_13: -5504498043139341026
+      Black-Splat-PNG-Transparent_14: -8579086773595923730
+      Black-Splat-PNG-Transparent_2: -615675107358181266
+      Black-Splat-PNG-Transparent_3: -953255991943169201
+      Black-Splat-PNG-Transparent_4: -6820545914394458092
+      Black-Splat-PNG-Transparent_5: -3105300963922010982
+      Black-Splat-PNG-Transparent_6: 3526478297736274679
+      Black-Splat-PNG-Transparent_7: -3576282470653807930
+      Black-Splat-PNG-Transparent_8: 6726900628277716003
+      Black-Splat-PNG-Transparent_9: 3313068920133531934
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

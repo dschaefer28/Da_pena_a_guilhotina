@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{63feaf9e-bfce-4fb6-be87-082a96209925}">
+		<property name="assetPath">
+			<value>pena.mp3</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>22.569795918367348</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{889338c8-75de-4d8d-b256-cea3b7d361d8}</destination>
+		</relationship>
+	</object>
+</objects>

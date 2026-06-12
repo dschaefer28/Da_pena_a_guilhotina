@@ -1,0 +1,17 @@
+# =========================================================================
+# FMOD Studio Project Rules
+# =========================================================================
+
+# Ignore local user preferences and window states
+.user/
+Workspace.xml
+
+# Ignore local caches and crash data
+.cache/
+.unsaved/
+
+# Ignore local logging
+fmod_editor.log
+
+# Optional: Ignore profiler session audio files if they bloat the repo
+# Profiler/

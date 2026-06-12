@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
+  m_Name: DialogueData
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  talkScript:
+  - name: Marie Bradier
+    text: "Por miseric\xF3rdia! Eles v\xE3o matar o meu marido, meu irm\xE3o e um
+      outro amigo deles na roda!"
+    choices:
+    - choiceText: Por favor, se acalme, vamos te ajudar. O que aconteceu?
+      nextDialogue: {fileID: 11400000, guid: a7e42bc888792a24d8f5066c66a3e3fc, type: 2}
+    - choiceText: E onde seu marido e os outros estavam nessa noite?
+      nextDialogue: {fileID: 11400000, guid: b81fc808942eb8841876a75118ac997f, type: 2}
+    - choiceText: O Sr.Thomassin, ele viu quem o atacou?
+      nextDialogue: {fileID: 11400000, guid: b3034fac45cc43f4da475772a73a0964, type: 2}

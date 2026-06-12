@@ -1,0 +1,1781 @@
+fileFormatVersion: 2
+guid: 46ea693d52347ec45b29cc0917c4094f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6611722087388233139
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_0
+  - first:
+      213: 2717535238085140991
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_1
+  - first:
+      213: -3416756313220401748
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_2
+  - first:
+      213: -690598142091823906
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_3
+  - first:
+      213: 5820569928234518416
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_4
+  - first:
+      213: 5083162106027901107
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_5
+  - first:
+      213: -8181067069607289328
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_6
+  - first:
+      213: -8186488949021894011
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_7
+  - first:
+      213: 1453875522625288655
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_8
+  - first:
+      213: -4197326023309961969
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_9
+  - first:
+      213: -2810322606937190888
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_10
+  - first:
+      213: -1635253979287758723
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_11
+  - first:
+      213: 4402518424583510178
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_12
+  - first:
+      213: 5422101493403901012
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_13
+  - first:
+      213: 4245322828086046560
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_14
+  - first:
+      213: 7859965346161973674
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_15
+  - first:
+      213: -473681299254015640
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_16
+  - first:
+      213: -4798863848235631453
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_17
+  - first:
+      213: -3042191110849521179
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_18
+  - first:
+      213: 48838949066740113
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_19
+  - first:
+      213: -5460574558822509887
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_20
+  - first:
+      213: 6519176639814627203
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_21
+  - first:
+      213: 568719017543842478
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_22
+  - first:
+      213: 1162595171650276187
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_23
+  - first:
+      213: 8108274399919520557
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_24
+  - first:
+      213: 4388580965805415778
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_25
+  - first:
+      213: -4456217229640634434
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_26
+  - first:
+      213: -7736323218158607090
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_27
+  - first:
+      213: -3386314789264925157
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_28
+  - first:
+      213: 7795467614895077058
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_29
+  - first:
+      213: 2858712846377743853
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_30
+  - first:
+      213: -1245496675000191375
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_31
+  - first:
+      213: -8297667975671842685
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_32
+  - first:
+      213: 1938121552711101446
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_33
+  - first:
+      213: 3447143154038630203
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_34
+  - first:
+      213: 8696129509523404537
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_35
+  - first:
+      213: -5302930848872596226
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_36
+  - first:
+      213: 8779694785103803522
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_37
+  - first:
+      213: 7473003638911470336
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_38
+  - first:
+      213: 3841408537448718359
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_39
+  - first:
+      213: -8519521002641880046
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_40
+  - first:
+      213: -6897951236335558221
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_41
+  - first:
+      213: 8860527996350991855
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_42
+  - first:
+      213: 3793469115434303808
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_43
+  - first:
+      213: -6615454644677410762
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_44
+  - first:
+      213: -9007051269763800724
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_45
+  - first:
+      213: 1271205768280685317
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_46
+  - first:
+      213: 5179640751795094188
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_47
+  - first:
+      213: -500470930712833725
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_48
+  - first:
+      213: -1408162009303630729
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_49
+  - first:
+      213: 6924108835350848158
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_50
+  - first:
+      213: 8425435797115838191
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_51
+  - first:
+      213: 8221149123658540305
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_52
+  - first:
+      213: -4104081146366321156
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_53
+  - first:
+      213: -4300006972601570064
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_54
+  - first:
+      213: -1548585136143859067
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_55
+  - first:
+      213: -3411364027517581084
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_56
+  - first:
+      213: 32132983663782731
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_57
+  - first:
+      213: -5249797886132676808
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_58
+  - first:
+      213: -2715278221414729371
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_59
+  - first:
+      213: 5079815347786978666
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_60
+  - first:
+      213: -2817892342667126095
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_61
+  - first:
+      213: 8759505102077735311
+    second: 967-9679466_free-png-download-ink-splash-png-png-images_62
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1
+        width: 783
+        height: 620
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d42ce9bbac17e34a0800000000000000
+      internalID: -6611722087388233139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_1
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 595
+        width: 14
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff1eba2a6ef96b520800000000000000
+      internalID: 2717535238085140991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_2
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 603
+        width: 21
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca5bc626c3e3590d0800000000000000
+      internalID: -3416756313220401748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_3
+      rect:
+        serializedVersion: 2
+        x: 750
+        y: 607
+        width: 16
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed4721216a08a66f0800000000000000
+      internalID: -690598142091823906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_4
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 608
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0974db2d281d6c050800000000000000
+      internalID: 5820569928234518416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_5
+      rect:
+        serializedVersion: 2
+        x: 794
+        y: 568
+        width: 25
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b00581f0050b8640800000000000000
+      internalID: 5083162106027901107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_6
+      rect:
+        serializedVersion: 2
+        x: 756
+        y: 578
+        width: 18
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01e596868d2077e80800000000000000
+      internalID: -8181067069607289328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_7
+      rect:
+        serializedVersion: 2
+        x: 779
+        y: 598
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58a93ebbcafb36e80800000000000000
+      internalID: -8186488949021894011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_8
+      rect:
+        serializedVersion: 2
+        x: 822
+        y: 588
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc937b9b5143d2410800000000000000
+      internalID: 1453875522625288655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_9
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 586
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f055b1e583a10c5c0800000000000000
+      internalID: -4197326023309961969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_10
+      rect:
+        serializedVersion: 2
+        x: 823
+        y: 582
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81e424d8a7abff8d0800000000000000
+      internalID: -2810322606937190888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_11
+      rect:
+        serializedVersion: 2
+        x: 754
+        y: 563
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7852077b296e49e0800000000000000
+      internalID: -1635253979287758723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_12
+      rect:
+        serializedVersion: 2
+        x: 765
+        y: 562
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a8996e7e23e81d30800000000000000
+      internalID: 4402518424583510178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_13
+      rect:
+        serializedVersion: 2
+        x: 765
+        y: 551
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45c547aa49c2f3b40800000000000000
+      internalID: 5422101493403901012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_14
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 548
+        width: 25
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06fece49e9a6aea30800000000000000
+      internalID: 4245322828086046560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_15
+      rect:
+        serializedVersion: 2
+        x: 821
+        y: 565
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa95dd4a6d4341d60800000000000000
+      internalID: 7859965346161973674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_16
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 546
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86908353e552d69f0800000000000000
+      internalID: -473681299254015640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_17
+      rect:
+        serializedVersion: 2
+        x: 787
+        y: 534
+        width: 16
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ac737861c2076db0800000000000000
+      internalID: -4798863848235631453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_18
+      rect:
+        serializedVersion: 2
+        x: 759
+        y: 535
+        width: 15
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e996fa8d47f7c5d0800000000000000
+      internalID: -3042191110849521179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_19
+      rect:
+        serializedVersion: 2
+        x: 813
+        y: 532
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1919352f3c28da000800000000000000
+      internalID: 48838949066740113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_20
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 527
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c259dfbe542834b0800000000000000
+      internalID: -5460574558822509887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_21
+      rect:
+        serializedVersion: 2
+        x: 773
+        y: 509
+        width: 17
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38fec242d94c87a50800000000000000
+      internalID: 6519176639814627203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_22
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 512
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eaab5b9eeee74e700800000000000000
+      internalID: 568719017543842478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_23
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 484
+        width: 27
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5b8ccf162e522010800000000000000
+      internalID: 1162595171650276187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_24
+      rect:
+        serializedVersion: 2
+        x: 821
+        y: 491
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2bb8947b90668070800000000000000
+      internalID: 8108274399919520557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_25
+      rect:
+        serializedVersion: 2
+        x: 829
+        y: 496
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26d5fdef22f57ec30800000000000000
+      internalID: 4388580965805415778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_26
+      rect:
+        serializedVersion: 2
+        x: 752
+        y: 485
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebf6b492a065822c0800000000000000
+      internalID: -4456217229640634434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_27
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 480
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e05ac0a950f03a490800000000000000
+      internalID: -7736323218158607090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_28
+      rect:
+        serializedVersion: 2
+        x: 759
+        y: 484
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1e563004a46101d0800000000000000
+      internalID: -3386314789264925157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_29
+      rect:
+        serializedVersion: 2
+        x: 789
+        y: 475
+        width: 22
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c6f1eb5e701f2c60800000000000000
+      internalID: 7795467614895077058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_30
+      rect:
+        serializedVersion: 2
+        x: 735
+        y: 437
+        width: 45
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de5f03b00303ca720800000000000000
+      internalID: 2858712846377743853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_31
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 460
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 176fead7f5b17bee0800000000000000
+      internalID: -1245496675000191375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_32
+      rect:
+        serializedVersion: 2
+        x: 779
+        y: 448
+        width: 16
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 388f1f560f2c8dc80800000000000000
+      internalID: -8297667975671842685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_33
+      rect:
+        serializedVersion: 2
+        x: 803
+        y: 451
+        width: 29
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60cafd8984795ea10800000000000000
+      internalID: 1938121552711101446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_34
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 416
+        width: 28
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3764625f66b6df20800000000000000
+      internalID: 3447143154038630203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_35
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 437
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f63feff6bbdea870800000000000000
+      internalID: 8696129509523404537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_36
+      rect:
+        serializedVersion: 2
+        x: 772
+        y: 426
+        width: 11
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efcfc743d743866b0800000000000000
+      internalID: -5302930848872596226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_37
+      rect:
+        serializedVersion: 2
+        x: 757
+        y: 396
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2843676e3edb7d970800000000000000
+      internalID: 8779694785103803522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_38
+      rect:
+        serializedVersion: 2
+        x: 797
+        y: 392
+        width: 28
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00b0586473175b760800000000000000
+      internalID: 7473003638911470336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_39
+      rect:
+        serializedVersion: 2
+        x: 790
+        y: 379
+        width: 17
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 710a8cf46bc6f4530800000000000000
+      internalID: 3841408537448718359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_40
+      rect:
+        serializedVersion: 2
+        x: 819
+        y: 376
+        width: 13
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21c0d0559c494c980800000000000000
+      internalID: -8519521002641880046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_41
+      rect:
+        serializedVersion: 2
+        x: 742
+        y: 321
+        width: 23
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b1a040c5ed8540a0800000000000000
+      internalID: -6897951236335558221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_42
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 310
+        width: 34
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fed87e0844be6fa70800000000000000
+      internalID: 8860527996350991855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_43
+      rect:
+        serializedVersion: 2
+        x: 806
+        y: 160
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04180e3df0c15a430800000000000000
+      internalID: 3793469115434303808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_44
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 147
+        width: 18
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6308b440d0f2134a0800000000000000
+      internalID: -6615454644677410762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_45
+      rect:
+        serializedVersion: 2
+        x: 236
+        y: 104
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c616fff6796800380800000000000000
+      internalID: -9007051269763800724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_46
+      rect:
+        serializedVersion: 2
+        x: 428
+        y: 104
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50b3cce39ea34a110800000000000000
+      internalID: 1271205768280685317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_47
+      rect:
+        serializedVersion: 2
+        x: 491
+        y: 98
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca242e222d7c1e740800000000000000
+      internalID: 5179640751795094188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_48
+      rect:
+        serializedVersion: 2
+        x: 466
+        y: 93
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 341d3721758fd09f0800000000000000
+      internalID: -500470930712833725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_49
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 88
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77cb1410d14357ce0800000000000000
+      internalID: -1408162009303630729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_50
+      rect:
+        serializedVersion: 2
+        x: 617
+        y: 92
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e922b3ddc40671060800000000000000
+      internalID: 6924108835350848158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_51
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 45
+        width: 12
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fee13f4b7392de470800000000000000
+      internalID: 8425435797115838191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_52
+      rect:
+        serializedVersion: 2
+        x: 570
+        y: 75
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1156e290293671270800000000000000
+      internalID: 8221149123658540305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_53
+      rect:
+        serializedVersion: 2
+        x: 590
+        y: 77
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfd157511ff5b07c0800000000000000
+      internalID: -4104081146366321156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_54
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 69
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fc616ad07e4354c0800000000000000
+      internalID: -4300006972601570064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_55
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 49
+        width: 35
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58202bff502528ae0800000000000000
+      internalID: -1548585136143859067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_56
+      rect:
+        serializedVersion: 2
+        x: 328
+        y: 48
+        width: 36
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e8c44cbd7668a0d0800000000000000
+      internalID: -3411364027517581084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_57
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 45
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4b6ad447c8227000800000000000000
+      internalID: 32132983663782731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_58
+      rect:
+        serializedVersion: 2
+        x: 637
+        y: 40
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 837177e13a8f427b0800000000000000
+      internalID: -5249797886132676808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_59
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 25
+        width: 20
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 569783208d4615ad0800000000000000
+      internalID: -2715278221414729371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_60
+      rect:
+        serializedVersion: 2
+        x: 557
+        y: 38
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a659b6115212f7640800000000000000
+      internalID: 5079815347786978666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_61
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 12
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ba580c18d5d4e8d0800000000000000
+      internalID: -2817892342667126095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 967-9679466_free-png-download-ink-splash-png-png-images_62
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 0
+        width: 8
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f81b0910b73009970800000000000000
+      internalID: 8759505102077735311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      967-9679466_free-png-download-ink-splash-png-png-images_0: -6611722087388233139
+      967-9679466_free-png-download-ink-splash-png-png-images_1: 2717535238085140991
+      967-9679466_free-png-download-ink-splash-png-png-images_10: -2810322606937190888
+      967-9679466_free-png-download-ink-splash-png-png-images_11: -1635253979287758723
+      967-9679466_free-png-download-ink-splash-png-png-images_12: 4402518424583510178
+      967-9679466_free-png-download-ink-splash-png-png-images_13: 5422101493403901012
+      967-9679466_free-png-download-ink-splash-png-png-images_14: 4245322828086046560
+      967-9679466_free-png-download-ink-splash-png-png-images_15: 7859965346161973674
+      967-9679466_free-png-download-ink-splash-png-png-images_16: -473681299254015640
+      967-9679466_free-png-download-ink-splash-png-png-images_17: -4798863848235631453
+      967-9679466_free-png-download-ink-splash-png-png-images_18: -3042191110849521179
+      967-9679466_free-png-download-ink-splash-png-png-images_19: 48838949066740113
+      967-9679466_free-png-download-ink-splash-png-png-images_2: -3416756313220401748
+      967-9679466_free-png-download-ink-splash-png-png-images_20: -5460574558822509887
+      967-9679466_free-png-download-ink-splash-png-png-images_21: 6519176639814627203
+      967-9679466_free-png-download-ink-splash-png-png-images_22: 568719017543842478
+      967-9679466_free-png-download-ink-splash-png-png-images_23: 1162595171650276187
+      967-9679466_free-png-download-ink-splash-png-png-images_24: 8108274399919520557
+      967-9679466_free-png-download-ink-splash-png-png-images_25: 4388580965805415778
+      967-9679466_free-png-download-ink-splash-png-png-images_26: -4456217229640634434
+      967-9679466_free-png-download-ink-splash-png-png-images_27: -7736323218158607090
+      967-9679466_free-png-download-ink-splash-png-png-images_28: -3386314789264925157
+      967-9679466_free-png-download-ink-splash-png-png-images_29: 7795467614895077058
+      967-9679466_free-png-download-ink-splash-png-png-images_3: -690598142091823906
+      967-9679466_free-png-download-ink-splash-png-png-images_30: 2858712846377743853
+      967-9679466_free-png-download-ink-splash-png-png-images_31: -1245496675000191375
+      967-9679466_free-png-download-ink-splash-png-png-images_32: -8297667975671842685
+      967-9679466_free-png-download-ink-splash-png-png-images_33: 1938121552711101446
+      967-9679466_free-png-download-ink-splash-png-png-images_34: 3447143154038630203
+      967-9679466_free-png-download-ink-splash-png-png-images_35: 8696129509523404537
+      967-9679466_free-png-download-ink-splash-png-png-images_36: -5302930848872596226
+      967-9679466_free-png-download-ink-splash-png-png-images_37: 8779694785103803522
+      967-9679466_free-png-download-ink-splash-png-png-images_38: 7473003638911470336
+      967-9679466_free-png-download-ink-splash-png-png-images_39: 3841408537448718359
+      967-9679466_free-png-download-ink-splash-png-png-images_4: 5820569928234518416
+      967-9679466_free-png-download-ink-splash-png-png-images_40: -8519521002641880046
+      967-9679466_free-png-download-ink-splash-png-png-images_41: -6897951236335558221
+      967-9679466_free-png-download-ink-splash-png-png-images_42: 8860527996350991855
+      967-9679466_free-png-download-ink-splash-png-png-images_43: 3793469115434303808
+      967-9679466_free-png-download-ink-splash-png-png-images_44: -6615454644677410762
+      967-9679466_free-png-download-ink-splash-png-png-images_45: -9007051269763800724
+      967-9679466_free-png-download-ink-splash-png-png-images_46: 1271205768280685317
+      967-9679466_free-png-download-ink-splash-png-png-images_47: 5179640751795094188
+      967-9679466_free-png-download-ink-splash-png-png-images_48: -500470930712833725
+      967-9679466_free-png-download-ink-splash-png-png-images_49: -1408162009303630729
+      967-9679466_free-png-download-ink-splash-png-png-images_5: 5083162106027901107
+      967-9679466_free-png-download-ink-splash-png-png-images_50: 6924108835350848158
+      967-9679466_free-png-download-ink-splash-png-png-images_51: 8425435797115838191
+      967-9679466_free-png-download-ink-splash-png-png-images_52: 8221149123658540305
+      967-9679466_free-png-download-ink-splash-png-png-images_53: -4104081146366321156
+      967-9679466_free-png-download-ink-splash-png-png-images_54: -4300006972601570064
+      967-9679466_free-png-download-ink-splash-png-png-images_55: -1548585136143859067
+      967-9679466_free-png-download-ink-splash-png-png-images_56: -3411364027517581084
+      967-9679466_free-png-download-ink-splash-png-png-images_57: 32132983663782731
+      967-9679466_free-png-download-ink-splash-png-png-images_58: -5249797886132676808
+      967-9679466_free-png-download-ink-splash-png-png-images_59: -2715278221414729371
+      967-9679466_free-png-download-ink-splash-png-png-images_6: -8181067069607289328
+      967-9679466_free-png-download-ink-splash-png-png-images_60: 5079815347786978666
+      967-9679466_free-png-download-ink-splash-png-png-images_61: -2817892342667126095
+      967-9679466_free-png-download-ink-splash-png-png-images_62: 8759505102077735311
+      967-9679466_free-png-download-ink-splash-png-png-images_7: -8186488949021894011
+      967-9679466_free-png-download-ink-splash-png-png-images_8: 1453875522625288655
+      967-9679466_free-png-download-ink-splash-png-png-images_9: -4197326023309961969
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
