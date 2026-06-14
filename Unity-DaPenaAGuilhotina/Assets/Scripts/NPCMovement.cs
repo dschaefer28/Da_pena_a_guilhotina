@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NPCMovement : MonoBehaviour
+public class NPCMovement : MonoBehaviour, IInteractable
 {
     [Header("Configurações de Movimento")]
     public Transform insidePosition;
@@ -9,6 +9,9 @@ public class NPCMovement : MonoBehaviour
     public enum NPCState { WaitingAtDoor, MovingInside, ReadyToTalk }
     public NPCState currentState = NPCState.WaitingAtDoor;
 
+    [Header("Referências")]
+    [SerializeField] private DialogueSystem dialogueSystem;
+
     // Referência para o Animator
     private Animator anim;
 
@@ -16,6 +19,11 @@ public class NPCMovement : MonoBehaviour
     {
         // Pega o componente Animator anexado ao NPC
         anim = GetComponent<Animator>();
+
+        if (dialogueSystem == null)
+        {
+            dialogueSystem = FindObjectOfType<DialogueSystem>();
+        }
     }
 
     void Update()
@@ -42,6 +50,25 @@ public class NPCMovement : MonoBehaviour
         if (currentState == NPCState.WaitingAtDoor)
         {
             currentState = NPCState.MovingInside;
+        }
+    }
+
+    public void Interact()
+    {
+        if (currentState == NPCState.WaitingAtDoor)
+        {
+            EnterHouse();
+        }
+        else if (currentState == NPCState.ReadyToTalk)
+        {
+            if (dialogueSystem != null)
+            {
+                dialogueSystem.Next();
+            }
+            else
+            {
+                Debug.LogWarning("DialogueSystem não encontrado para NPCInteraction.");
+            }
         }
     }
 }

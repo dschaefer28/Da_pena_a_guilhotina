@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class PressInteractable : MonoBehaviour
+public class PressInteractable : MonoBehaviour, IInteractable
 {
     [Header("Paineis de Interface (UI) - Opcional para testes")]
     public GameObject pressUIPanel; 
     public InventoryManager inventoryManager;
 
-   public void Interact()
+    public void Interact()
     {
         if (pressUIPanel != null)
         {

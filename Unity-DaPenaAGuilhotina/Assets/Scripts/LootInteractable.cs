@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class LootInteractable : MonoBehaviour
+public class LootInteractable : MonoBehaviour, IInteractable
 {
     [Header("Item que o jogador vai receber")]
     public Item itemToGive;
@@ -8,16 +8,27 @@ public class LootInteractable : MonoBehaviour
 
     [Header("Configurações")]
     public bool destroyAfterLoot = false; 
-    private bool alreadyLooted = false;   
+    private bool alreadyLooted = false;
 
-    public void Interact(InventoryManager inventory)
+    private InventoryManager inventoryManager;
+
+    private void Awake()
     {
-        if (alreadyLooted || itemToGive == null) return;
+        inventoryManager = FindObjectOfType<InventoryManager>();
+        if (inventoryManager == null)
+        {
+            Debug.LogWarning("LootInteractable não encontrou InventoryManager na cena.");
+        }
+    }
+
+    public void Interact()
+    {
+        if (alreadyLooted || itemToGive == null || inventoryManager == null) return;
 
         Item itemClone = itemToGive.Clone();
         itemClone.itemAmt = amountToGive;
 
-        bool foiGuardado = inventory.AddItem(itemClone);
+        bool foiGuardado = inventoryManager.AddItem(itemClone);
 
         if (foiGuardado)
         {

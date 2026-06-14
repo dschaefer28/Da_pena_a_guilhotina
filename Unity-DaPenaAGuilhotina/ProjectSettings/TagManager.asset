@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Prensa
   - Coletavel
+  - NPC
   layers:
   - Default
   - TransparentFX

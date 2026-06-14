@@ -10,8 +10,6 @@ public class PlayerInteraction : MonoBehaviour
     [Header("Referências")]
     public InventoryManager inventoryManager;
 
-    private PressInteractable currentPress;
-
     private void OnEnable()
     {
         if (interactAction != null) interactAction.action.Enable();
@@ -46,13 +44,15 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (currentInteractableObj != null)
         {
-            // Se for uma prensa, abre a prensa
-            PressInteractable press = currentInteractableObj.GetComponent<PressInteractable>();
-            if (press != null) press.Interact();
-
-            // Se for um item coletável, pega o item
-            LootInteractable loot = currentInteractableObj.GetComponent<LootInteractable>();
-            if (loot != null) loot.Interact(inventoryManager);
+            IInteractable interactable = currentInteractableObj.GetComponent<IInteractable>();
+            if (interactable != null)
+            {
+                interactable.Interact();
+            }
+            else
+            {
+                Debug.Log("O objeto atual não é interagível.");
+            }
         }
         else
         {
@@ -63,8 +63,7 @@ public class PlayerInteraction : MonoBehaviour
     // --- FÍSICA 2D ---
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Agora aceita tanto a tag da Prensa quanto a tag de itens pegáveis
-        if (other.CompareTag("Prensa") || other.CompareTag("Coletavel"))
+        if (other.TryGetComponent<IInteractable>(out var interactable))
         {
             currentInteractableObj = other.gameObject;
             Debug.Log($"Você encostou em: {other.name}. Aperte E!");
@@ -75,10 +74,6 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (currentInteractableObj == other.gameObject)
         {
-            // Fecha a prensa se o jogador se afastar
-            PressInteractable press = currentInteractableObj.GetComponent<PressInteractable>();
-            if (press != null) press.ClosePressUI();
-
             currentInteractableObj = null;
         }
     }
