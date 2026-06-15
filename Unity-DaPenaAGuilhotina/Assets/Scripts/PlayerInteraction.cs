@@ -9,6 +9,7 @@ public class PlayerInteraction : MonoBehaviour
 
     [Header("Referências")]
     public InventoryManager inventoryManager;
+    [SerializeField] private DialogueSystem dialogueSystem;
 
     private void OnEnable()
     {
@@ -24,6 +25,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Start()
     {
+        if (dialogueSystem == null)
+        {
+            dialogueSystem = FindObjectOfType<DialogueSystem>();
+        }
+
         if (toggleInventoryAction != null)
             toggleInventoryAction.action.performed += ctx => OnToggleInventory();
 
@@ -42,6 +48,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnInteract()
     {
+        if (dialogueSystem != null && dialogueSystem.IsDialogueActive)
+        {
+            dialogueSystem.AdvanceDialogue();
+            return;
+        }
+
         if (currentInteractableObj != null)
         {
             IInteractable interactable = currentInteractableObj.GetComponent<IInteractable>();

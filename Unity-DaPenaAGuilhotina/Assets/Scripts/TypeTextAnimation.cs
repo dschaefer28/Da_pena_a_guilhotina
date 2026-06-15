@@ -12,10 +12,33 @@ public class TypeTextAnimation : MonoBehaviour {
 
     public string fullText;
 
+    private DialogueSystem dialogueSystem;
+
     Coroutine coroutine;
 
-    void Start() {
+    void OnEnable() {
+        if (dialogueSystem == null)
+        {
+            dialogueSystem = FindObjectOfType<DialogueSystem>();
+        }
 
+        if (dialogueSystem != null)
+        {
+            dialogueSystem.OnDialogueLineStarted += HandleDialogueLineStarted;
+        }
+    }
+
+    void OnDisable() {
+        if (dialogueSystem != null)
+        {
+            dialogueSystem.OnDialogueLineStarted -= HandleDialogueLineStarted;
+        }
+    }
+
+    private void HandleDialogueLineStarted(string name, string text)
+    {
+        fullText = text;
+        StartTyping();
     }
 
     public void StartTyping() {

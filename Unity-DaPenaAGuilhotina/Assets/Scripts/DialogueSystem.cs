@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum STATE {
@@ -11,39 +13,64 @@ public class DialogueSystem : MonoBehaviour {
 
     public DialogueData dialogueData;
 
+    public event Action OnDialogueStarted;
+    public event Action OnDialogueEnded;
+    public event Action<string, string> OnDialogueLineStarted;
+    public event Action<List<Choice>> OnChoicesAvailable;
+    public event Action OnChoicesCleared;
+
+    public bool IsDialogueActive { get; private set; }
+
     int currentText = 0;
     bool finished = false;
 
     TypeTextAnimation typeText;
-    DialogueUI dialogueUI;
 
     STATE state;
 
     void Awake() {
         typeText = FindObjectOfType<TypeTextAnimation>();
-        dialogueUI = FindObjectOfType<DialogueUI>();
         typeText.TypeFinished = OnTypeFinished;
     }
 
     void Start() {
         state = STATE.DISABLED;
+        IsDialogueActive = false;
     }
 
-    void Update() {
-        if(state == STATE.DISABLED) return;
-
-        switch(state) {
-            case STATE.WAITING:
-                Waiting();
-                break;
-            case STATE.TYPING:
-                Typing();
-                break;
-            // No estado CHOOSING, não fazemos nada no Update, esperamos o clique do botão.
+    public void AdvanceDialogue()
+    {
+        if (state == STATE.DISABLED)
+        {
+            Next();
+            return;
         }
+
+        if (state == STATE.TYPING)
+        {
+            typeText.Skip();
+            OnTypeFinished();
+            return;
+        }
+
+        if (state == STATE.WAITING)
+        {
+            if (!finished)
+            {
+                Next();
+            }
+            else
+            {
+                EndDialogue();
+            }
+            return;
+        }
+
+        // No estado CHOOSING, as escolhas devem ser tomadas pelos botões da UI.
     }
 
     public void Next() {
+        IsDialogueActive = true;
 
         // --- TRAVA DE SEGURANÇA: Se não tiver fala na lista, encerra o diálogo. ---
         if (dialogueData.talkScript == null || dialogueData.talkScript.Count == 0) {
@@ -54,16 +81,16 @@ public class DialogueSystem : MonoBehaviour {
         // ------------------------------------------------------------------------------
 
         if(currentText == 0) {
-            dialogueUI.Enable();
+            OnDialogueStarted?.Invoke();
         }
 
-        dialogueUI.SetName(dialogueData.talkScript[currentText].name);
-        typeText.fullText = dialogueData.talkScript[currentText].text;
+        string speakerName = dialogueData.talkScript[currentText].name;
+        string speakerText = dialogueData.talkScript[currentText].text;
+        OnDialogueLineStarted?.Invoke(speakerName, speakerText);
 
         currentText++;
         if(currentText >= dialogueData.talkScript.Count) finished = true;
 
-        typeText.StartTyping();
         state = STATE.TYPING;
     }
 
@@ -81,45 +108,30 @@ public class DialogueSystem : MonoBehaviour {
     }
 
     void Waiting() {
-        if(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.E)) {
-            if(!finished) {
-                Next();
-            } else {
-                EndDialogue();
-            }
-        }
+        // Input direto removido. Use AdvanceDialogue() para avançar o diálogo reativamente.
     }
 
     void Typing() {
-        if(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.E)) {
-            typeText.Skip();
-            OnTypeFinished(); // Chama a verificação direto para não pular as escolhas acidentalmente
-        }
+        // Input direto removido. Use AdvanceDialogue() para pular a digitação.
     }
 
     void EndDialogue() {
-        dialogueUI.Disable();
+        OnDialogueEnded?.Invoke();
         state = STATE.DISABLED;
         currentText = 0;
         finished = false;
+        IsDialogueActive = false;
     }
 
     // --- NOVA LÓGICA DE ESCOLHAS ---
 
     void SetupChoices(Dialogue dialogue) {
-        dialogueUI.ClearChoices(); // Limpa botões velhos, por garantia
-
-        foreach (Choice choice in dialogue.choices) {
-            // Guarda a referência da próxima conversa em uma variável local para o evento do botão
-            DialogueData nextTalk = choice.nextDialogue; 
-            
-            // Cria o botão passando o texto e o que acontece quando clica
-            dialogueUI.CreateChoiceButton(choice.choiceText, () => MakeChoice(nextTalk));
-        }
+        OnChoicesCleared?.Invoke();
+        OnChoicesAvailable?.Invoke(dialogue.choices);
     }
 
     public void MakeChoice(DialogueData nextTalkData) {
-        dialogueUI.ClearChoices(); // Limpa os botões da tela
+        OnChoicesCleared?.Invoke();
 
         if (nextTalkData != null) {
             // Se tiver uma próxima conversa, troca o ScriptableObject e reseta a leitura
