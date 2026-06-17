@@ -9076,6 +9076,7 @@ MonoBehaviour:
   interactAction: {fileID: 1781555164194001046, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}
   toggleInventoryAction: {fileID: 3581055334647609260, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}
   inventoryManager: {fileID: 1259493282}
+  dialogueSystem: {fileID: 1551622548}
 --- !u!1 &1421537946
 GameObject:
   m_ObjectHideFlags: 0
