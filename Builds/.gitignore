@@ -1,0 +1,7 @@
+# Ignorar a pasta de builds na raiz do repositorio
+/Builds/
+/Build/
+
+# Ignorar os arquivos executaveis finais gerados
+*.apk
+*.aab
