@@ -70,6 +70,8 @@ public class DialogueSystem : MonoBehaviour {
     }
 
     public void Next() {
+
+        Debug.Log("PASSO 1: O NPC recebeu o comando de interação!");
         IsDialogueActive = true;
 
         // --- TRAVA DE SEGURANÇA: Se não tiver fala na lista, encerra o diálogo. ---

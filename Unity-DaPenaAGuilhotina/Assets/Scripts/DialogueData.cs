@@ -5,7 +5,8 @@ using UnityEngine;
 [Serializable]
 public struct Choice {
     public string choiceText;          // O texto que vai aparecer no botão
-    public DialogueData nextDialogue;  // O ScriptableObject que será carregado se essa opção for escolhida
+    public DialogueData nextDialogue;
+  // O ScriptableObject que será carregado se essa opção for escolhida
 }
 
 [Serializable]

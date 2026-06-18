@@ -58,7 +58,8 @@ public class DialogueUI : MonoBehaviour {
     }
 
     private void HandleDialogueStarted() {
-        gameObject.SetActive(true);
+        //gameObject.SetActive(true);
+        Debug.Log("PASSO 3: A Interface Visual ouviu o evento e vai abrir!");
         Enable();
     }
 
@@ -71,7 +72,7 @@ public class DialogueUI : MonoBehaviour {
         // para evitar que o valor permaneça visível quando o GameObject é desativado.
         Disable();
         if (background != null) background.fillAmount = 0f;
-        gameObject.SetActive(false);
+       // gameObject.SetActive(false);
     }
 
     private void HandleChoicesAvailable(List<Choice> choices)

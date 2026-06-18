@@ -12,15 +12,17 @@ public class TypeTextAnimation : MonoBehaviour {
 
     public string fullText;
 
+    [SerializeField]
     private DialogueSystem dialogueSystem;
 
     Coroutine coroutine;
 
     void OnEnable() {
+        /*
         if (dialogueSystem == null)
         {
             dialogueSystem = FindObjectOfType<DialogueSystem>();
-        }
+        }*/
 
         if (dialogueSystem != null)
         {

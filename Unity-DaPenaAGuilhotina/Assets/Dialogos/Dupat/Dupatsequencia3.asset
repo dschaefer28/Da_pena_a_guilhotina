@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
-  m_Name: sequencia3
+  m_Name: Dupatsequencia3
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Marie Bradier
-    text: "Viu, eu acho. Mas quando pegaram meu marido e os outros, demoraram meses
-      para ele e sua esposa confirmarem, e eles n\xE3o pareciam ter certeza de nada,
-      e estavam errados de qualquer forma."
+  - name: Dupaty
+    text: "\"A tortura para a instru\xE7\xE3o de processos j\xE1 foi formalmente
+      abolida por Lu\xEDs XVI. Se eles os torturaram, est\xE3o agindo contra a pr\xF3pria
+      lei da Coroa. Vamos tornar os seus erros p\xFAblicos e salvar esses homens!
+      V\xE1 para o por\xE3o e escreva um memorial com suas descobertas.\""
     choices: []
