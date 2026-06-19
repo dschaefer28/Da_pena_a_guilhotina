@@ -1010,7 +1010,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 634477785}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 22473429104203323, guid: 0297e90a85155ac4f97d902242847821, type: 3}
       propertyPath: dialogueSystem
@@ -1022,15 +1022,15 @@ PrefabInstance:
       objectReference: {fileID: 171746703}
     - target: {fileID: 1680127401970856883, guid: 0297e90a85155ac4f97d902242847821, type: 3}
       propertyPath: m_Name
-      value: Dupat
+      value: Charles Dupaty
       objectReference: {fileID: 0}
     - target: {fileID: 3662675020942740488, guid: 0297e90a85155ac4f97d902242847821, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.23
+      value: -8
       objectReference: {fileID: 0}
     - target: {fileID: 3662675020942740488, guid: 0297e90a85155ac4f97d902242847821, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.18085998
+      value: 0.53085995
       objectReference: {fileID: 0}
     - target: {fileID: 3662675020942740488, guid: 0297e90a85155ac4f97d902242847821, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1453,8 +1453,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 294.3676, y: 203.21568}
-  m_SizeDelta: {x: 3645, y: 620}
+  m_AnchoredPosition: {x: 266.97388, y: 203.21568}
+  m_SizeDelta: {x: 3453.8154, y: 620}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &507609760
 MonoBehaviour:
@@ -1476,10 +1476,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: tuftffuffjiuuyguiu
+  m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
-  m_sharedMaterial: {fileID: 4674454212167143234, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1503,13 +1503,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 76
-  m_fontSizeBase: 76
+  m_fontSize: 110
+  m_fontSizeBase: 110
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 8
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -1797,11 +1797,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!4 &634477785 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3467263471424227229, guid: f725072d2077ebb4d89d2afca230bd5b, type: 3}
-  m_PrefabInstance: {fileID: 1220264835}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &637160752
 GameObject:
   m_ObjectHideFlags: 0
@@ -1837,7 +1832,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -7, y: -124}
+  m_AnchoredPosition: {x: -7, y: -92}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &659563439
@@ -1948,8 +1943,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -855.9415, y: -359.24075}
-  m_SizeDelta: {x: 559.8137, y: 279.8529}
+  m_AnchoredPosition: {x: -831.5813, y: -339.422}
+  m_SizeDelta: {x: 517.088, y: 153.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &693048693
 MonoBehaviour:
@@ -3288,7 +3283,6 @@ GameObject:
   - component: {fileID: 1073334484}
   - component: {fileID: 1073334487}
   - component: {fileID: 1073334486}
-  - component: {fileID: 1073334485}
   m_Layer: 5
   m_Name: JoystickBG
   m_TagString: Untagged
@@ -3316,41 +3310,6 @@ RectTransform:
   m_AnchoredPosition: {x: 250, y: 100}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1073334485
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1073334483}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9d677f1681015749b15c436eec6d880, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.OnScreen.OnScreenStick
-  m_MovementRange: 50
-  m_DynamicOriginRange: 100
-  m_ControlPath: <Gamepad>/leftStick
-  m_Behaviour: 0
-  m_UseIsolatedInputActions: 0
-  m_PointerDownAction:
-    m_Name: Pointer Down
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: c227883c-1517-42aa-b681-f8f224a1fb18
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  m_PointerMoveAction:
-    m_Name: Pointer Move
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: ea1aae46-5d67-4e07-9659-594069760646
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
 --- !u!114 &1073334486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3821,10 +3780,7 @@ PrefabInstance:
       objectReference: {fileID: 1970655855}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 3467263471424227229, guid: f725072d2077ebb4d89d2afca230bd5b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1970655859}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f725072d2077ebb4d89d2afca230bd5b, type: 3}
 --- !u!1 &1258142455
@@ -4045,6 +4001,7 @@ GameObject:
   - component: {fileID: 1554995101}
   - component: {fileID: 1554995103}
   - component: {fileID: 1554995102}
+  - component: {fileID: 1554995104}
   m_Layer: 5
   m_Name: JoystickHandle
   m_TagString: Untagged
@@ -4109,6 +4066,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1554995100}
   m_CullTransparentMesh: 1
+--- !u!114 &1554995104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554995100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9d677f1681015749b15c436eec6d880, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.OnScreen.OnScreenStick
+  m_MovementRange: 50
+  m_DynamicOriginRange: 100
+  m_ControlPath: <Gamepad>/leftStick
+  m_Behaviour: 0
+  m_UseIsolatedInputActions: 0
+  m_PointerDownAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: b1f3c29b-c71a-422a-8f30-d8c4721b8959
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  m_PointerMoveAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 577a0bd5-9ae7-4971-b77f-925e31d744eb
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!1 &1670140775
 GameObject:
   m_ObjectHideFlags: 0
@@ -4419,8 +4411,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 249.86}
-  m_SizeDelta: {x: 6000, y: 1100}
+  m_AnchoredPosition: {x: 0, y: 224.49588}
+  m_SizeDelta: {x: 6000, y: 1255.339}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1959733849
 MonoBehaviour:
@@ -4447,7 +4439,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -4606,11 +4598,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3737362528c1999449c92dc61130dc9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCMovement
---- !u!4 &1970655859 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3662675020942740488, guid: 0297e90a85155ac4f97d902242847821, type: 3}
-  m_PrefabInstance: {fileID: 292087536}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1977178336
 GameObject:
   m_ObjectHideFlags: 0
@@ -4670,8 +4657,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1317b05940543754c91519025e09ce5a, type: 2}
-  m_sharedMaterial: {fileID: -2305410678268293463, guid: 1317b05940543754c91519025e09ce5a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4695,13 +4682,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 76
-  m_fontSizeBase: 76
+  m_fontSize: 120
+  m_fontSizeBase: 120
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -5112,3 +5099,4 @@ SceneRoots:
   - {fileID: 189412083}
   - {fileID: 1220264835}
   - {fileID: 470665825}
+  - {fileID: 292087536}

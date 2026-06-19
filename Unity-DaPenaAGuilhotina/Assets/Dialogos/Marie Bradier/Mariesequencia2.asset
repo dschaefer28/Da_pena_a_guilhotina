@@ -17,4 +17,6 @@ MonoBehaviour:
     text: "Meu marido, Charles Bradier, estava em casa, doente. Meu irm\xE3o Jean
       Simare trouxe batata e p\xE3o para ele e eu fiz uma sopa. O Nicolas Lardoise,
       o amigo deles, estava na casa dele com a esposa e os filhos."
-    choices: []
+    choices:
+    - choiceText: O Sr.Thomassin, ele viu quem o atacou?
+      nextDialogue: {fileID: 11400000, guid: b3034fac45cc43f4da475772a73a0964, type: 2}

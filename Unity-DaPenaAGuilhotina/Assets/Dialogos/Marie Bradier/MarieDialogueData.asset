@@ -17,9 +17,5 @@ MonoBehaviour:
     text: "Por miseric\xF3rdia! Eles v\xE3o matar o meu marido, meu irm\xE3o e um
       outro amigo deles na roda!"
     choices:
-    - choiceText: Por favor, se acalme, vamos te ajudar. O que aconteceu?
-      nextDialogue: {fileID: 11400000, guid: a7e42bc888792a24d8f5066c66a3e3fc, type: 2}
     - choiceText: E onde seu marido e os outros estavam nessa noite?
       nextDialogue: {fileID: 11400000, guid: b81fc808942eb8841876a75118ac997f, type: 2}
-    - choiceText: O Sr.Thomassin, ele viu quem o atacou?
-      nextDialogue: {fileID: 11400000, guid: b3034fac45cc43f4da475772a73a0964, type: 2}

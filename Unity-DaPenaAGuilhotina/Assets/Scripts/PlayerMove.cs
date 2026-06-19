@@ -23,7 +23,7 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
-        // --- Lógica de Virar o Personagem (Flip) ---
+        
         if (spriteRenderer != null)
         {
             if (move.x > 0)
@@ -59,6 +59,6 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.linearVelocity = move * moveSpeed; // Nota: A Unity atualizou 'velocity' para 'linearVelocity' no Rigidbody2D
+       rb.linearVelocity = new Vector2(move.x * moveSpeed, rb.linearVelocity.y);
     }
 }

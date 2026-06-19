@@ -46,7 +46,7 @@ public class PlayerInteraction : MonoBehaviour
     }
     private GameObject currentInteractableObj;
 
-    private void OnInteract()
+    public void OnInteract()
     {
         if (dialogueSystem != null && dialogueSystem.IsDialogueActive)
         {

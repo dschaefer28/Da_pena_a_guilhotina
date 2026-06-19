@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Dupatsequencia1
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Dupaty
-    text: "\"Eu ouvi falar sobre esse caso. Est\xE1 cheio de erros: n\xE3o investigaram,
+  - name: Charles Dupaty
+    text: "Eu ouvi falar sobre esse caso. Est\xE1 cheio de erros: n\xE3o investigaram,
       n\xE3o ouviram os acusados e usaram a tortura para os obrigar a confessar o
-      que queriam.\""
+      que queriam."
     choices:
-    - choiceText: "\"Mestre, se as falhas s\xE3o t\xE3o \xF3bvias, por que n\xE3o
-        apelamos diretamente ao Parlamento?\""
+    - choiceText: "Mestre, se as falhas s\xE3o t\xE3o \xF3bvias, por que n\xE3o apelamos
+        diretamente ao Parlamento?"
       nextDialogue: {fileID: 11400000, guid: 01222fe2072dd8e44a0ee4eb0c1d84fd, type: 2}

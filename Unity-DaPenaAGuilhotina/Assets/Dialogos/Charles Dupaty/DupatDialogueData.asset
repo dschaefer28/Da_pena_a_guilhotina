@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DupatDialogueData
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Dupaty
-    text: "\u201CConverse com ela, entenda o que est\xE1 acontecendo. Algo est\xE1
-      muito estranho nesse caso\u201D"
+  - name: Charles Dupaty
+    text: "Converse com ela, entenda o que est\xE1 acontecendo. Algo est\xE1 muito
+      estranho nesse caso."
     choices: []

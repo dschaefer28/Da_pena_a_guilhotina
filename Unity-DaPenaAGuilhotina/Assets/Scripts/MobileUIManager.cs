@@ -6,19 +6,60 @@ public class MobileUIManager : MonoBehaviour
     [Tooltip("Marque para ver os botões no Editor da Unity enquanto programa. Eles sumirão no Build final de PC de qualquer forma.")]
     public bool showInEditorForTesting = true;
 
+    [Header("UI Dinâmica")]
+    [Tooltip("Arraste o JoystickBG aqui para ele sumir durante os diálogos.")]
+    public GameObject joystickUI; 
+
+    private DialogueSystem dialogueSystem;
+
     void Awake()
     {
-        // 1. Se estiver rodando dentro do Editor da Unity
+        // Lógica de PC vs Android
 #if UNITY_EDITOR
         gameObject.SetActive(showInEditorForTesting);
-
-        // 2. Se for o Build final para Android ou iOS
 #elif UNITY_ANDROID || UNITY_IOS
         gameObject.SetActive(true);
-
-        // 3. Se for o Build final para PC, Mac, WebGL ou Consoles
 #else
         gameObject.SetActive(false);
 #endif
+    }
+
+    void Start()
+    {
+        // Encontra o sistema de diálogos ao iniciar a cena
+        dialogueSystem = FindAnyObjectByType<DialogueSystem>();
+
+        if (dialogueSystem != null)
+        {
+            // Se inscreve nos eventos do diálogo
+            dialogueSystem.OnDialogueStarted += EsconderJoystick;
+            dialogueSystem.OnDialogueEnded += MostrarJoystick;
+        }
+    }
+
+    void OnDestroy()
+    {
+        // Se desinscreve para evitar erros caso a cena mude
+        if (dialogueSystem != null)
+        {
+            dialogueSystem.OnDialogueStarted -= EsconderJoystick;
+            dialogueSystem.OnDialogueEnded -= MostrarJoystick;
+        }
+    }
+
+    private void EsconderJoystick()
+    {
+        if (joystickUI != null) 
+        {
+            joystickUI.SetActive(false);
+        }
+    }
+
+    private void MostrarJoystick()
+    {
+        if (joystickUI != null) 
+        {
+            joystickUI.SetActive(true);
+        }
     }
 }

@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Dupatsequencia2
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Dupaty
-    text: "\"Nobres protegem nobres, meu jovem. O Parlamento n\xE3o rasgar\xE1 uma
+  - name: Charles Dupaty
+    text: "Nobres protegem nobres, meu jovem. O Parlamento n\xE3o rasgar\xE1 uma
       senten\xE7a para salvar camponeses, a menos que a verdade se torne um esc\xE2ndalo
-      p\xFAblico.\" \n\n\"Mas n\xE3o lutaremos desarmados. Aqui, leve isto.\u201D  "
+      p\xFAblico.\n\nMas n\xE3o lutaremos desarmados. Aqui, leve isto. "
     choices:
-    - choiceText: '"Como esse documento pode nos ajudar contra o tribunal?"'
+    - choiceText: Como esse documento pode nos ajudar contra o tribunal?
       nextDialogue: {fileID: 11400000, guid: f09873696d20fdb4a98c32181dc87c30, type: 2}

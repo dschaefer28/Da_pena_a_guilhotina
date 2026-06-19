@@ -16,4 +16,6 @@ MonoBehaviour:
   - name: 'Marie Bradier '
     text: "Um lorde, o Sr.Thomassin, foi atacado uma noite por tr\xEAs homens. Invadiram
       sua casa, roubaram suas coisas e bateram nele e na esposa."
-    choices: []
+    choices:
+    - choiceText: E onde seu marido e os outros estavam nessa noite?
+      nextDialogue: {fileID: 11400000, guid: b81fc808942eb8841876a75118ac997f, type: 2}

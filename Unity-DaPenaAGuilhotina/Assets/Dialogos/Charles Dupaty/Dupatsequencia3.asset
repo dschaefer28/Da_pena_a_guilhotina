@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Dupatsequencia3
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Dupaty
-    text: "\"A tortura para a instru\xE7\xE3o de processos j\xE1 foi formalmente
-      abolida por Lu\xEDs XVI. Se eles os torturaram, est\xE3o agindo contra a pr\xF3pria
+  - name: Charles Dupaty
+    text: "A tortura para a instru\xE7\xE3o de processos j\xE1 foi formalmente abolida
+      por Lu\xEDs XVI. Se eles os torturaram, est\xE3o agindo contra a pr\xF3pria
       lei da Coroa. Vamos tornar os seus erros p\xFAblicos e salvar esses homens!
-      V\xE1 para o por\xE3o e escreva um memorial com suas descobertas.\""
+      V\xE1 para o por\xE3o e escreva um memorial com suas descobertas."
     choices: []
