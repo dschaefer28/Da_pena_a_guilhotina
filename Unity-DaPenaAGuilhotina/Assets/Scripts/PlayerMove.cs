@@ -6,25 +6,49 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     private Rigidbody2D rb;
     private Vector2 move;
-
-    // Referência para o Animator
+    
     private Animator anim;
+    
+    // 1. Criamos a variável para guardar o SpriteRenderer
+    private SpriteRenderer spriteRenderer;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        
-        // Pega o componente Animator anexado ao Player
         anim = GetComponent<Animator>();
+        
+        // 2. Pegamos o componente automaticamente no início do jogo
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        // --- Lógica de Animação ---
-        if (anim != null)
+        // --- Lógica de Virar o Personagem (Flip) ---
+        if (spriteRenderer != null)
         {
-            // Se o Vector2 de movimento não for zero, significa que estamos andando
-            anim.SetBool("isWalking", move != Vector2.zero);
+            if (move.x > 0)
+            {
+                // Se está indo para a direita, desativa o espelhamento (imagem original)
+                spriteRenderer.flipX = false;
+            }
+            else if (move.x < 0)
+            {
+                // Se está indo para a esquerda, ativa o espelhamento
+                spriteRenderer.flipX = true;
+            }
+        }
+
+        // --- Lógica de Animação ---
+        if (anim != null) 
+        {
+            if (move != Vector2.zero) 
+            {
+                anim.SetBool("isWalking", true);
+            } 
+            else 
+            {
+                anim.SetBool("isWalking", false);
+            }
         }
     }
 
@@ -35,6 +59,6 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.linearVelocity = move * moveSpeed;
+        rb.linearVelocity = move * moveSpeed; // Nota: A Unity atualizou 'velocity' para 'linearVelocity' no Rigidbody2D
     }
 }
