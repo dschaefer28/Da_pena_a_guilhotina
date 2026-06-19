@@ -44,5 +44,11 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: cenario
+    uniqueID: 3138968775
+    locked: 0
+  - name: personagem
+    uniqueID: 4070257339
+    locked: 0
   m_RenderingLayers:
   - Default
