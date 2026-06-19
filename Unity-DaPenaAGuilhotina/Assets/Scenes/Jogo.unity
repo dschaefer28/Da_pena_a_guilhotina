@@ -554,7 +554,7 @@ Transform:
   m_GameObject: {fileID: 121427688}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0.83, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1044,6 +1044,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Charles Dupaty
       objectReference: {fileID: 0}
+    - target: {fileID: 2493432197487759678, guid: 0297e90a85155ac4f97d902242847821, type: 3}
+      propertyPath: m_SortingLayer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2493432197487759678, guid: 0297e90a85155ac4f97d902242847821, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2493432197487759678, guid: 0297e90a85155ac4f97d902242847821, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -224709957
+      objectReference: {fileID: 0}
     - target: {fileID: 3662675020942740488, guid: 0297e90a85155ac4f97d902242847821, type: 3}
       propertyPath: m_LocalPosition.x
       value: -8
@@ -1312,7 +1324,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.4537, y: 2.1616, z: 0}
-  m_LocalScale: {x: 42.29905, y: 24.88175, z: 1}
+  m_LocalScale: {x: 132.71327, y: 24.88175, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1369,7 +1381,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.43571472, y: -0.20978856}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1379,7 +1391,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 18.97726, y: 0.5804229}
   m_EdgeRadius: 0
 --- !u!212 &470665824
 SpriteRenderer:
@@ -1597,7 +1609,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1784,7 +1796,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c03f9b90b78ad40a505f6c03f55988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MobileUIManager
-  showInEditorForTesting: 1
+  showInEditorForTesting: 0
   joystickUI: {fileID: 0}
 --- !u!114 &624593175
 MonoBehaviour:
@@ -1944,7 +1956,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -7, y: -92}
+  m_AnchoredPosition: {x: -7, y: -25}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &659563439
@@ -2055,8 +2067,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -831.5813, y: -339.422}
-  m_SizeDelta: {x: 517.088, y: 153.01}
+  m_AnchoredPosition: {x: -831.5813, y: -371.2389}
+  m_SizeDelta: {x: 517.088, y: 145.94}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &693048693
 MonoBehaviour:
@@ -3834,6 +3846,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2062400013657696362, guid: f725072d2077ebb4d89d2afca230bd5b, type: 3}
+      propertyPath: m_SortingLayer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2062400013657696362, guid: f725072d2077ebb4d89d2afca230bd5b, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -224709957
+      objectReference: {fileID: 0}
     - target: {fileID: 3467263471424227229, guid: f725072d2077ebb4d89d2afca230bd5b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.23
@@ -4807,7 +4827,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 224.49588}
+  m_AnchoredPosition: {x: 0, y: 270}
   m_SizeDelta: {x: 6000, y: 1255.339}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1959733849
@@ -4830,7 +4850,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  m_Sprite: {fileID: -6392820593738233421, guid: 84af5cb5764d9e84584a66180b4f063a, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5028,7 +5048,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 203, y: 355}
+  m_AnchoredPosition: {x: -405, y: 383}
   m_SizeDelta: {x: 3000, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1977178338
@@ -5061,7 +5081,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
