@@ -1796,8 +1796,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c03f9b90b78ad40a505f6c03f55988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MobileUIManager
-  showInEditorForTesting: 1
-  joystickUI: {fileID: 0}
+  showInEditorForTesting: 0
+  joystickUI: {fileID: 1073334483}
 --- !u!114 &624593175
 MonoBehaviour:
   m_ObjectHideFlags: 0

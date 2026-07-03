@@ -6,7 +6,7 @@ public enum STATE {
     DISABLED,
     WAITING,
     TYPING,
-    CHOOSING // Novo estado adicionado!
+    CHOOSING 
 }
 
 public class DialogueSystem : MonoBehaviour {
@@ -25,8 +25,10 @@ public class DialogueSystem : MonoBehaviour {
     bool finished = false;
 
     TypeTextAnimation typeText;
-
     STATE state;
+
+    // === NOVO: Guarda a instância do áudio atual para podermos pará-lo se necessário ===
+    private FMOD.Studio.EventInstance currentAudioInstance;
 
     void Awake() {
         typeText = FindObjectOfType<TypeTextAnimation>();
@@ -65,29 +67,37 @@ public class DialogueSystem : MonoBehaviour {
             }
             return;
         }
-
-        // No estado CHOOSING, as escolhas devem ser tomadas pelos botões da UI.
     }
 
     public void Next() {
-
         Debug.Log("PASSO 1: O NPC recebeu o comando de interação!");
         IsDialogueActive = true;
 
-        // --- TRAVA DE SEGURANÇA: Se não tiver fala na lista, encerra o diálogo. ---
         if (dialogueData.talkScript == null || dialogueData.talkScript.Count == 0) {
             Debug.LogWarning("Cuidado: O ScriptableObject carregado não possui falas!");
             EndDialogue();
             return;
         }
-        // ------------------------------------------------------------------------------
+
+        // === NOVO: Para o áudio da fala anterior antes de tocar a próxima ===
+        StopCurrentAudio();
 
         if(currentText == 0) {
             OnDialogueStarted?.Invoke();
         }
 
-        string speakerName = dialogueData.talkScript[currentText].name;
-        string speakerText = dialogueData.talkScript[currentText].text;
+        // Pega as informações do diálogo atual
+        Dialogue currentDialogue = dialogueData.talkScript[currentText];
+        string speakerName = currentDialogue.name;
+        string speakerText = currentDialogue.text;
+        
+        // === NOVO: Toca o áudio se ele tiver sido configurado no FMOD ===
+        if (!currentDialogue.dialogueAudio.IsNull) {
+            currentAudioInstance = FMODUnity.RuntimeManager.CreateInstance(currentDialogue.dialogueAudio);
+            currentAudioInstance.start();
+            currentAudioInstance.release(); // Libera a memória quando o som acabar sozinho
+        }
+
         OnDialogueLineStarted?.Invoke(speakerName, speakerText);
 
         currentText++;
@@ -97,27 +107,21 @@ public class DialogueSystem : MonoBehaviour {
     }
 
     void OnTypeFinished() {
-        // Verifica qual foi o último diálogo que acabou de ser digitado
-        Dialogue currentDialogue = dialogueData.talkScript[currentText - 1];
+    StopCurrentAudio();
 
-        // Se esse diálogo tiver opções de escolha, vamos para o estado de escolher
-        if (currentDialogue.choices != null && currentDialogue.choices.Count > 0) {
-            state = STATE.CHOOSING;
-            SetupChoices(currentDialogue);
-        } else {
-            state = STATE.WAITING; // Se não, espera o "Enter" normal
-        }
-    }
+    Dialogue currentDialogue = dialogueData.talkScript[currentText - 1];
 
-    void Waiting() {
-        // Input direto removido. Use AdvanceDialogue() para avançar o diálogo reativamente.
+    if (currentDialogue.choices != null && currentDialogue.choices.Count > 0) {
+        state = STATE.CHOOSING;
+        SetupChoices(currentDialogue);
+    } else {
+        state = STATE.WAITING;
     }
-
-    void Typing() {
-        // Input direto removido. Use AdvanceDialogue() para pular a digitação.
-    }
+}
 
     void EndDialogue() {
+        StopCurrentAudio();
+
         OnDialogueEnded?.Invoke();
         state = STATE.DISABLED;
         currentText = 0;
@@ -125,7 +129,12 @@ public class DialogueSystem : MonoBehaviour {
         IsDialogueActive = false;
     }
 
-    // --- NOVA LÓGICA DE ESCOLHAS ---
+    void StopCurrentAudio() {
+        if (currentAudioInstance.isValid()) {
+            currentAudioInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            currentAudioInstance.release();
+        }
+    }
 
     void SetupChoices(Dialogue dialogue) {
         OnChoicesCleared?.Invoke();
@@ -136,13 +145,11 @@ public class DialogueSystem : MonoBehaviour {
         OnChoicesCleared?.Invoke();
 
         if (nextTalkData != null) {
-            // Se tiver uma próxima conversa, troca o ScriptableObject e reseta a leitura
             dialogueData = nextTalkData;
             currentText = 0;
             finished = false;
             Next();
         } else {
-            // Se a opção não levar a lugar nenhum, apenas encerra o diálogo
             EndDialogue();
         }
     }

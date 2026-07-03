@@ -16,4 +16,11 @@ MonoBehaviour:
   - name: Charles Dupaty
     text: "Converse com ela, entenda o que est\xE1 acontecendo. Algo est\xE1 muito
       estranho nesse caso."
+    dialogueAudio:
+      Guid:
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/Normal geral_01
     choices: []
