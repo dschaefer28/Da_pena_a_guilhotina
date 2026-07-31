@@ -17,4 +17,11 @@ MonoBehaviour:
     text: "Viu, eu acho... Mas quando pegaram meu marido e os outros, demoraram meses
       para ele e sua esposa confirmarem, e eles n\xE3o pareciam ter certeza de nada,
       e estavam errados de qualquer forma."
+    dialogueAudio:
+      Guid:
+        Data1: 745793994
+        Data2: 1290263996
+        Data3: -404866682
+        Data4: -1175277728
+      Path: event:/reclamar feminino_02
     choices: []

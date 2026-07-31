@@ -16,6 +16,13 @@ MonoBehaviour:
   - name: Marie Bradier
     text: "Por miseric\xF3rdia! Eles v\xE3o matar o meu marido, meu irm\xE3o e um
       outro amigo deles na roda!"
+    dialogueAudio:
+      Guid:
+        Data1: -121802520
+        Data2: 1137269962
+        Data3: 1602447276
+        Data4: -1031367414
+      Path: event:/reclamar feminino_01
     choices:
     - choiceText: E onde seu marido e os outros estavam nessa noite?
       nextDialogue: {fileID: 11400000, guid: b81fc808942eb8841876a75118ac997f, type: 2}
