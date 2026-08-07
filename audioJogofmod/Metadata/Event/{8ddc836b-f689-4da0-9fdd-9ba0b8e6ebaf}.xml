@@ -60,7 +60,7 @@
 	<object class="MarkerTrack" id="{563eadca-ebfa-491d-88cd-c2d37847b5ab}" />
 	<object class="GroupTrack" id="{8d873072-f6be-4793-a2f6-b558409a1414}">
 		<relationship name="modules">
-			<destination>{4209fb97-203b-4621-b6c1-258607ba5ada}</destination>
+			<destination>{80eefccb-46aa-4329-b9dd-efb528b37155}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{74eba856-6458-49a1-ba3f-9771b50aeaea}</destination>
@@ -68,7 +68,10 @@
 	</object>
 	<object class="Timeline" id="{af7965c4-d0f0-4523-a6ac-9e61d7c2e242}">
 		<relationship name="modules">
-			<destination>{4209fb97-203b-4621-b6c1-258607ba5ada}</destination>
+			<destination>{80eefccb-46aa-4329-b9dd-efb528b37155}</destination>
+		</relationship>
+		<relationship name="markers">
+			<destination>{0ae74e2e-dc93-4049-9302-fb07482d281f}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{04e4bb66-4988-4267-9750-d6356db164b3}">
@@ -88,15 +91,21 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{326f4046-3539-4baf-a833-7c8af4a807bd}" />
-	<object class="SingleSound" id="{4209fb97-203b-4621-b6c1-258607ba5ada}">
+	<object class="MultiSound" id="{80eefccb-46aa-4329-b9dd-efb528b37155}">
+		<property name="isAsync">
+			<value>true</value>
+		</property>
 		<property name="length">
-			<value>4.6000000000000005</value>
+			<value>1.1499773242630384</value>
 		</property>
-		<property name="timelockedOffset">
-			<value>1.5</value>
+		<property name="looping">
+			<value>true</value>
 		</property>
-		<relationship name="audioFile">
-			<destination>{bd7c5b4a-7d08-49d0-a535-1ece2854d34b}</destination>
+		<relationship name="sounds">
+			<destination>{5bec69d9-97d9-4464-8ed3-bcc571de5d9b}</destination>
+			<destination>{92b1df43-24a2-45bd-911c-0d32c153a49f}</destination>
+			<destination>{c79b5cc9-5044-4d11-9f21-425fb5c46387}</destination>
+			<destination>{27a23d40-77d1-4f2f-8216-a673e23cfad6}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{74eba856-6458-49a1-ba3f-9771b50aeaea}">
@@ -113,6 +122,20 @@
 			<destination>{04e4bb66-4988-4267-9750-d6356db164b3}</destination>
 		</relationship>
 	</object>
+	<object class="LoopRegion" id="{0ae74e2e-dc93-4049-9302-fb07482d281f}">
+		<property name="position">
+			<value>0</value>
+		</property>
+		<property name="length">
+			<value>1.1499773242630384</value>
+		</property>
+		<relationship name="timeline">
+			<destination>{af7965c4-d0f0-4523-a6ac-9e61d7c2e242}</destination>
+		</relationship>
+		<relationship name="markerTrack">
+			<destination>{563eadca-ebfa-491d-88cd-c2d37847b5ab}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusEffectChain" id="{6ecc1868-8d37-4936-9b64-458c9b274bcf}">
 		<relationship name="effects">
 			<destination>{5443d4f1-1b89-4e1e-adc7-765e5713c9bd}</destination>
@@ -120,6 +143,26 @@
 	</object>
 	<object class="MixerBusPanner" id="{ae5434e7-68b8-4f32-8030-0f544409636b}" />
 	<object class="MixerBusFader" id="{ba3f1354-12f8-4baa-b94c-e403751d7599}" />
+	<object class="SingleSound" id="{5bec69d9-97d9-4464-8ed3-bcc571de5d9b}">
+		<relationship name="audioFile">
+			<destination>{3b0df8cb-580e-4fd4-844f-819d0465b013}</destination>
+		</relationship>
+	</object>
+	<object class="SingleSound" id="{92b1df43-24a2-45bd-911c-0d32c153a49f}">
+		<relationship name="audioFile">
+			<destination>{d7fbd377-acad-49f4-a888-9a6590521692}</destination>
+		</relationship>
+	</object>
+	<object class="SingleSound" id="{c79b5cc9-5044-4d11-9f21-425fb5c46387}">
+		<relationship name="audioFile">
+			<destination>{67b3e197-b376-4e82-b62b-b578808f7a2c}</destination>
+		</relationship>
+	</object>
+	<object class="SingleSound" id="{27a23d40-77d1-4f2f-8216-a673e23cfad6}">
+		<relationship name="audioFile">
+			<destination>{056e0997-c37a-49d3-b525-bbf4cd8f28a3}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusEffectChain" id="{4e41c588-3f0c-4329-9713-b395ed54f3e8}">
 		<relationship name="effects">
 			<destination>{16c257b7-a064-4923-95ea-945936f0913c}</destination>

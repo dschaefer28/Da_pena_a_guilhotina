@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{a90444b5-935b-4b6c-a8c4-bd5eecd77b13}">
+		<property name="assetPath">
+			<value>Normal feminino_01 - Trimmed.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>0.40000000000000002</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{889338c8-75de-4d8d-b256-cea3b7d361d8}</destination>
+		</relationship>
+	</object>
+</objects>

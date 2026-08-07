@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{22668e6f-8ee5-4188-9c49-02ac430df288}">
+		<property name="assetPath">
+			<value>Normal geral_05 - Trimmed.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>1</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{889338c8-75de-4d8d-b256-cea3b7d361d8}</destination>
+		</relationship>
+	</object>
+</objects>

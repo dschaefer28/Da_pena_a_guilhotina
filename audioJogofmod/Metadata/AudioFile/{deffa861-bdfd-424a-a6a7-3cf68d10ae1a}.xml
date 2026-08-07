@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{deffa861-bdfd-424a-a6a7-3cf68d10ae1a}">
+		<property name="assetPath">
+			<value>Bravo feminino_03 - Trimmed.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>3.2000000000000002</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{889338c8-75de-4d8d-b256-cea3b7d361d8}</destination>
+		</relationship>
+	</object>
+</objects>
