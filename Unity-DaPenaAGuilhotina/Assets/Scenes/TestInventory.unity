@@ -613,7 +613,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
   moveSpeed: 5
-  npc: {fileID: 0}
 --- !u!50 &201229792
 Rigidbody2D:
   serializedVersion: 5
@@ -767,6 +766,7 @@ MonoBehaviour:
   interactAction: {fileID: 1781555164194001046, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}
   toggleInventoryAction: {fileID: 3581055334647609260, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}
   inventoryManager: {fileID: 1765245632}
+  dialogueSystem: {fileID: 0}
 --- !u!1 &216568928
 GameObject:
   m_ObjectHideFlags: 0
