@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{b30df87b-a982-4b40-afb5-f30c38333f73}">
+		<property name="assetPath">
+			<value>tristeza geral dois_02 - Trimmed.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>0.80000000000000004</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{889338c8-75de-4d8d-b256-cea3b7d361d8}</destination>
+		</relationship>
+	</object>
+</objects>
