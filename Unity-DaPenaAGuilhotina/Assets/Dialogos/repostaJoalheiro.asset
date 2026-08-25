@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
-  m_Name: Operario_Dialogo
+  m_Name: repostaJoalheiro
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: 
-    text: Obrigado por me ajudar Senhor. Serei eternamente grato
+    text: "Um colar de diamantes? N\xE3o \xE9 o primeiro que me pede isto. A algo
+      em mente?"
     dialogueAudio:
       Guid:
         Data1: 0
@@ -22,6 +23,4 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices:
-    - choiceText: Mas me diga, como tudo aconteceu?
-      nextDialogue: {fileID: 11400000, guid: 3337009e8a97aee43bb7cb7c6c456df3, type: 2}
+    choices: []

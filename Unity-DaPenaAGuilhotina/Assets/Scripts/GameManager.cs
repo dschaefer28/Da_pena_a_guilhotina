@@ -2,30 +2,45 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Padrão Singleton: permite que qualquer script acesse o GameManager de forma fácil
     public static GameManager Instance;
 
     [Header("Dados da Investigação")]
-    public CaseData casoEscolhido; // Guarda o ScriptableObject que o player escolher
+    public CaseData casoEscolhido;
+
+    [Header("Status Globais")]
+    public int dinheiroAtual = 0;
+    public int opiniaoPublicaAtual = 50; // Começa neutro (50)
 
     void Awake()
     {
-        // Garante que só exista um GameManager no jogo inteiro
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Isso o torna "imortal" entre as cenas
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // Se já existir outro, destrói o clone
+            Destroy(gameObject);
         }
     }
 
-    // Função que a interface da Mesa vai chamar quando o player clicar em "Confirmar"
     public void ConfirmarCaso(CaseData caso)
     {
         casoEscolhido = caso;
-        Debug.Log($"Caso escolhido e salvo no sistema: {caso.caseTitle}");
+        Debug.Log($"Caso escolhido e salvo: {caso.caseTitle}");
+    }
+
+    // Chamaremos esta função no fim da Fase 2, quando o caso for resolvido!
+    public void ConcluirCasoAtual()
+    {
+        if (casoEscolhido != null)
+        {
+            dinheiroAtual += casoEscolhido.moneyReward;
+            opiniaoPublicaAtual += casoEscolhido.publicOpinionReward;
+            Debug.Log($"Caso Concluído! Dinheiro: {dinheiroAtual} | Opinião: {opiniaoPublicaAtual}");
+            
+            // Limpa o caso atual para o jogador poder pegar outro na mesa depois
+            casoEscolhido = null; 
+        }
     }
 }
