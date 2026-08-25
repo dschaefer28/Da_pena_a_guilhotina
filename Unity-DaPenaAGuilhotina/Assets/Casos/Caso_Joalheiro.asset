@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
+  m_Name: Caso_Joalheiro
+  m_EditorClassIdentifier: Assembly-CSharp::CaseData
+  caseTitle: Caso das Joias
+  caseDescription: "\xE9 o caso das joias "
+  objectiveText: 'terminar o caso '
+  moneyReward: 50
+  publicOpinionReward: -20
+  npcDialogueRoute: {fileID: 11400000, guid: c58f27ed9b03f3a499f8062499574c16, type: 2}
+  nextSceneName: Fase2
