@@ -1,109 +1,158 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events; // Necessário para criar a "fila" de NPCs no Inspector
+using UnityEngine.Events;
+
+// Estrutura que define como o NPC deve agir dependendo de qual caso o jogador escolheu
+[System.Serializable]
+public struct CasoReacao
+{
+    public CaseData caso;
+    
+    [Header("Fase 1: Investigação (Opcional)")]
+    [Tooltip("Fala do NPC após o caso ser aceito, mas ANTES de achar a pista.")]
+    public DialogueData dialogoInicialDoCaso;
+    
+    [Header("Fase 2: Resolução")]
+    [Tooltip("O jogador precisa ter este item (Pista) para o NPC avançar a conversa.")]
+    public Item pistaNecessaria;
+    
+    [Tooltip("Fala do NPC APÓS o jogador encontrar a pista acima.")]
+    public DialogueData dialogoComPista;
+    
+    [Tooltip("Item entregue ao jogador ao fim do diálogo com a pista (Ex: Decreto/Papel).")]
+    public Item recompensaDoDialogo;
+}
 
 public class NPCMovement : MonoBehaviour, IInteractable
 {
-    [Header("Configurações de Interação")]
-    [Tooltip("Se falso, o jogador não consegue interagir com este NPC ainda.")]
+    [Header("Configurações Base")]
     public bool canInteract = true;
+    [Tooltip("Desmarque isso para NPCs Mentores (como Dupaty) para permitir falar com eles várias vezes.")]
+    public bool disableAfterDialogue = true;
+
+    [Header("Diálogo de Fallback (Padrão)")]
+    [Tooltip("Diálogo padrão quando nenhum caso foi escolhido ainda (Ex: 'Vá até a mesa pegar um caso').")]
+    public DialogueData dialogoPadrao;
     
-    [Tooltip("O ScriptableObject com as falas específicas deste NPC.")]
-    public DialogueData myDialogue; 
+    [Header("Restrição Estrita (Opcional)")]
+    [Tooltip("Preencha APENAS se este NPC for figurante exclusivo de um caso (Ex: Marie). Deixe VAZIO para o Dupaty.")]
+    public CaseData casoObrigatorio;
 
-    [Header("Feedback Visual")]
-    [Tooltip("Arraste o GameObject do contorno ou ícone que indica que o NPC quer falar.")]
-    public GameObject visualIndicator; 
+    [Header("Reações por Caso (GDD)")]
+    [Tooltip("Configure aqui como o NPC reage a cada caso diferente.")]
+    public List<CasoReacao> reacoesDeCaso;
 
-    [Header("Eventos (O que acontece quando o diálogo acaba?)")]
-    [Tooltip("Arraste o próximo NPC aqui e chame a função EnableInteraction() dele.")]
+    [Header("Feedback e Eventos")]
+    public GameObject visualIndicator;
     public UnityEvent OnDialogueComplete;
 
-    [Header("Referências")]
-    [SerializeField] private DialogueSystem dialogueSystem;
+    // Guarda temporariamente qual item o NPC vai dar ao fim da conversa atual
+    private Item recompensaPendente;
 
-    void Awake()
-    {
-        if (dialogueSystem == null)
-        {
-            dialogueSystem = FindObjectOfType<DialogueSystem>();
-        }
-    }
-
-    void Start()
-    {
-        // Atualiza a UI visual logo no início do jogo
-        UpdateVisualFeedback();
-    }
+    void Start() { UpdateVisualFeedback(); }
 
     public void Interact()
     {
-        Debug.Log("PASSO 1: O NPC recebeu o comando de interação!");
-        // 1. Verifica se é a vez deste NPC
-        if (!canInteract)
+        if (!canInteract) return;
+
+        // 1. Trava estrita para NPCs figurantes (Ignora se for vazio)
+        if (casoObrigatorio != null && GameManager.Instance.casoEscolhido != casoObrigatorio)
         {
-            Debug.Log($"Ainda não é o momento de falar com {gameObject.name}.");
+            Debug.Log($"{gameObject.name} ignora você.");
             return;
         }
 
-        // 2. Alimenta o sistema com as falas DESTE NPC
-        if (dialogueSystem != null && myDialogue != null)
+        DialogueSystem dialogueSystem = GameManager.Instance.dialogueSystem;
+        if (dialogueSystem == null) return;
+
+        // 2. Define o roteiro assumindo o Padrão inicialmente
+        DialogueData dialogoParaTocar = dialogoPadrao; 
+        recompensaPendente = null;
+
+        CaseData casoAtual = GameManager.Instance.casoEscolhido;
+
+        // 3. Procura a reação do NPC baseada no caso da mesa
+        if (casoAtual != null && reacoesDeCaso != null)
         {
-            dialogueSystem.dialogueData = myDialogue;
-            
-            // Assina o evento para saber quando ESTE diálogo terminar
+            foreach (var reacao in reacoesDeCaso)
+            {
+                if (reacao.caso == casoAtual)
+                {
+                    // Checa se o jogador tem a pista usando o InventoryManager centralizado
+                    bool temAPista = false;
+                    if (reacao.pistaNecessaria != null && GameManager.Instance.inventoryManager != null)
+                    {
+                        temAPista = GameManager.Instance.inventoryManager.HasItem(reacao.pistaNecessaria.itemID);
+                    }
+
+                    // Se tem a pista, toca a fala de resolução
+                    if (temAPista && reacao.dialogoComPista != null)
+                    {
+                        dialogoParaTocar = reacao.dialogoComPista;
+                        
+                        // Garante que o jogador não ganhe o Decreto duplicado se conversar de novo
+                        bool jaTemRecompensa = false;
+                        if (reacao.recompensaDoDialogo != null)
+                        {
+                            jaTemRecompensa = GameManager.Instance.inventoryManager.HasItem(reacao.recompensaDoDialogo.itemID);
+                        }
+
+                        if (reacao.recompensaDoDialogo != null && !jaTemRecompensa)
+                        {
+                            recompensaPendente = reacao.recompensaDoDialogo;
+                        }
+                    }
+                    // Se não tem a pista, toca a dica inicial do caso
+                    else if (reacao.dialogoInicialDoCaso != null)
+                    {
+                        dialogoParaTocar = reacao.dialogoInicialDoCaso;
+                    }
+                    
+                    break; // Achou o caso correspondente, não precisa olhar a lista inteira
+                }
+            }
+        }
+
+        // 4. Inicia o Sistema de Diálogos
+        if (dialogoParaTocar != null)
+        {
+            dialogueSystem.dialogueData = dialogoParaTocar;
             dialogueSystem.OnDialogueEnded += HandleDialogueEnded;
-            
             dialogueSystem.Next();
         }
         else
         {
-            Debug.LogWarning("DialogueSystem ou DialogueData não configurados no NPC!");
+            Debug.LogWarning("Nenhum diálogo configurado para este estado do jogo.");
         }
     }
 
     private void HandleDialogueEnded()
     {
-        // Desassina o evento para não ouvir os diálogos de outros NPCs
-        if (dialogueSystem != null)
+        DialogueSystem dialogueSystem = GameManager.Instance.dialogueSystem;
+        if (dialogueSystem != null) dialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
+
+        // Entrega o item silenciosamente e de forma natural
+        if (recompensaPendente != null && GameManager.Instance.inventoryManager != null)
         {
-            dialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
+            Item recompensa = recompensaPendente.Clone();
+            recompensa.itemAmt = 1;
+            GameManager.Instance.inventoryManager.AddItem(recompensa);
+            
+            Debug.Log($"[SISTEMA] O NPC {gameObject.name} te entregou: {recompensa.name}");
+            recompensaPendente = null; 
         }
 
-        // Desativa este NPC para que o jogador não fale com ele de novo (opcional)
-        DisableInteraction();
-
-        // Dispara o evento que vai "acordar" o próximo NPC na fila
+        // Trava o NPC apenas se a opção estiver marcada no Inspector
+        if (disableAfterDialogue) DisableInteraction();
+        
         OnDialogueComplete?.Invoke();
     }
 
-    // --- MÉTODOS DE CONTROLE ---
-
-    public void EnableInteraction()
-    {
-        canInteract = true;
-        UpdateVisualFeedback();
-    }
-
-    public void DisableInteraction()
-    {
-        canInteract = false;
-        UpdateVisualFeedback();
-    }
+    public void EnableInteraction() { canInteract = true; UpdateVisualFeedback(); }
+    public void DisableInteraction() { canInteract = false; UpdateVisualFeedback(); }
 
     private void UpdateVisualFeedback()
     {
-        // Liga ou desliga o contorno/ícone com base na variável canInteract
-        if (visualIndicator != null)
-        {
-            visualIndicator.SetActive(canInteract);
-        }
-    }
-
-    // --- NOVO MÉTODO PARA TROCAR O TEXTO ---
-    public void ChangeDialogue(DialogueData newDialogue)
-    {
-        // Troca o ScriptableObject antigo pelo novo
-        myDialogue = newDialogue;
-        Debug.Log($"{gameObject.name} agora tem um novo texto para falar!");
+        if (visualIndicator != null) visualIndicator.SetActive(canInteract);
     }
 }

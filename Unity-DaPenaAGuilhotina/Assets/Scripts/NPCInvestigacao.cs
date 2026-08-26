@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 public class NPCInvestigacao : MonoBehaviour
 {
@@ -17,4 +17,4 @@ public class NPCInvestigacao : MonoBehaviour
             Debug.Log("O NPC da Fase 2 recebeu o roteiro correto para este caso!");
         }
     }
-}
+}*/

@@ -1,33 +1,37 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DialogueUI : MonoBehaviour {
-
+public class DialogueUI : MonoBehaviour
+{
     [SerializeField] private Image background;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI talkText;
     
     [Header("Sistema de Escolhas")]
-    [SerializeField] private GameObject choiceButtonPrefab; // O prefab do botão
-    [SerializeField] private Transform choicesContainer;    // Onde os botões vão ser instanciados
-
-    private DialogueSystem dialogueSystem;
-
-    public float speed = 10f;
-    bool open = false;
+    [SerializeField] private GameObject choiceButtonPrefab;
+    [SerializeField] private Transform choicesContainer;
     
-    // Lista para guardar os botões gerados e apagá-los depois
+    private DialogueSystem dialogueSystem;
+    public float speed = 10f;
+    private bool open = false;
     private List<GameObject> activeButtons = new List<GameObject>();
 
-    void OnEnable() {
+    void Awake()
+    {
+        // ARQUITETURA BLINDADA: Busca o script irmão no mesmo GameObject.
+        // Isso previne qualquer falha de "Race Condition" com Singletons.
+        dialogueSystem = GetComponent<DialogueSystem>();
+        
         if (dialogueSystem == null)
         {
-            dialogueSystem = FindObjectOfType<DialogueSystem>();
+            Debug.LogError("DialogueSystem não encontrado no mesmo GameObject que o DialogueUI!");
         }
+    }
 
+    void OnEnable() 
+    {
         if (dialogueSystem != null)
         {
             dialogueSystem.OnDialogueStarted += HandleDialogueStarted;
@@ -38,7 +42,8 @@ public class DialogueUI : MonoBehaviour {
         }
     }
 
-    void OnDisable() {
+    void OnDisable() 
+    {
         if (dialogueSystem != null)
         {
             dialogueSystem.OnDialogueStarted -= HandleDialogueStarted;
@@ -49,7 +54,10 @@ public class DialogueUI : MonoBehaviour {
         }
     }
 
-    void Update() {
+    void Update() 
+    {
+        if (background == null) return; // Segurança caso a imagem não esteja no Inspector
+
         if(open) {
             background.fillAmount = Mathf.Lerp(background.fillAmount, 1, speed * Time.deltaTime);
         } else {
@@ -57,28 +65,25 @@ public class DialogueUI : MonoBehaviour {
         }
     }
 
-    private void HandleDialogueStarted() {
-        //gameObject.SetActive(true);
-        Debug.Log("PASSO 3: A Interface Visual ouviu o evento e vai abrir!");
-        Enable();
+    private void HandleDialogueStarted() 
+    { 
+        Enable(); 
     }
-
-    private void HandleDialogueLineStarted(string name, string text) {
-        SetName(name);
+    
+    private void HandleDialogueLineStarted(string name, string text) 
+    { 
+        SetName(name); 
     }
-
-    private void HandleDialogueEnded() {
-        // Garante que o fillAmount zere imediatamente antes de desativar o objeto,
-        // para evitar que o valor permaneça visível quando o GameObject é desativado.
+    
+    private void HandleDialogueEnded() 
+    {
         Disable();
         if (background != null) background.fillAmount = 0f;
-       // gameObject.SetActive(false);
     }
 
     private void HandleChoicesAvailable(List<Choice> choices)
     {
         if (dialogueSystem == null) return;
-
         ClearChoices();
         foreach (Choice choice in choices)
         {
@@ -87,44 +92,34 @@ public class DialogueUI : MonoBehaviour {
         }
     }
 
-    private void HandleChoicesCleared()
+    private void HandleChoicesCleared() { ClearChoices(); }
+    public void SetName(string name) { nameText.text = name; }
+    
+    public void Enable() 
+    { 
+        if(background != null) background.fillAmount = 0; 
+        open = true; 
+    }
+    
+    public void Disable() 
     {
-        ClearChoices();
-    }
-
-    public void SetName(string name) {
-        nameText.text = name;
-    }
-
-    public void Enable() {
-        background.fillAmount = 0;
-        open = true;
-    }
-
-    public void Disable() {
         open = false;
         nameText.text = "";
         talkText.text = "";
         ClearChoices();
     }
 
-    // Cria um botão de escolha na tela
-    public void CreateChoiceButton(string text, UnityEngine.Events.UnityAction onClickAction) {
+    public void CreateChoiceButton(string text, UnityEngine.Events.UnityAction onClickAction) 
+    {
         GameObject newButton = Instantiate(choiceButtonPrefab, choicesContainer);
         activeButtons.Add(newButton);
-
-        // Ajusta o texto do botão (assume que o botão tem um TextMeshProUGUI no filho)
         newButton.GetComponentInChildren<TextMeshProUGUI>().text = text;
-
-        // Adiciona a função de clique
         newButton.GetComponent<Button>().onClick.AddListener(onClickAction);
     }
 
-    // Limpa os botões antigos
-    public void ClearChoices() {
-        foreach (GameObject btn in activeButtons) {
-            Destroy(btn);
-        }
+    public void ClearChoices() 
+    {
+        foreach (GameObject btn in activeButtons) { Destroy(btn); }
         activeButtons.Clear();
     }
 }

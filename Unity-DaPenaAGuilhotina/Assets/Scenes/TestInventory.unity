@@ -2234,6 +2234,56 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+--- !u!1 &560557416
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 560557418}
+  - component: {fileID: 560557417}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &560557417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 560557416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd3b817854e8ab54f976acbf2f004578, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  casoEscolhido: {fileID: 0}
+  capitalAtual: 0
+  opiniaoPublicaAtual: 50
+  opiniaoEstadoAtual: 50
+  inventoryManager: {fileID: 1765245632}
+  dialogueSystem: {fileID: 0}
+--- !u!4 &560557418
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 560557416}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.77792, y: -0.99597, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &682672982
 GameObject:
   m_ObjectHideFlags: 0
@@ -3241,6 +3291,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LootInteractable
   itemToGive: {fileID: 11400000, guid: c5ebb99b971d3df40840b5b826aaec28, type: 2}
   amountToGive: 1
+  casoObrigatorio: {fileID: 0}
   destroyAfterLoot: 0
 --- !u!61 &1035227761
 BoxCollider2D:
@@ -5792,7 +5843,6 @@ MonoBehaviour:
   slotOutput: {fileID: 2069977723}
   recipes:
   - {fileID: 11400000, guid: b304772c93d6e7f4295274adcdb00031, type: 2}
-  inventoryManager: {fileID: 1765245632}
 --- !u!114 &1719265451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7181,3 +7231,4 @@ SceneRoots:
   - {fileID: 426555458}
   - {fileID: 1035227763}
   - {fileID: 14729130}
+  - {fileID: 560557418}

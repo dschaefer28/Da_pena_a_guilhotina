@@ -2,32 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 public class InventoryManager : MonoBehaviour
 {
     public GameObject inventoryGrid;
     public bool messyInventory;
-
     public GameObject inventoryUI;
 
-    private void Awake()
-    {
-        ConfigureInventory();
+    // NOVO: Evento Observer para avisar outras UIs (como a Prensa)
+    public event Action<bool> OnInventoryToggled; 
 
+   private void Awake()
+    {
+        // ARQUITETURA BLINDADA: Injeção de Dependência Reversa
+        // Garante que o GameManager imortal sempre aponte para o inventário vivo da cena atual
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.inventoryManager = this;
+        }
+
+        ConfigureInventory();
         if(inventoryUI != null) inventoryUI.SetActive(false);
     }
 
-
-
-  public void ToggleInventory()
+    public void ToggleInventory()
     {
         if (inventoryUI != null)
         {
-            // Inverte o estado atual
             bool vaiAbrir = !inventoryUI.activeSelf;
             inventoryUI.SetActive(vaiAbrir);
+            
+            // Dispara o evento avisando a Prensa se o inventário abriu(true) ou fechou(false)
+            OnInventoryToggled?.Invoke(vaiAbrir); 
 
-          
             Time.timeScale = vaiAbrir ? 0f : 1f;
         }
     }
@@ -114,5 +122,82 @@ public class InventoryManager : MonoBehaviour
         
         Debug.Log("Inventário cheio! Não foi possível pegar o item.");
         return false; 
+    }
+
+    // NOVO MÉTODO: Retorna verdadeiro se a pista/item já estiver no inventário
+    public bool HasItem(string searchItemID)
+    {
+        for (int i = 0; i < inventoryGrid.transform.childCount; i++)
+        {
+            UISlotHandler slot = inventoryGrid.transform.GetChild(i).GetComponent<UISlotHandler>();
+            if (slot.item != null && slot.item.itemID == searchItemID)
+            {
+                return true; 
+            }
+        }
+        return false; 
+    }
+
+
+   private void Start()
+    {
+        // Limpa qualquer lixo que tenha ficado no Prefab no Unity Editor
+        LimparInventarioVisual();
+        
+        // Em seguida, puxa os itens reais que vieram da cena anterior
+        RestaurarInventario();
+    }
+
+    // ARQUITETURA BLINDADA: Esvazia todos os slots antes de injetar os dados salvos
+    public void LimparInventarioVisual()
+    {
+        if (inventoryGrid == null) return;
+
+        for (int i = 0; i < inventoryGrid.transform.childCount; i++)
+        {
+            UISlotHandler slot = inventoryGrid.transform.GetChild(i).GetComponent<UISlotHandler>();
+            if (slot != null)
+            {
+                ClearItemSlot(slot);
+            }
+        }
+    }
+
+    // ARQUITETURA: Salva o estado físico da UI nos dados imortais do GameManager
+    public void SalvarEstadoAtual()
+    {
+        if (GameManager.Instance == null) return;
+        
+        List<Item> itensParaSalvar = new List<Item>();
+        
+        for (int i = 0; i < inventoryGrid.transform.childCount; i++)
+        {
+            UISlotHandler slot = inventoryGrid.transform.GetChild(i).GetComponent<UISlotHandler>();
+            if (slot.item != null && slot.item.itemAmt > 0)
+            {
+                // Cria um clone limpo para não referenciar um item de uma UI que será destruída
+                Item clone = slot.item.Clone();
+                itensParaSalvar.Add(clone);
+            }
+        }
+        
+        GameManager.Instance.inventarioSalvo = itensParaSalvar;
+        Debug.Log($"[SISTEMA] Inventário Salvo: {itensParaSalvar.Count} itens.");
+    }
+
+    // ARQUITETURA: Restaura os itens salvos nos slots vazios da nova cena
+   public void RestaurarInventario()
+    {
+        if (GameManager.Instance == null || GameManager.Instance.inventarioSalvo == null) return;
+        
+        foreach (Item itemSalvo in GameManager.Instance.inventarioSalvo)
+        {
+            // Proteção contra o NullReferenceException: Ignora itens vazios no cofre
+            if (itemSalvo == null) continue; 
+
+            Item clone = itemSalvo.Clone();
+            AddItem(clone);
+        }
+        Debug.Log("[SISTEMA] Inventário Restaurado com segurança.");
     }
 }

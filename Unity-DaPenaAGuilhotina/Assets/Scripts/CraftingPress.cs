@@ -9,40 +9,50 @@ public class CraftingPress : MonoBehaviour
     public UISlotHandler slotOutput;
 
     [Header("Configurações")]
-    public List<Recipe> recipes;
-    public InventoryManager inventoryManager;
+    public List<Recipe> recipes; 
+    
+    private Dictionary<string, Recipe> recipeDictionary;
 
+    private void Start()
+    {
+        recipeDictionary = new Dictionary<string, Recipe>();
+        
+        foreach (var recipe in recipes)
+        {
+            if (recipe == null) continue;
+            
+            string key1 = $"{recipe.itemID1}_{recipe.itemID2}";
+            string key2 = $"{recipe.itemID2}_{recipe.itemID1}";
+
+            recipeDictionary.TryAdd(key1, recipe);
+            recipeDictionary.TryAdd(key2, recipe);
+        }
+    }
 
     public void CombineItems() 
     {
-     
-        if (slotInput1.item == null || slotInput2.item == null) return;
-
-        Recipe validRecipe = null;
-
-
-        foreach (var recipe in recipes)
+        if (slotInput1.item == null || slotInput2.item == null) 
         {
-            bool matchDirect = slotInput1.item.itemID == recipe.itemID1 && slotInput2.item.itemID == recipe.itemID2;
-
-            bool matchReverse = slotInput1.item.itemID == recipe.itemID2 && slotInput2.item.itemID == recipe.itemID1;
-
-            if (matchDirect || matchReverse)
-            {
-                validRecipe = recipe;
-                break;
-            }
+            Debug.Log("Faltam ingredientes nos slots!");
+            return;
         }
 
-       
-        if (validRecipe != null)
+        string attemptKey = $"{slotInput1.item.itemID}_{slotInput2.item.itemID}";
+
+        if (recipeDictionary.TryGetValue(attemptKey, out Recipe validRecipe))
         {
-            
             if (slotOutput.item == null || slotOutput.item.itemID == validRecipe.resultItem.itemID)
             {
                 ConsumeItem(slotInput1);
                 ConsumeItem(slotInput2);
                 ProduceItem(validRecipe.resultItem);
+                
+                // Dispara a consequência matemática da receita (GDD)
+                GameManager.Instance.AplicarImpactoPanfleto(
+                    validRecipe.publicOpinionImpact, 
+                    validRecipe.stateOpinionImpact, 
+                    validRecipe.moneyReward
+                );
             }
             else
             {
@@ -51,7 +61,7 @@ public class CraftingPress : MonoBehaviour
         }
         else
         {
-            Debug.Log("Combinação inválida!");
+            Debug.Log("Combinação inválida! Esta mistura não gera um panfleto reconhecido.");
         }
     }
 
@@ -60,7 +70,7 @@ public class CraftingPress : MonoBehaviour
         slot.item.itemAmt--;
         if (slot.item.itemAmt <= 0)
         {
-            inventoryManager.ClearItemSlot(slot);
+            GameManager.Instance.inventoryManager.ClearItemSlot(slot);
         }
         else
         {
@@ -72,16 +82,14 @@ public class CraftingPress : MonoBehaviour
     {
         if (slotOutput.item == null)
         {
-            
             Item newItem = resultPrefab.Clone();
             newItem.itemAmt = 1;
-            inventoryManager.PlaceInInventory(slotOutput, newItem);
+            GameManager.Instance.inventoryManager.PlaceInInventory(slotOutput, newItem);
         }
         else
         {
-            Item stackItem = resultPrefab.Clone();
-            stackItem.itemAmt = 1;
-            inventoryManager.StackInInventory(slotOutput, stackItem);
+            slotOutput.item.itemAmt++;
+            slotOutput.itemCount.text = slotOutput.item.itemAmt.ToString();
         }
     }
 }

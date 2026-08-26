@@ -14,4 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   itemID1: Helmet
   itemID2: Shield
-  resultItem: {fileID: 11400000, guid: 6fcdf7f3346af604894e3c8d7e8e9992, type: 2}
+  resultItem: {fileID: 11400000, guid: d04d15091bf2cef4592686f23f1968f5, type: 2}
+  publicOpinionImpact: 20
+  stateOpinionImpact: -10
+  moneyReward: 10
