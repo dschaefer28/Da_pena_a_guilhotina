@@ -10,47 +10,40 @@ public class PlayerInteraction : MonoBehaviour
 
     private List<GameObject> interactablesInRange = new List<GameObject>();
 
-    // ARQUITETURA BLINDADA: Fazemos a assinatura segura dos inputs no OnEnable
     private void OnEnable()
+{
+    if (interactAction != null)
     {
-        if (interactAction != null) 
-        {
-            interactAction.action.Enable();
-            // Vincula o teclado à função real (sem usar '=>')
-            interactAction.action.performed += OnInteractPerformed;
-        }
-
-        if (toggleInventoryAction != null) 
-        {
-            toggleInventoryAction.action.Enable();
-            toggleInventoryAction.action.performed += OnToggleInventoryPerformed;
-        }
+        interactAction.action.Enable();
+        interactAction.action.performed += OnInteractPerformed;
     }
-
-    // ARQUITETURA BLINDADA: Cancelamos a assinatura no OnDisable para evitar "Delegate Leaks"
-    private void OnDisable()
+    if (toggleInventoryAction != null)
     {
-        if (interactAction != null) 
-        {
-            interactAction.action.performed -= OnInteractPerformed;
-            interactAction.action.Disable();
-        }
-
-        if (toggleInventoryAction != null) 
-        {
-            toggleInventoryAction.action.performed -= OnToggleInventoryPerformed;
-            toggleInventoryAction.action.Disable();
-        }
+        toggleInventoryAction.action.Enable();
+        toggleInventoryAction.action.performed += OnToggleInventoryPerformed;
     }
+}
 
-    // O Start agora fica limpo, pois os Inputs são gerenciados pelo ciclo de vida do objeto
-    private void Start()
+private void OnDisable()
+{
+    if (interactAction != null)
     {
-        // Mantido limpo intencionalmente
+        interactAction.action.performed -= OnInteractPerformed;
+        interactAction.action.Disable();
     }
+    if (toggleInventoryAction != null)
+    {
+        toggleInventoryAction.action.performed -= OnToggleInventoryPerformed;
+        toggleInventoryAction.action.Disable();
+    }
+}
 
-    // Método exigido pela arquitetura do Novo Input System (recebe o contexto da tecla)
-    private void OnToggleInventoryPerformed(InputAction.CallbackContext context)
+private void OnInteractPerformed(InputAction.CallbackContext ctx) => InteractMobile();
+private void OnToggleInventoryPerformed(InputAction.CallbackContext ctx) => ToggleInventoryMobile();
+
+    // === MÉTODOS PÚBLICOS (Chamados pelos Botões do Canvas no Android) ===
+    
+    public void ToggleInventoryMobile()
     {
         if (GameManager.Instance != null && GameManager.Instance.inventoryManager != null)
         {
@@ -58,12 +51,11 @@ public class PlayerInteraction : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("O Player tentou abrir o inventário, mas o GameManager não encontrou a UI nesta cena!");
+            Debug.LogWarning("O Player tentou abrir o inventário, mas a UI não foi encontrada!");
         }
     }
 
-    // Método exigido pela arquitetura do Novo Input System
-    private void OnInteractPerformed(InputAction.CallbackContext context)
+    public void InteractMobile()
     {
         if (GameManager.Instance != null && GameManager.Instance.dialogueSystem != null)
         {
@@ -75,25 +67,20 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         GameObject closestInteractable = GetClosestInteractable();
-
         if (closestInteractable != null)
         {
             IInteractable interactable = closestInteractable.GetComponent<IInteractable>();
             if (interactable != null) interactable.Interact();
         }
-        else
-        {
-            Debug.Log("Não há nada próximo para interagir.");
-        }
     }
 
+    // === LÓGICA DE FÍSICA ===
     private GameObject GetClosestInteractable()
     {
         GameObject closest = null;
         float minDistance = float.MaxValue;
         
         interactablesInRange.RemoveAll(item => item == null);
-
         foreach (var obj in interactablesInRange)
         {
             float dist = Vector2.Distance(transform.position, obj.transform.position);
@@ -111,17 +98,13 @@ public class PlayerInteraction : MonoBehaviour
         if (other.TryGetComponent<IInteractable>(out var interactable))
         {
             if (!interactablesInRange.Contains(other.gameObject))
-            {
                 interactablesInRange.Add(other.gameObject);
-            }
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         if (interactablesInRange.Contains(other.gameObject))
-        {
             interactablesInRange.Remove(other.gameObject);
-        }
     }
 }

@@ -44,9 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd3b817854e8ab54f976acbf2f004578, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  casoEscolhido: {fileID: 0}
+  casoEscolhido: {fileID: 11400000, guid: d0bd65d553c918045aaf794e01462c68, type: 2}
   capitalAtual: 0
   opiniaoPublicaAtual: 50
   opiniaoEstadoAtual: 50
+  inventarioSalvo: []
   inventoryManager: {fileID: 0}
   dialogueSystem: {fileID: 0}

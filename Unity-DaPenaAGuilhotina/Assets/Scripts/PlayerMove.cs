@@ -3,62 +3,63 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
+    [Header("Movimento")]
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private InputActionReference moveAction; // arraste a action "Move" aqui
+
     private Rigidbody2D rb;
-    private Vector2 move;
-    
     private Animator anim;
-    
-    // 1. Criamos a variável para guardar o SpriteRenderer
     private SpriteRenderer spriteRenderer;
+    private Vector2 move;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        
-        // 2. Pegamos o componente automaticamente no início do jogo
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    void Update()
+    void OnEnable()
     {
-        
-        if (spriteRenderer != null)
+        if (moveAction != null)
         {
-            if (move.x > 0)
-            {
-                // Se está indo para a direita, desativa o espelhamento (imagem original)
-                spriteRenderer.flipX = false;
-            }
-            else if (move.x < 0)
-            {
-                // Se está indo para a esquerda, ativa o espelhamento
-                spriteRenderer.flipX = true;
-            }
-        }
-
-        // --- Lógica de Animação ---
-        if (anim != null) 
-        {
-            if (move != Vector2.zero) 
-            {
-                anim.SetBool("isWalking", true);
-            } 
-            else 
-            {
-                anim.SetBool("isWalking", false);
-            }
+            moveAction.action.Enable();
+            moveAction.action.performed += OnMovePerformed;
+            moveAction.action.canceled += OnMovePerformed;
         }
     }
 
-    public void OnMove(InputAction.CallbackContext context)
+    void OnDisable()
+    {
+        if (moveAction != null)
+        {
+            moveAction.action.performed -= OnMovePerformed;
+            moveAction.action.canceled -= OnMovePerformed;
+            moveAction.action.Disable();
+        }
+    }
+
+    private void OnMovePerformed(InputAction.CallbackContext context)
     {
         move = context.ReadValue<Vector2>();
     }
 
+    void Update()
+    {
+        if (spriteRenderer != null)
+        {
+            if (move.x > 0) spriteRenderer.flipX = false;
+            else if (move.x < 0) spriteRenderer.flipX = true;
+        }
+
+        if (anim != null)
+        {
+            anim.SetBool("isWalking", move != Vector2.zero);
+        }
+    }
+
     void FixedUpdate()
     {
-       rb.linearVelocity = new Vector2(move.x * moveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(move.x * moveSpeed, rb.linearVelocity.y);
     }
 }
