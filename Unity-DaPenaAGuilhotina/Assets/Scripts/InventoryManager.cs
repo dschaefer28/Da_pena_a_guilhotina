@@ -11,7 +11,7 @@ public class InventoryManager : MonoBehaviour
     public GameObject inventoryUI;
 
     // NOVO: Evento Observer para avisar outras UIs (como a Prensa)
-    public event Action<bool> OnInventoryToggled; 
+    public event Action<bool> OnInventoryToggled;
 
    private void Awake()
     {
@@ -32,11 +32,18 @@ public class InventoryManager : MonoBehaviour
         {
             bool vaiAbrir = !inventoryUI.activeSelf;
             inventoryUI.SetActive(vaiAbrir);
-            
+
             // Dispara o evento avisando a Prensa se o inventário abriu(true) ou fechou(false)
-            OnInventoryToggled?.Invoke(vaiAbrir); 
+            OnInventoryToggled?.Invoke(vaiAbrir);
 
             Time.timeScale = vaiAbrir ? 0f : 1f;
+
+            // Mesma lógica já usada no diálogo e no menu de pause: desliga o raycast
+            // dos controles mobile enquanto o inventário/prensa está aberto, para que
+            // os slots e o botão de combinar recebam o toque em vez de serem
+            // interceptados pelo joystick/botões de fundo.
+            if (MobileControlsManager.Instance != null)
+                MobileControlsManager.Instance.SetControlsInteractable(!vaiAbrir);
         }
     }
     public void PlaceInInventory(UISlotHandler activeSlot, Item item)
@@ -97,14 +104,14 @@ public class InventoryManager : MonoBehaviour
 
     public bool AddItem(Item itemToAdd)
     {
-       
+
         for (int i = 0; i < inventoryGrid.transform.childCount; i++)
         {
             UISlotHandler slot = inventoryGrid.transform.GetChild(i).GetComponent<UISlotHandler>();
             if (slot.item != null && slot.item.itemID == itemToAdd.itemID)
             {
                 StackInInventory(slot, itemToAdd);
-                return true; 
+                return true;
             }
         }
 
@@ -113,15 +120,15 @@ public class InventoryManager : MonoBehaviour
             UISlotHandler slot = inventoryGrid.transform.GetChild(i).GetComponent<UISlotHandler>();
             if (slot.item == null)
             {
-                Item newItem = itemToAdd.Clone(); 
+                Item newItem = itemToAdd.Clone();
                 PlaceInInventory(slot, newItem);
-                return true; 
+                return true;
             }
         }
 
-        
+
         Debug.Log("Inventário cheio! Não foi possível pegar o item.");
-        return false; 
+        return false;
     }
 
     // NOVO MÉTODO: Retorna verdadeiro se a pista/item já estiver no inventário
@@ -132,10 +139,10 @@ public class InventoryManager : MonoBehaviour
             UISlotHandler slot = inventoryGrid.transform.GetChild(i).GetComponent<UISlotHandler>();
             if (slot.item != null && slot.item.itemID == searchItemID)
             {
-                return true; 
+                return true;
             }
         }
-        return false; 
+        return false;
     }
 
 
@@ -143,7 +150,7 @@ public class InventoryManager : MonoBehaviour
     {
         // Limpa qualquer lixo que tenha ficado no Prefab no Unity Editor
         LimparInventarioVisual();
-        
+
         // Em seguida, puxa os itens reais que vieram da cena anterior
         RestaurarInventario();
     }
@@ -167,9 +174,9 @@ public class InventoryManager : MonoBehaviour
     public void SalvarEstadoAtual()
     {
         if (GameManager.Instance == null) return;
-        
+
         List<Item> itensParaSalvar = new List<Item>();
-        
+
         for (int i = 0; i < inventoryGrid.transform.childCount; i++)
         {
             UISlotHandler slot = inventoryGrid.transform.GetChild(i).GetComponent<UISlotHandler>();
@@ -180,7 +187,7 @@ public class InventoryManager : MonoBehaviour
                 itensParaSalvar.Add(clone);
             }
         }
-        
+
         GameManager.Instance.inventarioSalvo = itensParaSalvar;
         Debug.Log($"[SISTEMA] Inventário Salvo: {itensParaSalvar.Count} itens.");
     }
@@ -189,11 +196,11 @@ public class InventoryManager : MonoBehaviour
    public void RestaurarInventario()
     {
         if (GameManager.Instance == null || GameManager.Instance.inventarioSalvo == null) return;
-        
+
         foreach (Item itemSalvo in GameManager.Instance.inventarioSalvo)
         {
             // Proteção contra o NullReferenceException: Ignora itens vazios no cofre
-            if (itemSalvo == null) continue; 
+            if (itemSalvo == null) continue;
 
             Item clone = itemSalvo.Clone();
             AddItem(clone);

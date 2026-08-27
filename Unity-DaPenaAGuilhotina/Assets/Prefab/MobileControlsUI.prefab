@@ -689,6 +689,7 @@ GameObject:
   - component: {fileID: 933000976915073215}
   - component: {fileID: 6019735914969798236}
   - component: {fileID: 3242361554690577399}
+  - component: {fileID: 4147601896859310448}
   m_Layer: 5
   m_Name: InventoryButton
   m_TagString: Untagged
@@ -810,6 +811,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!225 &4147601896859310448
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6076994130784838137}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &7283027036231297884
 GameObject:
   m_ObjectHideFlags: 0

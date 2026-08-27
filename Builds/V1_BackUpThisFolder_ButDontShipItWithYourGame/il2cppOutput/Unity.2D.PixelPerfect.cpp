@@ -469,7 +469,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void Color__ctor_m3786F0D6E510D9C
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 64617
+// Method Definition Index: 64619
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR MonoScriptData_t799301C41365248339AE73896ADB30CC7571E0AD UnitySourceGeneratedAssemblyMonoScriptTypes_v1_Get_mAEF193637B3F0160FF34428A5856672E722ADFB4 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -503,7 +503,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR MonoScriptData_t799301C41365248339AE73896ADB3
 		return L_6;
 	}
 }
-// Method Definition Index: 64618
+// Method Definition Index: 64620
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void UnitySourceGeneratedAssemblyMonoScriptTypes_v1__ctor_mA1CE7C388B9E7621276704218BEB499CC1FB55CE (UnitySourceGeneratedAssemblyMonoScriptTypes_v1_t0C275585D2E63B9638E5C799091C73FF74B30CD5* __this, const RuntimeMethod* method) 
 {
 	{
@@ -589,7 +589,7 @@ IL2CPP_EXTERN_C void MonoScriptData_t799301C41365248339AE73896ADB30CC7571E0AD_ma
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 64619
+// Method Definition Index: 64621
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void CinemachinePixelPerfect_OnEnable_m8F61B251CA3256600FAA6C2AC09CE2F38906122A (CinemachinePixelPerfect_tE6CCF3C73CBDD7F9723CCC8A7D72FAB5AD7657D7* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -607,7 +607,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void CinemachinePixelPerfect_OnEnable_m8F61B2
 		return;
 	}
 }
-// Method Definition Index: 64620
+// Method Definition Index: 64622
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void CinemachinePixelPerfect__ctor_m62B0EA6CEF2A6B8F810E3202E5EFA351ADDD486A (CinemachinePixelPerfect_tE6CCF3C73CBDD7F9723CCC8A7D72FAB5AD7657D7* __this, const RuntimeMethod* method) 
 {
 	{
@@ -623,7 +623,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void CinemachinePixelPerfect__ctor_m62B0EA6CE
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 64621
+// Method Definition Index: 64623
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t PixelPerfectCamera_get_assetsPPU_m7236DCB6650FD2F31B83FBE71FAA1C57F8E5CD82 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -632,7 +632,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t PixelPerfectCamera_get_assetsPPU_m723
 		return L_0;
 	}
 }
-// Method Definition Index: 64622
+// Method Definition Index: 64624
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_assetsPPU_mB5C7A2D57479E53699EA35659B246E9A8FFC5B73 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, int32_t ___0_value, const RuntimeMethod* method) 
 {
 	PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* G_B2_0 = NULL;
@@ -670,7 +670,7 @@ IL_0009:
 		return;
 	}
 }
-// Method Definition Index: 64623
+// Method Definition Index: 64625
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t PixelPerfectCamera_get_refResolutionX_mF0A85ACEC0E811C9796D12A8E53FF961C1C89CFB (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -679,7 +679,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t PixelPerfectCamera_get_refResolutionX
 		return L_0;
 	}
 }
-// Method Definition Index: 64624
+// Method Definition Index: 64626
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_refResolutionX_m8A75C95405A5B5A1DF30C8F7540E87FE19DFEEBF (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, int32_t ___0_value, const RuntimeMethod* method) 
 {
 	PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* G_B2_0 = NULL;
@@ -717,7 +717,7 @@ IL_0009:
 		return;
 	}
 }
-// Method Definition Index: 64625
+// Method Definition Index: 64627
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t PixelPerfectCamera_get_refResolutionY_mA553B21D4E35F139ADE5AA82D1A911ECABE758BA (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -726,7 +726,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t PixelPerfectCamera_get_refResolutionY
 		return L_0;
 	}
 }
-// Method Definition Index: 64626
+// Method Definition Index: 64628
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_refResolutionY_m7D3B3F7E3B363217236210D850F04F5E25DD053A (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, int32_t ___0_value, const RuntimeMethod* method) 
 {
 	PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* G_B2_0 = NULL;
@@ -764,7 +764,7 @@ IL_0009:
 		return;
 	}
 }
-// Method Definition Index: 64627
+// Method Definition Index: 64629
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool PixelPerfectCamera_get_upscaleRT_m7BB069D54061F262D7A5C4720B28C90657600023 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -773,7 +773,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool PixelPerfectCamera_get_upscaleRT_m7BB069
 		return L_0;
 	}
 }
-// Method Definition Index: 64628
+// Method Definition Index: 64630
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_upscaleRT_mC285595CF8F32752BE35E7251E31546E7C06278E (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, bool ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -784,7 +784,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_upscaleRT_mC28559
 		return;
 	}
 }
-// Method Definition Index: 64629
+// Method Definition Index: 64631
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool PixelPerfectCamera_get_pixelSnapping_mE1669328218DFA6F55A7E94BB39C77EBDC8A7D10 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -793,7 +793,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool PixelPerfectCamera_get_pixelSnapping_mE1
 		return L_0;
 	}
 }
-// Method Definition Index: 64630
+// Method Definition Index: 64632
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_pixelSnapping_m64D63AC75BD127218EAB920645AF051A3451AB05 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, bool ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -804,7 +804,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_pixelSnapping_m64
 		return;
 	}
 }
-// Method Definition Index: 64631
+// Method Definition Index: 64633
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool PixelPerfectCamera_get_cropFrameX_m445326A62051D6C2C290F38DC3C4E2E97043023B (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -813,7 +813,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool PixelPerfectCamera_get_cropFrameX_m44532
 		return L_0;
 	}
 }
-// Method Definition Index: 64632
+// Method Definition Index: 64634
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_cropFrameX_m7F2003D17778A1039DBDDEEB5902CF81E6C1700E (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, bool ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -824,7 +824,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_cropFrameX_m7F200
 		return;
 	}
 }
-// Method Definition Index: 64633
+// Method Definition Index: 64635
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool PixelPerfectCamera_get_cropFrameY_m2C0CCE1A3BA3186C72DC06BD7B7741B2C1D98D90 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -833,7 +833,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool PixelPerfectCamera_get_cropFrameY_m2C0CC
 		return L_0;
 	}
 }
-// Method Definition Index: 64634
+// Method Definition Index: 64636
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_cropFrameY_m469D01AF3E433907A1C672283E4860F83757C892 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, bool ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -844,7 +844,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_cropFrameY_m469D0
 		return;
 	}
 }
-// Method Definition Index: 64635
+// Method Definition Index: 64637
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool PixelPerfectCamera_get_stretchFill_m0880634A47975D84D0F266321D6C1BE01BF6CDE8 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -853,7 +853,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool PixelPerfectCamera_get_stretchFill_m0880
 		return L_0;
 	}
 }
-// Method Definition Index: 64636
+// Method Definition Index: 64638
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_stretchFill_m834E542EE52D7AB56F5E1577A48615BD4D7C7AEA (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, bool ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -864,7 +864,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_set_stretchFill_m834E
 		return;
 	}
 }
-// Method Definition Index: 64637
+// Method Definition Index: 64639
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t PixelPerfectCamera_get_pixelRatio_mD04D1FBE58D9266C9CB354DDC8911CDD69C2263F (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -912,7 +912,7 @@ IL_0034:
 		return L_9;
 	}
 }
-// Method Definition Index: 64638
+// Method Definition Index: 64640
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 PixelPerfectCamera_RoundToPixel_mF2C9FEBE8BEAEBF8A347E1B2747C9BFDD2778592 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_position, const RuntimeMethod* method) 
 {
 	float V_0 = 0.0f;
@@ -968,7 +968,7 @@ IL_0016:
 		return L_19;
 	}
 }
-// Method Definition Index: 64639
+// Method Definition Index: 64641
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float PixelPerfectCamera_CorrectCinemachineOrthoSize_m954071ACDDE4E77D706BE79EB8C2562BE55CADCD (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, float ___0_targetOrthoSize, const RuntimeMethod* method) 
 {
 	{
@@ -998,7 +998,7 @@ IL_0011:
 		return L_4;
 	}
 }
-// Method Definition Index: 64640
+// Method Definition Index: 64642
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_PixelSnap_m260BC623D3DB1F4687F20AC085C68B4D930ABB21 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_0;
@@ -1060,7 +1060,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_PixelSnap_m260BC623D3
 		return;
 	}
 }
-// Method Definition Index: 64641
+// Method Definition Index: 64643
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_Awake_m1361D5EF172AC03007B5846A243A1BE11521A06F (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -1127,7 +1127,7 @@ IL_006d:
 		return;
 	}
 }
-// Method Definition Index: 64642
+// Method Definition Index: 64644
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_LateUpdate_m1D2BF8FDBE43306DED2AFE6F66CEE593958A8548 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	Camera_tA92CC927D7439999BC82DBEDC0AA45B470F9E184* G_B2_0 = NULL;
@@ -1178,7 +1178,7 @@ IL_0036:
 		return;
 	}
 }
-// Method Definition Index: 64643
+// Method Definition Index: 64645
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_OnPreCull_mA9E75392FDDD3D52271F8C75F7A50278E85B4037 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -1251,7 +1251,7 @@ IL_0077:
 		return;
 	}
 }
-// Method Definition Index: 64644
+// Method Definition Index: 64646
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_OnPreRender_m0DF9E768A68EEF80ABB6951FD1E0AFF893916FBA (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1282,7 +1282,7 @@ IL_0019:
 		return;
 	}
 }
-// Method Definition Index: 64645
+// Method Definition Index: 64647
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_OnPostRender_m9BC0CE38B0F281C31DADDB7097ECC1E95D83CC25 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -1384,7 +1384,7 @@ IL_0044:
 		return;
 	}
 }
-// Method Definition Index: 64646
+// Method Definition Index: 64648
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_OnEnable_m38F3E385ECADF00606C9E3C602188C93E6A17EB2 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1394,7 +1394,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_OnEnable_m38F3E385ECA
 		return;
 	}
 }
-// Method Definition Index: 64647
+// Method Definition Index: 64649
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_OnDisable_m7338FD1B80302BBE823F88744B11F8B0169857A6 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1431,7 +1431,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera_OnDisable_m7338FD1B80
 		return;
 	}
 }
-// Method Definition Index: 64648
+// Method Definition Index: 64650
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera__ctor_mD0A0A89A62DDE239CD452527B084826C38349C65 (PixelPerfectCamera_t7B0849F4AB5E6399719BE7C3B330BCBBA3AAF7A9* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1453,7 +1453,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCamera__ctor_mD0A0A89A62DDE2
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 64665
+// Method Definition Index: 64667
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCameraInternal__ctor_m9BA2244B557EA69E48A85D9C66B7C99C45A4C0F5 (PixelPerfectCameraInternal_t3A785975106C548143FC2C057233A72DC250FEFE* __this, RuntimeObject* ___0_component, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -1484,7 +1484,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCameraInternal__ctor_m9BA224
 		return;
 	}
 }
-// Method Definition Index: 64666
+// Method Definition Index: 64668
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCameraInternal_OnBeforeSerialize_m619B674B64C11A49C5CFC75F7E1CE5C4E2E7F89F (PixelPerfectCameraInternal_t3A785975106C548143FC2C057233A72DC250FEFE* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -1502,7 +1502,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCameraInternal_OnBeforeSeria
 		return;
 	}
 }
-// Method Definition Index: 64667
+// Method Definition Index: 64669
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCameraInternal_OnAfterDeserialize_mDACB77CE1C48E71D52E67812D687FAC6D900C259 (PixelPerfectCameraInternal_t3A785975106C548143FC2C057233A72DC250FEFE* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -1535,7 +1535,7 @@ IL_001a:
 		return;
 	}
 }
-// Method Definition Index: 64668
+// Method Definition Index: 64670
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PixelPerfectCameraInternal_CalculateCameraProperties_m0C1A9F48317FBD0710DCEF29FB7D4B7ECEADE4F7 (PixelPerfectCameraInternal_t3A785975106C548143FC2C057233A72DC250FEFE* __this, int32_t ___0_screenWidth, int32_t ___1_screenHeight, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2058,7 +2058,7 @@ IL_0374:
 		return;
 	}
 }
-// Method Definition Index: 64669
+// Method Definition Index: 64671
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Rect_tA04E0F8A1830E767F40FB27ECD8D309303571F0D PixelPerfectCameraInternal_CalculatePostRenderPixelRect_mC41F2F6B554C0E28AB9344868E3B887118221B39 (PixelPerfectCameraInternal_t3A785975106C548143FC2C057233A72DC250FEFE* __this, float ___0_cameraAspect, int32_t ___1_screenWidth, int32_t ___2_screenHeight, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2159,7 +2159,7 @@ IL_00d9:
 		return L_22;
 	}
 }
-// Method Definition Index: 64670
+// Method Definition Index: 64672
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float PixelPerfectCameraInternal_CorrectCinemachineOrthoSize_mCD4C1B0EBDC7FBDE0A17AA8BE4F5EC1ABD574CED (PixelPerfectCameraInternal_t3A785975106C548143FC2C057233A72DC250FEFE* __this, float ___0_targetOrthoSize, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;

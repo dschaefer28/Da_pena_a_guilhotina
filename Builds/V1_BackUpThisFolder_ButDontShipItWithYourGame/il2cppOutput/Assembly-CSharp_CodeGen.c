@@ -198,11 +198,13 @@ extern void U3CTypeTextU3Ed__11_System_Collections_Generic_IEnumeratorU3CSystem_
 extern void U3CTypeTextU3Ed__11_System_Collections_IEnumerator_Reset_m28E39BB0136C6B79469CE53583E3EAB9347421D8 (void);
 extern void U3CTypeTextU3Ed__11_System_Collections_IEnumerator_get_Current_m497F55CCC04D77E29FC6C369E0B19453B44C0EFD (void);
 extern void UISlotHandler_Awake_m1561E32DC2812D0EBE57B37E0D8F0C8B3B76A3B4 (void);
+extern void UISlotHandler_OnPointerDown_m02AAD344B1FB152331B4902B2FF0C18C2FB47F57 (void);
+extern void UISlotHandler_OnPointerUp_m5C1F472BE46209278B35B81BE971493B99823603 (void);
 extern void UISlotHandler_OnPointerClick_mFBD7B8BAF093FEA06E7DE06B4A9998BCD672E49B (void);
 extern void UISlotHandler__ctor_m003E8F3467C89E9CB61085B27CBF2F021F0DBDBC (void);
 extern void UnitySourceGeneratedAssemblyMonoScriptTypes_v1_Get_mBEB95BEB954BB63E9710BBC7AD5E78C4CB0A0033 (void);
 extern void UnitySourceGeneratedAssemblyMonoScriptTypes_v1__ctor_mE70FB23ACC1EA12ABC948AA22C2E78B2D0AA39B1 (void);
-static Il2CppMethodPointer s_methodPointers[197] = 
+static Il2CppMethodPointer s_methodPointers[199] = 
 {
 	CaseData__ctor_mE67E4654A2B623512782EF047D6E54B90669A4E4,
 	CameraFollow_LateUpdate_m9C559F2A33098CED5CB8BD82CCD6FC98AB521D61,
@@ -397,12 +399,14 @@ static Il2CppMethodPointer s_methodPointers[197] =
 	U3CTypeTextU3Ed__11_System_Collections_IEnumerator_Reset_m28E39BB0136C6B79469CE53583E3EAB9347421D8,
 	U3CTypeTextU3Ed__11_System_Collections_IEnumerator_get_Current_m497F55CCC04D77E29FC6C369E0B19453B44C0EFD,
 	UISlotHandler_Awake_m1561E32DC2812D0EBE57B37E0D8F0C8B3B76A3B4,
+	UISlotHandler_OnPointerDown_m02AAD344B1FB152331B4902B2FF0C18C2FB47F57,
+	UISlotHandler_OnPointerUp_m5C1F472BE46209278B35B81BE971493B99823603,
 	UISlotHandler_OnPointerClick_mFBD7B8BAF093FEA06E7DE06B4A9998BCD672E49B,
 	UISlotHandler__ctor_m003E8F3467C89E9CB61085B27CBF2F021F0DBDBC,
 	UnitySourceGeneratedAssemblyMonoScriptTypes_v1_Get_mBEB95BEB954BB63E9710BBC7AD5E78C4CB0A0033,
 	UnitySourceGeneratedAssemblyMonoScriptTypes_v1__ctor_mE70FB23ACC1EA12ABC948AA22C2E78B2D0AA39B1,
 };
-static const int32_t s_InvokerIndices[197] = 
+static const int32_t s_InvokerIndices[199] = 
 {
 	10972,
 	10972,
@@ -598,6 +602,8 @@ static const int32_t s_InvokerIndices[197] =
 	10797,
 	10972,
 	8604,
+	8604,
+	8604,
 	10972,
 	19052,
 	10972,
@@ -619,7 +625,7 @@ IL2CPP_EXTERN_C const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule;
 const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule = 
 {
 	"Assembly-CSharp.dll",
-	197,
+	199,
 	s_methodPointers,
 	0,
 	NULL,

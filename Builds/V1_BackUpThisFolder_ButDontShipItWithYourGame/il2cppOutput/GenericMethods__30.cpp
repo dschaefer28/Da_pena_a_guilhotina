@@ -9807,7 +9807,7 @@ IL_0018:
 		return L_3;
 	}
 }
-// Method Definition Index: 62581
+// Method Definition Index: 62361
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* ScriptableObjectExtension_Clone_TisRuntimeObject_m8BA83BA5688EFFD54EDC8DC4DC5C18F0809C8303_gshared (RuntimeObject* ___0_scriptableObject, const RuntimeMethod* method) 
 {
 	if (!il2cpp_rgctx_is_initialized(method))
