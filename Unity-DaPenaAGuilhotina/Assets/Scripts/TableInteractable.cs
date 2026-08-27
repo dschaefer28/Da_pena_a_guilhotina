@@ -6,17 +6,30 @@ public class TableInteractable : MonoBehaviour, IInteractable
     [Tooltip("Arraste o GameObject do painel de Casos (UI) aqui")]
     public GameObject caseSelectionUI;
 
+    [Header("Trava de Progressão (Opcional)")]
+    [Tooltip("Arraste o ScriptableObject do item necessário para liberar a mesa.")]
+    public Item itemObrigatorio;
+    
+    [Tooltip("O que ele pensa se tentar mexer na mesa antes da hora?")]
+    public DialogueData pensamentoBloqueado;
+
     public void Interact()
     {
-        // Se o painel já estiver aberto, não faz nada
-        if (caseSelectionUI.activeSelf) return;
+        if (itemObrigatorio != null && GameManager.Instance != null && GameManager.Instance.inventoryManager != null)
+        {
+            if (!GameManager.Instance.inventoryManager.HasItem(itemObrigatorio.itemID))
+            {
+                if (pensamentoBloqueado != null && GameManager.Instance.dialogueSystem != null)
+                {
+                    GameManager.Instance.dialogueSystem.dialogueData = pensamentoBloqueado;
+                    GameManager.Instance.dialogueSystem.Next();
+                }
+                return; // Impede que o painel abra
+            }
+        }
 
-        // Ativa o painel de UI na tela
+        if (caseSelectionUI.activeSelf) return;
         caseSelectionUI.SetActive(true);
-        
         Debug.Log("O jogador abriu as cartas sobre a mesa.");
-        
-        // Dica: Aqui você também pode chamar um evento para pausar o movimento do player,
-        // igual fizemos no diálogo, para ele não sair andando com a tela aberta.
     }
 }

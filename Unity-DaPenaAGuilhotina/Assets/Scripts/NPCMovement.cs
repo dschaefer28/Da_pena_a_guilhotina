@@ -38,6 +38,8 @@ public class NPCMovement : MonoBehaviour, IInteractable
     [Tooltip("Preencha APENAS se este NPC for figurante exclusivo de um caso (Ex: Marie). Deixe VAZIO para o Dupaty.")]
     public CaseData casoObrigatorio;
 
+// Trava interna para impedir que eventos se repitam infinitamente
+    private bool blockEvents = false;
     [Header("Reações por Caso (GDD)")]
     [Tooltip("Configure aqui como o NPC reage a cada caso diferente.")]
     public List<CasoReacao> reacoesDeCaso;
@@ -102,10 +104,22 @@ public class NPCMovement : MonoBehaviour, IInteractable
                             recompensaPendente = reacao.recompensaDoDialogo;
                         }
                     }
-                    // Se não tem a pista, toca a dica inicial do caso
+                    // Se não tem a pista (ou não exige pista), toca o diálogo inicial
                     else if (reacao.dialogoInicialDoCaso != null)
                     {
                         dialogoParaTocar = reacao.dialogoInicialDoCaso;
+                        
+                        // NOVO: Permite que o NPC entregue o item logo na primeira conversa
+                        bool jaTemRecompensa = false;
+                        if (reacao.recompensaDoDialogo != null && GameManager.Instance.inventoryManager != null)
+                        {
+                            jaTemRecompensa = GameManager.Instance.inventoryManager.HasItem(reacao.recompensaDoDialogo.itemID);
+                        }
+
+                        if (reacao.recompensaDoDialogo != null && !jaTemRecompensa)
+                        {
+                            recompensaPendente = reacao.recompensaDoDialogo;
+                        }
                     }
                     
                     break; // Achou o caso correspondente, não precisa olhar a lista inteira
@@ -140,12 +154,19 @@ public class NPCMovement : MonoBehaviour, IInteractable
             
             Debug.Log($"[SISTEMA] O NPC {gameObject.name} te entregou: {recompensa.name}");
             recompensaPendente = null; 
+
+            DisableInteraction();
+            
         }
 
         // Trava o NPC apenas se a opção estiver marcada no Inspector
         if (disableAfterDialogue) DisableInteraction();
         
-        OnDialogueComplete?.Invoke();
+        // Dispara o evento apenas se a trava não estiver ativada
+        if (!blockEvents)
+            {
+             OnDialogueComplete?.Invoke();
+            }
     }
 
     public void EnableInteraction() { canInteract = true; UpdateVisualFeedback(); }
@@ -154,5 +175,19 @@ public class NPCMovement : MonoBehaviour, IInteractable
     private void UpdateVisualFeedback()
     {
         if (visualIndicator != null) visualIndicator.SetActive(canInteract);
+    }
+
+    public void ChangeDefaultDialogue(DialogueData newDialogue)
+    {
+        dialogoPadrao = newDialogue;
+        Debug.Log($"O roteiro padrão de {gameObject.name} foi atualizado para uma nova conversa!");
+    }
+
+    // --- FUNÇÃO PARA QUEBRAR LOOPS DE EVENTOS ---
+    // Impede que o NPC dispare o OnDialogueComplete nas próximas vezes
+    public void BlockFutureEvents()
+    {
+        blockEvents = true;
+        Debug.Log($"Os eventos futuros de {gameObject.name} foram bloqueados!");
     }
 }
