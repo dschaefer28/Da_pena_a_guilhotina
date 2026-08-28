@@ -1398,7 +1398,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5607127782276985743, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 38.49
+      value: 52.11
       objectReference: {fileID: 0}
     - target: {fileID: 5607127782276985743, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1639,13 +1639,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Operario
       objectReference: {fileID: 0}
+    - target: {fileID: 3657492797209745752, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_SortingLayer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657492797209745752, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657492797209745752, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -224709957
+      objectReference: {fileID: 0}
     - target: {fileID: 5607127782276985743, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 15.9
+      value: 29.19
       objectReference: {fileID: 0}
     - target: {fileID: 5607127782276985743, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.77
+      value: -0.94
       objectReference: {fileID: 0}
     - target: {fileID: 5607127782276985743, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_LocalPosition.z
