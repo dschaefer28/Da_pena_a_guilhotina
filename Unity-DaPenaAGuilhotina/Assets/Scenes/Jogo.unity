@@ -2803,6 +2803,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6936298117741118776, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: showInEditorForTesting
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8081194991470116072, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_Name
       value: MobileControlsUI
