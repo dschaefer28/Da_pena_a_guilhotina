@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
-  m_Name: resposta_operario
+  m_Name: respostaJean1
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: 
-    text: "O senhor da f\xE1brica queria diminuir mais ainda os sal\xE1rios, eles
-      n\xE3o cansam de ter dinheiro!"
+  - name: "Jean R\xE9veillon"
+    text: "Eu sugeri diminuir os sal\xE1rios de todos os trabalhadores, para baratear
+      tudo, principalmente o p\xE3o\r\n[...]Mas eles pensaram que eu s\xF3 queria
+      diminuir por diminuir. Falta clareza a esse povo.\r\n"
     dialogueAudio:
       Guid:
         Data1: 0
@@ -23,4 +24,7 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices: []
+    choices:
+    - choiceText: "Ent\xE3o o senhor acha que se diminuir os sal\xE1rios, os pre\xE7os
+        dos alimentos caem, e ent\xE3o?"
+      nextDialogue: {fileID: 11400000, guid: fc40b79b6fb3a664bbc603a76e3d932b, type: 2}

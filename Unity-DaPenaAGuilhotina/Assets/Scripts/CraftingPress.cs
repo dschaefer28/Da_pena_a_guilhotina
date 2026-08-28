@@ -21,8 +21,8 @@ public class CraftingPress : MonoBehaviour
         {
             if (recipe == null) continue;
             
-            string key1 = $"{recipe.itemID1}_{recipe.itemID2}";
-            string key2 = $"{recipe.itemID2}_{recipe.itemID1}";
+            string key1 = $"{recipe.ingrediente1.itemID}_{recipe.ingrediente2.itemID}";
+            string key2 = $"{recipe.ingrediente2.itemID}_{recipe.ingrediente1.itemID}";
 
             recipeDictionary.TryAdd(key1, recipe);
             recipeDictionary.TryAdd(key2, recipe);

@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
-  m_Name: Joalheiro_Dialogo
+  m_Name: resposta jean
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: 
-    text: "O que procura Rapaz? Uma bela alian\xE7a para pedir a m\xE3o de uma dama?"
+  - name: "Jean R\xE9veillon"
+    text: Tsk. O que quer?
     dialogueAudio:
       Guid:
         Data1: 0
@@ -23,5 +23,5 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices:
-    - choiceText: "Na verdade, estou procurando um colar de diamantes\u201D"
-      nextDialogue: {fileID: 11400000, guid: 1e7dc31bbe2e4884a8483cf8800c3fef, type: 2}
+    - choiceText: "O que aconteceu com sua f\xE1brica"
+      nextDialogue: {fileID: 11400000, guid: 527abaaf8778b534c8f837437e96b52c, type: 2}

@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: daa124a2bcbce4043846ab3905a2fb1b, type: 3}
-  m_Name: Health
+  m_Name: Item_Jean1
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  itemID: Health
-  itemImg: {fileID: -7431660244541044175, guid: 0f5702f505fb9914f8febb627f147af3, type: 3}
-  itemAmt: 3
+  itemID: 
+  itemImg: {fileID: 0}
+  itemAmt: 0

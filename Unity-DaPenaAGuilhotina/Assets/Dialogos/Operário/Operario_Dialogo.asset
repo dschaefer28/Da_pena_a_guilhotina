@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Operario_Dialogo
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: 
-    text: Obrigado por me ajudar Senhor. Serei eternamente grato
+  - name: "Oper\xE1rio"
+    text: Obrigado por me ajudar Senhor. Serei eternamente grato.
     dialogueAudio:
       Guid:
         Data1: 0

@@ -13,7 +13,12 @@ MonoBehaviour:
   m_Name: Caso_Joalheiro
   m_EditorClassIdentifier: Assembly-CSharp::CaseData
   caseTitle: Caso das Joias
-  caseDescription: "\xE9 o caso das joias "
+  caseDescription: "Uma grande fraude onde uma vigarista forjou a assinatura da Rainha
+    para comprar um colar de diamantes milion\xE1rio. O joalheiro, que estava quase
+    falindo devido \xE0 crise econ\xF4mica, entregou a joia acreditando estar fazendo
+    neg\xF3cio com a realeza. No jogo, esse processo \xE9 uma oportunidade para defender
+    o joalheiro e humilhar a Coroa, argumentando que a reputa\xE7\xE3o da Rainha
+    era t\xE3o leviana perante o povo que a fraude se tornou totalmente cr\xEDvel."
   objectiveText: 'terminar o caso '
   moneyReward: 50
   publicOpinionReward: -20

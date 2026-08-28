@@ -2,35 +2,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Estrutura Data-Driven para mapear o caso atual às pistas que liberam o porão
 [System.Serializable]
 public struct RequisitosDoPorao
 {
     public CaseData caso;
+    [Tooltip("Deixe vazio (None) se não houver exigência para este slot.")]
     public Item pista1;
+    [Tooltip("Deixe vazio (None) se não houver exigência para este slot.")]
     public Item pista2;
 }
 
 public class TrapdoorInteractable : MonoBehaviour, IInteractable
 {
-    [Header("Configurações de Transição")]
-    [Tooltip("Nome exato da cena do porão conforme está no Build Settings.")]
     public string nomeCenaPorao = "Porao";
-
-    [Header("Gatilhos de Missão (Quest Gates)")]
-    [Tooltip("Lista dos casos e quais são as 2 pistas obrigatórias para descer.")]
     public List<RequisitosDoPorao> requisitosDeCaso;
-
-    [Header("Feedback Narrativo (Inner Thoughts)")]
-    [Tooltip("O que o personagem pensa se tentar descer sem pegar um caso na mesa?")]
-    public DialogueData pensamentoSemCaso;
     
-    [Tooltip("O que o personagem pensa se tentar descer sem todas as evidências?")]
+    public DialogueData pensamentoSemCaso;
     public DialogueData pensamentoFaltamPistas;
 
     public void Interact()
     {
-        // 1. Verifica se o jogador já aceitou um caso na mesa
         CaseData casoAtual = GameManager.Instance.casoEscolhido;
         if (casoAtual == null)
         {
@@ -38,41 +29,41 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
             return;
         }
 
-        // 2. Busca na nossa lista de requisitos quais são as pistas deste caso específico
-        RequisitosDoPorao requisitosAtuais = new RequisitosDoPorao();
-        bool casoConfigurado = false;
+        bool temPermissaoParaDescer = false;
+        bool casoEncontradoNaLista = false;
 
         foreach (var req in requisitosDeCaso)
         {
             if (req.caso == casoAtual)
             {
-                requisitosAtuais = req;
-                casoConfigurado = true;
-                break;
+                casoEncontradoNaLista = true;
+
+                // O pulo do gato: Se o slot da pista estiver vazio no Inspector, ele pula a checagem (considera true)
+                bool temPista1 = (req.pista1 == null) || GameManager.Instance.inventoryManager.HasItem(req.pista1.itemID);
+                bool temPista2 = (req.pista2 == null) || GameManager.Instance.inventoryManager.HasItem(req.pista2.itemID);
+
+                if (temPista1 && temPista2)
+                {
+                    temPermissaoParaDescer = true;
+                }
+                break; 
             }
         }
 
-        if (!casoConfigurado)
+        // Se o caso atual for da Fase 2 e nem estiver configurado nesta lista, o alçapão abre direto!
+        if (!casoEncontradoNaLista)
         {
-            Debug.LogWarning($"O caso '{casoAtual.caseTitle}' não tem requisitos configurados no Alçapão!");
-            return;
+            Debug.Log($"O caso {casoAtual.name} não exige fiscalização do alçapão. Acesso livre!");
+            temPermissaoParaDescer = true;
         }
 
-        // 3. Verifica no InventoryManager otimizado (O(n)) se os itens estão na mochila
-        bool temPista1 = GameManager.Instance.inventoryManager.HasItem(requisitosAtuais.pista1.itemID);
-        bool temPista2 = GameManager.Instance.inventoryManager.HasItem(requisitosAtuais.pista2.itemID);
-
-        // 4. Libera a passagem ou barra o jogador com feedback narrativo
-        if (temPista1 && temPista2)
+        if (temPermissaoParaDescer)
         {
-            Debug.Log("Provas suficientes coletadas. Salvando inventário e acessando a tipografia...");
-            
-            // NOVO: Obriga o inventário a guardar as provas no GameManager
+            Debug.Log("Acessando o porão...");
             if (GameManager.Instance.inventoryManager != null)
             {
                 GameManager.Instance.inventoryManager.SalvarEstadoAtual();
             }
-            
             SceneManager.LoadScene(nomeCenaPorao);
         }
         else
@@ -81,7 +72,6 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
         }
     }
 
-    // Método auxiliar para usar o sistema de diálogo já existente como "Voz da Consciência"
     private void TocarPensamento(DialogueData pensamento)
     {
         if (pensamento != null && GameManager.Instance.dialogueSystem != null)
@@ -89,11 +79,5 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
             GameManager.Instance.dialogueSystem.dialogueData = pensamento;
             GameManager.Instance.dialogueSystem.Next();
         }
-        else
-        {
-            Debug.Log("O alçapão está trancado. Faltam evidências (Sem diálogo configurado).");
-        }
     }
-
-    
 }

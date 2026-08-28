@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
   m_Name: Caso_Operario
   m_EditorClassIdentifier: Assembly-CSharp::CaseData
-  caseTitle: 'caso do operario '
-  caseDescription: caso do operario
+  caseTitle: "Caso do Oper\xE1rio "
+  caseDescription: "O oper\xE1rio \xE9 um dos sobreviventes do massacre da f\xE1brica
+    de R\xE9veillon. Ele procura ajuda jur\xEDdica para fugir da condena\xE7\xE3o,
+    relatando que a guarda n\xE3o queria apenas conter o levante, mas atirar para
+    matar os trabalhadores que se reuniram em busca de comida e sal\xE1rios dignos."
   objectiveText: terminar o caso
   moneyReward: 5
   publicOpinionReward: 50

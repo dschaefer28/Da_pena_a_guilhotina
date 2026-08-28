@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: daa124a2bcbce4043846ab3905a2fb1b, type: 3}
-  m_Name: Sword
+  m_Name: Item_joalheiro2
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  itemID: Sword
-  itemImg: {fileID: -2644768626319467958, guid: 5ebb015c8457a274bb1d0e422669fcbb, type: 3}
-  itemAmt: 1
+  itemID: 
+  itemImg: {fileID: 0}
+  itemAmt: 0

@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
   m_Name: Caso_Reveillon
   m_EditorClassIdentifier: Assembly-CSharp::CaseData
-  caseTitle: caso revellion
-  caseDescription: caso do revellion
+  caseTitle: "Caso de Jean-Baptiste R\xE9veillon"
+  caseDescription: "Gira em torno do dono de uma pr\xF3spera f\xE1brica de pap\xE9is
+    de parede. Em meio \xE0 crise, ele sugeriu reduzir os sal\xE1rios dos seus oper\xE1rios
+    com a justificativa de que isso tamb\xE9m diminuiria o pre\xE7o do p\xE3o e dos
+    produtos. O povo faminto de Paris entendeu a fala como uma amea\xE7a de morte
+    pela fome. Como resultado, a multid\xE3o invadiu e saqueou sua f\xE1brica e resid\xEAncia,
+    o que culminou em um violento massacre do povo perpetrado pela Guarda Francesa."
   objectiveText: 'terminar o caso '
   moneyReward: 70
   publicOpinionReward: -50

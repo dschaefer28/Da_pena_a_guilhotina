@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-// Estrutura que define como o NPC deve agir dependendo de qual caso o jogador escolheu
 [System.Serializable]
 public struct CasoReacao
 {
@@ -19,8 +18,8 @@ public struct CasoReacao
     [Tooltip("Fala do NPC APÓS o jogador encontrar a pista acima.")]
     public DialogueData dialogoComPista;
     
-    [Tooltip("Item entregue ao jogador ao fim do diálogo com a pista (Ex: Decreto/Papel).")]
-    public Item recompensaDoDialogo;
+    [Tooltip("Lista de itens entregues ao jogador ao fim do diálogo (Ex: Decreto/Papel).")]
+    public List<Item> recompensasDoDialogo; // Transformado em Lista
 }
 
 public class NPCMovement : MonoBehaviour, IInteractable
@@ -38,8 +37,8 @@ public class NPCMovement : MonoBehaviour, IInteractable
     [Tooltip("Preencha APENAS se este NPC for figurante exclusivo de um caso (Ex: Marie). Deixe VAZIO para o Dupaty.")]
     public CaseData casoObrigatorio;
 
-// Trava interna para impedir que eventos se repitam infinitamente
     private bool blockEvents = false;
+
     [Header("Reações por Caso (GDD)")]
     [Tooltip("Configure aqui como o NPC reage a cada caso diferente.")]
     public List<CasoReacao> reacoesDeCaso;
@@ -48,8 +47,8 @@ public class NPCMovement : MonoBehaviour, IInteractable
     public GameObject visualIndicator;
     public UnityEvent OnDialogueComplete;
 
-    // Guarda temporariamente qual item o NPC vai dar ao fim da conversa atual
-    private Item recompensaPendente;
+    // Guarda temporariamente a lista de itens que o NPC vai dar ao fim da conversa atual
+    private List<Item> recompensasPendentes = new List<Item>();
 
     void Start() { UpdateVisualFeedback(); }
 
@@ -57,7 +56,6 @@ public class NPCMovement : MonoBehaviour, IInteractable
     {
         if (!canInteract) return;
 
-        // 1. Trava estrita para NPCs figurantes (Ignora se for vazio)
         if (casoObrigatorio != null && GameManager.Instance.casoEscolhido != casoObrigatorio)
         {
             Debug.Log($"{gameObject.name} ignora você.");
@@ -67,67 +65,39 @@ public class NPCMovement : MonoBehaviour, IInteractable
         DialogueSystem dialogueSystem = GameManager.Instance.dialogueSystem;
         if (dialogueSystem == null) return;
 
-        // 2. Define o roteiro assumindo o Padrão inicialmente
         DialogueData dialogoParaTocar = dialogoPadrao; 
-        recompensaPendente = null;
+        recompensasPendentes.Clear(); // Limpa a lista antes de cada interação
 
         CaseData casoAtual = GameManager.Instance.casoEscolhido;
 
-        // 3. Procura a reação do NPC baseada no caso da mesa
         if (casoAtual != null && reacoesDeCaso != null)
         {
             foreach (var reacao in reacoesDeCaso)
             {
                 if (reacao.caso == casoAtual)
                 {
-                    // Checa se o jogador tem a pista usando o InventoryManager centralizado
                     bool temAPista = false;
                     if (reacao.pistaNecessaria != null && GameManager.Instance.inventoryManager != null)
                     {
                         temAPista = GameManager.Instance.inventoryManager.HasItem(reacao.pistaNecessaria.itemID);
                     }
 
-                    // Se tem a pista, toca a fala de resolução
                     if (temAPista && reacao.dialogoComPista != null)
                     {
                         dialogoParaTocar = reacao.dialogoComPista;
-                        
-                        // Garante que o jogador não ganhe o Decreto duplicado se conversar de novo
-                        bool jaTemRecompensa = false;
-                        if (reacao.recompensaDoDialogo != null)
-                        {
-                            jaTemRecompensa = GameManager.Instance.inventoryManager.HasItem(reacao.recompensaDoDialogo.itemID);
-                        }
-
-                        if (reacao.recompensaDoDialogo != null && !jaTemRecompensa)
-                        {
-                            recompensaPendente = reacao.recompensaDoDialogo;
-                        }
+                        PrepararRecompensas(reacao.recompensasDoDialogo);
                     }
-                    // Se não tem a pista (ou não exige pista), toca o diálogo inicial
                     else if (reacao.dialogoInicialDoCaso != null)
                     {
                         dialogoParaTocar = reacao.dialogoInicialDoCaso;
-                        
-                        // NOVO: Permite que o NPC entregue o item logo na primeira conversa
-                        bool jaTemRecompensa = false;
-                        if (reacao.recompensaDoDialogo != null && GameManager.Instance.inventoryManager != null)
-                        {
-                            jaTemRecompensa = GameManager.Instance.inventoryManager.HasItem(reacao.recompensaDoDialogo.itemID);
-                        }
-
-                        if (reacao.recompensaDoDialogo != null && !jaTemRecompensa)
-                        {
-                            recompensaPendente = reacao.recompensaDoDialogo;
-                        }
+                        PrepararRecompensas(reacao.recompensasDoDialogo);
                     }
                     
-                    break; // Achou o caso correspondente, não precisa olhar a lista inteira
+                    break; 
                 }
             }
         }
 
-        // 4. Inicia o Sistema de Diálogos
         if (dialogoParaTocar != null)
         {
             dialogueSystem.dialogueData = dialogoParaTocar;
@@ -140,33 +110,47 @@ public class NPCMovement : MonoBehaviour, IInteractable
         }
     }
 
+    // Rotina auxiliar para verificar e listar os itens que faltam no inventário
+    private void PrepararRecompensas(List<Item> itensConfigurados)
+    {
+        if (itensConfigurados != null && GameManager.Instance.inventoryManager != null)
+        {
+            foreach (Item item in itensConfigurados)
+            {
+                if (item != null && !GameManager.Instance.inventoryManager.HasItem(item.itemID))
+                {
+                    recompensasPendentes.Add(item);
+                }
+            }
+        }
+    }
+
     private void HandleDialogueEnded()
     {
         DialogueSystem dialogueSystem = GameManager.Instance.dialogueSystem;
         if (dialogueSystem != null) dialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
 
-        // Entrega o item silenciosamente e de forma natural
-        if (recompensaPendente != null && GameManager.Instance.inventoryManager != null)
+        // Entrega todos os itens da lista de uma vez
+        if (recompensasPendentes.Count > 0 && GameManager.Instance.inventoryManager != null)
         {
-            Item recompensa = recompensaPendente.Clone();
-            recompensa.itemAmt = 1;
-            GameManager.Instance.inventoryManager.AddItem(recompensa);
+            foreach (Item itemPendente in recompensasPendentes)
+            {
+                Item recompensa = itemPendente.Clone();
+                recompensa.itemAmt = 1;
+                GameManager.Instance.inventoryManager.AddItem(recompensa);
+                Debug.Log($"[SISTEMA] O NPC {gameObject.name} te entregou: {recompensa.name}");
+            }
             
-            Debug.Log($"[SISTEMA] O NPC {gameObject.name} te entregou: {recompensa.name}");
-            recompensaPendente = null; 
-
+            recompensasPendentes.Clear();
             DisableInteraction();
-            
         }
 
-        // Trava o NPC apenas se a opção estiver marcada no Inspector
         if (disableAfterDialogue) DisableInteraction();
         
-        // Dispara o evento apenas se a trava não estiver ativada
         if (!blockEvents)
-            {
-             OnDialogueComplete?.Invoke();
-            }
+        {
+            OnDialogueComplete?.Invoke();
+        }
     }
 
     public void EnableInteraction() { canInteract = true; UpdateVisualFeedback(); }
@@ -183,8 +167,6 @@ public class NPCMovement : MonoBehaviour, IInteractable
         Debug.Log($"O roteiro padrão de {gameObject.name} foi atualizado para uma nova conversa!");
     }
 
-    // --- FUNÇÃO PARA QUEBRAR LOOPS DE EVENTOS ---
-    // Impede que o NPC dispare o OnDialogueComplete nas próximas vezes
     public void BlockFutureEvents()
     {
         blockEvents = true;

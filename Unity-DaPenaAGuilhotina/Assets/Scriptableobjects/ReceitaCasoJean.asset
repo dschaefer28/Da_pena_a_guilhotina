@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f9ef5f4be0bfa146bdfd05b11fb01a8, type: 3}
+  m_Name: ReceitaCasoJean
+  m_EditorClassIdentifier: Assembly-CSharp::Recipe
+  ingrediente1: {fileID: 11400000, guid: 9d7e85a0e81ff334a9df31a556a053ac, type: 2}
+  ingrediente2: {fileID: 11400000, guid: dce74fa9250bef44f936cb44fe76cecd, type: 2}
+  resultItem: {fileID: 11400000, guid: 0c819b8641132564596ff3a2b4d444bb, type: 2}
+  publicOpinionImpact: -20
+  stateOpinionImpact: 50
+  moneyReward: 50

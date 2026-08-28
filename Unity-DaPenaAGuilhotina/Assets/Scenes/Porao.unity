@@ -1780,6 +1780,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3052949638090544138, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: recipes.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3052949638090544138, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: 'recipes.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 191c62121e4bef94291ee4fd48e4c5c9, type: 2}
+    - target: {fileID: 3052949638090544138, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: 'recipes.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 2ffa6e8ab9cf59f4a997d49fa0e9554a, type: 2}
+    - target: {fileID: 3052949638090544138, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: 'recipes.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 6c4c1d25adea3fa4a88483f989e069f4, type: 2}
     - target: {fileID: 3172722956333852045, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

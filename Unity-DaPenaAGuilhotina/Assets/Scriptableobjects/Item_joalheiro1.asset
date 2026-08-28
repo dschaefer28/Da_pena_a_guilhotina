@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: daa124a2bcbce4043846ab3905a2fb1b, type: 3}
-  m_Name: Helmet
+  m_Name: Item_joalheiro1
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  itemID: Helmet
-  itemImg: {fileID: 2080994061147076775, guid: 8d20fa8db3441874d95127b8c30ba59b, type: 3}
-  itemAmt: 1
+  itemID: 
+  itemImg: {fileID: 0}
+  itemAmt: 0

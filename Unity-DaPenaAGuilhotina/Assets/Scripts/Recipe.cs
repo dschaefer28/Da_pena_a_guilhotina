@@ -4,8 +4,11 @@ using UnityEngine;
 public class Recipe : ScriptableObject
 {
     [Header("Evidências Necessárias (Ingredientes)")]
-    public string itemID1; 
-    public string itemID2; 
+    [Tooltip("Arraste o ScriptableObject da primeira pista aqui.")]
+    public Item ingrediente1; 
+    
+    [Tooltip("Arraste o ScriptableObject da segunda pista aqui.")]
+    public Item ingrediente2; 
 
     [Header("Panfleto Gerado (Resultado)")]
     public Item resultItem; 

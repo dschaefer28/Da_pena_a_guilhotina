@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8f9ef5f4be0bfa146bdfd05b11fb01a8, type: 3}
-  m_Name: Receita2
+  m_Name: ReceitaFase1
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
-  itemID1: Evidencia_Decreto1780
-  itemID2: Evidencia_RelatoBradier
+  ingrediente1: {fileID: 11400000, guid: a41fb3cd7d8b20f479759eb72c5d511b, type: 2}
+  ingrediente2: {fileID: 11400000, guid: 6c1c1ed830eb85f47a44f2dc6488276f, type: 2}
   resultItem: {fileID: 11400000, guid: d04d15091bf2cef4592686f23f1968f5, type: 2}
   publicOpinionImpact: 15
   stateOpinionImpact: -10

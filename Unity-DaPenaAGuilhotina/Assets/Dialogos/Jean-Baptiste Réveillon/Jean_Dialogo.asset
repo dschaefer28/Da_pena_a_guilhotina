@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Jean_Dialogo
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: jean
-    text: "\u201CAh, outro n\xE3o! Eu n\xE3o mandei atirar em ningu\xE9m!\u201D"
+  - name: "Jean R\xE9veillon"
+    text: "Ah, outro n\xE3o! Eu n\xE3o mandei atirar em ningu\xE9m!"
     dialogueAudio:
       Guid:
         Data1: 0
@@ -23,5 +23,5 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices:
-    - choiceText: "1.\u201DSenhor, apenas vim em busca de resposta e da verdade.\u201D"
+    - choiceText: Senhor, apenas vim em busca de resposta e da verdade.
       nextDialogue: {fileID: 11400000, guid: 81a95ad37b662444f834f2a30711af99, type: 2}
