@@ -18,4 +18,11 @@ MonoBehaviour:
       por Lu\xEDs XVI. Se eles os torturaram, est\xE3o agindo contra a pr\xF3pria
       lei da Coroa. Vamos tornar os seus erros p\xFAblicos e salvar esses homens!
       V\xE1 para o por\xE3o e escreva um memorial com suas descobertas."
+    dialogueAudio:
+      Guid:
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/Normal geral_01
     choices: []

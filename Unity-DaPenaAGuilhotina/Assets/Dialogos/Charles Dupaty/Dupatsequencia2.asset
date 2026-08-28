@@ -17,6 +17,13 @@ MonoBehaviour:
     text: "Nobres protegem nobres, meu jovem. O Parlamento n\xE3o rasgar\xE1 uma
       senten\xE7a para salvar camponeses, a menos que a verdade se torne um esc\xE2ndalo
       p\xFAblico.\n\nMas n\xE3o lutaremos desarmados. Aqui, leve isto. "
+    dialogueAudio:
+      Guid:
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/Normal geral_01
     choices:
     - choiceText: Como esse documento pode nos ajudar contra o tribunal?
       nextDialogue: {fileID: 11400000, guid: f09873696d20fdb4a98c32181dc87c30, type: 2}

@@ -17,6 +17,13 @@ MonoBehaviour:
     text: "Eu ouvi falar sobre esse caso. Est\xE1 cheio de erros: n\xE3o investigaram,
       n\xE3o ouviram os acusados e usaram a tortura para os obrigar a confessar o
       que queriam."
+    dialogueAudio:
+      Guid:
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/Normal geral_01
     choices:
     - choiceText: "Mestre, se as falhas s\xE3o t\xE3o \xF3bvias, por que n\xE3o apelamos
         diretamente ao Parlamento?"
