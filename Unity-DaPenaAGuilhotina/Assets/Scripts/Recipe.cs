@@ -21,5 +21,21 @@ public class Recipe : ScriptableObject
     public int stateOpinionImpact;  
     
     [Tooltip("Quantidade de Capital (Ouro) recebida pela publicação deste panfleto.")]
-    public int moneyReward;         
+    public int moneyReward;
+
+    /// <summary>Verdadeiro somente se os dois ingredientes e o resultado estiverem configurados com itemID válido.</summary>
+    public bool IsValid()
+    {
+        return ingrediente1 != null && !string.IsNullOrEmpty(ingrediente1.itemID)
+            && ingrediente2 != null && !string.IsNullOrEmpty(ingrediente2.itemID)
+            && resultItem != null;
+    }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (!IsValid())
+            Debug.LogWarning($"[Recipe] '{name}' está incompleta (ingredientes/resultado ausentes ou sem itemID). Ela será ignorada pela prensa.", this);
+    }
+#endif
 }

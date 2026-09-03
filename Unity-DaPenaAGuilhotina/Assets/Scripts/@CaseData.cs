@@ -19,4 +19,15 @@ public class CaseData : ScriptableObject
     
     [Tooltip("Nome da cena da Fase 2 para carregar após aceitar o caso (opcional).")]
     public string nextSceneName = "Fase2";
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (string.IsNullOrWhiteSpace(caseTitle))
+            Debug.LogWarning($"[CaseData] '{name}' está sem caseTitle.", this);
+
+        if (npcDialogueRoute == null)
+            Debug.LogWarning($"[CaseData] '{name}' não tem rota de diálogo (npcDialogueRoute) definida.", this);
+    }
+#endif
 }

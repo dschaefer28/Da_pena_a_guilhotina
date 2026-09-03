@@ -19,6 +19,14 @@ public class MobileControlsManager : MonoBehaviour
             return;
         }
         Instance = this;
+
+        if (canvasGroup == null)
+            canvasGroup = GetComponent<CanvasGroup>();
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
     }
 
     /// <summary>

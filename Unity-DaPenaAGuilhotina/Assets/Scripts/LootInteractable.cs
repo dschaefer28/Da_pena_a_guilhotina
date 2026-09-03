@@ -28,21 +28,40 @@ public class LootInteractable : MonoBehaviour, IInteractable
     private void Start()
     {
         // Se ativado, a estante (ou objeto) se teletransporta para um local aleatório da sala no início da fase
-        if (aleatorizarPosicao && pontosDeSpawn != null && pontosDeSpawn.Count > 0)
+        if (aleatorizarPosicao && pontosDeSpawn != null)
         {
-            int index = Random.Range(0, pontosDeSpawn.Count);
-            transform.position = pontosDeSpawn[index].position;
+            // Ignora slots vazios arrastados por engano no Inspector
+            var validos = pontosDeSpawn.FindAll(p => p != null);
+            if (validos.Count > 0)
+            {
+                int index = Random.Range(0, validos.Count);
+                transform.position = validos[index].position;
+            }
         }
+
+        amountToGive = Mathf.Max(1, amountToGive);
     }
 
     public void Interact()
     {
         if (alreadyLooted) return;
 
+        if (GameManager.Instance == null)
+        {
+            Debug.LogWarning("[LootInteractable] GameManager ausente.");
+            return;
+        }
+
         CaseData casoAtual = GameManager.Instance.casoEscolhido;
         if (casoAtual == null)
         {
             Debug.Log("Você não está investigando nenhum caso no momento.");
+            return;
+        }
+
+        if (pistasPossiveis == null || pistasPossiveis.Count == 0)
+        {
+            Debug.Log("Não há pistas úteis para o seu caso atual aqui.");
             return;
         }
 
@@ -65,20 +84,28 @@ public class LootInteractable : MonoBehaviour, IInteractable
         }
 
         InventoryManager inventory = GameManager.Instance.inventoryManager;
-        if (inventory != null)
+        if (inventory == null)
         {
-            Item itemClone = itemCorreto.Clone();
-            itemClone.itemAmt = amountToGive;
+            Debug.LogWarning("[LootInteractable] InventoryManager ausente no GameManager.");
+            return;
+        }
 
-            bool foiGuardado = inventory.AddItem(itemClone);
+        Item itemClone = itemCorreto.Clone();
+        itemClone.itemAmt = Mathf.Max(1, amountToGive);
 
-            if (foiGuardado)
-            {
-                Debug.Log($"Você encontrou: {itemCorreto.name}!");
-                
-                if (destroyAfterLoot) Destroy(gameObject);
-                else alreadyLooted = true;
-            }
+        bool foiGuardado = inventory.AddItem(itemClone);
+
+        if (foiGuardado)
+        {
+            Debug.Log($"Você encontrou: {itemCorreto.name}!");
+
+            if (destroyAfterLoot) Destroy(gameObject);
+            else alreadyLooted = true;
+        }
+        else
+        {
+            // Inventário cheio: mantém o loot disponível para tentar de novo depois
+            Debug.Log("Inventário cheio — volte para pegar esta pista mais tarde.");
         }
     }
 }

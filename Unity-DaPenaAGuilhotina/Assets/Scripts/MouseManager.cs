@@ -15,67 +15,86 @@ public class MouseManager : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
         if (dragIcon != null) dragIcon.gameObject.SetActive(false);
     }
 
+    private void OnDestroy()
+    {
+        if (instance == this) instance = null;
+    }
+
     private void Update()
     {
+        if (dragIcon == null) return;
+
         if (heldItem != null && heldItem.itemAmt > 0)
         {
-            if (dragIcon != null)
-            {
-                if (!dragIcon.gameObject.activeSelf) dragIcon.gameObject.SetActive(true);
-                dragIcon.sprite = heldItem.itemImg;
+            if (!dragIcon.gameObject.activeSelf) dragIcon.gameObject.SetActive(true);
+            if (dragIcon.sprite != heldItem.itemImg) dragIcon.sprite = heldItem.itemImg;
 
-                // ARQUITETURA UNIVERSAL: Pointer.current capta Mouse (Windows) e Toque (Android)
-                if (Pointer.current != null)
-                {
-                    dragIcon.transform.position = Pointer.current.position.ReadValue();
-                }
+            // ARQUITETURA UNIVERSAL: Pointer.current capta Mouse (Windows) e Toque (Android)
+            if (Pointer.current != null)
+            {
+                dragIcon.transform.position = Pointer.current.position.ReadValue();
             }
         }
         else
         {
-            if (dragIcon != null && dragIcon.gameObject.activeSelf)
-                dragIcon.gameObject.SetActive(false);
+            if (heldItem != null && heldItem.itemAmt <= 0) heldItem = null; // stack zerado: solta o item fantasma
+            if (dragIcon.gameObject.activeSelf) dragIcon.gameObject.SetActive(false);
         }
     }
 
     public void UpdateHeldItem(UISlotHandler activeSlot)
     {
+        if (activeSlot == null || activeSlot.inventoryManager == null)
+        {
+            Debug.LogWarning("[MouseManager] Slot ou InventoryManager nulo em UpdateHeldItem.");
+            return;
+        }
+
+        var inventory = activeSlot.inventoryManager;
         var activeItem = activeSlot.item;
+
         if (heldItem != null && activeItem != null && heldItem.itemID == activeItem.itemID)
         {
-            activeSlot.inventoryManager.StackInInventory(activeSlot, heldItem);
+            inventory.StackInInventory(activeSlot, heldItem);
             heldItem = null;
             return;
         }
 
         if (activeSlot.item != null)
         {
-            activeSlot.inventoryManager.ClearItemSlot(activeSlot);
+            inventory.ClearItemSlot(activeSlot);
         }
 
         if (heldItem != null)
-            activeSlot.inventoryManager.PlaceInInventory(activeSlot, heldItem);
+            inventory.PlaceInInventory(activeSlot, heldItem);
 
         heldItem = activeItem;
     }
 
     public void PickupFromStack(UISlotHandler activeSlot)
     {
+        if (activeSlot == null || activeSlot.item == null || activeSlot.inventoryManager == null) { return; }
         if (heldItem != null && heldItem.itemID != activeSlot.item.itemID) { return; }
         if (heldItem == null)
         {
             heldItem = activeSlot.item.Clone();
-            heldItem.itemAmt = default;
+            heldItem.itemAmt = 0;
         }
-        
+
         heldItem.itemAmt++;
         activeSlot.item.itemAmt--;
-        activeSlot.itemCount.text = activeSlot.item.itemAmt.ToString();
-        
+        if (activeSlot.itemCount != null)
+            activeSlot.itemCount.text = activeSlot.item.itemAmt.ToString();
+
         if (activeSlot.item.itemAmt <= 0)
         {
             activeSlot.inventoryManager.ClearItemSlot(activeSlot);

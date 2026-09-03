@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using FMODUnity;
 
 [System.Serializable]
 public struct RequisitosDoPorao
@@ -16,12 +17,21 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
 {
     public string nomeCenaPorao = "Porao";
     public List<RequisitosDoPorao> requisitosDeCaso;
-    
+
     public DialogueData pensamentoSemCaso;
     public DialogueData pensamentoFaltamPistas;
 
+    [Header("Áudio (FMOD)")]
+    public EventReference somAlcapao;
+
     public void Interact()
     {
+        if (GameManager.Instance == null)
+        {
+            Debug.LogWarning("[TrapdoorInteractable] GameManager ausente.");
+            return;
+        }
+
         CaseData casoAtual = GameManager.Instance.casoEscolhido;
         if (casoAtual == null)
         {
@@ -29,24 +39,28 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
             return;
         }
 
+        InventoryManager inventario = GameManager.Instance.inventoryManager;
+
         bool temPermissaoParaDescer = false;
         bool casoEncontradoNaLista = false;
 
-        foreach (var req in requisitosDeCaso)
+        if (requisitosDeCaso != null)
         {
-            if (req.caso == casoAtual)
+            foreach (var req in requisitosDeCaso)
             {
+                if (req.caso != casoAtual) continue;
+
                 casoEncontradoNaLista = true;
 
                 // O pulo do gato: Se o slot da pista estiver vazio no Inspector, ele pula a checagem (considera true)
-                bool temPista1 = (req.pista1 == null) || GameManager.Instance.inventoryManager.HasItem(req.pista1.itemID);
-                bool temPista2 = (req.pista2 == null) || GameManager.Instance.inventoryManager.HasItem(req.pista2.itemID);
+                bool temPista1 = (req.pista1 == null) || (inventario != null && inventario.HasItem(req.pista1.itemID));
+                bool temPista2 = (req.pista2 == null) || (inventario != null && inventario.HasItem(req.pista2.itemID));
 
                 if (temPista1 && temPista2)
                 {
                     temPermissaoParaDescer = true;
                 }
-                break; 
+                break;
             }
         }
 
@@ -59,11 +73,22 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
 
         if (temPermissaoParaDescer)
         {
-            Debug.Log("Acessando o porão...");
-            if (GameManager.Instance.inventoryManager != null)
+            if (string.IsNullOrEmpty(nomeCenaPorao) || !Application.CanStreamedLevelBeLoaded(nomeCenaPorao))
             {
-                GameManager.Instance.inventoryManager.SalvarEstadoAtual();
+                Debug.LogError($"[TrapdoorInteractable] Cena '{nomeCenaPorao}' não está nas Build Settings.", this);
+                return;
             }
+
+            if (!somAlcapao.IsNull)
+                RuntimeManager.PlayOneShot(somAlcapao, transform.position);
+
+            Debug.Log("Acessando o porão...");
+            if (inventario != null)
+            {
+                inventario.SalvarEstadoAtual();
+            }
+
+            Time.timeScale = 1f; // garante que a próxima cena não abra congelada
             SceneManager.LoadScene(nomeCenaPorao);
         }
         else
@@ -74,10 +99,14 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
 
     private void TocarPensamento(DialogueData pensamento)
     {
-        if (pensamento != null && GameManager.Instance.dialogueSystem != null)
+        if (pensamento == null) return;
+        if (GameManager.Instance == null || GameManager.Instance.dialogueSystem == null)
         {
-            GameManager.Instance.dialogueSystem.dialogueData = pensamento;
-            GameManager.Instance.dialogueSystem.Next();
+            Debug.LogWarning("[TrapdoorInteractable] DialogueSystem ausente; não foi possível tocar o pensamento.");
+            return;
         }
+
+        GameManager.Instance.dialogueSystem.dialogueData = pensamento;
+        GameManager.Instance.dialogueSystem.Next();
     }
 }

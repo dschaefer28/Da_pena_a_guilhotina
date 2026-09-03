@@ -1,11 +1,15 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using FMODUnity;
 
 public class PlayerMove : MonoBehaviour
 {
     [Header("Movimento")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private InputActionReference moveAction; // arraste a action "Move" aqui
+
+    [Header("Áudio (FMOD)")]
+    [SerializeField] private EventReference footstepEvent;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -61,5 +65,12 @@ public class PlayerMove : MonoBehaviour
     void FixedUpdate()
     {
         rb.linearVelocity = new Vector2(move.x * moveSpeed, rb.linearVelocity.y);
+    }
+
+    // Disparado pela Animation Event nos frames de contato do pé com o chão
+    public void PlayFootstep()
+    {
+        if (footstepEvent.IsNull || move == Vector2.zero) return;
+        RuntimeManager.PlayOneShot(footstepEvent, transform.position);
     }
 }

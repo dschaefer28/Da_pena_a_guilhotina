@@ -26,14 +26,24 @@ public class MobileUIManager : MonoBehaviour
 
     void Start()
     {
-        // Encontra o sistema de diálogos ao iniciar a cena
-        dialogueSystem = FindAnyObjectByType<DialogueSystem>();
+        // Encontra o sistema de diálogos ao iniciar a cena (prioriza a referência global já resolvida)
+        if (GameManager.Instance != null && GameManager.Instance.dialogueSystem != null)
+            dialogueSystem = GameManager.Instance.dialogueSystem;
+        else
+            dialogueSystem = FindAnyObjectByType<DialogueSystem>();
 
         if (dialogueSystem != null)
         {
-            // Se inscreve nos eventos do diálogo
+            // Evita inscrição dupla caso Start rode mais de uma vez
+            dialogueSystem.OnDialogueStarted -= EsconderJoystick;
+            dialogueSystem.OnDialogueEnded -= MostrarJoystick;
+
             dialogueSystem.OnDialogueStarted += EsconderJoystick;
             dialogueSystem.OnDialogueEnded += MostrarJoystick;
+        }
+        else
+        {
+            Debug.LogWarning("[MobileUIManager] Nenhum DialogueSystem encontrado na cena; o joystick não será ocultado durante diálogos.");
         }
     }
 

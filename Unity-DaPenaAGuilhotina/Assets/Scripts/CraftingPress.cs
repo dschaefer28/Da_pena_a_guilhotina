@@ -16,11 +16,20 @@ public class CraftingPress : MonoBehaviour
     private void Start()
     {
         recipeDictionary = new Dictionary<string, Recipe>();
-        
+
+        if (recipes == null) return;
+
         foreach (var recipe in recipes)
         {
             if (recipe == null) continue;
-            
+
+            // Ignora receitas mal configuradas em vez de estourar NullReference ao montar o dicionário
+            if (!recipe.IsValid())
+            {
+                Debug.LogWarning($"[CraftingPress] Receita '{recipe.name}' ignorada: ingredientes ou resultado ausentes.", this);
+                continue;
+            }
+
             string key1 = $"{recipe.ingrediente1.itemID}_{recipe.ingrediente2.itemID}";
             string key2 = $"{recipe.ingrediente2.itemID}_{recipe.ingrediente1.itemID}";
 
@@ -29,17 +38,40 @@ public class CraftingPress : MonoBehaviour
         }
     }
 
-    public void CombineItems() 
+    private bool SlotsConfigurados()
     {
-        if (slotInput1.item == null || slotInput2.item == null) 
+        if (slotInput1 == null || slotInput2 == null || slotOutput == null)
+        {
+            Debug.LogError("[CraftingPress] Slots de entrada/saída não atribuídos no Inspector.", this);
+            return false;
+        }
+        return true;
+    }
+
+    private InventoryManager Inventario =>
+        GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
+
+    public void CombineItems()
+    {
+        if (!SlotsConfigurados()) return;
+
+        if (recipeDictionary == null) Start(); // caso CombineItems seja chamado antes do Start (ordem de execução)
+
+        if (slotInput1.item == null || slotInput2.item == null)
         {
             Debug.Log("Faltam ingredientes nos slots!");
             return;
         }
 
+        if (Inventario == null)
+        {
+            Debug.LogError("[CraftingPress] InventoryManager indisponível no GameManager.", this);
+            return;
+        }
+
         string attemptKey = $"{slotInput1.item.itemID}_{slotInput2.item.itemID}";
 
-        if (recipeDictionary.TryGetValue(attemptKey, out Recipe validRecipe))
+        if (recipeDictionary.TryGetValue(attemptKey, out Recipe validRecipe) && validRecipe.resultItem != null)
         {
             if (slotOutput.item == null || slotOutput.item.itemID == validRecipe.resultItem.itemID)
             {
@@ -67,12 +99,14 @@ public class CraftingPress : MonoBehaviour
 
     private void ConsumeItem(UISlotHandler slot)
     {
+        if (slot == null || slot.item == null) return;
+
         slot.item.itemAmt--;
         if (slot.item.itemAmt <= 0)
         {
-            GameManager.Instance.inventoryManager.ClearItemSlot(slot);
+            Inventario.ClearItemSlot(slot);
         }
-        else
+        else if (slot.itemCount != null)
         {
             slot.itemCount.text = slot.item.itemAmt.ToString();
         }
@@ -80,16 +114,19 @@ public class CraftingPress : MonoBehaviour
 
     private void ProduceItem(Item resultPrefab)
     {
+        if (resultPrefab == null) return;
+
         if (slotOutput.item == null)
         {
             Item newItem = resultPrefab.Clone();
             newItem.itemAmt = 1;
-            GameManager.Instance.inventoryManager.PlaceInInventory(slotOutput, newItem);
+            Inventario.PlaceInInventory(slotOutput, newItem);
         }
         else
         {
             slotOutput.item.itemAmt++;
-            slotOutput.itemCount.text = slotOutput.item.itemAmt.ToString();
+            if (slotOutput.itemCount != null)
+                slotOutput.itemCount.text = slotOutput.item.itemAmt.ToString();
         }
     }
 }

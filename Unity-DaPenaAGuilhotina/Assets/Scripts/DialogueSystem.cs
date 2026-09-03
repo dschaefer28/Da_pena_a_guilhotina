@@ -77,19 +77,31 @@ public class DialogueSystem : MonoBehaviour
             return;
         }
 
+        // FMOD: se os banks ainda não terminaram de carregar, a 1ª fala costuma sair muda
+        if (currentText == 0 && !FMODUnity.RuntimeManager.HaveAllBanksLoaded)
+        {
+            Debug.LogWarning("[DialogueSystem] FMOD ainda não carregou todos os banks — " +
+                             "o áudio da primeira fala pode não tocar.");
+        }
+
         StopCurrentAudio();
-        
+
         if(currentText == 0) OnDialogueStarted?.Invoke();
 
         Dialogue currentDialogue = dialogueData.talkScript[currentText];
         string speakerName = currentDialogue.name;
         string speakerText = currentDialogue.text;
         
-        if (!currentDialogue.dialogueAudio.IsNull) 
+        if (!currentDialogue.dialogueAudio.IsNull)
         {
             currentAudioInstance = FMODUnity.RuntimeManager.CreateInstance(currentDialogue.dialogueAudio);
-            currentAudioInstance.start();
-            currentAudioInstance.release(); 
+
+            FMOD.RESULT startResult = currentAudioInstance.start();
+            if (startResult != FMOD.RESULT.OK)
+                Debug.LogWarning($"[DialogueSystem] start() do áudio da fala '{speakerName}' " +
+                                 $"retornou {startResult}.");
+
+            currentAudioInstance.release();
         }
 
         OnDialogueLineStarted?.Invoke(speakerName, speakerText);

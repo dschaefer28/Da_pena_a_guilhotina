@@ -67,10 +67,9 @@ private void OnToggleInventoryPerformed(InputAction.CallbackContext ctx) => Togg
         }
 
         GameObject closestInteractable = GetClosestInteractable();
-        if (closestInteractable != null)
+        if (closestInteractable != null && closestInteractable.TryGetComponent<IInteractable>(out var interactable))
         {
-            IInteractable interactable = closestInteractable.GetComponent<IInteractable>();
-            if (interactable != null) interactable.Interact();
+            interactable.Interact();
         }
     }
 
@@ -80,10 +79,10 @@ private void OnToggleInventoryPerformed(InputAction.CallbackContext ctx) => Togg
         GameObject closest = null;
         float minDistance = float.MaxValue;
         
-        interactablesInRange.RemoveAll(item => item == null);
+        interactablesInRange.RemoveAll(item => item == null || !item.activeInHierarchy);
         foreach (var obj in interactablesInRange)
         {
-            float dist = Vector2.Distance(transform.position, obj.transform.position);
+            float dist = Vector2.SqrMagnitude((Vector2)(transform.position - obj.transform.position));
             if (dist < minDistance)
             {
                 minDistance = dist;

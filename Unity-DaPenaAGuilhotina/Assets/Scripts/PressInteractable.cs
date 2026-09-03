@@ -8,9 +8,14 @@ public class PressInteractable : MonoBehaviour, IInteractable
 
     private void Start()
     {
+        // Fallback: usa o inventário global se não foi ligado no Inspector
+        if (inventoryManager == null && GameManager.Instance != null)
+            inventoryManager = GameManager.Instance.inventoryManager;
+
         // Padrão Observer: A Prensa começa a "escutar" o inventário
         if (inventoryManager != null)
         {
+            inventoryManager.OnInventoryToggled -= HandleInventoryToggled; // evita inscrição dupla
             inventoryManager.OnInventoryToggled += HandleInventoryToggled;
         }
     }
@@ -26,23 +31,26 @@ public class PressInteractable : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (pressUIPanel != null)
+        if (pressUIPanel == null)
         {
-            bool vaiAbrir = !pressUIPanel.activeSelf;
-            pressUIPanel.SetActive(vaiAbrir);
+            Debug.LogWarning("[PressInteractable] pressUIPanel não atribuído no Inspector.", this);
+            return;
+        }
 
-            if (inventoryManager != null && inventoryManager.inventoryUI != null)
+        bool vaiAbrir = !pressUIPanel.activeSelf;
+        pressUIPanel.SetActive(vaiAbrir);
+
+        if (inventoryManager != null && inventoryManager.inventoryUI != null)
+        {
+            // Abre ou fecha o inventário apenas se ele estiver dessincronizado da prensa
+            if (inventoryManager.inventoryUI.activeSelf != vaiAbrir)
             {
-                // Abre ou fecha o inventário apenas se ele estiver dessincronizado da prensa
-                if (inventoryManager.inventoryUI.activeSelf != vaiAbrir)
-                {
-                    inventoryManager.ToggleInventory();
-                }
+                inventoryManager.ToggleInventory();
             }
-            else
-            {
-                Time.timeScale = vaiAbrir ? 0f : 1f;
-            }
+        }
+        else
+        {
+            Time.timeScale = vaiAbrir ? 0f : 1f;
         }
     }
 
