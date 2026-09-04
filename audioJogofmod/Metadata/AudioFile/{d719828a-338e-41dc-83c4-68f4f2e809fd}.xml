@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{ad0edb27-6ebe-4c7d-a06e-44935258e6cc}">
+	<object class="AudioFile" id="{d719828a-338e-41dc-83c4-68f4f2e809fd}">
 		<property name="assetPath">
-			<value>fs madeira.wav</value>
+			<value>Guilhotina_02.wav</value>
 		</property>
 		<property name="isStreaming">
 			<value>true</value>

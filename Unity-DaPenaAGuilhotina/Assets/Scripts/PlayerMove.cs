@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using FMODUnity;
+using Unity.VisualScripting;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -9,12 +10,15 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private InputActionReference moveAction; // arraste a action "Move" aqui
 
     [Header("Áudio (FMOD)")]
-    [SerializeField] private EventReference footstepEvent;
+    //[SerializeField] private EventReference footstepEvent;
 
     private Rigidbody2D rb;
+
     private Animator anim;
     private SpriteRenderer spriteRenderer;
     private Vector2 move;
+    public GameObject fs;
+    public bool walk;
 
     void Awake()
     {
@@ -30,6 +34,7 @@ public class PlayerMove : MonoBehaviour
             moveAction.action.Enable();
             moveAction.action.performed += OnMovePerformed;
             moveAction.action.canceled += OnMovePerformed;
+            fs.SetActive(true);
         }
     }
 
@@ -40,6 +45,7 @@ public class PlayerMove : MonoBehaviour
             moveAction.action.performed -= OnMovePerformed;
             moveAction.action.canceled -= OnMovePerformed;
             moveAction.action.Disable();
+            fs.SetActive(false);
         }
     }
 
@@ -68,9 +74,9 @@ public class PlayerMove : MonoBehaviour
     }
 
     // Disparado pela Animation Event nos frames de contato do pé com o chão
-    public void PlayFootstep()
+    /*public void PlayFootstep()
     {
         if (footstepEvent.IsNull || move == Vector2.zero) return;
         RuntimeManager.PlayOneShot(footstepEvent, transform.position);
-    }
+    }*/
 }
