@@ -690,6 +690,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5827515608162278835, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 2.829956
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827515608162278835, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -4.119995
+      objectReference: {fileID: 0}
     - target: {fileID: 5952057542437194866, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1230,12 +1238,32 @@ PrefabInstance:
       value: Joalheiro
       objectReference: {fileID: 0}
     - target: {fileID: 3657492797209745752, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_Size.x
+      value: 1.0625
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657492797209745752, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_Size.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657492797209745752, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3d27a89e90a825e49b2bae0b3d82923b, type: 3}
+    - target: {fileID: 3657492797209745752, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_SortingLayer
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3657492797209745752, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_SortingLayerID
       value: -224709957
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657492797209745752, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607127782276985743, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5607127782276985743, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1276,6 +1304,38 @@ PrefabInstance:
     - target: {fileID: 5607127782276985743, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714086207090666989, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_SpriteTilingProperty.border.w
+      value: 0.0625
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714086207090666989, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_SpriteTilingProperty.border.x
+      value: 0.42708334
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714086207090666989, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_SpriteTilingProperty.border.y
+      value: 0.083333336
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714086207090666989, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_SpriteTilingProperty.border.z
+      value: 0.40625
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714086207090666989, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 1.0625
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714086207090666989, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714086207090666989, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 1.0625
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714086207090666989, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: dialogoPadrao
