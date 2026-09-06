@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using FMODUnity;
-using Unity.VisualScripting;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMove : MonoBehaviour
@@ -35,7 +33,7 @@ public class PlayerMove : MonoBehaviour
             moveAction.action.Enable();
             moveAction.action.performed += OnMovePerformed;
             moveAction.action.canceled += OnMovePerformed;
-            fs.SetActive(true);
+            if (fs != null) fs.SetActive(true);
         }
     }
 
@@ -46,7 +44,7 @@ public class PlayerMove : MonoBehaviour
             moveAction.action.performed -= OnMovePerformed;
             moveAction.action.canceled -= OnMovePerformed;
             moveAction.action.Disable();
-            fs.SetActive(false);
+            if (fs != null) fs.SetActive(false);
         }
     }
 
@@ -75,15 +73,4 @@ public class PlayerMove : MonoBehaviour
         rb.linearVelocity = new Vector2(move.x * moveSpeed, rb.linearVelocity.y);
     }
 
-    // Disparado pela Animation Event nos frames de contato do pé com o chão
-    /*public void PlayFootstep()
-    {
-        if (footstepEvent.IsNull || move == Vector2.zero) return;
-        RuntimeManager.PlayOneShot(footstepEvent, transform.position);
-<<<<<<< Updated upstream
-    }*/
 }
-=======
-    }
-}
->>>>>>> Stashed changes
