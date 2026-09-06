@@ -43,6 +43,9 @@ public class TypeTextAnimation : MonoBehaviour
 
     public void StartTyping() 
     {
+        if (coroutine != null)
+            StopCoroutine(coroutine);
+
         coroutine = StartCoroutine(TypeText());
     }
 
@@ -56,14 +59,19 @@ public class TypeTextAnimation : MonoBehaviour
         for(int i = 0; i <= textObject.text.Length; i++) 
         {
             textObject.maxVisibleCharacters = i;
-            yield return new WaitForSeconds(typeDelay);
+            yield return new WaitForSecondsRealtime(Mathf.Max(0f, typeDelay));
         }
+        coroutine = null;
         TypeFinished?.Invoke();
     }
 
     public void Skip() 
     {
-        if (coroutine != null) StopCoroutine(coroutine);
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+        }
         if (textObject != null) textObject.maxVisibleCharacters = textObject.text.Length;
     }
 }

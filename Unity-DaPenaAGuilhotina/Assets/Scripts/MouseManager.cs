@@ -100,4 +100,19 @@ public class MouseManager : MonoBehaviour
             activeSlot.inventoryManager.ClearItemSlot(activeSlot);
         }
     }
+
+    public bool ReturnHeldItemToInventory(InventoryManager inventory)
+    {
+        if (heldItem == null || heldItem.itemAmt <= 0)
+        {
+            heldItem = null;
+            return true;
+        }
+
+        if (inventory == null) return false;
+
+        bool stored = inventory.AddItem(heldItem);
+        if (stored) heldItem = null;
+        return stored;
+    }
 }

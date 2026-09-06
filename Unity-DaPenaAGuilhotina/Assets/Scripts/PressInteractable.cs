@@ -5,6 +5,7 @@ public class PressInteractable : MonoBehaviour, IInteractable
     [Header("Paineis de Interface (UI)")]
     public GameObject pressUIPanel;
     public InventoryManager inventoryManager;
+    private bool ownsPauseRequest;
 
     private void Start()
     {
@@ -27,6 +28,7 @@ public class PressInteractable : MonoBehaviour, IInteractable
         {
             inventoryManager.OnInventoryToggled -= HandleInventoryToggled;
         }
+        SetFallbackPause(false);
     }
 
     public void Interact()
@@ -50,7 +52,7 @@ public class PressInteractable : MonoBehaviour, IInteractable
         }
         else
         {
-            Time.timeScale = vaiAbrir ? 0f : 1f;
+            SetFallbackPause(vaiAbrir);
         }
     }
 
@@ -73,5 +75,16 @@ public class PressInteractable : MonoBehaviour, IInteractable
         {
             inventoryManager.ToggleInventory();
         }
+        else
+        {
+            SetFallbackPause(false);
+        }
+    }
+
+    private void SetFallbackPause(bool shouldPause)
+    {
+        if (ownsPauseRequest == shouldPause) return;
+        ownsPauseRequest = shouldPause;
+        PauseManager.RequestPause(shouldPause);
     }
 }

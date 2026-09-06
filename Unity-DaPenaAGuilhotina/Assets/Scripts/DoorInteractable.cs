@@ -17,9 +17,16 @@ public class DoorInteractable : MonoBehaviour, IInteractable
     public void Interact()
     {
         // Verifica se existe um item exigido e se o jogador não o possui
-        if (itemObrigatorio != null && GameManager.Instance != null && GameManager.Instance.inventoryManager != null)
+        if (itemObrigatorio != null)
         {
-            if (!GameManager.Instance.inventoryManager.HasItem(itemObrigatorio.itemID))
+            InventoryManager inventory = GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
+            if (inventory == null)
+            {
+                Debug.LogError("[DoorInteractable] Não foi possível validar o item obrigatório porque o inventário está ausente.", this);
+                return;
+            }
+
+            if (!inventory.HasItem(itemObrigatorio.itemID))
             {
                 Debug.Log("A porta está trancada. Preciso terminar o meu trabalho primeiro.");
                 
@@ -32,11 +39,18 @@ public class DoorInteractable : MonoBehaviour, IInteractable
             }
         }
 
+        if (string.IsNullOrWhiteSpace(cenaDestino) || !Application.CanStreamedLevelBeLoaded(cenaDestino))
+        {
+            Debug.LogError($"[DoorInteractable] Cena '{cenaDestino}' não está nas Build Settings.", this);
+            return;
+        }
+
         Debug.Log($"Salvando inventário e retornando para a cena: {cenaDestino}...");
         if (GameManager.Instance != null && GameManager.Instance.inventoryManager != null)
         {
             GameManager.Instance.inventoryManager.SalvarEstadoAtual();
         }
+        PauseManager.ForceReset();
         SceneManager.LoadScene(cenaDestino);
     }
 }

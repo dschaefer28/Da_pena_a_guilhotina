@@ -5,6 +5,7 @@ public class PauseMenu : MonoBehaviour
 {
     public GameObject container;
     public GameObject opções;
+    private bool ownsPauseRequest;
 
     void Update()
     {
@@ -26,8 +27,9 @@ public class PauseMenu : MonoBehaviour
 
     private void Pausar()
     {
+        if (container == null) return;
         container.SetActive(true);
-        Time.timeScale = 0;
+        SetPauseRequest(true);
 
         // Desliga o raycast dos controles mobile enquanto o menu de pause está aberto.
         if (MobileControlsManager.Instance != null)
@@ -36,8 +38,9 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumirButton()
     {
+        if (container == null) return;
         container.SetActive(false);
-        Time.timeScale = 1;
+        SetPauseRequest(false);
 
         // Devolve o raycast pros controles mobile assim que o menu fecha.
         if (MobileControlsManager.Instance != null)
@@ -54,7 +57,7 @@ public class PauseMenu : MonoBehaviour
     public void MainMenuButton()
     {
 
-        Time.timeScale = 1;
+        PauseManager.ForceReset();
         UnityEngine.SceneManagement.SceneManager.LoadScene("Menu principal");
     }
 
@@ -69,5 +72,18 @@ public class PauseMenu : MonoBehaviour
         {
             Pausar();
         }
+    }
+
+    private void SetPauseRequest(bool shouldPause)
+    {
+        if (ownsPauseRequest == shouldPause) return;
+        ownsPauseRequest = shouldPause;
+        PauseManager.RequestPause(shouldPause);
+    }
+
+    private void OnDestroy()
+    {
+        if (ownsPauseRequest)
+            SetPauseRequest(false);
     }
 }

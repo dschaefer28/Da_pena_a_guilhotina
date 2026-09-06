@@ -88,7 +88,7 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
                 inventario.SalvarEstadoAtual();
             }
 
-            Time.timeScale = 1f; // garante que a próxima cena não abra congelada
+            PauseManager.ForceReset();
             SceneManager.LoadScene(nomeCenaPorao);
         }
         else

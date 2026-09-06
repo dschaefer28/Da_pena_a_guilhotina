@@ -58,7 +58,12 @@ public class DialogueSystem : MonoBehaviour
     public void AdvanceDialogue()
     {
         if (state == STATE.DISABLED) { Next(); return; }
-        if (state == STATE.TYPING) { typeText.Skip(); OnTypeFinished(); return; }
+        if (state == STATE.TYPING)
+        {
+            if (typeText != null) typeText.Skip();
+            OnTypeFinished();
+            return;
+        }
         if (state == STATE.WAITING)
         {
             if (!finished) Next();
@@ -78,7 +83,7 @@ public class DialogueSystem : MonoBehaviour
         }
 
         // FMOD: se os banks ainda não terminaram de carregar, a 1ª fala costuma sair muda
-        if (currentText == 0 && !FMODUnity.RuntimeManager.HaveAllBanksLoaded)
+        if (Application.isPlaying && currentText == 0 && !FMODUnity.RuntimeManager.HaveAllBanksLoaded)
         {
             Debug.LogWarning("[DialogueSystem] FMOD ainda não carregou todos os banks — " +
                              "o áudio da primeira fala pode não tocar.");
@@ -98,20 +103,31 @@ public class DialogueSystem : MonoBehaviour
 
             FMOD.RESULT startResult = currentAudioInstance.start();
             if (startResult != FMOD.RESULT.OK)
+            {
                 Debug.LogWarning($"[DialogueSystem] start() do áudio da fala '{speakerName}' " +
                                  $"retornou {startResult}.");
-
-            currentAudioInstance.release();
+                currentAudioInstance.release();
+                currentAudioInstance = default;
+            }
         }
 
         OnDialogueLineStarted?.Invoke(speakerName, speakerText);
         currentText++;
         if(currentText >= dialogueData.talkScript.Count) finished = true;
         state = STATE.TYPING;
+
+        if (typeText == null)
+            OnTypeFinished();
     }
 
     void OnTypeFinished() 
     {
+        if (dialogueData == null || dialogueData.talkScript == null || currentText <= 0 || currentText > dialogueData.talkScript.Count)
+        {
+            EndDialogue();
+            return;
+        }
+
         StopCurrentAudio();
         Dialogue currentDialogue = dialogueData.talkScript[currentText - 1];
         if (currentDialogue.choices != null && currentDialogue.choices.Count > 0) 
@@ -141,7 +157,13 @@ public class DialogueSystem : MonoBehaviour
         {
             currentAudioInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             currentAudioInstance.release();
+            currentAudioInstance = default;
         }
+    }
+
+    private void OnDestroy()
+    {
+        StopCurrentAudio();
     }
 
     void SetupChoices(Dialogue dialogue) 

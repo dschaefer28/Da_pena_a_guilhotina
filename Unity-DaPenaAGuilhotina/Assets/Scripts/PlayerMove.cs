@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using FMODUnity;
 using Unity.VisualScripting;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMove : MonoBehaviour
 {
     [Header("Movimento")]
@@ -70,6 +71,7 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (rb == null) return;
         rb.linearVelocity = new Vector2(move.x * moveSpeed, rb.linearVelocity.y);
     }
 
@@ -78,5 +80,10 @@ public class PlayerMove : MonoBehaviour
     {
         if (footstepEvent.IsNull || move == Vector2.zero) return;
         RuntimeManager.PlayOneShot(footstepEvent, transform.position);
+<<<<<<< Updated upstream
     }*/
 }
+=======
+    }
+}
+>>>>>>> Stashed changes

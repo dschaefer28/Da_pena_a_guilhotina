@@ -19,6 +19,15 @@ public class PauseManager : MonoBehaviour
     /// <summary>True enquanto houver qualquer solicitação de pause ativa.</summary>
     public bool IsPaused => pauseRequests > 0;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void EnsureInstanceExists()
+    {
+        if (Instance != null) return;
+
+        GameObject pauseManagerObject = new GameObject(nameof(PauseManager));
+        pauseManagerObject.AddComponent<PauseManager>();
+    }
+
     private void Awake()
     {
         if (Instance != null && Instance != this)

@@ -49,12 +49,19 @@ public class NPCMovement : MonoBehaviour, IInteractable
 
     // Guarda temporariamente a lista de itens que o NPC vai dar ao fim da conversa atual
     private List<Item> recompensasPendentes = new List<Item>();
+    private DialogueSystem subscribedDialogueSystem;
 
     void Start() { UpdateVisualFeedback(); }
 
     public void Interact()
     {
         if (!canInteract) return;
+
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError($"[NPCMovement] GameManager ausente para o NPC '{name}'.", this);
+            return;
+        }
 
         if (casoObrigatorio != null && GameManager.Instance.casoEscolhido != casoObrigatorio)
         {
@@ -90,7 +97,6 @@ public class NPCMovement : MonoBehaviour, IInteractable
                     else if (reacao.dialogoInicialDoCaso != null)
                     {
                         dialogoParaTocar = reacao.dialogoInicialDoCaso;
-                        PrepararRecompensas(reacao.recompensasDoDialogo);
                     }
                     
                     break; 
@@ -101,7 +107,9 @@ public class NPCMovement : MonoBehaviour, IInteractable
         if (dialogoParaTocar != null)
         {
             dialogueSystem.dialogueData = dialogoParaTocar;
+            dialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
             dialogueSystem.OnDialogueEnded += HandleDialogueEnded;
+            subscribedDialogueSystem = dialogueSystem;
             dialogueSystem.Next();
         }
         else
@@ -127,27 +135,35 @@ public class NPCMovement : MonoBehaviour, IInteractable
 
     private void HandleDialogueEnded()
     {
-        DialogueSystem dialogueSystem = GameManager.Instance.dialogueSystem;
-        if (dialogueSystem != null) dialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
+        if (subscribedDialogueSystem != null)
+        {
+            subscribedDialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
+            subscribedDialogueSystem = null;
+        }
 
         // Entrega todos os itens da lista de uma vez
-        if (recompensasPendentes.Count > 0 && GameManager.Instance.inventoryManager != null)
+        InventoryManager inventory = GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
+        if (recompensasPendentes.Count > 0 && inventory != null)
         {
+            List<Item> naoEntregues = new List<Item>();
             foreach (Item itemPendente in recompensasPendentes)
             {
                 Item recompensa = itemPendente.Clone();
                 recompensa.itemAmt = 1;
-                GameManager.Instance.inventoryManager.AddItem(recompensa);
-                Debug.Log($"[SISTEMA] O NPC {gameObject.name} te entregou: {recompensa.name}");
+
+                if (inventory.AddItem(recompensa))
+                    Debug.Log($"[SISTEMA] O NPC {gameObject.name} te entregou: {recompensa.name}");
+                else
+                    naoEntregues.Add(itemPendente);
             }
-            
-            recompensasPendentes.Clear();
-            DisableInteraction();
+
+            recompensasPendentes = naoEntregues;
         }
 
-        if (disableAfterDialogue) DisableInteraction();
+        if (disableAfterDialogue && recompensasPendentes.Count == 0)
+            DisableInteraction();
         
-        if (!blockEvents)
+        if (!blockEvents && recompensasPendentes.Count == 0)
         {
             OnDialogueComplete?.Invoke();
         }
@@ -171,5 +187,11 @@ public class NPCMovement : MonoBehaviour, IInteractable
     {
         blockEvents = true;
         Debug.Log($"Os eventos futuros de {gameObject.name} foram bloqueados!");
+    }
+
+    private void OnDestroy()
+    {
+        if (subscribedDialogueSystem != null)
+            subscribedDialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
     }
 }

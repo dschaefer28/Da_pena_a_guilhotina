@@ -15,9 +15,16 @@ public class TableInteractable : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (itemObrigatorio != null && GameManager.Instance != null && GameManager.Instance.inventoryManager != null)
+        if (itemObrigatorio != null)
         {
-            if (!GameManager.Instance.inventoryManager.HasItem(itemObrigatorio.itemID))
+            InventoryManager inventory = GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
+            if (inventory == null)
+            {
+                Debug.LogError("[TableInteractable] Não foi possível validar o item obrigatório porque o inventário está ausente.", this);
+                return;
+            }
+
+            if (!inventory.HasItem(itemObrigatorio.itemID))
             {
                 if (pensamentoBloqueado != null && GameManager.Instance.dialogueSystem != null)
                 {
@@ -26,6 +33,12 @@ public class TableInteractable : MonoBehaviour, IInteractable
                 }
                 return; // Impede que o painel abra
             }
+        }
+
+        if (caseSelectionUI == null)
+        {
+            Debug.LogError("[TableInteractable] caseSelectionUI não atribuída.", this);
+            return;
         }
 
         if (caseSelectionUI.activeSelf) return;

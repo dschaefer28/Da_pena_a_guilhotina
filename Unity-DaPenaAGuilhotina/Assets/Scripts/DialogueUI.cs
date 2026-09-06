@@ -105,7 +105,10 @@ public class DialogueUI : MonoBehaviour
     }
 
     private void HandleChoicesCleared() { ClearChoices(); }
-    public void SetName(string name) { nameText.text = name; }
+    public void SetName(string name)
+    {
+        if (nameText != null) nameText.text = name;
+    }
 
     public void Enable()
     {
@@ -116,17 +119,32 @@ public class DialogueUI : MonoBehaviour
     public void Disable()
     {
         open = false;
-        nameText.text = "";
-        talkText.text = "";
+        if (nameText != null) nameText.text = "";
+        if (talkText != null) talkText.text = "";
         ClearChoices();
     }
 
     public void CreateChoiceButton(string text, UnityEngine.Events.UnityAction onClickAction)
     {
+        if (choiceButtonPrefab == null || choicesContainer == null)
+        {
+            Debug.LogError("[DialogueUI] choiceButtonPrefab ou choicesContainer não atribuído.", this);
+            return;
+        }
+
         GameObject newButton = Instantiate(choiceButtonPrefab, choicesContainer);
+        TextMeshProUGUI buttonText = newButton.GetComponentInChildren<TextMeshProUGUI>();
+        Button button = newButton.GetComponent<Button>();
+        if (buttonText == null || button == null)
+        {
+            Debug.LogError("[DialogueUI] Prefab de escolha sem Button ou TextMeshProUGUI.", newButton);
+            Destroy(newButton);
+            return;
+        }
+
         activeButtons.Add(newButton);
-        newButton.GetComponentInChildren<TextMeshProUGUI>().text = text;
-        newButton.GetComponent<Button>().onClick.AddListener(onClickAction);
+        buttonText.text = text;
+        button.onClick.AddListener(onClickAction);
     }
 
     public void ClearChoices()

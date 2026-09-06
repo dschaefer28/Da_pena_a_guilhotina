@@ -16,6 +16,7 @@ public class InventoryManager : MonoBehaviour
 
     // NOVO: Evento Observer para avisar outras UIs (como a Prensa)
     public event Action<bool> OnInventoryToggled; 
+    private bool ownsPauseRequest;
 
    private void Awake()
     {
@@ -29,8 +30,6 @@ public class InventoryManager : MonoBehaviour
         ConfigureInventory();
         if(inventoryUI != null) inventoryUI.SetActive(false);
 
-        // Segurança: nenhuma cena deve iniciar com o jogo congelado por um inventário aberto na cena anterior
-        Time.timeScale = 1f;
     }
 
     public void ToggleInventory()
@@ -38,6 +37,10 @@ public class InventoryManager : MonoBehaviour
         if (inventoryUI != null)
         {
             bool vaiAbrir = !inventoryUI.activeSelf;
+
+            if (!vaiAbrir && MouseManager.instance != null)
+                MouseManager.instance.ReturnHeldItemToInventory(this);
+
             inventoryUI.SetActive(vaiAbrir);
 
             if (!somToggleInventario.IsNull)
@@ -46,8 +49,21 @@ public class InventoryManager : MonoBehaviour
             // Dispara o evento avisando a Prensa se o inventário abriu(true) ou fechou(false)
             OnInventoryToggled?.Invoke(vaiAbrir);
 
-            Time.timeScale = vaiAbrir ? 0f : 1f;
+            SetPauseRequest(vaiAbrir);
         }
+    }
+
+    private void SetPauseRequest(bool shouldPause)
+    {
+        if (ownsPauseRequest == shouldPause) return;
+        ownsPauseRequest = shouldPause;
+        PauseManager.RequestPause(shouldPause);
+    }
+
+    private void OnDestroy()
+    {
+        if (ownsPauseRequest)
+            SetPauseRequest(false);
     }
     public void PlaceInInventory(UISlotHandler activeSlot, Item item)
     {
@@ -205,6 +221,18 @@ public class InventoryManager : MonoBehaviour
                 Item clone = slot.item.Clone();
                 itensParaSalvar.Add(clone);
             }
+        }
+
+        // Um item arrastado não está em nenhum slot. Incluí-lo aqui impede que desapareça
+        // caso a cena mude antes de o jogador soltá-lo de volta no inventário.
+        Item itemNaMao = MouseManager.instance != null ? MouseManager.instance.GetHeldItem : null;
+        if (itemNaMao != null && itemNaMao.itemAmt > 0)
+        {
+            Item stackExistente = itensParaSalvar.Find(item => item != null && item.Matches(itemNaMao));
+            if (stackExistente != null)
+                stackExistente.itemAmt += itemNaMao.itemAmt;
+            else
+                itensParaSalvar.Add(itemNaMao.Clone());
         }
         
         GameManager.Instance.inventarioSalvo = itensParaSalvar;

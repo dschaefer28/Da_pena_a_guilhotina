@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public DialogueSystem dialogueSystem;
 
     public event Action OnStatusChanged;
+    private readonly HashSet<CaseData> casosRecompensados = new HashSet<CaseData>();
 
     void Awake()
     {
@@ -59,10 +60,26 @@ public class GameManager : MonoBehaviour
         OnStatusChanged?.Invoke();
     }
 
-    public void ConfirmarCaso(CaseData caso)
+    public bool ConfirmarCaso(CaseData caso)
     {
+        if (caso == null)
+        {
+            Debug.LogWarning("[GameManager] Tentativa de confirmar um caso nulo.");
+            return false;
+        }
+
         casoEscolhido = caso;
+
+        // A recompensa pertence ao caso, portanto só pode ser concedida uma vez por sessão.
+        if (casosRecompensados.Add(caso))
+        {
+            capitalAtual += caso.moneyReward;
+            opiniaoPublicaAtual = Mathf.Clamp(opiniaoPublicaAtual + caso.publicOpinionReward, 0, 100);
+            ForcarAtualizacaoUI();
+        }
+
         Debug.Log($"Caso escolhido e salvo: {caso.caseTitle}");
+        return true;
     }
 
     public void AplicarImpactoPanfleto(int impactoPublico, int impactoEstado, int ouro)

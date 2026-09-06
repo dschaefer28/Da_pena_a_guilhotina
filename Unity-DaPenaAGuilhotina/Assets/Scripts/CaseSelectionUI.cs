@@ -23,6 +23,12 @@ public class CaseSelectionUI : MonoBehaviour
 
     private void GerarCartoesNaTela()
     {
+        if (cardsContainer == null || cardPrefab == null)
+        {
+            Debug.LogError("[CaseSelectionUI] cardsContainer ou cardPrefab não atribuído.", this);
+            return;
+        }
+
         // 1. Limpeza de Segurança: Destrói cartões velhos caso o jogador feche e abra a mesa de novo
         foreach (Transform child in cardsContainer)
         {
@@ -30,16 +36,31 @@ public class CaseSelectionUI : MonoBehaviour
         }
 
         // 2. Loop de Criação: Roda uma vez para cada caso na nossa lista
+        if (availableCases == null) return;
+
         foreach (CaseData caso in availableCases)
         {
+            if (caso == null) continue;
+
             // Tira a cópia do prefab e joga dentro da AreaDosCartoes
             GameObject novoCartao = Instantiate(cardPrefab, cardsContainer);
 
             // 3. Busca os componentes dentro da cópia exata que acabamos de criar
             // ATENÇÃO: Os nomes entre aspas devem ser exatamente iguais aos nomes na Hierarchy!
-            TextMeshProUGUI titulo = novoCartao.transform.Find("TituloTexto").GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI descricao = novoCartao.transform.Find("DescricaoTexto").GetComponent<TextMeshProUGUI>();
-            Button botaoAceitar = novoCartao.transform.Find("BotaoAceitar").GetComponent<Button>();
+            Transform tituloTransform = novoCartao.transform.Find("TituloTexto");
+            Transform descricaoTransform = novoCartao.transform.Find("DescricaoTexto");
+            Transform botaoTransform = novoCartao.transform.Find("BotaoAceitar");
+
+            TextMeshProUGUI titulo = tituloTransform != null ? tituloTransform.GetComponent<TextMeshProUGUI>() : null;
+            TextMeshProUGUI descricao = descricaoTransform != null ? descricaoTransform.GetComponent<TextMeshProUGUI>() : null;
+            Button botaoAceitar = botaoTransform != null ? botaoTransform.GetComponent<Button>() : null;
+
+            if (titulo == null || descricao == null || botaoAceitar == null)
+            {
+                Debug.LogError("[CaseSelectionUI] O prefab do cartão não possui TituloTexto, DescricaoTexto ou BotaoAceitar corretamente configurado.", novoCartao);
+                Destroy(novoCartao);
+                continue;
+            }
 
             // 4. Preenche os textos com os dados do ScriptableObject
             if (titulo != null) titulo.text = caso.caseTitle;
@@ -57,15 +78,32 @@ public class CaseSelectionUI : MonoBehaviour
     // Função chamada quando o botão "Aceitar" de um cartão é clicado
     private void ConfirmarEscolha(CaseData casoEscolhido)
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.ConfirmarCaso(casoEscolhido);
-        }
-        else
+        if (GameManager.Instance == null)
         {
             Debug.LogError("GameManager não encontrado na cena!");
+            FecharPainel();
+            return;
         }
 
+        string nextScene = casoEscolhido != null ? casoEscolhido.nextSceneName : null;
+        if (!string.IsNullOrWhiteSpace(nextScene) && !Application.CanStreamedLevelBeLoaded(nextScene))
+        {
+            Debug.LogError($"[CaseSelectionUI] Cena '{nextScene}' não está nas Build Settings.", casoEscolhido);
+            return;
+        }
+
+        if (GameManager.Instance.ConfirmarCaso(casoEscolhido))
+        {
+            InventoryManager inventory = GameManager.Instance.inventoryManager;
+            if (inventory != null) inventory.SalvarEstadoAtual();
+
+            if (!string.IsNullOrWhiteSpace(nextScene))
+            {
+                PauseManager.ForceReset();
+                UnityEngine.SceneManagement.SceneManager.LoadScene(nextScene);
+                return;
+            }
+        }
         FecharPainel();
     }
 
