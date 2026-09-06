@@ -18,3 +18,4 @@ MonoBehaviour:
   publicOpinionImpact: -20
   stateOpinionImpact: 50
   moneyReward: 50
+  caso: {fileID: 11400000, guid: 5c0733705941aa94db8fdec6796223e7, type: 2}

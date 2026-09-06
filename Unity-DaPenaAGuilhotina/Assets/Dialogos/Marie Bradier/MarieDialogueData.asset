@@ -24,5 +24,5 @@ MonoBehaviour:
         Data4: -1031367414
       Path: event:/reclamar feminino_01
     choices:
-    - choiceText: E onde seu marido e os outros estavam nessa noite?
-      nextDialogue: {fileID: 11400000, guid: b81fc808942eb8841876a75118ac997f, type: 2}
+    - choiceText: Por favor, se acalme, vamos te ajudar. O que aconteceu?
+      nextDialogue: {fileID: 11400000, guid: a7e42bc888792a24d8f5066c66a3e3fc, type: 2}

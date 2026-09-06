@@ -60,6 +60,7 @@ public class CraftingPress : MonoBehaviour
         if (slotInput1.item == null || slotInput2.item == null)
         {
             Debug.Log("Faltam ingredientes nos slots!");
+            GameFeedback.Show("Coloque duas evidências nos espaços da prensa.");
             return;
         }
 
@@ -73,11 +74,25 @@ public class CraftingPress : MonoBehaviour
 
         if (recipeDictionary.TryGetValue(attemptKey, out Recipe validRecipe) && validRecipe.resultItem != null)
         {
+            if (slotInput1.item.itemAmt <= 0 || slotInput2.item.itemAmt <= 0) return;
+            if (validRecipe.caso != null && GameManager.Instance.casoEscolhido != validRecipe.caso)
+            {
+                GameFeedback.Show("Estas evidências pertencem a outro caso.");
+                return;
+            }
+            if (GameManager.Instance.WasPublished(validRecipe.resultItem))
+            {
+                GameFeedback.Show("Este panfleto já foi publicado.");
+                return;
+            }
             if (slotOutput.item == null || slotOutput.item.itemID == validRecipe.resultItem.itemID)
             {
                 ConsumeItem(slotInput1);
                 ConsumeItem(slotInput2);
                 ProduceItem(validRecipe.resultItem);
+                GameManager.Instance.RegisterPublication(validRecipe.resultItem);
+                GameFeedback.Show($"Panfleto impresso: {validRecipe.resultItem.DisplayName}\nRecolha o resultado para continuar.");
+                GameFeedback.PlaySound("event:/carimbo");
                 
                 // Dispara a consequência matemática da receita (GDD)
                 GameManager.Instance.AplicarImpactoPanfleto(
@@ -89,12 +104,30 @@ public class CraftingPress : MonoBehaviour
             else
             {
                 Debug.Log("O slot de saída está ocupado com outro item!");
+                GameFeedback.Show("Recolha o panfleto anterior antes de imprimir.");
             }
         }
         else
         {
             Debug.Log("Combinação inválida! Esta mistura não gera um panfleto reconhecido.");
+            GameFeedback.Show("Essas evidências não formam um panfleto. Tente outra combinação.");
         }
+    }
+
+    public bool ReturnItemsToInventory()
+    {
+        if (Inventario == null) return false;
+        foreach (var slot in new[] { slotInput1, slotInput2, slotOutput })
+        {
+            if (slot == null || slot.item == null) continue;
+            if (!Inventario.AddItem(slot.item, false))
+            {
+                GameFeedback.Show("Libere espaço no inventário para guardar os itens da prensa.");
+                return false;
+            }
+            Inventario.ClearItemSlot(slot);
+        }
+        return true;
     }
 
     private void ConsumeItem(UISlotHandler slot)

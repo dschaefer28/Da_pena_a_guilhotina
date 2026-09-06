@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement; // NOVO: Permite gerenciar eventos de carregamento de cena
 
+[DefaultExecutionOrder(-100)]
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -24,6 +25,20 @@ public class GameManager : MonoBehaviour
 
     public event Action OnStatusChanged;
     private readonly HashSet<CaseData> casosRecompensados = new HashSet<CaseData>();
+    private readonly HashSet<DialogueData> dialogosConcluidos = new HashSet<DialogueData>();
+    private readonly HashSet<string> panfletosPublicados = new HashSet<string>();
+
+    public bool DialogueCompleted(DialogueData dialogue) => dialogue != null && dialogosConcluidos.Contains(dialogue);
+    public void CompleteDialogue(DialogueData dialogue)
+    {
+        if (dialogue != null) dialogosConcluidos.Add(dialogue);
+    }
+
+    public bool WasPublished(Item item) => item != null && panfletosPublicados.Contains(item.itemID);
+    public void RegisterPublication(Item item)
+    {
+        if (item != null) panfletosPublicados.Add(item.itemID);
+    }
 
     void Awake()
     {

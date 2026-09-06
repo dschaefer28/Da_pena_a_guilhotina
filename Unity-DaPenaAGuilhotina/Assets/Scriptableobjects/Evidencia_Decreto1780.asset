@@ -15,3 +15,5 @@ MonoBehaviour:
   itemID: Evidencia_Decreto1780
   itemImg: {fileID: 8573063344119951801, guid: aad06a6aeb830864797c5dbd9ea8a961, type: 3}
   itemAmt: 0
+  displayName: "Decreto de 1780"
+  description: "Documento entregue por Dupaty: abolição da tortura na instrução de processos."

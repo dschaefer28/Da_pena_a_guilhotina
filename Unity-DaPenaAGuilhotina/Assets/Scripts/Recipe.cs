@@ -3,6 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NovaReceitaPanfleto", menuName = "ScriptableObjects/Receita de Panfleto")]
 public class Recipe : ScriptableObject
 {
+    public CaseData caso;
     [Header("Evidências Necessárias (Ingredientes)")]
     [Tooltip("Arraste o ScriptableObject da primeira pista aqui.")]
     public Item ingrediente1; 
@@ -28,7 +29,7 @@ public class Recipe : ScriptableObject
     {
         return ingrediente1 != null && !string.IsNullOrEmpty(ingrediente1.itemID)
             && ingrediente2 != null && !string.IsNullOrEmpty(ingrediente2.itemID)
-            && resultItem != null;
+            && resultItem != null && !string.IsNullOrEmpty(resultItem.itemID);
     }
 
 #if UNITY_EDITOR

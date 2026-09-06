@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: Item_operario1
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: 
-  itemImg: {fileID: 0}
+  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 0
+  displayName: "Item operario1"
+  description: "Evidência ou panfleto para consultar durante a investigação."

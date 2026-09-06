@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
@@ -17,6 +18,7 @@ public class DialogueSystem : MonoBehaviour
 
     public event Action OnDialogueStarted;
     public event Action OnDialogueEnded;
+    public event Action OnDialogueCancelled;
     public event Action<string, string> OnDialogueLineStarted;
     public event Action<List<Choice>> OnChoicesAvailable;
     public event Action OnChoicesCleared;
@@ -26,7 +28,8 @@ public class DialogueSystem : MonoBehaviour
     int currentText = 0;
     bool finished = false;
     TypeTextAnimation typeText;
-    STATE state;
+    STATE state = STATE.DISABLED;
+    private Coroutine pendingAudio;
     
     private FMOD.Studio.EventInstance currentAudioInstance;
 
@@ -47,12 +50,6 @@ public class DialogueSystem : MonoBehaviour
         {
             Debug.LogError("TypeTextAnimation não foi encontrado no GameObject DialogueManager!");
         }
-    }
-
-    void Start() 
-    {
-        state = STATE.DISABLED;
-        IsDialogueActive = false;
     }
 
     public void AdvanceDialogue()
@@ -78,7 +75,7 @@ public class DialogueSystem : MonoBehaviour
         if (dialogueData == null || dialogueData.talkScript == null || dialogueData.talkScript.Count == 0) 
         {
             Debug.LogWarning("ScriptableObject de diálogo vazio!");
-            EndDialogue();
+            CancelDialogue();
             return;
         }
 
@@ -91,7 +88,7 @@ public class DialogueSystem : MonoBehaviour
 
         StopCurrentAudio();
 
-        if(currentText == 0) OnDialogueStarted?.Invoke();
+        if(currentText == 0 && state == STATE.DISABLED) OnDialogueStarted?.Invoke();
 
         Dialogue currentDialogue = dialogueData.talkScript[currentText];
         string speakerName = currentDialogue.name;
@@ -99,22 +96,13 @@ public class DialogueSystem : MonoBehaviour
         
         if (!currentDialogue.dialogueAudio.IsNull)
         {
-            currentAudioInstance = FMODUnity.RuntimeManager.CreateInstance(currentDialogue.dialogueAudio);
-
-            FMOD.RESULT startResult = currentAudioInstance.start();
-            if (startResult != FMOD.RESULT.OK)
-            {
-                Debug.LogWarning($"[DialogueSystem] start() do áudio da fala '{speakerName}' " +
-                                 $"retornou {startResult}.");
-                currentAudioInstance.release();
-                currentAudioInstance = default;
-            }
+            pendingAudio = StartCoroutine(PlayLineAudio(currentDialogue.dialogueAudio));
         }
 
-        OnDialogueLineStarted?.Invoke(speakerName, speakerText);
         currentText++;
         if(currentText >= dialogueData.talkScript.Count) finished = true;
         state = STATE.TYPING;
+        OnDialogueLineStarted?.Invoke(speakerName, speakerText);
 
         if (typeText == null)
             OnTypeFinished();
@@ -128,7 +116,6 @@ public class DialogueSystem : MonoBehaviour
             return;
         }
 
-        StopCurrentAudio();
         Dialogue currentDialogue = dialogueData.talkScript[currentText - 1];
         if (currentDialogue.choices != null && currentDialogue.choices.Count > 0) 
         {
@@ -144,15 +131,51 @@ public class DialogueSystem : MonoBehaviour
     void EndDialogue() 
     {
         StopCurrentAudio();
-        OnDialogueEnded?.Invoke();
+        OnChoicesCleared?.Invoke();
         state = STATE.DISABLED;
         currentText = 0;
         finished = false;
         IsDialogueActive = false;
+        OnDialogueEnded?.Invoke();
+    }
+
+    public void CancelDialogue()
+    {
+        bool wasActive = IsDialogueActive;
+        StopCurrentAudio();
+        if (typeText != null) typeText.Skip();
+        state = STATE.DISABLED;
+        currentText = 0;
+        finished = false;
+        IsDialogueActive = false;
+        OnChoicesCleared?.Invoke();
+        if (wasActive) OnDialogueCancelled?.Invoke();
+    }
+
+    private IEnumerator PlayLineAudio(EventReference audio)
+    {
+        // Keep the request attached to this line; advancing cancels it.
+        float deadline = Time.realtimeSinceStartup + 5f;
+        while (!RuntimeManager.HaveAllBanksLoaded && Time.realtimeSinceStartup < deadline)
+            yield return null;
+
+        try
+        {
+            currentAudioInstance = RuntimeManager.CreateInstance(audio);
+            FMOD.RESULT result = currentAudioInstance.start();
+            if (result != FMOD.RESULT.OK)
+                Debug.LogWarning($"[DialogueSystem] Áudio não iniciou: {result}.");
+        }
+        catch (FMODUnity.EventNotFoundException exception)
+        {
+            Debug.LogWarning($"[DialogueSystem] {exception.Message}");
+        }
+        pendingAudio = null;
     }
 
     void StopCurrentAudio() 
     {
+        if (pendingAudio != null) { StopCoroutine(pendingAudio); pendingAudio = null; }
         if (currentAudioInstance.isValid()) 
         {
             currentAudioInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
@@ -163,7 +186,7 @@ public class DialogueSystem : MonoBehaviour
 
     private void OnDestroy()
     {
-        StopCurrentAudio();
+        CancelDialogue();
     }
 
     void SetupChoices(Dialogue dialogue) 
@@ -174,6 +197,7 @@ public class DialogueSystem : MonoBehaviour
 
     public void MakeChoice(DialogueData nextTalkData) 
     {
+        if (state != STATE.CHOOSING) return;
         OnChoicesCleared?.Invoke();
         if (nextTalkData != null) 
         {

@@ -57,6 +57,7 @@ private void OnToggleInventoryPerformed(InputAction.CallbackContext ctx) => Togg
 
     public void InteractMobile()
     {
+        if (SceneTransition.IsTransitioning || Time.timeScale == 0) return;
         if (GameManager.Instance != null && GameManager.Instance.dialogueSystem != null)
         {
             if (GameManager.Instance.dialogueSystem.IsDialogueActive)

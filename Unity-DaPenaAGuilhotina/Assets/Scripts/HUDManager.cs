@@ -14,8 +14,13 @@ public class HUDManager : MonoBehaviour
     private void Start()
     {
         // 1. Desativa a interação do mouse por segurança
-        if (publicOpinionSlider != null) publicOpinionSlider.interactable = false;
-        if (stateOpinionSlider != null) stateOpinionSlider.interactable = false;
+        foreach (var slider in new[] { publicOpinionSlider, stateOpinionSlider })
+        {
+            if (slider == null) continue;
+            slider.interactable = false;
+            slider.minValue = 0;
+            slider.maxValue = 100;
+        }
 
         // ARQUITETURA BLINDADA: 
         // O Start() garante que o Awake() do GameManager já terminou de rodar na cena.

@@ -38,12 +38,17 @@ public class InventoryManager : MonoBehaviour
         {
             bool vaiAbrir = !inventoryUI.activeSelf;
 
-            if (!vaiAbrir && MouseManager.instance != null)
-                MouseManager.instance.ReturnHeldItemToInventory(this);
+            if (!vaiAbrir)
+                foreach (var press in FindObjectsByType<CraftingPress>(FindObjectsSortMode.None))
+                    if (!press.ReturnItemsToInventory()) return;
+
+            if (!vaiAbrir && MouseManager.instance != null && !MouseManager.instance.ReturnHeldItemToInventory(this))
+                return;
 
             inventoryUI.SetActive(vaiAbrir);
 
-            if (!somToggleInventario.IsNull)
+            if (!vaiAbrir) GameFeedback.PlaySound("event:/portafechar", 0.3f);
+            else if (!somToggleInventario.IsNull)
                 RuntimeManager.PlayOneShot(somToggleInventario);
 
             // Dispara o evento avisando a Prensa se o inventário abriu(true) ou fechou(false)
@@ -133,9 +138,12 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public bool AddItem(Item itemToAdd)
+    public bool AddItem(Item itemToAdd) => AddItem(itemToAdd, true);
+
+    public bool AddItem(Item itemToAdd, bool notify)
     {
         if (itemToAdd == null) { Debug.LogWarning("[InventoryManager] AddItem recebeu item nulo."); return false; }
+        if (itemToAdd.itemAmt <= 0 || string.IsNullOrWhiteSpace(itemToAdd.itemID)) return false;
         if (inventoryGrid == null) { Debug.LogError("[InventoryManager] inventoryGrid não atribuído.", this); return false; }
 
         for (int i = 0; i < inventoryGrid.transform.childCount; i++)
@@ -144,6 +152,7 @@ public class InventoryManager : MonoBehaviour
             if (slot != null && slot.item != null && slot.item.itemID == itemToAdd.itemID)
             {
                 StackInInventory(slot, itemToAdd);
+                if (notify) NotifyReceived(itemToAdd);
                 return true;
             }
         }
@@ -155,13 +164,21 @@ public class InventoryManager : MonoBehaviour
             {
                 Item newItem = itemToAdd.Clone();
                 PlaceInInventory(slot, newItem);
+                if (notify) NotifyReceived(itemToAdd);
                 return true;
             }
         }
 
 
         Debug.Log("Inventário cheio! Não foi possível pegar o item.");
+        if (notify) GameFeedback.Show("Inventário cheio. Libere um espaço e tente novamente.");
         return false;
+    }
+
+    private void NotifyReceived(Item item)
+    {
+        GameFeedback.Show($"Recebido: {item.DisplayName}\nTAB para abrir o inventário.");
+        GameFeedback.PlaySound("event:/pegaritem");
     }
 
     // NOVO MÉTODO: Retorna verdadeiro se a pista/item já estiver no inventário
@@ -172,7 +189,7 @@ public class InventoryManager : MonoBehaviour
         for (int i = 0; i < inventoryGrid.transform.childCount; i++)
         {
             UISlotHandler slot = inventoryGrid.transform.GetChild(i).GetComponent<UISlotHandler>();
-            if (slot != null && slot.item != null && slot.item.itemID == searchItemID)
+            if (slot != null && slot.item != null && slot.item.itemAmt > 0 && slot.item.itemID == searchItemID)
             {
                 return true;
             }
@@ -250,7 +267,7 @@ public class InventoryManager : MonoBehaviour
             if (itemSalvo == null) continue; 
 
             Item clone = itemSalvo.Clone();
-            AddItem(clone);
+            AddItem(clone, false);
         }
         Debug.Log("[SISTEMA] Inventário Restaurado com segurança.");
     }

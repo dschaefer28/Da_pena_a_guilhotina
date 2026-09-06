@@ -37,6 +37,7 @@ public class DialogueUI : MonoBehaviour
             dialogueSystem.OnDialogueStarted += HandleDialogueStarted;
             dialogueSystem.OnDialogueLineStarted += HandleDialogueLineStarted;
             dialogueSystem.OnDialogueEnded += HandleDialogueEnded;
+            dialogueSystem.OnDialogueCancelled += HandleDialogueEnded;
             dialogueSystem.OnChoicesAvailable += HandleChoicesAvailable;
             dialogueSystem.OnChoicesCleared += HandleChoicesCleared;
         }
@@ -49,6 +50,7 @@ public class DialogueUI : MonoBehaviour
             dialogueSystem.OnDialogueStarted -= HandleDialogueStarted;
             dialogueSystem.OnDialogueLineStarted -= HandleDialogueLineStarted;
             dialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
+            dialogueSystem.OnDialogueCancelled -= HandleDialogueEnded;
             dialogueSystem.OnChoicesAvailable -= HandleChoicesAvailable;
             dialogueSystem.OnChoicesCleared -= HandleChoicesCleared;
         }
@@ -149,7 +151,7 @@ public class DialogueUI : MonoBehaviour
 
     public void ClearChoices()
     {
-        foreach (GameObject btn in activeButtons) { Destroy(btn); }
+        foreach (GameObject btn in activeButtons) { btn.SetActive(false); Destroy(btn); }
         activeButtons.Clear();
     }
 }

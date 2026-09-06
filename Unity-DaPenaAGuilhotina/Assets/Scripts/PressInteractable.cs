@@ -40,6 +40,7 @@ public class PressInteractable : MonoBehaviour, IInteractable
         }
 
         bool vaiAbrir = !pressUIPanel.activeSelf;
+        if (!vaiAbrir) { ClosePressUI(); return; }
         pressUIPanel.SetActive(vaiAbrir);
 
         if (inventoryManager != null && inventoryManager.inventoryUI != null)
@@ -68,17 +69,17 @@ public class PressInteractable : MonoBehaviour, IInteractable
 
     public void ClosePressUI()
     {
-        if(pressUIPanel != null) pressUIPanel.SetActive(false);
-        
         // Se a prensa foi fechada pelo próprio botão "X" dela, fecha o inventário junto
         if(inventoryManager != null && inventoryManager.inventoryUI != null && inventoryManager.inventoryUI.activeSelf)
         {
             inventoryManager.ToggleInventory();
+            if (inventoryManager.inventoryUI.activeSelf) return;
         }
         else
         {
             SetFallbackPause(false);
         }
+        if (pressUIPanel != null) pressUIPanel.SetActive(false);
     }
 
     private void SetFallbackPause(bool shouldPause)

@@ -36,6 +36,8 @@ public class NPCMovement : MonoBehaviour, IInteractable
     [Header("Restrição Estrita (Opcional)")]
     [Tooltip("Preencha APENAS se este NPC for figurante exclusivo de um caso (Ex: Marie). Deixe VAZIO para o Dupaty.")]
     public CaseData casoObrigatorio;
+    [Tooltip("Conversa que precisa terminar antes de liberar este NPC.")]
+    public DialogueData dialogoPrerequisito;
 
     private bool blockEvents = false;
 
@@ -50,8 +52,14 @@ public class NPCMovement : MonoBehaviour, IInteractable
     // Guarda temporariamente a lista de itens que o NPC vai dar ao fim da conversa atual
     private List<Item> recompensasPendentes = new List<Item>();
     private DialogueSystem subscribedDialogueSystem;
+    private DialogueData pendingDialogue;
 
-    void Start() { UpdateVisualFeedback(); }
+    void Start()
+    {
+        if (dialogoPrerequisito != null && GameManager.Instance != null)
+            canInteract = GameManager.Instance.DialogueCompleted(dialogoPrerequisito);
+        UpdateVisualFeedback();
+    }
 
     public void Interact()
     {
@@ -70,7 +78,8 @@ public class NPCMovement : MonoBehaviour, IInteractable
         }
 
         DialogueSystem dialogueSystem = GameManager.Instance.dialogueSystem;
-        if (dialogueSystem == null) return;
+        if (dialogueSystem == null || dialogueSystem.IsDialogueActive) return;
+        if (dialogoPrerequisito != null && !GameManager.Instance.DialogueCompleted(dialogoPrerequisito)) return;
 
         DialogueData dialogoParaTocar = dialogoPadrao; 
         recompensasPendentes.Clear(); // Limpa a lista antes de cada interação
@@ -83,7 +92,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
             {
                 if (reacao.caso == casoAtual)
                 {
-                    bool temAPista = false;
+                    bool temAPista = reacao.pistaNecessaria == null;
                     if (reacao.pistaNecessaria != null && GameManager.Instance.inventoryManager != null)
                     {
                         temAPista = GameManager.Instance.inventoryManager.HasItem(reacao.pistaNecessaria.itemID);
@@ -97,6 +106,8 @@ public class NPCMovement : MonoBehaviour, IInteractable
                     else if (reacao.dialogoInicialDoCaso != null)
                     {
                         dialogoParaTocar = reacao.dialogoInicialDoCaso;
+                        if (reacao.pistaNecessaria == null)
+                            PrepararRecompensas(reacao.recompensasDoDialogo);
                     }
                     
                     break; 
@@ -106,10 +117,17 @@ public class NPCMovement : MonoBehaviour, IInteractable
 
         if (dialogoParaTocar != null)
         {
+            if (GameManager.Instance.DialogueCompleted(dialogoParaTocar))
+            {
+                recompensasPendentes.Clear();
+                if (disableAfterDialogue) { DisableInteraction(); return; }
+            }
+            pendingDialogue = dialogoParaTocar;
             dialogueSystem.dialogueData = dialogoParaTocar;
             dialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
             dialogueSystem.OnDialogueEnded += HandleDialogueEnded;
             subscribedDialogueSystem = dialogueSystem;
+            dialogueSystem.OnDialogueCancelled += HandleDialogueCancelled;
             dialogueSystem.Next();
         }
         else
@@ -121,11 +139,11 @@ public class NPCMovement : MonoBehaviour, IInteractable
     // Rotina auxiliar para verificar e listar os itens que faltam no inventário
     private void PrepararRecompensas(List<Item> itensConfigurados)
     {
-        if (itensConfigurados != null && GameManager.Instance.inventoryManager != null)
+        if (itensConfigurados != null)
         {
             foreach (Item item in itensConfigurados)
             {
-                if (item != null && !GameManager.Instance.inventoryManager.HasItem(item.itemID))
+                if (item != null && (GameManager.Instance.inventoryManager == null || !GameManager.Instance.inventoryManager.HasItem(item.itemID)))
                 {
                     recompensasPendentes.Add(item);
                 }
@@ -138,11 +156,13 @@ public class NPCMovement : MonoBehaviour, IInteractable
         if (subscribedDialogueSystem != null)
         {
             subscribedDialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
+            subscribedDialogueSystem.OnDialogueCancelled -= HandleDialogueCancelled;
             subscribedDialogueSystem = null;
         }
 
         // Entrega todos os itens da lista de uma vez
         InventoryManager inventory = GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
+        if (recompensasPendentes.Count > 0 && inventory == null) return;
         if (recompensasPendentes.Count > 0 && inventory != null)
         {
             List<Item> naoEntregues = new List<Item>();
@@ -165,8 +185,23 @@ public class NPCMovement : MonoBehaviour, IInteractable
         
         if (!blockEvents && recompensasPendentes.Count == 0)
         {
-            OnDialogueComplete?.Invoke();
+            bool alreadyCompleted = GameManager.Instance.DialogueCompleted(pendingDialogue);
+            GameManager.Instance.CompleteDialogue(pendingDialogue);
+            if (!alreadyCompleted) OnDialogueComplete?.Invoke();
         }
+        if (recompensasPendentes.Count == 0 && inventory != null) inventory.SalvarEstadoAtual();
+    }
+
+    private void HandleDialogueCancelled()
+    {
+        if (subscribedDialogueSystem != null)
+        {
+            subscribedDialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
+            subscribedDialogueSystem.OnDialogueCancelled -= HandleDialogueCancelled;
+            subscribedDialogueSystem = null;
+        }
+        recompensasPendentes.Clear();
+        pendingDialogue = null;
     }
 
     public void EnableInteraction() { canInteract = true; UpdateVisualFeedback(); }
@@ -191,7 +226,6 @@ public class NPCMovement : MonoBehaviour, IInteractable
 
     private void OnDestroy()
     {
-        if (subscribedDialogueSystem != null)
-            subscribedDialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
+        HandleDialogueCancelled();
     }
 }

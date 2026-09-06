@@ -111,7 +111,7 @@ public class MouseManager : MonoBehaviour
 
         if (inventory == null) return false;
 
-        bool stored = inventory.AddItem(heldItem);
+        bool stored = inventory.AddItem(heldItem, false);
         if (stored) heldItem = null;
         return stored;
     }

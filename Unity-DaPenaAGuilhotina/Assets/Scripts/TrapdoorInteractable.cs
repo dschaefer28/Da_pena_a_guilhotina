@@ -26,6 +26,7 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        if (SceneTransition.IsTransitioning) return;
         if (GameManager.Instance == null)
         {
             Debug.LogWarning("[TrapdoorInteractable] GameManager ausente.");
@@ -81,6 +82,7 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
 
             if (!somAlcapao.IsNull)
                 RuntimeManager.PlayOneShot(somAlcapao, transform.position);
+            else GameFeedback.PlaySound("event:/bauabrir1");
 
             Debug.Log("Acessando o porão...");
             if (inventario != null)
@@ -89,7 +91,7 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
             }
 
             PauseManager.ForceReset();
-            SceneManager.LoadScene(nomeCenaPorao);
+            SceneTransition.Load(nomeCenaPorao);
         }
         else
         {

@@ -7,6 +7,9 @@ public class Item : ScriptableObject
 {
     public string itemID;
     public Sprite itemImg;
+    public string displayName;
+    [TextArea] public string description;
+    public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name.Replace('_', ' ') : displayName;
     [Min(0)] public int itemAmt;
 
     /// <summary>Verdadeiro se os dois itens representam o mesmo tipo (mesmo itemID não-vazio).</summary>

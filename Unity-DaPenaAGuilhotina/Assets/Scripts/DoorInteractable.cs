@@ -16,6 +16,7 @@ public class DoorInteractable : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        if (SceneTransition.IsTransitioning) return;
         // Verifica se existe um item exigido e se o jogador não o possui
         if (itemObrigatorio != null)
         {
@@ -51,6 +52,7 @@ public class DoorInteractable : MonoBehaviour, IInteractable
             GameManager.Instance.inventoryManager.SalvarEstadoAtual();
         }
         PauseManager.ForceReset();
-        SceneManager.LoadScene(cenaDestino);
+        GameFeedback.PlaySound("event:/portaabrir");
+        SceneTransition.Load(cenaDestino);
     }
 }

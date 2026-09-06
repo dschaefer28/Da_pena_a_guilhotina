@@ -33,7 +33,7 @@ public class PlayerMove : MonoBehaviour
             moveAction.action.Enable();
             moveAction.action.performed += OnMovePerformed;
             moveAction.action.canceled += OnMovePerformed;
-            if (fs != null) fs.SetActive(true);
+            if (fs != null) fs.SetActive(false);
         }
     }
 
@@ -55,6 +55,8 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
+        walk = !MovementBlocked && Mathf.Abs(move.x) > 0.01f;
+        if (fs != null && fs.activeSelf != walk) fs.SetActive(walk);
         if (spriteRenderer != null)
         {
             if (move.x > 0) spriteRenderer.flipX = false;
@@ -63,14 +65,17 @@ public class PlayerMove : MonoBehaviour
 
         if (anim != null)
         {
-            anim.SetBool("isWalking", move != Vector2.zero);
+            anim.SetBool("isWalking", walk);
         }
     }
 
     void FixedUpdate()
     {
         if (rb == null) return;
-        rb.linearVelocity = new Vector2(move.x * moveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(MovementBlocked ? 0 : move.x * moveSpeed, rb.linearVelocity.y);
     }
+
+    private bool MovementBlocked => SceneTransition.IsTransitioning || Time.timeScale == 0 ||
+        (GameManager.Instance != null && GameManager.Instance.dialogueSystem != null && GameManager.Instance.dialogueSystem.IsDialogueActive);
 
 }

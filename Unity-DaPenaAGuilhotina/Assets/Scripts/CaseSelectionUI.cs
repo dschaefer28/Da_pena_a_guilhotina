@@ -18,8 +18,11 @@ public class CaseSelectionUI : MonoBehaviour
     // Roda automaticamente quando o painel for ativado pelo TableInteractable
     void OnEnable()
     {
+        PauseManager.RequestPause(true);
         GerarCartoesNaTela();
     }
+
+    void OnDisable() { PauseManager.RequestPause(false); }
 
     private void GerarCartoesNaTela()
     {
@@ -65,6 +68,14 @@ public class CaseSelectionUI : MonoBehaviour
             // 4. Preenche os textos com os dados do ScriptableObject
             if (titulo != null) titulo.text = caso.caseTitle;
             if (descricao != null) descricao.text = caso.caseDescription;
+            titulo.fontStyle &= ~(FontStyles.UpperCase | FontStyles.SmallCaps);
+            descricao.fontStyle &= ~(FontStyles.UpperCase | FontStyles.SmallCaps);
+            if (GameManager.Instance != null && GameManager.Instance.casoEscolhido == caso)
+            {
+                var buttonLabel = botaoAceitar.GetComponentInChildren<TextMeshProUGUI>();
+                if (buttonLabel != null) buttonLabel.text = "Caso aceito";
+                botaoAceitar.interactable = false;
+            }
 
             // 5. Configura o botão dinamicamente para avisar qual caso ele representa
             if (botaoAceitar != null)
@@ -78,6 +89,7 @@ public class CaseSelectionUI : MonoBehaviour
     // Função chamada quando o botão "Aceitar" de um cartão é clicado
     private void ConfirmarEscolha(CaseData casoEscolhido)
     {
+        if (SceneTransition.IsTransitioning) return;
         if (GameManager.Instance == null)
         {
             Debug.LogError("GameManager não encontrado na cena!");
@@ -94,13 +106,15 @@ public class CaseSelectionUI : MonoBehaviour
 
         if (GameManager.Instance.ConfirmarCaso(casoEscolhido))
         {
+            GameFeedback.Show($"Caso aceito: {casoEscolhido.caseTitle}\n{casoEscolhido.objectiveText}");
             InventoryManager inventory = GameManager.Instance.inventoryManager;
             if (inventory != null) inventory.SalvarEstadoAtual();
 
             if (!string.IsNullOrWhiteSpace(nextScene))
             {
                 PauseManager.ForceReset();
-                UnityEngine.SceneManagement.SceneManager.LoadScene(nextScene);
+                FecharPainel();
+                SceneTransition.Load(nextScene);
                 return;
             }
         }
