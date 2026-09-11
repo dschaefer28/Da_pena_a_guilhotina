@@ -7,16 +7,16 @@ public class PlayerMove : MonoBehaviour
 {
     [Header("Movimento")]
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private InputActionReference moveAction; // arraste a action "Move" aqui
+    [SerializeField] private InputActionReference moveAction;
 
     [Header("Áudio (FMOD)")]
     //[SerializeField] private EventReference footstepEvent;
 
     private Rigidbody2D rb;
-
     private Animator anim;
     private SpriteRenderer spriteRenderer;
     private Vector2 move;
+
     public GameObject fs;
     public bool walk;
 
@@ -27,6 +27,15 @@ public class PlayerMove : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    void Start()
+    {
+        // Garante que o objeto comece desativado
+        if (fs != null)
+        {
+            fs.SetActive(false);
+        }
+    }
+
     void OnEnable()
     {
         if (moveAction != null)
@@ -34,7 +43,6 @@ public class PlayerMove : MonoBehaviour
             moveAction.action.Enable();
             moveAction.action.performed += OnMovePerformed;
             moveAction.action.canceled += OnMovePerformed;
-            fs.SetActive(true);
         }
     }
 
@@ -45,7 +53,6 @@ public class PlayerMove : MonoBehaviour
             moveAction.action.performed -= OnMovePerformed;
             moveAction.action.canceled -= OnMovePerformed;
             moveAction.action.Disable();
-            fs.SetActive(false);
         }
     }
 
@@ -56,6 +63,8 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
+        bool isMoving = move != Vector2.zero;
+
         if (spriteRenderer != null)
         {
             if (move.x > 0) spriteRenderer.flipX = false;
@@ -64,7 +73,13 @@ public class PlayerMove : MonoBehaviour
 
         if (anim != null)
         {
-            anim.SetBool("isWalking", move != Vector2.zero);
+            anim.SetBool("isWalking", isMoving);
+        }
+
+        // Ativa se estiver andando, desativa se estiver parado
+        if (fs != null)
+        {
+            fs.SetActive(isMoving);
         }
     }
 
@@ -72,11 +87,4 @@ public class PlayerMove : MonoBehaviour
     {
         rb.linearVelocity = new Vector2(move.x * moveSpeed, rb.linearVelocity.y);
     }
-
-    // Disparado pela Animation Event nos frames de contato do pé com o chão
-    /*public void PlayFootstep()
-    {
-        if (footstepEvent.IsNull || move == Vector2.zero) return;
-        RuntimeManager.PlayOneShot(footstepEvent, transform.position);
-    }*/
 }
