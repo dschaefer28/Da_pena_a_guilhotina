@@ -55,7 +55,10 @@ public class PauseMenu : MonoBehaviour
     {
 
         Time.timeScale = 1;
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu principal");
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadScene("Menu principal");
+        else
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Menu principal");
     }
 
     public void TogglePauseMobile()

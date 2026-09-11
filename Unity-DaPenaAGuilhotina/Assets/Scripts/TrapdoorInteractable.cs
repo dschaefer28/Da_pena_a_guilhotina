@@ -89,7 +89,10 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
             }
 
             Time.timeScale = 1f; // garante que a próxima cena não abra congelada
-            SceneManager.LoadScene(nomeCenaPorao);
+            if (SceneTransitionManager.Instance != null)
+                SceneTransitionManager.Instance.LoadScene(nomeCenaPorao);
+            else
+                SceneManager.LoadScene(nomeCenaPorao);
         }
         else
         {

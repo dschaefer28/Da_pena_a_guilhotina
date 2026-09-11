@@ -16,7 +16,10 @@ public class MenuPrincipalManager : MonoBehaviour
     [SerializeField] private GameObject painelDeConfirmação;
     public void Jogar()
     {
-        SceneManager.LoadScene(nomeDoLevelDeJogo);
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadScene(nomeDoLevelDeJogo);
+        else
+            SceneManager.LoadScene(nomeDoLevelDeJogo);
     }
 
     public void AbrirOpcoes()

@@ -37,6 +37,9 @@ public class DoorInteractable : MonoBehaviour, IInteractable
         {
             GameManager.Instance.inventoryManager.SalvarEstadoAtual();
         }
-        SceneManager.LoadScene(cenaDestino);
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadScene(cenaDestino);
+        else
+            SceneManager.LoadScene(cenaDestino);
     }
 }
