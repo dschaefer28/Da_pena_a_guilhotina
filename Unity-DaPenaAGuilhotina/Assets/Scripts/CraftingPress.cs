@@ -91,6 +91,10 @@ public class CraftingPress : MonoBehaviour
                 );
 
                 OnPanfletoGerado?.Invoke();
+
+                // Avisa o jogador (mesmo popup de "item recebido" já usado no resto do jogo), já que
+                // ProduceItem coloca o panfleto direto no slot de saída da prensa, sem passar por AddItem.
+                Inventario.NotificarItemRecebido(validRecipe.resultItem);
             }
             else
             {

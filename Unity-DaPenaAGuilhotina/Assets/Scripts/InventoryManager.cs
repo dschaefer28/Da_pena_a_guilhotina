@@ -25,6 +25,14 @@ public class InventoryManager : MonoBehaviour
     // ao simplesmente repor no ar os itens que o jogador já tinha antes de trocar de cena.
     private bool restaurandoInventario = false;
 
+    // Permite que sistemas que colocam item em um slot sem passar por AddItem (ex: a prensa
+    // colocando o panfleto pronto no próprio slot de saída) ainda assim disparem o popup de
+    // "item recebido" já usado no resto do jogo.
+    public void NotificarItemRecebido(Item item)
+    {
+        if (item != null && !restaurandoInventario) OnItemAdicionado?.Invoke(item);
+    }
+
    private void Awake()
     {
         // ARQUITETURA BLINDADA: Injeção de Dependência Reversa
