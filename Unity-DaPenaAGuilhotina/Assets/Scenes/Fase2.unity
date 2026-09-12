@@ -1055,7 +1055,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7374019664807440416, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.47920936
+      value: 0.33391404
       objectReference: {fileID: 0}
     - target: {fileID: 7374019664807440416, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1744,7 +1744,7 @@ PrefabInstance:
       objectReference: {fileID: 904849422}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.47920936
+      value: 0.33391404
       objectReference: {fileID: 0}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1807,18 +1807,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2146902915}
-    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ToggleInventoryMobile
-      objectReference: {fileID: 0}
     - target: {fileID: 3294171803248714111, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 311638390}
-    - target: {fileID: 3294171803248714111, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: TogglePauseMobile
-      objectReference: {fileID: 0}
     - target: {fileID: 5093548019644834565, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1899,6 +1891,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6936298117741118776, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: showInEditorForTesting
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8081194991470116072, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_Name
       value: MobileControlsUI
@@ -1907,10 +1903,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2146902915}
-    - target: {fileID: 8736567357753795153, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: InteractMobile
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
