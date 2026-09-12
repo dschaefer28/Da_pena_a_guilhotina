@@ -193,24 +193,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7414540832886654737, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
-      propertyPath: fs
-      value: 
-      objectReference: {fileID: 1362831124}
-    - target: {fileID: 7414540832886654737, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
-      propertyPath: walk
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 6920069771313339523, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1362831126}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2425006227071979621, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1383054487}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
 --- !u!1 &206957686
 GameObject:
@@ -923,94 +909,110 @@ MonoBehaviour:
     nomeDoEvento: 
     nomeDaCena: 
   - etapaId: Joystick
-    mensagem: "Este é o joystick. Use-o para se movimentar pelo escritório. Depois de experimentar, toque em Continuar."
+    mensagem: "Este \xE9 o joystick. Use-o para se movimentar pelo escrit\xF3rio.
+      Depois de experimentar, toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
   - etapaId: Personagem
-    mensagem: "Caminhe até o primeiro personagem indicado. Quando estiver perto dele, toque em Continuar."
+    mensagem: "Caminhe at\xE9 o primeiro personagem indicado. Quando estiver perto
+      dele, toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
   - etapaId: explica_interacao
-    mensagem: "Perto do primeiro personagem, aperte o botão de interação e converse com ele até o fim."
+    mensagem: "Perto do primeiro personagem, aperte o bot\xE3o de intera\xE7\xE3o
+      e converse com ele at\xE9 o fim."
     icone: {fileID: 0}
     tipoDeAvanco: 1
     nomeDoEvento: dialogo_finalizado
-    nomeDaCena:
+    nomeDaCena: 
   - etapaId: falar_segunda_personagem
-    mensagem: "Agora vá até a segunda personagem e interaja com ela. Termine a conversa para receber o primeiro item."
+    mensagem: "Agora v\xE1 at\xE9 a segunda personagem e interaja com ela. Termine
+      a conversa para receber o primeiro item."
     icone: {fileID: 0}
     tipoDeAvanco: 1
     nomeDoEvento: item_recebido
     nomeDaCena: 
   - etapaId: InventoryButton
-    mensagem: "Você recebeu o primeiro item! Aperte o botão do inventário para abri-lo."
+    mensagem: "Voc\xEA recebeu o primeiro item! Aperte o bot\xE3o do invent\xE1rio
+      para abri-lo."
     icone: {fileID: 0}
     tipoDeAvanco: 1
     nomeDoEvento: inventario_alternado
-    nomeDaCena:
+    nomeDaCena: 
   - etapaId: ver_item_inventario
-    mensagem: "Aqui está o item que você recebeu. O inventário guarda suas pistas e materiais. Observe o item e toque em Continuar."
+    mensagem: "Aqui est\xE1 o item que voc\xEA recebeu. O invent\xE1rio guarda suas
+      pistas e materiais. Observe o item e toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
   - etapaId: fechar_inventario
-    mensagem: "Aperte novamente o botão do inventário para fechá-lo e voltar ao escritório."
+    mensagem: "Aperte novamente o bot\xE3o do invent\xE1rio para fech\xE1-lo e voltar
+      ao escrit\xF3rio."
     icone: {fileID: 0}
     tipoDeAvanco: 1
     nomeDoEvento: inventario_alternado
-    nomeDaCena:
+    nomeDaCena: 
   - etapaId: PauseButton
-    mensagem: "Este é o botão de pause. Ele abre o menu de pausa e as opções. Você pode abrir o menu e retomar o jogo. Depois, toque em Continuar."
+    mensagem: "Este \xE9 o bot\xE3o de pause. Ele abre o menu de pausa e as op\xE7\xF5es.
+      Voc\xEA pode abrir o menu e retomar o jogo. Depois, toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
   - etapaId: segunda_pista
-    mensagem: "Volte ao primeiro personagem e converse com ele novamente para receber o segundo item."
+    mensagem: Volte ao primeiro personagem e converse com ele novamente para receber
+      o segundo item.
     icone: {fileID: 0}
     tipoDeAvanco: 1
     nomeDoEvento: item_recebido
     nomeDaCena: 
   - etapaId: ir_para_porao
-    mensagem: "Com os dois itens no inventário, vá até o alçapão e interaja com ele para descer ao porão."
+    mensagem: "Com os dois itens no invent\xE1rio, v\xE1 at\xE9 o al\xE7ap\xE3o e
+      interaja com ele para descer ao por\xE3o."
     icone: {fileID: 0}
     tipoDeAvanco: 2
     nomeDoEvento: 
     nomeDaCena: Porao
   - etapaId: explicar_prensa
-    mensagem: "Você chegou ao porão! Aproxime-se da prensa e use o botão de interação para abri-la. Depois, toque em Continuar."
+    mensagem: "Voc\xEA chegou ao por\xE3o! Aproxime-se da prensa e use o bot\xE3o
+      de intera\xE7\xE3o para abri-la. Depois, toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
-    nomeDoEvento:
-    nomeDaCena:
+    nomeDoEvento: 
+    nomeDaCena: 
   - etapaId: colocar_itens_prensa
-    mensagem: "Toque em um item do inventário e depois em um slot de entrada da prensa. Repita com o outro item no segundo slot. Depois, toque em Continuar."
+    mensagem: "Toque em um item do invent\xE1rio e depois em um slot de entrada da
+      prensa. Repita com o outro item no segundo slot. Depois, toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
   - etapaId: misturar_itens
-    mensagem: "Com um item em cada slot de entrada, aperte o botão de misturar. Quando o panfleto aparecer no resultado, toque em Continuar."
+    mensagem: "Com um item em cada slot de entrada, aperte o bot\xE3o de misturar.
+      Quando o panfleto aparecer no resultado, toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
-    nomeDoEvento:
+    nomeDoEvento: 
     nomeDaCena: 
   - etapaId: coletar_resultado_prensa
-    mensagem: "O panfleto está no slot de resultado da prensa. Toque nele para pegá-lo e depois em um slot vazio do inventário para guardá-lo. Só então toque em Continuar."
+    mensagem: "O panfleto est\xE1 no slot de resultado da prensa. Toque nele para
+      peg\xE1-lo e depois em um slot vazio do invent\xE1rio para guard\xE1-lo. S\xF3
+      ent\xE3o toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
-    nomeDoEvento:
-    nomeDaCena:
+    nomeDoEvento: 
+    nomeDaCena: 
   - etapaId: voltar_escritorio
-    mensagem: "Com o panfleto guardado, feche a prensa e o inventário. Vá até a saída do porão e interaja para subir ao escritório."
+    mensagem: "Com o panfleto guardado, feche a prensa e o invent\xE1rio. V\xE1 at\xE9
+      a sa\xEDda do por\xE3o e interaja para subir ao escrit\xF3rio."
     icone: {fileID: 0}
     tipoDeAvanco: 2
-    nomeDoEvento:
+    nomeDoEvento: 
     nomeDaCena: Jogo
 --- !u!4 &780209768
 Transform:
@@ -1031,11 +1033,6 @@ Transform:
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8321938319943726507, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
   m_PrefabInstance: {fileID: 6744143684552005281}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &820484794 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2425006227071979621, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
-  m_PrefabInstance: {fileID: 189412083}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &847434237
 GameObject:
@@ -1473,111 +1470,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
---- !u!1 &1362831124
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1362831126}
-  - component: {fileID: 1362831125}
-  m_Layer: 0
-  m_Name: fs
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1362831125
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1362831124}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: 342541647
-      Data2: 1103364964
-      Data3: -1945564274
-      Data4: -934186449
-    Path: event:/fs madeira
-  Event: 
-  EventPlayTrigger: 11
-  EventStopTrigger: 12
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  NonRigidbodyVelocity: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
---- !u!4 &1362831126
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1362831124}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1354486688}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1383054486 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1769631618493765877, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
   m_PrefabInstance: {fileID: 189412083}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 820484794}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1e63fa2b72ac5946b3d9f074b03f507, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
---- !u!114 &1383054487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 820484794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: 342541647
-      Data2: 1103364964
-      Data3: -1945564274
-      Data4: -934186449
-    Path: event:/fs madeira
-  Event: 
-  EventPlayTrigger: 0
-  EventStopTrigger: 0
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  NonRigidbodyVelocity: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
 --- !u!114 &1416445691 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4944696893005537634, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
@@ -2394,6 +2297,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 649986575731002336, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 206
+      objectReference: {fileID: 0}
+    - target: {fileID: 649986575731002336, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 159
+      objectReference: {fileID: 0}
     - target: {fileID: 707271121286583824, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -2510,6 +2421,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1139509765459284850, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1151851272692268995, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2608,11 +2523,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2838128962652340213, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -1097
+      value: -1038
       objectReference: {fileID: 0}
     - target: {fileID: 2838128962652340213, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -168
+      value: -217
       objectReference: {fileID: 0}
     - target: {fileID: 2916417767377089921, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2685,6 +2600,14 @@ PrefabInstance:
     - target: {fileID: 3172722956333852045, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500096438757677715, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 206
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500096438757677715, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 39.00003
       objectReference: {fileID: 0}
     - target: {fileID: 3674660127712935655, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2798,6 +2721,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 167
       objectReference: {fileID: 0}
+    - target: {fileID: 5460253981767371569, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_MatchWidthOrHeight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5952057542437194866, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2834,6 +2761,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6781067767287874575, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 205.99997
+      objectReference: {fileID: 0}
+    - target: {fileID: 6781067767287874575, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -261
+      objectReference: {fileID: 0}
     - target: {fileID: 7173417857982127267, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2868,7 +2803,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7209894993733956421, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -167.33006
+      value: -226
+      objectReference: {fileID: 0}
+    - target: {fileID: 7361146709407986077, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8125072818572955969, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_Pivot.x
@@ -2974,6 +2913,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8267906124237242777, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.4374
+      objectReference: {fileID: 0}
+    - target: {fileID: 8267906124237242777, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.6374
+      objectReference: {fileID: 0}
     - target: {fileID: 8281215023314630182, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_margin.w
       value: 20.369198
@@ -3025,6 +2972,14 @@ PrefabInstance:
     - target: {fileID: 8526697617143209193, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8741556641402068951, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 205.99997
+      objectReference: {fileID: 0}
+    - target: {fileID: 8741556641402068951, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -111.000015
       objectReference: {fileID: 0}
     - target: {fileID: 8913742785971151534, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3263,7 +3218,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2839023747088503929, guid: 808e88043f9b00b488697c5805fc4b0a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3473,40 +3428,44 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1383054486}
+    - target: {fileID: 2172071452771243712, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -311
+      objectReference: {fileID: 0}
     - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value:
-      objectReference: {fileID: 780209767}
-    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: TutorialManager, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: NotificarEvento
       objectReference: {fileID: 0}
     - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
-      value:
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1383054486}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 780209767}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: NotificarEvento
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: TutorialManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
@@ -3514,16 +3473,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_StringArgument
       value: inventario_alternado
       objectReference: {fileID: 0}
     - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3294171803248714111, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -3613,9 +3572,17 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6003972915166157455, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -336
+      objectReference: {fileID: 0}
     - target: {fileID: 6076994130784838137, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7937631853183375932, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -311.5999
       objectReference: {fileID: 0}
     - target: {fileID: 8081194991470116072, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_Name

@@ -112,6 +112,9 @@ public class TutorialStepUI : MonoBehaviour
         AplicarRevelacoes();
 
         TutorialStep etapa = TutorialManager.Instance != null ? TutorialManager.Instance.ObterEtapa(etapaId) : null;
+        Debug.Log($"[TutorialStepUI:{gameObject.scene.name}/{name}] HandleEtapaAlterada('{etapaId}') -> " +
+                  $"{(etapa != null ? "vou mostrar o popup" : "etapa nula, escondendo popup (painelPopup atribuído: " + (painelPopup != null) + ")")}.", this);
+
         if (etapa == null)
         {
             if (painelPopup != null) painelPopup.SetActive(false);
@@ -141,7 +144,11 @@ public class TutorialStepUI : MonoBehaviour
 
     private void MostrarPopup(TutorialStep etapa)
     {
-        if (painelPopup == null) return;
+        if (painelPopup == null)
+        {
+            Debug.LogWarning($"[TutorialStepUI:{gameObject.scene.name}/{name}] Deveria mostrar a etapa '{etapa.etapaId}' mas 'Painel Popup' está vazio no Inspector.", this);
+            return;
+        }
 
         if (imagemIcone != null)
         {

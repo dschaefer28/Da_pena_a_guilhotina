@@ -182,8 +182,12 @@ public class TutorialManager : MonoBehaviour
         BroadcastEtapaAtual();
 
         TutorialStep etapa = EtapaAtualObjeto();
+        Debug.Log($"[TutorialManager] Cena '{scene.name}' carregada. Etapa atual: {(etapa?.etapaId ?? "(nenhuma)")}, " +
+                  $"tipoDeAvanco: {(etapa != null ? etapa.tipoDeAvanco.ToString() : "-")}, nomeDaCena esperado: '{etapa?.nomeDaCena}'.");
+
         if (etapa != null && etapa.tipoDeAvanco == TipoDeAvanco.CarregamentoDeCena && etapa.nomeDaCena == scene.name)
         {
+            Debug.Log($"[TutorialManager] Cena bateu com a etapa '{etapa.etapaId}' — avançando automaticamente.");
             CompletarEtapaAtual();
         }
     }
@@ -289,6 +293,9 @@ public class TutorialManager : MonoBehaviour
 
     private void BroadcastEtapaAtual()
     {
-        OnEtapaAlterada?.Invoke(EtapaAtualId);
+        string id = EtapaAtualId;
+        int ouvintes = OnEtapaAlterada?.GetInvocationList().Length ?? 0;
+        Debug.Log($"[TutorialManager] BroadcastEtapaAtual: '{id ?? "(nenhuma)"}' (indiceAtual={indiceAtual}/{etapas.Count}, ouvintes={ouvintes}).");
+        OnEtapaAlterada?.Invoke(id);
     }
 }
