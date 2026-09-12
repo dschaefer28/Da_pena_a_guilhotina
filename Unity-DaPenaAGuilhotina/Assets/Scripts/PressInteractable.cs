@@ -38,7 +38,20 @@ public class PressInteractable : MonoBehaviour, IInteractable
         }
 
         bool vaiAbrir = !pressUIPanel.activeSelf;
+
+        // Não deixa abrir a prensa com o jogo pausado (mesma regra do inventário).
+        if (vaiAbrir && PauseMenu.Instance != null && PauseMenu.Instance.IsOpen)
+        {
+            Debug.Log("Não é possível abrir a prensa com o jogo pausado.");
+            return;
+        }
+
         pressUIPanel.SetActive(vaiAbrir);
+
+        // Mesmo tratamento do PauseMenu: desliga o raycast dos controles mobile enquanto
+        // a prensa está aberta, para o toque ir pros botões da UI em vez do joystick/botões.
+        if (MobileControlsManager.Instance != null)
+            MobileControlsManager.Instance.SetControlsInteractable(!vaiAbrir);
 
         if (inventoryManager != null && inventoryManager.inventoryUI != null)
         {
@@ -67,7 +80,12 @@ public class PressInteractable : MonoBehaviour, IInteractable
     public void ClosePressUI()
     {
         if(pressUIPanel != null) pressUIPanel.SetActive(false);
-        
+
+        // Garante que os controles mobile voltam a receber toque mesmo se a prensa for
+        // fechada por este botão (e não pelo atalho de inventário).
+        if (MobileControlsManager.Instance != null)
+            MobileControlsManager.Instance.SetControlsInteractable(true);
+
         // Se a prensa foi fechada pelo próprio botão "X" dela, fecha o inventário junto
         if(inventoryManager != null && inventoryManager.inventoryUI != null && inventoryManager.inventoryUI.activeSelf)
         {

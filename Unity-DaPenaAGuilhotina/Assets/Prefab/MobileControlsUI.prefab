@@ -697,6 +697,7 @@ GameObject:
   - component: {fileID: 6003972915166157455}
   - component: {fileID: 3647160527816209763}
   - component: {fileID: 8318668106128124818}
+  - component: {fileID: 5121872778904699001}
   m_Layer: 5
   m_Name: JoystickBG
   m_TagString: Untagged
@@ -762,6 +763,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &5121872778904699001
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5121872778904621356}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6076994130784838137
 GameObject:
   m_ObjectHideFlags: 0
@@ -1185,7 +1198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc624c1cd09b8bd47a48ec39224d4472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MobileControlsManager
-  canvasGroup: {fileID: 1331548819087024541}
+  canvasGroup: {fileID: 5121872778904699001}
 --- !u!1 &8321938319943726507
 GameObject:
   m_ObjectHideFlags: 0

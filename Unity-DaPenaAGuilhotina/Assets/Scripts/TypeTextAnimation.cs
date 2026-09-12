@@ -17,6 +17,14 @@ public class TypeTextAnimation : MonoBehaviour
     {
         // Busca automática do componente irmão
         dialogueSystem = GetComponent<DialogueSystem>();
+
+        // Aplica a velocidade de texto salva no slider de Opções (chave/intervalo espelham
+        // PauseMenu.OnTextSpeedSliderChanged — 0 = mais lento, 1 = mais rápido).
+        if (PlayerPrefs.HasKey("opt_textspeed"))
+        {
+            float valor01 = PlayerPrefs.GetFloat("opt_textspeed");
+            typeDelay = Mathf.Lerp(0.12f, 0.01f, valor01);
+        }
     }
 
     void OnEnable() 

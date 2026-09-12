@@ -22,6 +22,17 @@ public class MobileControlsManager : MonoBehaviour
 
         if (canvasGroup == null)
             canvasGroup = GetComponent<CanvasGroup>();
+
+        // Verificação de plataforma: essa HUD (joystick + botões de ação) só faz sentido
+        // em tela de toque. Mesmo critério usado em MobileUIManager.cs.
+#if UNITY_EDITOR
+        // Mantém ativo no Editor pra dar pra testar sem precisar buildar pro Android.
+#elif UNITY_ANDROID || UNITY_IOS
+        // Build mobile: mantém ativo.
+#else
+        // PC/standalone: não tem toque, então desativa a HUD mobile inteira.
+        gameObject.SetActive(false);
+#endif
     }
 
     void OnDestroy()

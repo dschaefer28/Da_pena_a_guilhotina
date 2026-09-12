@@ -57,6 +57,15 @@ private void OnToggleInventoryPerformed(InputAction.CallbackContext ctx) => Togg
 
     public void InteractMobile()
     {
+        // Mesma trava do pause/inventário: não deixa interagir com o mundo (portas, prensa, NPCs...)
+        // enquanto o menu de pause ou o inventário/prensa estiverem abertos.
+        if (PauseMenu.Instance != null && PauseMenu.Instance.IsOpen)
+            return;
+
+        var inventoryManager = GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
+        if (inventoryManager != null && inventoryManager.inventoryUI != null && inventoryManager.inventoryUI.activeSelf)
+            return;
+
         if (GameManager.Instance != null && GameManager.Instance.dialogueSystem != null)
         {
             if (GameManager.Instance.dialogueSystem.IsDialogueActive)

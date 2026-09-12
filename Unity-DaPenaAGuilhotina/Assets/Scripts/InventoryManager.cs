@@ -38,6 +38,14 @@ public class InventoryManager : MonoBehaviour
         if (inventoryUI != null)
         {
             bool vaiAbrir = !inventoryUI.activeSelf;
+
+            // Não deixa abrir o inventário com o jogo pausado (evita os dois modais brigando pela tela/raycast).
+            if (vaiAbrir && PauseMenu.Instance != null && PauseMenu.Instance.IsOpen)
+            {
+                Debug.Log("Não é possível abrir o inventário com o jogo pausado.");
+                return;
+            }
+
             inventoryUI.SetActive(vaiAbrir);
 
             if (!somToggleInventario.IsNull)
@@ -45,6 +53,11 @@ public class InventoryManager : MonoBehaviour
 
             // Dispara o evento avisando a Prensa se o inventário abriu(true) ou fechou(false)
             OnInventoryToggled?.Invoke(vaiAbrir);
+
+            // Mesmo tratamento do PauseMenu: desliga o raycast dos controles mobile enquanto
+            // o inventário está aberto, para o toque ir pros slots da UI em vez do joystick/botões.
+            if (MobileControlsManager.Instance != null)
+                MobileControlsManager.Instance.SetControlsInteractable(!vaiAbrir);
 
             Time.timeScale = vaiAbrir ? 0f : 1f;
         }
