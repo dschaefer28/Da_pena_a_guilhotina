@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: 65b588b8a86055447b2c8a9fe4733b11
+guid: b27b1274e8d10a643b1b3d633ac85ca7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6780804922114991124
-    second: valois-idle_0
+      213: 7834935843665246088
+    second: marie-Sheet_0
+  - first:
+      213: -7537228255246494838
+    second: marie-Sheet_1
+  - first:
+      213: -4972574641806230196
+    second: marie-Sheet_2
+  - first:
+      213: -9024301654555867351
+    second: marie-Sheet_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +46,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +84,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,13 +122,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: valois-idle_0
+      name: marie-Sheet_0
       rect:
         serializedVersion: 2
-        x: 47
-        y: 15
-        width: 154
-        height: 650
+        x: 40
+        y: 48
+        width: 160
+        height: 616
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +137,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ceb9d1e79ddb5e1a0800000000000000
-      internalID: -6780804922114991124
+      spriteID: 88774a773a84bbc60800000000000000
+      internalID: 7834935843665246088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: marie-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 328
+        y: 48
+        width: 160
+        height: 624
+      alignment: 9
+      pivot: {x: 0.5, y: 0.49358976}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a83def6f5d2666790800000000000000
+      internalID: -7537228255246494838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: marie-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 616
+        y: 48
+        width: 160
+        height: 624
+      alignment: 9
+      pivot: {x: 0.5, y: 0.49358976}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4d360885bdddfab0800000000000000
+      internalID: -4972574641806230196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: marie-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 904
+        y: 48
+        width: 160
+        height: 624
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4919872}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9274a3e357d33c280800000000000000
+      internalID: -9024301654555867351
       vertices: []
       indices: 
       edges: []
@@ -138,7 +213,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5a928b95c4e6cbf43b5ae36c8b39e3f5
     internalID: 0
     vertices: []
     indices: 
@@ -146,9 +221,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":1,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      valois-idle_0: -6780804922114991124
+      marie-Sheet_0: 7834935843665246088
+      marie-Sheet_1: -7537228255246494838
+      marie-Sheet_2: -4972574641806230196
+      marie-Sheet_3: -9024301654555867351
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
