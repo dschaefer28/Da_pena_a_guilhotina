@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 8134340362529133872}
   - component: {fileID: 8091759050903072630}
   - component: {fileID: 8862906976220026581}
+  - component: {fileID: 2026847926404610461}
   m_Layer: 5
   m_Name: TouchZone
   m_TagString: Untagged
@@ -787,6 +788,7 @@ GameObject:
   - component: {fileID: 933000976915073215}
   - component: {fileID: 6019735914969798236}
   - component: {fileID: 3242361554690577399}
+  - component: {fileID: 6076994130784838150}
   m_Layer: 5
   m_Name: InventoryButton
   m_TagString: Untagged
@@ -905,9 +907,21 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument:
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!225 &6076994130784838150
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6076994130784838137}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &7283027036231297884
 GameObject:
   m_ObjectHideFlags: 0
@@ -1199,6 +1213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MobileControlsManager
   canvasGroup: {fileID: 5121872778904699001}
+  touchZoneCanvasGroup: {fileID: 2026847926404610461}
 --- !u!1 &8321938319943726507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1211,6 +1226,7 @@ GameObject:
   - component: {fileID: 9141494112356792235}
   - component: {fileID: 3146449965675428452}
   - component: {fileID: 3294171803248714111}
+  - component: {fileID: 7839596180442651345}
   m_Layer: 5
   m_Name: PauseButton
   m_TagString: Untagged
@@ -1329,6 +1345,30 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument:
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!225 &2026847926404610461
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2401528730514040086}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!225 &7839596180442651345
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8321938319943726507}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1

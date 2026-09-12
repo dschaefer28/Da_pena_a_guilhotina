@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject); // Torna o GameManager imortal
+        VincularDependenciasLocais();
     }
 
     // ARQUITETURA: Assina o evento nativo da Unity para troca de cenas
@@ -50,8 +51,19 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log($"[SISTEMA] Cena '{scene.name}' carregada. Sincronizando HUD...");
+        // Reencontra as dependências locais da cena recém-carregada (GameManager é persistente entre cenas)
+        VincularDependenciasLocais();
         // Força todas as UIs da nova cena a buscarem os valores salvos
         ForcarAtualizacaoUI();
+    }
+
+    // Preenche inventoryManager/dialogueSystem com as instâncias da cena atual quando ainda não vinculadas
+    private void VincularDependenciasLocais()
+    {
+        if (inventoryManager == null)
+            inventoryManager = FindObjectOfType<InventoryManager>(true);
+        if (dialogueSystem == null)
+            dialogueSystem = FindObjectOfType<DialogueSystem>(true);
     }
 
     public void ForcarAtualizacaoUI()

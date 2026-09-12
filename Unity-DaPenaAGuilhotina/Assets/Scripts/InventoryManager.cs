@@ -15,7 +15,15 @@ public class InventoryManager : MonoBehaviour
     public EventReference somToggleInventario;
 
     // NOVO: Evento Observer para avisar outras UIs (como a Prensa)
-    public event Action<bool> OnInventoryToggled; 
+    public event Action<bool> OnInventoryToggled;
+
+    // NOVO: Evento Observer disparado sempre que um item novo entra no inventário
+    // (usado pelo popup de "item recebido" e pelo tutorial).
+    public event Action<Item> OnItemAdicionado;
+
+    // Fica true durante RestaurarInventario() para NÃO disparar o popup de "item recebido"
+    // ao simplesmente repor no ar os itens que o jogador já tinha antes de trocar de cena.
+    private bool restaurandoInventario = false;
 
    private void Awake()
     {
@@ -43,6 +51,16 @@ public class InventoryManager : MonoBehaviour
             if (vaiAbrir && PauseMenu.Instance != null && PauseMenu.Instance.IsOpen)
             {
                 Debug.Log("Não é possível abrir o inventário com o jogo pausado.");
+                return;
+            }
+
+            // Mesma trava, mas para diálogo: evita o inventário abrir por cima de uma conversa em
+            // andamento (o que fazia os cliques de fechar o inventário caírem em cima do texto do
+            // diálogo por baixo, e o jogador precisar de vários cliques até os dois se dessincronizarem).
+            var dialogo = GameManager.Instance != null ? GameManager.Instance.dialogueSystem : null;
+            if (vaiAbrir && dialogo != null && dialogo.IsDialogueActive)
+            {
+                Debug.Log("Não é possível abrir o inventário durante um diálogo.");
                 return;
             }
 
@@ -141,6 +159,7 @@ public class InventoryManager : MonoBehaviour
             if (slot != null && slot.item != null && slot.item.itemID == itemToAdd.itemID)
             {
                 StackInInventory(slot, itemToAdd);
+                if (!restaurandoInventario) OnItemAdicionado?.Invoke(itemToAdd);
                 return true;
             }
         }
@@ -152,6 +171,7 @@ public class InventoryManager : MonoBehaviour
             {
                 Item newItem = itemToAdd.Clone();
                 PlaceInInventory(slot, newItem);
+                if (!restaurandoInventario) OnItemAdicionado?.Invoke(itemToAdd);
                 return true;
             }
         }
@@ -228,15 +248,17 @@ public class InventoryManager : MonoBehaviour
    public void RestaurarInventario()
     {
         if (GameManager.Instance == null || GameManager.Instance.inventarioSalvo == null) return;
-        
+
+        restaurandoInventario = true;
         foreach (Item itemSalvo in GameManager.Instance.inventarioSalvo)
         {
             // Proteção contra o NullReferenceException: Ignora itens vazios no cofre
-            if (itemSalvo == null) continue; 
+            if (itemSalvo == null) continue;
 
             Item clone = itemSalvo.Clone();
             AddItem(clone);
         }
+        restaurandoInventario = false;
         Debug.Log("[SISTEMA] Inventário Restaurado com segurança.");
     }
 }

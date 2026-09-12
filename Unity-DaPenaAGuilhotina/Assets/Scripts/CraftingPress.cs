@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,9 +10,12 @@ public class CraftingPress : MonoBehaviour
     public UISlotHandler slotOutput;
 
     [Header("Configurações")]
-    public List<Recipe> recipes; 
-    
+    public List<Recipe> recipes;
+
     private Dictionary<string, Recipe> recipeDictionary;
+
+    // NOVO: Evento Observer disparado toda vez que a prensa gera um panfleto novo (usado pelo tutorial).
+    public event Action OnPanfletoGerado;
 
     private void Start()
     {
@@ -81,10 +85,12 @@ public class CraftingPress : MonoBehaviour
                 
                 // Dispara a consequência matemática da receita (GDD)
                 GameManager.Instance.AplicarImpactoPanfleto(
-                    validRecipe.publicOpinionImpact, 
-                    validRecipe.stateOpinionImpact, 
+                    validRecipe.publicOpinionImpact,
+                    validRecipe.stateOpinionImpact,
                     validRecipe.moneyReward
                 );
+
+                OnPanfletoGerado?.Invoke();
             }
             else
             {

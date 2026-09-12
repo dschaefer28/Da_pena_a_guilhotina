@@ -9,6 +9,13 @@ public class Item : ScriptableObject
     public Sprite itemImg;
     [Min(0)] public int itemAmt;
 
+    [Header("Popup de Coleta (opcional)")]
+    [Tooltip("Nome mostrado ao jogador no popup de 'item recebido'. Se deixar vazio, usa o nome do arquivo do ScriptableObject.")]
+    public string itemName;
+
+    /// <summary>Nome pronto para exibição em UI (usa itemName se configurado, senão cai no nome do asset).</summary>
+    public string NomeExibicao => string.IsNullOrWhiteSpace(itemName) ? name : itemName;
+
     /// <summary>Verdadeiro se os dois itens representam o mesmo tipo (mesmo itemID não-vazio).</summary>
     public bool Matches(Item other)
     {

@@ -57,7 +57,10 @@ public class DialogueSystem : MonoBehaviour
 
     public void AdvanceDialogue()
     {
-        if (state == STATE.DISABLED) { Next(); return; }
+        // Não faz nada quando não há diálogo em andamento: o botão "ButtonAvancar" do Canvas cobre a
+        // tela inteira e fica sempre ativo (mesmo sem diálogo aberto), então qualquer clique na tela
+        // chegava aqui. Antes disso chamava Next() e reabria a última conversa do zero a cada clique.
+        if (state == STATE.DISABLED) return;
         if (state == STATE.TYPING) { typeText.Skip(); OnTypeFinished(); return; }
         if (state == STATE.WAITING)
         {
@@ -67,15 +70,21 @@ public class DialogueSystem : MonoBehaviour
         }
     }
 
-    public void Next() 
+    public void Next()
     {
-        IsDialogueActive = true;
-        if (dialogueData == null || dialogueData.talkScript == null || dialogueData.talkScript.Count == 0) 
+        if (dialogueData == null || dialogueData.talkScript == null || dialogueData.talkScript.Count == 0)
         {
             Debug.LogWarning("ScriptableObject de diálogo vazio!");
-            EndDialogue();
+            // Não chama EndDialogue() aqui: como o diálogo nunca chegou a começar de verdade
+            // (OnDialogueStarted nunca disparou), avisar "terminou" (OnDialogueEnded) confundia
+            // quem escuta esse evento — o tutorial, por exemplo, avançava sozinho com essa
+            // interação vazia antes da conversa real acontecer.
+            state = STATE.DISABLED;
+            IsDialogueActive = false;
             return;
         }
+
+        IsDialogueActive = true;
 
         // FMOD: se os banks ainda não terminaram de carregar, a 1ª fala costuma sair muda
         if (currentText == 0 && !FMODUnity.RuntimeManager.HaveAllBanksLoaded)
