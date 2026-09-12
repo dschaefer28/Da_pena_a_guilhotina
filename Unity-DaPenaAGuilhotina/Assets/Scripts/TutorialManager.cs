@@ -65,6 +65,7 @@ public class TutorialManager : MonoBehaviour
     public const string EVENTO_DIALOGO_FINALIZADO = "dialogo_finalizado";
     public const string EVENTO_ITEM_RECEBIDO = "item_recebido";
     public const string EVENTO_PANFLETO_GERADO = "panfleto_gerado";
+    public const string EVENTO_INVENTARIO_ALTERNADO = "inventario_alternado";
 
     private const string CHAVE_TUTORIAL_CONCLUIDO = "tutorial_concluido";
 
@@ -195,7 +196,11 @@ public class TutorialManager : MonoBehaviour
     private void VincularDependenciasLocais()
     {
         if (dialogueSystemAtual != null) dialogueSystemAtual.OnDialogueEnded -= HandleDialogoFinalizado;
-        if (inventoryManagerAtual != null) inventoryManagerAtual.OnItemAdicionado -= HandleItemAdicionado;
+        if (inventoryManagerAtual != null)
+        {
+            inventoryManagerAtual.OnItemAdicionado -= HandleItemAdicionado;
+            inventoryManagerAtual.OnInventoryToggled -= HandleInventarioAlternado;
+        }
         if (craftingPressAtual != null) craftingPressAtual.OnPanfletoGerado -= HandlePanfletoGerado;
 
         dialogueSystemAtual = GameManager.Instance != null ? GameManager.Instance.dialogueSystem : FindAnyObjectByType<DialogueSystem>();
@@ -203,13 +208,22 @@ public class TutorialManager : MonoBehaviour
         craftingPressAtual = FindAnyObjectByType<CraftingPress>();
 
         if (dialogueSystemAtual != null) dialogueSystemAtual.OnDialogueEnded += HandleDialogoFinalizado;
-        if (inventoryManagerAtual != null) inventoryManagerAtual.OnItemAdicionado += HandleItemAdicionado;
+        if (inventoryManagerAtual != null)
+        {
+            inventoryManagerAtual.OnItemAdicionado += HandleItemAdicionado;
+            inventoryManagerAtual.OnInventoryToggled += HandleInventarioAlternado;
+        }
         if (craftingPressAtual != null) craftingPressAtual.OnPanfletoGerado += HandlePanfletoGerado;
     }
 
     private void HandleDialogoFinalizado() => NotificarEvento(EVENTO_DIALOGO_FINALIZADO);
     private void HandleItemAdicionado(Item item) => NotificarEvento(EVENTO_ITEM_RECEBIDO);
     private void HandlePanfletoGerado() => NotificarEvento(EVENTO_PANFLETO_GERADO);
+    // Dispara tanto ao abrir quanto ao fechar o inventário — o mesmo comportamento que o botão de
+    // inventário já disparava manualmente (só na cena Jogo). Fazer isso aqui, ouvindo o InventoryManager
+    // diretamente, garante que funcione em qualquer cena (inclusive Porao), mesmo sem um botão configurado
+    // manualmente no Inspector daquela cena para chamar TutorialManager.
+    private void HandleInventarioAlternado(bool aberto) => NotificarEvento(EVENTO_INVENTARIO_ALTERNADO);
 
     /// <summary>Avança a etapa atual se ela estiver esperando exatamente este evento. Pode ser chamado
     /// também a partir de UnityEvents (botões, animações, etc.) além dos gatilhos automáticos acima.</summary>
