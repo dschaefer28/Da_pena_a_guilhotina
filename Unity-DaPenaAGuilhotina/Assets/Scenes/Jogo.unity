@@ -913,7 +913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5b9aa55f25898548bd9806b346c4604, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialManager
-  forcarReiniciar: 0
+  forcarReiniciar: 1
   etapas:
   - etapaId: boas_vindas
     mensagem: "Bem-vindo ao seu primeiro dia no escrit\xF3rio! Vamos te mostrar rapidinho
@@ -923,64 +923,95 @@ MonoBehaviour:
     nomeDoEvento: 
     nomeDaCena: 
   - etapaId: Joystick
-    mensagem: "Este \xE9 seu joyStick use-o para se mover no cen\xE1rio"
+    mensagem: "Este é o joystick. Use-o para se movimentar pelo escritório. Depois de experimentar, toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
   - etapaId: Personagem
-    mensagem: "Caminhe at\xE9 o personagem indicado"
+    mensagem: "Caminhe até o primeiro personagem indicado. Quando estiver perto dele, toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
   - etapaId: explica_interacao
-    mensagem: "Use seu bot\xE3o de interagir para ativar o evento com o personagem "
+    mensagem: "Perto do primeiro personagem, aperte o botão de interação e converse com ele até o fim."
+    icone: {fileID: 0}
+    tipoDeAvanco: 1
+    nomeDoEvento: dialogo_finalizado
+    nomeDaCena:
+  - etapaId: falar_segunda_personagem
+    mensagem: "Agora vá até a segunda personagem e interaja com ela. Termine a conversa para receber o primeiro item."
     icone: {fileID: 0}
     tipoDeAvanco: 1
     nomeDoEvento: item_recebido
     nomeDaCena: 
   - etapaId: InventoryButton
-    mensagem: "Este \xE9 o seu invent\xE1rio. Nele ficam guardadas as pistas e os
-      itens que voc\xEA encontrar."
+    mensagem: "Você recebeu o primeiro item! Aperte o botão do inventário para abri-lo."
+    icone: {fileID: 0}
+    tipoDeAvanco: 1
+    nomeDoEvento: inventario_alternado
+    nomeDaCena:
+  - etapaId: ver_item_inventario
+    mensagem: "Aqui está o item que você recebeu. O inventário guarda suas pistas e materiais. Observe o item e toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
+  - etapaId: fechar_inventario
+    mensagem: "Aperte novamente o botão do inventário para fechá-lo e voltar ao escritório."
+    icone: {fileID: 0}
+    tipoDeAvanco: 1
+    nomeDoEvento: inventario_alternado
+    nomeDaCena:
   - etapaId: PauseButton
-    mensagem: "Este bot\xE3o pausa o jogo e abre as op\xE7\xF5es, caso precise."
+    mensagem: "Este é o botão de pause. Ele abre o menu de pausa e as opções. Você pode abrir o menu e retomar o jogo. Depois, toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
   - etapaId: segunda_pista
-    mensagem: "Converse com o outro personagem do escrit\xF3rio para conseguir mais
-      uma pista."
+    mensagem: "Volte ao primeiro personagem e converse com ele novamente para receber o segundo item."
     icone: {fileID: 0}
     tipoDeAvanco: 1
     nomeDoEvento: item_recebido
     nomeDaCena: 
   - etapaId: ir_para_porao
-    mensagem: "Agora des\xE7a at\xE9 o por\xE3o para usar a prensa. Siga a seta at\xE9
-      o al\xE7ap\xE3o."
+    mensagem: "Com os dois itens no inventário, vá até o alçapão e interaja com ele para descer ao porão."
     icone: {fileID: 0}
     tipoDeAvanco: 2
     nomeDoEvento: 
     nomeDaCena: Porao
   - etapaId: explicar_prensa
-    mensagem: "Esta \xE9 a prensa. Coloque dois itens do invent\xE1rio nos slots
-      de entrada para criar um panfleto."
+    mensagem: "Você chegou ao porão! Aproxime-se da prensa e use o botão de interação para abri-la. Depois, toque em Continuar."
+    icone: {fileID: 0}
+    tipoDeAvanco: 0
+    nomeDoEvento:
+    nomeDaCena:
+  - etapaId: colocar_itens_prensa
+    mensagem: "Toque em um item do inventário e depois em um slot de entrada da prensa. Repita com o outro item no segundo slot. Depois, toque em Continuar."
     icone: {fileID: 0}
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
-  - etapaId: explicar_opiniao
-    mensagem: "Estas barras mostram a opini\xE3o p\xFAblica e a do estado sobre o
-      seu trabalho. Elas mudam a cada panfleto que voc\xEA cria!"
+  - etapaId: misturar_itens
+    mensagem: "Com um item em cada slot de entrada, aperte o botão de misturar. Quando o panfleto aparecer no resultado, toque em Continuar."
     icone: {fileID: 0}
-    tipoDeAvanco: 1
-    nomeDoEvento: panfleto_gerado
+    tipoDeAvanco: 0
+    nomeDoEvento:
     nomeDaCena: 
+  - etapaId: coletar_resultado_prensa
+    mensagem: "O panfleto está no slot de resultado da prensa. Toque nele para pegá-lo e depois em um slot vazio do inventário para guardá-lo. Só então toque em Continuar."
+    icone: {fileID: 0}
+    tipoDeAvanco: 0
+    nomeDoEvento:
+    nomeDaCena:
+  - etapaId: voltar_escritorio
+    mensagem: "Com o panfleto guardado, feche a prensa e o inventário. Vá até a saída do porão e interaja para subir ao escritório."
+    icone: {fileID: 0}
+    tipoDeAvanco: 2
+    nomeDoEvento:
+    nomeDaCena: Jogo
 --- !u!4 &780209768
 Transform:
   m_ObjectHideFlags: 0
@@ -3446,6 +3477,54 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1383054486}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value:
+      objectReference: {fileID: 780209767}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: TutorialManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: NotificarEvento
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
+      value:
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_FloatArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_StringArgument
+      value: inventario_alternado
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3294171803248714111, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

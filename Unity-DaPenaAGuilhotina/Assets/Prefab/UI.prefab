@@ -6333,7 +6333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickupNotificationUI
   painelPopup: {fileID: 6174460398447187986}
-  imagemItem: {fileID: 6724150820845623260}
+  imagemItem: {fileID: 5950556289591318579}
   textoMensagem: {fileID: 1550124048803849356}
   formatoMensagem: "Voc\xEA recebeu: {0}"
   duracaoExibicao: 2.5
@@ -8062,7 +8062,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.020870427, g: 0.27919656, b: 0.6320754, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8071,7 +8071,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 0}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1

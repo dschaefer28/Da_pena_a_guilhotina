@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Evidencia_RelatoBradier
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: Evidencia_RelatoBradier
-  itemImg: {fileID: 0}
+  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 0
   itemName: Relato Bradier
