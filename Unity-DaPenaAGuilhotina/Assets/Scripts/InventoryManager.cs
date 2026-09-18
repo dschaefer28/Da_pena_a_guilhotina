@@ -73,6 +73,7 @@ public class InventoryManager : MonoBehaviour
             }
 
             inventoryUI.SetActive(vaiAbrir);
+            if (vaiAbrir) ResetInventoryScroll();
 
             if (!somToggleInventario.IsNull)
                 RuntimeManager.PlayOneShot(somToggleInventario);
@@ -97,6 +98,7 @@ public class InventoryManager : MonoBehaviour
         activeSlot.slotImg.sprite = item.itemImg;
         activeSlot.itemCount.text = item.itemAmt.ToString();
         activeSlot.slotImg.gameObject.SetActive(true);
+        if (activeSlot.itemNameText != null) activeSlot.itemNameText.text = item.NomeExibicao;
         ConfigureInventory();
     }
 
@@ -108,6 +110,8 @@ public class InventoryManager : MonoBehaviour
         activeSlot.item.itemAmt += item.itemAmt;
         if (activeSlot.itemCount != null)
             activeSlot.itemCount.text = activeSlot.item.itemAmt.ToString();
+        if (activeSlot.itemNameText != null)
+            activeSlot.itemNameText.text = activeSlot.item.NomeExibicao;
         ConfigureInventory();
     }
 
@@ -122,6 +126,8 @@ public class InventoryManager : MonoBehaviour
         }
         if (activeSlot.itemCount != null)
             activeSlot.itemCount.text = string.Empty;
+        if (activeSlot.itemNameText != null)
+            activeSlot.itemNameText.text = string.Empty;
         activeSlot.item = null;
     }
 
@@ -154,6 +160,22 @@ public class InventoryManager : MonoBehaviour
         {
             uiSlots[i].SetSiblingIndex(i);
         }
+        ResetInventoryScroll();
+    }
+
+    private void ResetInventoryScroll()
+    {
+        if (inventoryGrid == null || !inventoryGrid.activeInHierarchy) return;
+        var content = inventoryGrid.transform as RectTransform;
+        var scroll = inventoryGrid.GetComponentInParent<UnityEngine.UI.ScrollRect>();
+        if (content == null || scroll == null || scroll.content != content) return;
+
+        // Rebuild before positioning: the fitter may change the content height.
+        UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(content);
+        Canvas.ForceUpdateCanvases();
+        scroll.StopMovement();
+        scroll.verticalNormalizedPosition = 1f;
+        content.anchoredPosition = new Vector2(content.anchoredPosition.x, 0f);
     }
 
     public bool AddItem(Item itemToAdd)
@@ -243,6 +265,10 @@ public class InventoryManager : MonoBehaviour
             if (slot != null && slot.item != null && slot.item.itemAmt > 0)
             {
                 // Cria um clone limpo para não referenciar um item de uma UI que será destruída
+#if UNITY_EDITOR
+                // Interactive layout samples must not enter the saved inventory.
+                if (slot.item.itemID != null && slot.item.itemID.StartsWith("__inventory_preview_", StringComparison.Ordinal)) continue;
+#endif
                 Item clone = slot.item.Clone();
                 itensParaSalvar.Add(clone);
             }
