@@ -21,7 +21,14 @@ public class MouseManager : MonoBehaviour
             return;
         }
         instance = this;
-        if (dragIcon != null) dragIcon.gameObject.SetActive(false);
+        if (dragIcon != null)
+        {
+            dragIcon.raycastTarget = false;
+            dragIcon.preserveAspect = true;
+            dragIcon.rectTransform.localScale = Vector3.one;
+            dragIcon.rectTransform.sizeDelta = new Vector2(24f, 24f);
+            dragIcon.gameObject.SetActive(false);
+        }
     }
 
     private void OnDestroy()
@@ -41,7 +48,13 @@ public class MouseManager : MonoBehaviour
             // ARQUITETURA UNIVERSAL: Pointer.current capta Mouse (Windows) e Toque (Android)
             if (Pointer.current != null)
             {
-                dragIcon.transform.position = Pointer.current.position.ReadValue();
+                var parent = dragIcon.rectTransform.parent as RectTransform;
+                var canvas = dragIcon.canvas;
+                var camera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay
+                    ? canvas.worldCamera : null;
+                if (parent != null && RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    parent, Pointer.current.position.ReadValue(), camera, out var position))
+                    dragIcon.rectTransform.localPosition = new Vector3(position.x, position.y, 0f);
             }
         }
         else

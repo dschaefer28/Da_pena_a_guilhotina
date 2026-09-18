@@ -6,11 +6,15 @@ using UnityEngine.UI;
 using TMPro;
 using FMODUnity;
 
-public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
+public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
+    IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
+    private bool draggingItem;
+    private bool suppressClick;
     public Item item;
     public Image slotImg;
     public TextMeshProUGUI itemCount;
+    public TextMeshProUGUI itemNameText;
     public InventoryManager inventoryManager;
 
     [Header("Áudio de Hover (FMOD)")]
@@ -36,16 +40,19 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             slotImg.sprite = item.itemImg;
             slotImg.gameObject.SetActive(true);
             itemCount.text = item.itemAmt.ToString();
+            if (itemNameText != null) itemNameText.text = item.NomeExibicao;
         }
         else
         {
             itemCount.text = string.Empty;
             slotImg.gameObject.SetActive(false);
+            if (itemNameText != null) itemNameText.text = string.Empty;
         }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (suppressClick) return;
         if (MouseManager.instance == null)
         {
             Debug.LogWarning("[UISlotHandler] MouseManager ausente na cena.");
@@ -61,6 +68,40 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         }
 
         MouseManager.instance.UpdateHeldItem(this);
+    }
+
+    public void OnPointerDown(PointerEventData eventData) => suppressClick = false;
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        var mouse = MouseManager.instance;
+        if (eventData.button != PointerEventData.InputButton.Left || item == null ||
+            inventoryManager == null || mouse == null || mouse.heldItem != null) return;
+        suppressClick = true;
+        mouse.UpdateHeldItem(this);
+        draggingItem = mouse.heldItem != null;
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        // MouseManager moves the held item's icon for both mouse and touch.
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        var source = eventData.pointerDrag != null
+            ? eventData.pointerDrag.GetComponent<UISlotHandler>() : null;
+        if (source == null || !source.draggingItem || MouseManager.instance == null) return;
+        MouseManager.instance.UpdateHeldItem(this);
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (!draggingItem) return;
+        draggingItem = false;
+        // Cancelled drops, or the other item after a swap, return to the source.
+        if (MouseManager.instance != null && MouseManager.instance.heldItem != null)
+            MouseManager.instance.UpdateHeldItem(this);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
