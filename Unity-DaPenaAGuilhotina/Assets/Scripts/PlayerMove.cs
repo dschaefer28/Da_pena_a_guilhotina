@@ -63,7 +63,7 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
-        bool isMoving = move != Vector2.zero;
+        bool isMoving = PodeMover() && move != Vector2.zero;
 
         if (spriteRenderer != null)
         {
@@ -85,6 +85,15 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector2(move.x * moveSpeed, rb.linearVelocity.y);
+        // Diálogo não pausa Time.timeScale (a digitação do texto depende dele rodando), então sem essa
+        // trava o jogador andava livremente durante uma conversa com um NPC.
+        float velocidadeX = PodeMover() ? move.x * moveSpeed : 0f;
+        rb.linearVelocity = new Vector2(velocidadeX, rb.linearVelocity.y);
+    }
+
+    private bool PodeMover()
+    {
+        var dialogo = GameManager.Instance != null ? GameManager.Instance.dialogueSystem : null;
+        return dialogo == null || !dialogo.IsDialogueActive;
     }
 }
