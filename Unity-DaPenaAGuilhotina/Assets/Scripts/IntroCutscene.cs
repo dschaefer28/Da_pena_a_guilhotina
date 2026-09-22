@@ -32,6 +32,8 @@ public class IntroCutscene : MonoBehaviour
 
         PlayerPrefs.SetInt(Chave, 1);
         PlayerPrefs.Save();
-        CutsceneLegendas.Instance.Tocar(legendas);
+        // Sem fade de entrada: é a primeira coisa da cena, não há cenário pra esmaecer (evita o
+        // escritório "piscar" por trás do fade antes de escurecer).
+        CutsceneLegendas.Instance.Tocar(legendas, fadeDeEntradaInstantaneo: true);
     }
 }

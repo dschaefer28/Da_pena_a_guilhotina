@@ -3478,7 +3478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac758d05b275614fae39eb16bf2813d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fase1Desfecho
-  forcarRepetir: 0
+  forcarRepetir: 1
   legendas:
   - texto: Paris, 1780. O panfleto sobre o caso Bradier circula pelas ruas antes
       do amanhecer.
@@ -3500,7 +3500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a5431a2b7b40a644bcf747982e4f640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IntroCutscene
-  forcarRepetir: 0
+  forcarRepetir: 1
   legendas:
   - texto: Paris, 1780. Nove anos antes da Queda da Bastilha.
     duracao: 4

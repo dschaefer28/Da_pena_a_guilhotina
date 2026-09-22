@@ -67,14 +67,17 @@ public class CutsceneLegendas : MonoBehaviour
         if (toque || tecla) pularLinha = true;
     }
 
-    public void Tocar(List<Linha> linhas, Action aoTerminar = null)
+    /// <param name="fadeDeEntradaInstantaneo">Verdadeiro pula o fade de entrada (tela já nasce preta).
+    /// Use para uma cutscene que é a primeira coisa exibida na cena (não há cenário de jogo visível
+    /// ainda para esmaecer) — senão o cenário "pisca" por trás do fade antes de escurecer de vez.</param>
+    public void Tocar(List<Linha> linhas, Action aoTerminar = null, bool fadeDeEntradaInstantaneo = false)
     {
         if (linhas == null || linhas.Count == 0) { aoTerminar?.Invoke(); return; }
         if (emAndamento != null) StopCoroutine(emAndamento);
-        emAndamento = StartCoroutine(Rotina(linhas, aoTerminar));
+        emAndamento = StartCoroutine(Rotina(linhas, aoTerminar, fadeDeEntradaInstantaneo));
     }
 
-    private IEnumerator Rotina(List<Linha> linhas, Action aoTerminar)
+    private IEnumerator Rotina(List<Linha> linhas, Action aoTerminar, bool fadeDeEntradaInstantaneo)
     {
         EmExibicao = true;
         float escalaAnterior = Time.timeScale;
@@ -82,7 +85,8 @@ public class CutsceneLegendas : MonoBehaviour
         fundo.gameObject.SetActive(true);
         fundo.blocksRaycasts = true;
         legenda.text = string.Empty;
-        yield return Fade(0f, 1f);
+        if (fadeDeEntradaInstantaneo) fundo.alpha = 1f;
+        else yield return Fade(0f, 1f);
 
         foreach (var linha in linhas)
         {
