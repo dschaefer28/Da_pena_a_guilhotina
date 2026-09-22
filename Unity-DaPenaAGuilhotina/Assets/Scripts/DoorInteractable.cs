@@ -19,22 +19,25 @@ public class DoorInteractable : MonoBehaviour, IInteractable
     [Tooltip("O que o personagem pensa se tentar passar sem o item?")]
     public DialogueData pensamentoBloqueado;
 
+    /// <summary>Falso enquanto o item obrigatório não estiver no inventário: o aviso de interação
+    /// (PromptDeInteracao) só aparece sobre a porta quando ela realmente responde.</summary>
+    public bool PodeInteragir =>
+        itemObrigatorio == null ||
+        (GameManager.Instance != null && GameManager.Instance.inventoryManager != null &&
+         GameManager.Instance.inventoryManager.HasItem(itemObrigatorio.itemID));
+
     public void Interact()
     {
-        // Verifica se existe um item exigido e se o jogador não o possui
-        if (itemObrigatorio != null && GameManager.Instance != null && GameManager.Instance.inventoryManager != null)
+        if (!PodeInteragir)
         {
-            if (!GameManager.Instance.inventoryManager.HasItem(itemObrigatorio.itemID))
+            Debug.Log("A porta está trancada. Preciso terminar o meu trabalho primeiro.");
+
+            if (pensamentoBloqueado != null && GameManager.Instance != null && GameManager.Instance.dialogueSystem != null)
             {
-                Debug.Log("A porta está trancada. Preciso terminar o meu trabalho primeiro.");
-                
-                if (pensamentoBloqueado != null && GameManager.Instance.dialogueSystem != null)
-                {
-                    GameManager.Instance.dialogueSystem.dialogueData = pensamentoBloqueado;
-                    GameManager.Instance.dialogueSystem.Next();
-                }
-                return; // Corta a viagem
+                GameManager.Instance.dialogueSystem.dialogueData = pensamentoBloqueado;
+                GameManager.Instance.dialogueSystem.Next();
             }
+            return; // Corta a viagem
         }
 
         Debug.Log($"Salvando inventário e retornando para a cena: {cenaDestino}...");

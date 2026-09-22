@@ -152,5 +152,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
   cenaDestino: Fase2
+  somPorta:
+    Guid:
+      Data1: 1226465514
+      Data2: 1196738812
+      Data3: -1838700891
+      Data4: -1569920292
+    Path: event:/portaabrir
   itemObrigatorio: {fileID: 11400000, guid: d04d15091bf2cef4592686f23f1968f5, type: 2}
   pensamentoBloqueado: {fileID: 0}

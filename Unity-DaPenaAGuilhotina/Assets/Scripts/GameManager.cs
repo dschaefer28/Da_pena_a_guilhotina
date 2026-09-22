@@ -8,7 +8,11 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [Header("Dados da Investigação (Fase Atual)")]
-    public CaseData casoEscolhido; 
+    public CaseData casoEscolhido;
+
+    [Tooltip("Todos os casos que o jogador já escolheu alguma vez (mesmo que não seja mais o atual). " +
+             "A Mesa de Casos (CaseSelectionUI) usa isso para bloquear cartões já selecionados.")]
+    public List<CaseData> casosJaSelecionados = new List<CaseData>();
 
     [Header("Status Globais (HUD)")]
     public int capitalAtual = 0;
@@ -74,8 +78,13 @@ public class GameManager : MonoBehaviour
     public void ConfirmarCaso(CaseData caso)
     {
         casoEscolhido = caso;
+        if (caso != null && !casosJaSelecionados.Contains(caso))
+            casosJaSelecionados.Add(caso);
         Debug.Log($"Caso escolhido e salvo: {caso.caseTitle}");
     }
+
+    /// <summary>Usado pela Mesa de Casos (CaseSelectionUI) para bloquear cartões já escolhidos antes.</summary>
+    public bool CasoJaFoiSelecionado(CaseData caso) => caso != null && casosJaSelecionados.Contains(caso);
 
     public void AplicarImpactoPanfleto(int impactoPublico, int impactoEstado, int ouro)
     {

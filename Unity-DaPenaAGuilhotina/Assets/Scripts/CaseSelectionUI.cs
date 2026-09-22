@@ -45,8 +45,17 @@ public class CaseSelectionUI : MonoBehaviour
             if (titulo != null) titulo.text = caso.caseTitle;
             if (descricao != null) descricao.text = caso.caseDescription;
 
-            // 5. Configura o botão dinamicamente para avisar qual caso ele representa
-            if (botaoAceitar != null)
+            // 5. Documento (Interlúdio, "Mesa de Casos"): bloquear visualmente casos já selecionados antes.
+            bool jaSelecionado = GameManager.Instance != null && GameManager.Instance.CasoJaFoiSelecionado(caso);
+            if (jaSelecionado)
+            {
+                if (botaoAceitar != null) botaoAceitar.interactable = false;
+                if (titulo != null) titulo.text += " (já escolhido)";
+                CanvasGroup grupoDoCartao = novoCartao.GetComponent<CanvasGroup>();
+                if (grupoDoCartao == null) grupoDoCartao = novoCartao.AddComponent<CanvasGroup>();
+                grupoDoCartao.alpha = 0.45f;
+            }
+            else if (botaoAceitar != null)
             {
                 // Adiciona a ação de clique via código
                 botaoAceitar.onClick.AddListener(() => ConfirmarEscolha(caso));
