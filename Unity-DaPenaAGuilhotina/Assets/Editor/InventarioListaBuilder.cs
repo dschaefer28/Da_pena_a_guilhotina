@@ -22,8 +22,8 @@ public static class InventarioListaBuilder
     // Medidas em pixels do canvas de referência (1920x1080, CanvasScaler casando pela altura).
     private const float LarguraPainel = 760f;
     private const float AlturaPainel = 900f;
-    private const float Margem = 28f;
-    private const float AlturaCabecalho = 120f;
+    internal const float Margem = 28f;
+    internal const float AlturaCabecalho = 120f;
     private const float AlturaLinha = 112f;
     private const float EspacoEntreLinhas = 12f;
     private const float TamanhoIcone = 84f;
@@ -31,9 +31,9 @@ public static class InventarioListaBuilder
     private const float RespiroInterno = 16f;
     private const float LarguraBotaoFechar = 200f;
 
-    private static readonly Color CorFundoLinha = new Color(0f, 0f, 0f, 0.32f);
-    private static readonly Color CorBotaoFechar = new Color(0.45f, 0.20f, 0.15f, 1f);
-    private static readonly Color CorTextoVazio = new Color(1f, 1f, 1f, 0.45f);
+    internal static readonly Color CorFundoLinha = new Color(0f, 0f, 0f, 0.32f);
+    internal static readonly Color CorBotaoFechar = new Color(0.45f, 0.20f, 0.15f, 1f);
+    internal static readonly Color CorTextoVazio = new Color(1f, 1f, 1f, 0.45f);
 
     [MenuItem("Ferramentas/Inventário/1 - Aplicar layout de lista ao UI_Inventory")]
     public static void Aplicar()
@@ -116,6 +116,8 @@ public static class InventarioListaBuilder
                 if (painel == null) continue;
                 removidos += RemoverLinhasAdicionadas(painel);
                 revertidos += ReverterOverridesDeLayout(painel);
+                Transform prensa = raiz.transform.Find("UI_Inventory/PainelPrensa");
+                if (prensa != null) revertidos += ReverterOverridesDeLayout(prensa);
             }
 
             EditorSceneManager.MarkSceneDirty(cena);
@@ -140,6 +142,8 @@ public static class InventarioListaBuilder
             }
             int removidos = RemoverLinhasAdicionadas(painel);
             int revertidos = ReverterOverridesDeLayout(painel);
+            Transform prensa = raiz.transform.Find("UI_Inventory/PainelPrensa");
+            if (prensa != null) revertidos += ReverterOverridesDeLayout(prensa);
             PrefabUtility.SaveAsPrefabAsset(raiz, CaminhoPrefabUI);
             Debug.Log($"[InventarioListaBuilder] {CaminhoPrefabUI}: {removidos} linha(s) locais removida(s), overrides revertidos em {revertidos} componente(s).");
         }
@@ -188,7 +192,7 @@ public static class InventarioListaBuilder
     // tem a tabela Latin-1 completa.
     private const string CaminhoFonte = "Assets/Fonts/Cinzel-Regular SDF.asset";
 
-    private static TMP_FontAsset ObterFonte(RectTransform conteudo)
+    internal static TMP_FontAsset ObterFonte(RectTransform conteudo)
     {
         TMP_FontAsset fonte = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(CaminhoFonte);
         if (fonte == null)
@@ -374,7 +378,7 @@ public static class InventarioListaBuilder
         if (imagem != null) imagem.preserveAspect = true;
     }
 
-    private static RectTransform CriarRect(string nome, Transform pai)
+    internal static RectTransform CriarRect(string nome, Transform pai)
     {
         var go = new GameObject(nome, typeof(RectTransform));
         go.layer = pai.gameObject.layer;
@@ -383,7 +387,7 @@ public static class InventarioListaBuilder
         return rect;
     }
 
-    private static TextMeshProUGUI CriarTexto(string nome, Transform pai, string texto, float tamanho,
+    internal static TextMeshProUGUI CriarTexto(string nome, Transform pai, string texto, float tamanho,
         TextAlignmentOptions alinhamento, TMP_FontAsset fonte)
     {
         var tmp = CriarRect(nome, pai).gameObject.AddComponent<TextMeshProUGUI>();
@@ -392,7 +396,7 @@ public static class InventarioListaBuilder
         return tmp;
     }
 
-    private static void ConfigurarTexto(TextMeshProUGUI tmp, float tamanho, TextAlignmentOptions alinhamento, TMP_FontAsset fonte)
+    internal static void ConfigurarTexto(TextMeshProUGUI tmp, float tamanho, TextAlignmentOptions alinhamento, TMP_FontAsset fonte)
     {
         if (fonte != null) tmp.font = fonte;
         tmp.fontSize = tamanho;
@@ -401,7 +405,7 @@ public static class InventarioListaBuilder
         tmp.raycastTarget = false;
     }
 
-    private static void Esticar(RectTransform rect, Vector2 offsetMin, Vector2 offsetMax)
+    internal static void Esticar(RectTransform rect, Vector2 offsetMin, Vector2 offsetMax)
     {
         rect.anchorMin = Vector2.zero;
         rect.anchorMax = Vector2.one;

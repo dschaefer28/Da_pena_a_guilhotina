@@ -21,6 +21,10 @@ public class InventoryManager : MonoBehaviour
     // (usado pelo popup de "item recebido" e pelo tutorial).
     public event Action<Item> OnItemAdicionado;
 
+    // Disparado quando um slot ganha, perde ou muda a quantidade de um item (o botão Misturar da
+    // prensa usa isso para só ficar habilitado com as duas entradas preenchidas).
+    public event Action<UISlotHandler> OnSlotAlterado;
+
     // Fica true durante RestaurarInventario() para NÃO disparar o popup de "item recebido"
     // ao simplesmente repor no ar os itens que o jogador já tinha antes de trocar de cena.
     private bool restaurandoInventario = false;
@@ -101,6 +105,7 @@ public class InventoryManager : MonoBehaviour
         if (activeSlot.itemNameText != null) activeSlot.itemNameText.text = item.NomeExibicao;
         activeSlot.AtualizarObjetoVazio();
         ConfigureInventory();
+        OnSlotAlterado?.Invoke(activeSlot);
     }
 
     public void StackInInventory(UISlotHandler activeSlot, Item item)
@@ -114,6 +119,7 @@ public class InventoryManager : MonoBehaviour
         if (activeSlot.itemNameText != null)
             activeSlot.itemNameText.text = activeSlot.item.NomeExibicao;
         ConfigureInventory();
+        OnSlotAlterado?.Invoke(activeSlot);
     }
 
     public void ClearItemSlot(UISlotHandler activeSlot)
@@ -131,6 +137,7 @@ public class InventoryManager : MonoBehaviour
             activeSlot.itemNameText.text = string.Empty;
         activeSlot.item = null;
         activeSlot.AtualizarObjetoVazio();
+        OnSlotAlterado?.Invoke(activeSlot);
     }
 
     public void ConfigureInventory()
