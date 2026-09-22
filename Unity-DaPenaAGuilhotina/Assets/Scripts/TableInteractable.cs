@@ -13,19 +13,23 @@ public class TableInteractable : MonoBehaviour, IInteractable
     [Tooltip("O que ele pensa se tentar mexer na mesa antes da hora?")]
     public DialogueData pensamentoBloqueado;
 
+    /// <summary>Falso enquanto o item obrigatório não estiver no inventário: o aviso de interação
+    /// (PromptDeInteracao) só aparece sobre a mesa quando ela realmente responde.</summary>
+    public bool PodeInteragir =>
+        itemObrigatorio == null ||
+        (GameManager.Instance != null && GameManager.Instance.inventoryManager != null &&
+         GameManager.Instance.inventoryManager.HasItem(itemObrigatorio.itemID));
+
     public void Interact()
     {
-        if (itemObrigatorio != null && GameManager.Instance != null && GameManager.Instance.inventoryManager != null)
+        if (!PodeInteragir)
         {
-            if (!GameManager.Instance.inventoryManager.HasItem(itemObrigatorio.itemID))
+            if (pensamentoBloqueado != null && GameManager.Instance != null && GameManager.Instance.dialogueSystem != null)
             {
-                if (pensamentoBloqueado != null && GameManager.Instance.dialogueSystem != null)
-                {
-                    GameManager.Instance.dialogueSystem.dialogueData = pensamentoBloqueado;
-                    GameManager.Instance.dialogueSystem.Next();
-                }
-                return; // Impede que o painel abra
+                GameManager.Instance.dialogueSystem.dialogueData = pensamentoBloqueado;
+                GameManager.Instance.dialogueSystem.Next();
             }
+            return; // Impede que o painel abra
         }
 
         if (caseSelectionUI.activeSelf) return;

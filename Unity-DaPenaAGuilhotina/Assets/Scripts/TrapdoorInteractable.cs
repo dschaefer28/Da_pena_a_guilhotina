@@ -79,8 +79,8 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
                 return;
             }
 
-            if (!somAlcapao.IsNull)
-                RuntimeManager.PlayOneShot(somAlcapao, transform.position);
+            // AudioSeguro ignora eventos vazios e nunca lança exceção se o FMOD falhar.
+                AudioSeguro.TocarUmaVez(somAlcapao, transform.position);
 
             Debug.Log("Acessando o porão...");
             if (inventario != null)

@@ -29,6 +29,10 @@ public class TutorialStep
     [Tooltip("Imagem opcional mostrada ao lado do texto no popup (deixe vazio para não mostrar nenhuma imagem).")]
     public Sprite icone;
 
+    [Tooltip("Controle destacado no popup como uma 'tecla' desenhada (E / Interagir, I / Inventário...). " +
+             "O texto da tecla muda sozinho entre Windows e Android. 'Principais' mostra o cartão com os três controles básicos.")]
+    public ControleTutorial controle = ControleTutorial.Nenhum;
+
     [Tooltip("Como o jogador avança para a próxima etapa.")]
     public TipoDeAvanco tipoDeAvanco = TipoDeAvanco.CliqueDoJogador;
 
@@ -79,123 +83,134 @@ public class TutorialManager : MonoBehaviour
              "configurada no Inspector (que sobrescreve este valor) — edite-a por lá para afetar o jogo rodando.")]
     public List<TutorialStep> etapas = new List<TutorialStep>
     {
+        // Um roteiro só para Windows e Android: os marcadores {mover} {interagir} {inventario} {pausa}
+        // {continuar} {toque}/{Toque} viram "a tecla E" ou "o botão Interagir" conforme o aparelho
+        // (DispositivoDeControle). Mensagens curtas: uma ação por etapa, como nos tutoriais contextuais.
         new TutorialStep
         {
             etapaId = "boas_vindas",
-            mensagem = "Bem-vindo ao seu primeiro dia no escritório! Vamos te mostrar rapidinho como tudo funciona.",
+            mensagem = "Bem-vindo ao seu primeiro dia na tipografia! Estes são os controles principais. Quando estiver pronto, {continuar}.",
+            controle = ControleTutorial.Principais,
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "Joystick",
-            mensagem = "Este é o joystick. Use-o para se movimentar pelo escritório. Depois de experimentar, toque em Continuar.",
+            mensagem = "Use {mover} para andar pelo escritório. Dê alguns passos e depois {continuar}.",
+            controle = ControleTutorial.Mover,
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "Personagem",
-            mensagem = "Caminhe até o primeiro personagem indicado. Quando estiver perto dele, toque em Continuar.",
+            mensagem = "Vá até Charles Dupaty, o homem com o contorno destacado. Quando estiver perto dele, {continuar}.",
+            controle = ControleTutorial.Mover,
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "explica_interacao",
-            mensagem = "Perto do primeiro personagem, aperte o botão de interação e converse com ele até o fim.",
+            mensagem = "Perto de alguém, use {interagir} para conversar. Fale com Dupaty até o fim da conversa.",
+            controle = ControleTutorial.Interagir,
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
             nomeDoEvento = EVENTO_DIALOGO_FINALIZADO
         },
         new TutorialStep
         {
             etapaId = "falar_segunda_personagem",
-            mensagem = "Agora vá até a segunda personagem e interaja com ela. Termine a conversa para receber o primeiro item.",
+            mensagem = "Agora fale com Marie Bradier do mesmo jeito. No fim da conversa você recebe a primeira pista.",
+            controle = ControleTutorial.Interagir,
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
             nomeDoEvento = EVENTO_ITEM_RECEBIDO
         },
         new TutorialStep
         {
             etapaId = "InventoryButton",
-            mensagem = "Você recebeu o primeiro item! Aperte o botão do inventário para abri-lo.",
+            mensagem = "Pista recebida! Use {inventario} para abrir o inventário.",
+            controle = ControleTutorial.Inventario,
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
             nomeDoEvento = EVENTO_INVENTARIO_ALTERNADO
         },
         new TutorialStep
         {
             etapaId = "ver_item_inventario",
-            mensagem = "Aqui está o item que você recebeu. O inventário guarda suas pistas e materiais. Observe o item e toque em Continuar.",
+            mensagem = "O inventário guarda suas pistas e panfletos. Quando terminar de olhar, {continuar}.",
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "fechar_inventario",
-            mensagem = "Aperte novamente o botão do inventário para fechá-lo e voltar ao escritório.",
+            mensagem = "Feche o inventário com {inventario} ou no botão Fechar para voltar ao escritório.",
+            controle = ControleTutorial.Inventario,
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
             nomeDoEvento = EVENTO_INVENTARIO_ALTERNADO
         },
         new TutorialStep
         {
             etapaId = "PauseButton",
-            mensagem = "Este é o botão de pause. Ele abre o menu de pausa e as opções. Você pode abrir o menu e retomar o jogo. Depois, toque em Continuar.",
+            mensagem = "Use {pausa} para abrir o menu de pausa, com volume e velocidade do texto. Quando quiser, {continuar}.",
+            controle = ControleTutorial.Pausa,
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "segunda_pista",
-            mensagem = "Volte ao primeiro personagem e converse com ele novamente para receber o segundo item.",
+            mensagem = "Volte até Charles Dupaty e converse de novo: agora ele tem a segunda pista.",
+            controle = ControleTutorial.Interagir,
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
             nomeDoEvento = EVENTO_ITEM_RECEBIDO
         },
         new TutorialStep
         {
             etapaId = "ir_para_porao",
-            mensagem = "Com os dois itens no inventário, vá até o alçapão e interaja com ele para descer ao porão.",
+            mensagem = "Com as duas pistas, siga a seta até o alçapão e use {interagir} para descer ao porão.",
+            controle = ControleTutorial.Interagir,
             tipoDeAvanco = TipoDeAvanco.CarregamentoDeCena,
             nomeDaCena = "Porao"
         },
         new TutorialStep
         {
             etapaId = "explicar_prensa",
-            mensagem = "Você chegou ao porão! Aproxime-se da prensa e use o botão de interação para abri-la. Depois, toque em Continuar.",
+            mensagem = "Este é o porão. Aproxime-se da prensa e use {interagir} para abri-la. Depois, {continuar}.",
+            controle = ControleTutorial.Interagir,
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "explicar_barras_status",
-            mensagem = "Antes de misturar, repare nas barras lá em cima: a Opinião Pública, a Opinião do Estado, e o seu " +
-                       "capital ao lado. Cada tipo de panfleto que você imprimir vai mexer nessas barras de um jeito " +
-                       "diferente — alguns agradam o povo e irritam o Estado, outros fazem o contrário.",
+            mensagem = "Repare nas barras no alto: Opinião Pública, Opinião do Estado e o seu capital. Cada panfleto impresso mexe nelas de um jeito diferente.",
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "colocar_itens_prensa",
-            mensagem = "Toque em um item do inventário e depois em um slot de entrada da prensa. Repita com o outro item no segundo slot. Depois, toque em Continuar.",
+            mensagem = "{Toque} numa pista do inventário e depois em uma Entrada da prensa. Faça o mesmo com a outra pista. Então {continuar}.",
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "misturar_itens",
-            mensagem = "Com um item em cada slot de entrada, aperte o botão de misturar para gerar o panfleto.",
+            mensagem = "Com as duas entradas cheias, {toque} em Misturar para imprimir o panfleto.",
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
             nomeDoEvento = EVENTO_PANFLETO_GERADO
         },
         new TutorialStep
         {
             etapaId = "explicar_efeito_barras",
-            mensagem = "Viu como a Opinião Pública, a Opinião do Estado e o seu capital mudaram? Foi esse panfleto que você " +
-                       "acabou de criar. Panfletos diferentes empurram essas barras de formas diferentes — fique de olho " +
-                       "nelas a cada decisão que tomar.",
+            mensagem = "Viu as barras mudarem? Foi o seu panfleto. Uns agradam o povo e irritam o Estado; outros, o contrário. Fique de olho nelas.",
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "coletar_resultado_prensa",
-            mensagem = "O panfleto está no slot de resultado da prensa. Toque nele para pegá-lo e depois em um slot vazio do inventário para guardá-lo. Só então toque em Continuar.",
+            mensagem = "{Toque} no panfleto em Resultado e depois em Espaço livre no inventário para guardá-lo. Então {continuar}.",
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "voltar_escritorio",
-            mensagem = "Com o panfleto guardado, feche a prensa e o inventário. Vá até a saída do porão e interaja para subir ao escritório.",
+            mensagem = "Feche os painéis, vá até a saída do porão e use {interagir} para subir ao escritório.",
+            controle = ControleTutorial.Interagir,
             tipoDeAvanco = TipoDeAvanco.CarregamentoDeCena,
             nomeDaCena = "Jogo"
         }
@@ -283,9 +298,11 @@ public class TutorialManager : MonoBehaviour
         }
         if (craftingPressAtual != null) craftingPressAtual.OnPanfletoGerado -= HandlePanfletoGerado;
 
-        dialogueSystemAtual = GameManager.Instance != null ? GameManager.Instance.dialogueSystem : FindAnyObjectByType<DialogueSystem>();
-        inventoryManagerAtual = GameManager.Instance != null ? GameManager.Instance.inventoryManager : FindAnyObjectByType<InventoryManager>();
-        craftingPressAtual = FindAnyObjectByType<CraftingPress>();
+        dialogueSystemAtual = GameManager.Instance != null ? GameManager.Instance.dialogueSystem : FindAnyObjectByType<DialogueSystem>(FindObjectsInactive.Include);
+        inventoryManagerAtual = GameManager.Instance != null ? GameManager.Instance.inventoryManager : FindAnyObjectByType<InventoryManager>(FindObjectsInactive.Include);
+        // O painel da prensa começa desativado na cena: sem "Include" a busca voltava null, o tutorial
+        // nunca ouvia OnPanfletoGerado e travava na etapa "misturar_itens".
+        craftingPressAtual = FindAnyObjectByType<CraftingPress>(FindObjectsInactive.Include);
 
         if (dialogueSystemAtual != null) dialogueSystemAtual.OnDialogueEnded += HandleDialogoFinalizado;
         if (inventoryManagerAtual != null)

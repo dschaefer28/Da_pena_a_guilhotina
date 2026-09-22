@@ -25,6 +25,8 @@ public class LootInteractable : MonoBehaviour, IInteractable
     public bool destroyAfterLoot = false;
     private bool alreadyLooted = false;
 
+    public bool PodeInteragir => !alreadyLooted;
+
     private void Start()
     {
         // Se ativado, a estante (ou objeto) se teletransporta para um local aleatório da sala no início da fase

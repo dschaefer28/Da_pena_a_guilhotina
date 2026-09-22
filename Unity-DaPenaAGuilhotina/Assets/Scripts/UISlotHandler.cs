@@ -136,8 +136,8 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
     {
         if (item == null || somHover.IsNull) return;
 
-        // Instância manual para poder mexer em volume e pitch antes de tocar
-        FMOD.Studio.EventInstance hover = RuntimeManager.CreateInstance(somHover);
+        // Instância manual para poder mexer em volume e pitch antes de tocar (sem exceção se o FMOD falhar)
+        if (!AudioSeguro.TentarCriar(somHover, out FMOD.Studio.EventInstance hover)) return;
         hover.setVolume(hoverVolume);
         hover.setPitch(Random.Range(hoverPitchMin, hoverPitchMax));
         hover.start();

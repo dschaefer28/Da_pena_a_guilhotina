@@ -52,6 +52,11 @@ public class NPCMovement : MonoBehaviour, IInteractable
 
     void Start() { UpdateVisualFeedback(); }
 
+    // Usado pelo Player (alvo mais próximo) e pelo aviso de interação: só conta como interagível
+    // enquanto ainda responde. Mesma regra dos dois primeiros "return" de Interact().
+    public bool PodeInteragir =>
+        canInteract && (casoObrigatorio == null || GameManager.Instance == null || GameManager.Instance.casoEscolhido == casoObrigatorio);
+
     public void Interact()
     {
         if (!canInteract) return;

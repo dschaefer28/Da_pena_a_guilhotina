@@ -60,7 +60,14 @@ public class DialogueSystem : MonoBehaviour
         // Não faz nada quando não há diálogo em andamento: o botão "ButtonAvancar" do Canvas cobre a
         // tela inteira e fica sempre ativo (mesmo sem diálogo aberto), então qualquer clique na tela
         // chegava aqui. Antes disso chamava Next() e reabria a última conversa do zero a cada clique.
-        if (state == STATE.DISABLED) return;
+        if (state == STATE.DISABLED)
+        {
+            // Segurança: se algo interrompeu Next() no meio (exceção de áudio, por exemplo), o
+            // diálogo nunca chegou a abrir mas a flag ficou ligada — e toda interação do jogador
+            // passava a cair aqui sem fazer nada. Destrava.
+            if (IsDialogueActive) EndDialogue();
+            return;
+        }
         if (state == STATE.TYPING) { typeText.Skip(); OnTypeFinished(); return; }
         if (state == STATE.WAITING)
         {
@@ -87,7 +94,7 @@ public class DialogueSystem : MonoBehaviour
         IsDialogueActive = true;
 
         // FMOD: se os banks ainda não terminaram de carregar, a 1ª fala costuma sair muda
-        if (currentText == 0 && !FMODUnity.RuntimeManager.HaveAllBanksLoaded)
+        if (currentText == 0 && !AudioSeguro.BanksCarregados)
         {
             Debug.LogWarning("[DialogueSystem] FMOD ainda não carregou todos os banks — " +
                              "o áudio da primeira fala pode não tocar.");
@@ -100,11 +107,11 @@ public class DialogueSystem : MonoBehaviour
         Dialogue currentDialogue = dialogueData.talkScript[currentText];
         string speakerName = currentDialogue.name;
         string speakerText = currentDialogue.text;
-        
-        if (!currentDialogue.dialogueAudio.IsNull)
-        {
-            currentAudioInstance = FMODUnity.RuntimeManager.CreateInstance(currentDialogue.dialogueAudio);
 
+        // Áudio da fala é opcional: se o FMOD falhar (banks ausentes, evento renomeado, sistema não
+        // iniciado), a conversa segue muda em vez de travar o jogo (AudioSeguro nunca lança exceção).
+        if (AudioSeguro.TentarCriar(currentDialogue.dialogueAudio, out currentAudioInstance))
+        {
             FMOD.RESULT startResult = currentAudioInstance.start();
             if (startResult != FMOD.RESULT.OK)
                 Debug.LogWarning($"[DialogueSystem] start() do áudio da fala '{speakerName}' " +
@@ -134,23 +141,21 @@ public class DialogueSystem : MonoBehaviour
         }
     }
 
-    void EndDialogue() 
+    void EndDialogue()
     {
         StopCurrentAudio();
-        OnDialogueEnded?.Invoke();
+        // Estado fica consistente ANTES de avisar os ouvintes: quem reage ao fim do diálogo (tutorial,
+        // popups) precisa ver IsDialogueActive == false, senão acha que ainda há conversa na tela.
         state = STATE.DISABLED;
         currentText = 0;
         finished = false;
         IsDialogueActive = false;
+        OnDialogueEnded?.Invoke();
     }
 
-    void StopCurrentAudio() 
+    void StopCurrentAudio()
     {
-        if (currentAudioInstance.isValid()) 
-        {
-            currentAudioInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            currentAudioInstance.release();
-        }
+        AudioSeguro.PararELiberar(ref currentAudioInstance);
     }
 
     void SetupChoices(Dialogue dialogue) 

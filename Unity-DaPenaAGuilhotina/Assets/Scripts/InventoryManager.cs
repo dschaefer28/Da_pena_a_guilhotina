@@ -79,8 +79,8 @@ public class InventoryManager : MonoBehaviour
             inventoryUI.SetActive(vaiAbrir);
             if (vaiAbrir) ConfigureInventory();
 
-            if (!somToggleInventario.IsNull)
-                RuntimeManager.PlayOneShot(somToggleInventario);
+            // AudioSeguro ignora eventos vazios e nunca lança exceção se o FMOD falhar.
+                AudioSeguro.TocarUmaVez(somToggleInventario);
 
             // Dispara o evento avisando a Prensa se o inventário abriu(true) ou fechou(false)
             OnInventoryToggled?.Invoke(vaiAbrir);

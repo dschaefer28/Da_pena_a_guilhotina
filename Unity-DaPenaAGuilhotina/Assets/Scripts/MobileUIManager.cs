@@ -10,6 +10,10 @@ public class MobileUIManager : MonoBehaviour
     [Tooltip("Arraste o JoystickBG aqui para ele sumir durante os diálogos.")]
     public GameObject joystickUI; 
 
+    /// <summary>Verdadeiro quando os controles de toque estão em uso (mesma regra do Awake abaixo). É a fonte
+    /// da verdade para textos e glifos do tutorial (DispositivoDeControle).</summary>
+    public static bool ControlesMobileAtivos { get; private set; }
+
     private DialogueSystem dialogueSystem;
 
     void Awake()
@@ -22,6 +26,7 @@ public class MobileUIManager : MonoBehaviour
 #else
         gameObject.SetActive(false);
 #endif
+        ControlesMobileAtivos = gameObject.activeSelf;
     }
 
     void Start()

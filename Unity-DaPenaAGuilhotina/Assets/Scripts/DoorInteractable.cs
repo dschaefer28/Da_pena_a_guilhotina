@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,6 +7,10 @@ public class DoorInteractable : MonoBehaviour, IInteractable
     [Header("Configurações de Transição")]
     [Tooltip("O nome exato da cena de destino (Ex: Fase2)")]
     public string cenaDestino = "Fase2";
+
+    [Header("Áudio (FMOD)")]
+    [Tooltip("Som de porta abrindo, tocado junto com o fade da troca de cena (documento: Transição de Cena).")]
+    public EventReference somPorta;
 
     [Header("Trava de Progressão (Opcional)")]
     [Tooltip("Arraste o ScriptableObject do item necessário para passar. Deixe VAZIO para portas livres.")]
@@ -37,6 +42,9 @@ public class DoorInteractable : MonoBehaviour, IInteractable
         {
             GameManager.Instance.inventoryManager.SalvarEstadoAtual();
         }
+
+        AudioSeguro.TocarUmaVez(somPorta, transform.position);
+        Time.timeScale = 1f; // garante que a próxima cena não abra congelada
         if (SceneTransitionManager.Instance != null)
             SceneTransitionManager.Instance.LoadScene(cenaDestino);
         else

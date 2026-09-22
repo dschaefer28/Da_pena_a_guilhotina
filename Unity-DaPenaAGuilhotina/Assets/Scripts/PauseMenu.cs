@@ -34,7 +34,7 @@ public class PauseMenu : MonoBehaviour
 
         // Aplica o volume salvo assim que a cena carrega (o FMOD mantém o volume do bus
         // entre cenas, então isso garante que uma cena nova comece com o valor certo).
-        RuntimeManager.GetBus("bus:/").setVolume(PlayerPrefs.GetFloat(VolumeKey, 1f));
+        AudioSeguro.DefinirVolumeDoBus("bus:/", PlayerPrefs.GetFloat(VolumeKey, 1f));
     }
 
     void OnDestroy()
@@ -104,7 +104,7 @@ public class PauseMenu : MonoBehaviour
     public void OnVolumeSliderChanged(float valor01)
     {
         PlayerPrefs.SetFloat(VolumeKey, valor01);
-        RuntimeManager.GetBus("bus:/").setVolume(valor01);
+        AudioSeguro.DefinirVolumeDoBus("bus:/", valor01);
     }
 
     // Ligado no OnValueChanged do slider de Velocidade de Texto da tela de Opções.

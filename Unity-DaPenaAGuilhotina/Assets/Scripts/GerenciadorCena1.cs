@@ -19,7 +19,35 @@ public class GerenciadorCena1 : MonoBehaviour
 
     void Start()
     {
+        CorrigirReferenciasDeCena();
         VerificarEstadoDaCena();
+    }
+
+    // Se alguém arrastar o PREFAB da Marie (asset) em vez do objeto da cena, SetActive(false) desativaria o
+    // asset no projeto e a Marie da cena continuaria lá. Troca pelo objeto de mesmo nome que está na cena.
+    private void CorrigirReferenciasDeCena()
+    {
+        if (npcsParaSumir == null) return;
+        for (int i = 0; i < npcsParaSumir.Length; i++)
+        {
+            GameObject alvo = npcsParaSumir[i];
+            if (alvo == null || alvo.scene.IsValid()) continue;
+
+            GameObject naCena = null;
+            foreach (NPCMovement npc in FindObjectsByType<NPCMovement>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                if (npc.gameObject.scene.IsValid() && npc.name == alvo.name) { naCena = npc.gameObject; break; }
+
+            if (naCena != null)
+            {
+                Debug.LogWarning($"[CENA 1] 'Npcs Para Sumir' apontava para o prefab '{alvo.name}' (asset), não para o objeto da cena. Usando o da cena; corrija a referência no Inspector.", this);
+                npcsParaSumir[i] = naCena;
+            }
+            else
+            {
+                Debug.LogWarning($"[CENA 1] 'Npcs Para Sumir' aponta para o asset '{alvo.name}' e não há objeto com esse nome na cena.", this);
+                npcsParaSumir[i] = null;
+            }
+        }
     }
 
     private void VerificarEstadoDaCena()
@@ -62,6 +90,14 @@ public class GerenciadorCena1 : MonoBehaviour
                 foreach (NPCMovement npc in npcsParaSilenciar)
                 {
                     if (npc != null) npc.DisableInteraction();
+                }
+
+                // Documento (Interlúdio, "Correção de Despawn"): ao subir do porão com o panfleto, a
+                // Marie já deve ter saído da cena — não só a partir da escolha de um caso novo.
+                Debug.Log("[CENA 1] Panfleto impresso: escondendo os NPCs do caso tutorial.");
+                foreach (GameObject npc in npcsParaSumir)
+                {
+                    if (npc != null) npc.SetActive(false);
                 }
             }
         }
