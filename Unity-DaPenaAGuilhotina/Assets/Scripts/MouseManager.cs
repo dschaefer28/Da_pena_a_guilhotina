@@ -26,7 +26,7 @@ public class MouseManager : MonoBehaviour
             dragIcon.raycastTarget = false;
             dragIcon.preserveAspect = true;
             dragIcon.rectTransform.localScale = Vector3.one;
-            dragIcon.rectTransform.sizeDelta = new Vector2(24f, 24f);
+            dragIcon.rectTransform.sizeDelta = new Vector2(96f, 96f);
             dragIcon.gameObject.SetActive(false);
         }
     }

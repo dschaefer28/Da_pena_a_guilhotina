@@ -73,7 +73,7 @@ public class InventoryManager : MonoBehaviour
             }
 
             inventoryUI.SetActive(vaiAbrir);
-            if (vaiAbrir) ResetInventoryScroll();
+            if (vaiAbrir) ConfigureInventory();
 
             if (!somToggleInventario.IsNull)
                 RuntimeManager.PlayOneShot(somToggleInventario);
@@ -99,6 +99,7 @@ public class InventoryManager : MonoBehaviour
         activeSlot.itemCount.text = item.itemAmt.ToString();
         activeSlot.slotImg.gameObject.SetActive(true);
         if (activeSlot.itemNameText != null) activeSlot.itemNameText.text = item.NomeExibicao;
+        activeSlot.AtualizarObjetoVazio();
         ConfigureInventory();
     }
 
@@ -129,15 +130,12 @@ public class InventoryManager : MonoBehaviour
         if (activeSlot.itemNameText != null)
             activeSlot.itemNameText.text = string.Empty;
         activeSlot.item = null;
+        activeSlot.AtualizarObjetoVazio();
     }
 
     public void ConfigureInventory()
     {
-        if (messyInventory) { return; }
         if (inventoryGrid == null) { Debug.LogError("[InventoryManager] inventoryGrid não atribuído.", this); return; }
-
-        //Loop through each child of inventory grid
-        //Rearrange by populated items
 
         List<Transform> uiSlots = new List<Transform>();
         for(int i = 0; i < inventoryGrid.transform.childCount; i++)
@@ -145,22 +143,47 @@ public class InventoryManager : MonoBehaviour
             uiSlots.Add(inventoryGrid.transform.GetChild(i));
         }
 
-        uiSlots.Sort((a, b) =>
+        if (!messyInventory)
         {
-            UISlotHandler itemA = a.GetComponent<UISlotHandler>();
-            UISlotHandler itemB = b.GetComponent<UISlotHandler>();
+            // Itens primeiro, slots vazios depois
+            uiSlots.Sort((a, b) =>
+            {
+                UISlotHandler itemA = a.GetComponent<UISlotHandler>();
+                UISlotHandler itemB = b.GetComponent<UISlotHandler>();
 
-            bool hasItemA = itemA != null && itemA.item != null;
-            bool hasItemB = itemB != null && itemB.item != null;
+                bool hasItemA = itemA != null && itemA.item != null;
+                bool hasItemB = itemB != null && itemB.item != null;
 
-            return hasItemB.CompareTo(hasItemA);
-        });
+                return hasItemB.CompareTo(hasItemA);
+            });
 
-        for(int i = 0; i < uiSlots.Count; i++)
-        {
-            uiSlots[i].SetSiblingIndex(i);
+            for(int i = 0; i < uiSlots.Count; i++)
+            {
+                uiSlots[i].SetSiblingIndex(i);
+            }
         }
+
+        AtualizarLinhasVisiveis(uiSlots);
         ResetInventoryScroll();
+    }
+
+    // Numa lista só as linhas com item aparecem, mais UMA linha vazia: ela é o alvo onde o jogador
+    // toca para guardar o item que estiver segurando (ex: o panfleto tirado da prensa).
+    private void AtualizarLinhasVisiveis(List<Transform> uiSlots)
+    {
+        bool vagaJaVisivel = false;
+        foreach (Transform t in uiSlots)
+        {
+            UISlotHandler slot = t.GetComponent<UISlotHandler>();
+            if (slot == null) continue;
+
+            // Linhas do prefab UI_Inventory não conseguem referenciar este manager (ele fica fora do prefab).
+            if (slot.inventoryManager == null) slot.inventoryManager = this;
+
+            bool visivel = slot.item != null || !vagaJaVisivel;
+            if (slot.item == null && visivel) vagaJaVisivel = true;
+            slot.DefinirVisivelNaLista(visivel);
+        }
     }
 
     private void ResetInventoryScroll()

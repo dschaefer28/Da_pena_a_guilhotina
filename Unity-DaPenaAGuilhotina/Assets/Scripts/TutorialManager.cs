@@ -75,7 +75,8 @@ public class TutorialManager : MonoBehaviour
     public bool forcarReiniciar = false;
 
     [Header("Etapas do Tutorial (em ordem)")]
-    [Tooltip("Roteiro de exemplo — edite o texto, a imagem e o tipo de avanço de cada etapa à vontade.")]
+    [Tooltip("Este roteiro é o padrão para um TutorialManager novo. A cena 'Jogo' já tem sua própria lista " +
+             "configurada no Inspector (que sobrescreve este valor) — edite-a por lá para afetar o jogo rodando.")]
     public List<TutorialStep> etapas = new List<TutorialStep>
     {
         new TutorialStep
@@ -86,49 +87,128 @@ public class TutorialManager : MonoBehaviour
         },
         new TutorialStep
         {
-            etapaId = "falar_com_npc",
-            mensagem = "Toque no personagem e use o botão de interação para conversar com ele.",
+            etapaId = "Joystick",
+            mensagem = "Este é o joystick. Use-o para se movimentar pelo escritório. Depois de experimentar, toque em Continuar.",
+            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
+        },
+        new TutorialStep
+        {
+            etapaId = "Personagem",
+            mensagem = "Caminhe até o primeiro personagem indicado. Quando estiver perto dele, toque em Continuar.",
+            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
+        },
+        new TutorialStep
+        {
+            etapaId = "explica_interacao",
+            mensagem = "Perto do primeiro personagem, aperte o botão de interação e converse com ele até o fim.",
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
             nomeDoEvento = EVENTO_DIALOGO_FINALIZADO
         },
         new TutorialStep
         {
-            etapaId = "botao_inventario",
-            mensagem = "Este é o seu inventário. Nele ficam guardadas as pistas e os itens que você encontrar.",
+            etapaId = "falar_segunda_personagem",
+            mensagem = "Agora vá até a segunda personagem e interaja com ela. Termine a conversa para receber o primeiro item.",
+            tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
+            nomeDoEvento = EVENTO_ITEM_RECEBIDO
+        },
+        new TutorialStep
+        {
+            etapaId = "InventoryButton",
+            mensagem = "Você recebeu o primeiro item! Aperte o botão do inventário para abri-lo.",
+            tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
+            nomeDoEvento = EVENTO_INVENTARIO_ALTERNADO
+        },
+        new TutorialStep
+        {
+            etapaId = "ver_item_inventario",
+            mensagem = "Aqui está o item que você recebeu. O inventário guarda suas pistas e materiais. Observe o item e toque em Continuar.",
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
-            etapaId = "botao_pause",
-            mensagem = "Este botão pausa o jogo e abre as opções, caso precise.",
+            etapaId = "fechar_inventario",
+            mensagem = "Aperte novamente o botão do inventário para fechá-lo e voltar ao escritório.",
+            tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
+            nomeDoEvento = EVENTO_INVENTARIO_ALTERNADO
+        },
+        new TutorialStep
+        {
+            etapaId = "PauseButton",
+            mensagem = "Este é o botão de pause. Ele abre o menu de pausa e as opções. Você pode abrir o menu e retomar o jogo. Depois, toque em Continuar.",
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
+        },
+        new TutorialStep
+        {
+            etapaId = "segunda_pista",
+            mensagem = "Volte ao primeiro personagem e converse com ele novamente para receber o segundo item.",
+            tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
+            nomeDoEvento = EVENTO_ITEM_RECEBIDO
         },
         new TutorialStep
         {
             etapaId = "ir_para_porao",
-            mensagem = "Agora desça até o porão para usar a prensa. Siga a seta até o alçapão.",
+            mensagem = "Com os dois itens no inventário, vá até o alçapão e interaja com ele para descer ao porão.",
             tipoDeAvanco = TipoDeAvanco.CarregamentoDeCena,
             nomeDaCena = "Porao"
         },
         new TutorialStep
         {
             etapaId = "explicar_prensa",
-            mensagem = "Esta é a prensa. Coloque dois itens do inventário nos slots de entrada para criar um panfleto.",
+            mensagem = "Você chegou ao porão! Aproxime-se da prensa e use o botão de interação para abri-la. Depois, toque em Continuar.",
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
-            etapaId = "explicar_opiniao",
-            mensagem = "Estas barras mostram a opinião pública e a do estado sobre o seu trabalho. " +
-                       "Elas mudam a cada panfleto que você cria!",
+            etapaId = "explicar_barras_status",
+            mensagem = "Antes de misturar, repare nas barras lá em cima: a Opinião Pública, a Opinião do Estado, e o seu " +
+                       "capital ao lado. Cada tipo de panfleto que você imprimir vai mexer nessas barras de um jeito " +
+                       "diferente — alguns agradam o povo e irritam o Estado, outros fazem o contrário.",
+            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
+        },
+        new TutorialStep
+        {
+            etapaId = "colocar_itens_prensa",
+            mensagem = "Toque em um item do inventário e depois em um slot de entrada da prensa. Repita com o outro item no segundo slot. Depois, toque em Continuar.",
+            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
+        },
+        new TutorialStep
+        {
+            etapaId = "misturar_itens",
+            mensagem = "Com um item em cada slot de entrada, aperte o botão de misturar para gerar o panfleto.",
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
             nomeDoEvento = EVENTO_PANFLETO_GERADO
+        },
+        new TutorialStep
+        {
+            etapaId = "explicar_efeito_barras",
+            mensagem = "Viu como a Opinião Pública, a Opinião do Estado e o seu capital mudaram? Foi esse panfleto que você " +
+                       "acabou de criar. Panfletos diferentes empurram essas barras de formas diferentes — fique de olho " +
+                       "nelas a cada decisão que tomar.",
+            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
+        },
+        new TutorialStep
+        {
+            etapaId = "coletar_resultado_prensa",
+            mensagem = "O panfleto está no slot de resultado da prensa. Toque nele para pegá-lo e depois em um slot vazio do inventário para guardá-lo. Só então toque em Continuar.",
+            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
+        },
+        new TutorialStep
+        {
+            etapaId = "voltar_escritorio",
+            mensagem = "Com o panfleto guardado, feche a prensa e o inventário. Vá até a saída do porão e interaja para subir ao escritório.",
+            tipoDeAvanco = TipoDeAvanco.CarregamentoDeCena,
+            nomeDaCena = "Jogo"
         }
     };
 
     /// <summary>Disparado sempre que a etapa atual muda (inclusive ao (re)carregar uma cena), com o ID da nova etapa
     /// (ou null quando o tutorial já terminou). O TutorialStepUI de cada cena escuta este evento.</summary>
     public event Action<string> OnEtapaAlterada;
+
+    /// <summary>Disparado uma única vez quando a última etapa é concluída (ou quando o tutorial é pulado).
+    /// Ponto de extensão para o Desfecho da Fase 1 (GDD): quem implementar a cutscene final da Fase 1
+    /// pode se inscrever aqui em vez de mexer neste script.</summary>
+    public event Action OnTutorialConcluido;
 
     private int indiceAtual = -1;
     private DialogueSystem dialogueSystemAtual;
@@ -292,6 +372,7 @@ public class TutorialManager : MonoBehaviour
         {
             PlayerPrefs.SetInt(CHAVE_TUTORIAL_CONCLUIDO, 1);
             PlayerPrefs.Save();
+            OnTutorialConcluido?.Invoke();
         }
         BroadcastEtapaAtual();
     }
@@ -299,10 +380,12 @@ public class TutorialManager : MonoBehaviour
     /// <summary>Pula o tutorial inteiro (ex: para um botão "Pular Tutorial" no menu de opções).</summary>
     public void PularTutorial()
     {
+        bool jaEstavaConcluido = TutorialConcluido;
         indiceAtual = etapas.Count;
         PlayerPrefs.SetInt(CHAVE_TUTORIAL_CONCLUIDO, 1);
         PlayerPrefs.Save();
         BroadcastEtapaAtual();
+        if (!jaEstavaConcluido) OnTutorialConcluido?.Invoke();
     }
 
     private void BroadcastEtapaAtual()

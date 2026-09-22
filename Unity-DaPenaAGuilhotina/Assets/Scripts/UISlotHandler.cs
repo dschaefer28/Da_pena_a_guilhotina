@@ -11,11 +11,17 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 {
     private bool draggingItem;
     private bool suppressClick;
+    private LayoutElement layoutElement;
+    private CanvasGroup canvasGroup;
     public Item item;
     public Image slotImg;
     public TextMeshProUGUI itemCount;
     public TextMeshProUGUI itemNameText;
     public InventoryManager inventoryManager;
+
+    [Header("Lista do Inventário (opcional)")]
+    [Tooltip("Objeto mostrado só enquanto este slot está vazio (ex: o texto 'Espaço livre' da linha). Deixe vazio nos slots da prensa.")]
+    public GameObject objetoVazio;
 
     [Header("Áudio de Hover (FMOD)")]
     public EventReference somHover;
@@ -47,6 +53,28 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             itemCount.text = string.Empty;
             slotImg.gameObject.SetActive(false);
             if (itemNameText != null) itemNameText.text = string.Empty;
+        }
+        AtualizarObjetoVazio();
+    }
+
+    public void AtualizarObjetoVazio()
+    {
+        if (objetoVazio != null) objetoVazio.SetActive(item == null);
+    }
+
+    /// <summary>Mostra/esconde esta linha na lista sem desativar o GameObject (um slot inativo no meio
+    /// de um arrasto perderia o OnEndDrag). Sem LayoutElement/CanvasGroup (slots da prensa) não faz nada.</summary>
+    public void DefinirVisivelNaLista(bool visivel)
+    {
+        if (layoutElement == null) layoutElement = GetComponent<LayoutElement>();
+        if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
+
+        if (layoutElement != null) layoutElement.ignoreLayout = !visivel;
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = visivel ? 1f : 0f;
+            canvasGroup.blocksRaycasts = visivel;
+            canvasGroup.interactable = visivel;
         }
     }
 
