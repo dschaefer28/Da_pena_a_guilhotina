@@ -8,6 +8,11 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private Image background;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI talkText;
+    [Tooltip("ScrollRect que envolve talkText. Usado só para voltar a rolagem ao topo a cada nova fala.")]
+    [SerializeField] private ScrollRect talkScrollRect;
+    [Tooltip("Botão invisível sobre a área de rolagem do texto: replica o clique-para-avançar do " +
+             "ButtonAvancar (que fica coberto ali), já que arrastar/rolar ali precisa ficar livre pro ScrollRect.")]
+    [SerializeField] private Button talkAdvanceButton;
 
     [Header("Sistema de Escolhas")]
     [SerializeField] private GameObject choiceButtonPrefab;
@@ -28,6 +33,12 @@ public class DialogueUI : MonoBehaviour
         {
             Debug.LogError("DialogueSystem não encontrado no mesmo GameObject que o DialogueUI!");
         }
+
+        // Igual ao onClick do ButtonAvancar (clicar avança/pula a fala) — feito em código em vez de
+        // ligação no Inspector porque esse botão fica por cima do ButtonAvancar só na área do texto
+        // (precisa estar acima para o ScrollRect receber o scroll do mouse ali).
+        if (talkAdvanceButton != null && dialogueSystem != null)
+            talkAdvanceButton.onClick.AddListener(dialogueSystem.AdvanceDialogue);
     }
 
     void OnEnable()
@@ -81,6 +92,10 @@ public class DialogueUI : MonoBehaviour
     private void HandleDialogueLineStarted(string name, string text)
     {
         SetName(name);
+        // Cada fala nova começa lida a partir do topo, mesmo que a anterior tenha ficado rolada
+        // para baixo. verticalNormalizedPosition é proporcional (0-1), então isso vale tanto para
+        // falas curtas quanto para falas longas, independente de quando o layout for recalculado.
+        if (talkScrollRect != null) talkScrollRect.verticalNormalizedPosition = 1f;
     }
 
     private void HandleDialogueEnded()
