@@ -12,6 +12,9 @@ public class CaseData : ScriptableObject
     [Header("Impacto nos Status (Ganhos e Perdas)")]
     public int moneyReward; // Ex: +50 para Réveillon, +10 para o Operário
     public int publicOpinionReward; // Ex: -20 (fama de mercenário) ou +30 (herói do povo)
+    [Tooltip("Impacto estimado na Opinião do Estado, exibido na HUD de seleção de casos (Mesa de Casos). " +
+             "Mesmo padrão de sinal do publicOpinionReward: positivo = tendência de aumento, negativo = queda.")]
+    public int stateOpinionReward; // Ex: -30 (desagrada a coroa) ou +20 (serve bem ao Estado)
 
     [Header("Conexão com a Próxima Fase")]
     [Tooltip("O roteiro de diálogo que será ativado no NPC da Fase 2 se este caso for escolhido.")]

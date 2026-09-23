@@ -39,11 +39,36 @@ public class CaseSelectionUI : MonoBehaviour
             // ATENÇÃO: Os nomes entre aspas devem ser exatamente iguais aos nomes na Hierarchy!
             TextMeshProUGUI titulo = novoCartao.transform.Find("TituloTexto").GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI descricao = novoCartao.transform.Find("DescricaoTexto").GetComponent<TextMeshProUGUI>();
-            Button botaoAceitar = novoCartao.transform.Find("BotaoAceitar").GetComponent<Button>();
+            TextMeshProUGUI objetivo = novoCartao.transform.Find("ObjetivoTexto")?.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI recompensa = novoCartao.transform.Find("RecompensaTexto")?.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI opiniaoPopular = novoCartao.transform.Find("OpiniaoPopularTexto")?.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI opiniaoEstado = novoCartao.transform.Find("OpiniaoEstadoTexto")?.GetComponent<TextMeshProUGUI>();
+            Button botaoAceitar = novoCartao.transform.Find("ButtonRow/BotaoAceitar").GetComponent<Button>();
 
             // 4. Preenche os textos com os dados do ScriptableObject
             if (titulo != null) titulo.text = caso.caseTitle;
             if (descricao != null) descricao.text = caso.caseDescription;
+
+            // Objetivo é opcional (nem todo CaseData tem — ex. Caso_Tutorial): esconde a linha se vazio,
+            // em vez de mostrar "Objetivo: " sem nada depois.
+            if (objetivo != null)
+            {
+                bool temObjetivo = !string.IsNullOrWhiteSpace(caso.objectiveText);
+                objetivo.gameObject.SetActive(temObjetivo);
+                if (temObjetivo) objetivo.text = $"Objetivo: {caso.objectiveText}";
+            }
+
+            // "Consequências estimadas": valores já cadastrados no CaseData (moneyReward,
+            // publicOpinionReward, stateOpinionReward), apresentados como estimativa — não são a
+            // aplicação real de recompensa (isso continua acontecendo só na prensa, ver Recipe/
+            // CraftingPress). Ícones = texto/símbolo (sem depender de sprites novos).
+            if (recompensa != null)
+            {
+                string sinalOuro = caso.moneyReward >= 0 ? "+" : "";
+                recompensa.text = $"Recompensa estimada: {sinalOuro}{caso.moneyReward} de ouro";
+            }
+            if (opiniaoPopular != null) opiniaoPopular.text = FormatarTendencia("Opinião Popular", caso.publicOpinionReward);
+            if (opiniaoEstado != null) opiniaoEstado.text = FormatarTendencia("Opinião do Estado", caso.stateOpinionReward);
 
             // 5. Documento (Interlúdio, "Mesa de Casos"): bloquear visualmente casos já selecionados antes.
             bool jaSelecionado = GameManager.Instance != null && GameManager.Instance.CasoJaFoiSelecionado(caso);
@@ -82,5 +107,16 @@ public class CaseSelectionUI : MonoBehaviour
     public void FecharPainel()
     {
         gameObject.SetActive(false);
+    }
+
+    // Documento (reformulação "Mesa de Casos"): formata a linha de tendência de uma barra de opinião
+    // (Popular/Estado) a partir do valor estimado do CaseData. Não indica valor exato — só a direção
+    // (aumento/queda/sem alteração), igual ao exemplo pedido ("tendência de aumento"), já que o
+    // resultado real pode variar conforme o sistema de casos.
+    private static string FormatarTendencia(string rotulo, int valorEstimado)
+    {
+        if (valorEstimado > 0) return $"<color=#4CAF50>▲</color> {rotulo}: tendência de aumento";
+        if (valorEstimado < 0) return $"<color=#E53935>▼</color> {rotulo}: tendência de queda";
+        return $"<color=#9E9E9E>●</color> {rotulo}: sem alteração estimada";
     }
 }
