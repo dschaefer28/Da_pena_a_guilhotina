@@ -12,7 +12,7 @@ public class CaseSelectionUI : MonoBehaviour
     public Transform cardsContainer; 
 
     [Header("Dados")]
-    [Tooltip("Coloque aqui os 3 ScriptableObjects dos casos que criamos")]
+    [Tooltip("Casos de todas as fases. A mesa mostra só os da fase atual (CaseData.fase).")]
     public List<CaseData> availableCases;
 
     // Roda automaticamente quando o painel for ativado pelo TableInteractable
@@ -31,9 +31,17 @@ public class CaseSelectionUI : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        // 2. Loop de Criação: Roda uma vez para cada caso na nossa lista
+        GameManager gm = GameManager.Instance;
+        // Um caso por vez: enquanto o panfleto do caso aceito não for impresso, a mesa só mostra as cartas.
+        bool casoEmAndamento = gm != null && gm.CasoAtualEmAndamento;
+        if (casoEmAndamento)
+            AvisoNaTela.Mostrar($"Termine o caso atual antes de aceitar outro: {(gm.casoEscolhido.caseTitle ?? gm.casoEscolhido.name).Trim()}");
+
+        // 2. Loop de Criação: Roda uma vez para cada caso da fase atual
         foreach (CaseData caso in availableCases)
         {
+            if (!CasoVisivel(caso, gm)) continue;
+
             // Tira a cópia do prefab e joga dentro da AreaDosCartoes
             GameObject novoCartao = Instantiate(cardPrefab, cardsContainer);
 
@@ -82,12 +90,34 @@ public class CaseSelectionUI : MonoBehaviour
                 if (grupoDoCartao == null) grupoDoCartao = novoCartao.AddComponent<CanvasGroup>();
                 grupoDoCartao.alpha = 0.45f;
             }
+            else if (botaoAceitar != null && casoEmAndamento)
+            {
+                botaoAceitar.interactable = false;
+            }
             else if (botaoAceitar != null)
             {
                 // Adiciona a ação de clique via código
                 botaoAceitar.onClick.AddListener(() => ConfirmarEscolha(caso));
             }
         }
+    }
+
+    // A mesa mostra só os casos da fase atual; na Fase 4, só o da rota travada (documento, "Filtro Dinâmico de Casos").
+    private static bool CasoVisivel(CaseData caso, GameManager gm)
+    {
+        if (caso == null) return false;
+        if (gm == null) return true;
+        if (caso.fase != gm.faseAtual) return false;
+        return caso.rota == RotaFinal.Nenhuma || caso.rota == gm.rotaFinal;
+    }
+
+    /// <summary>Falso quando nenhum caso da lista pertence à fase atual: a mesa avisa em vez de abrir vazia.</summary>
+    public bool TemCasosNaFase()
+    {
+        GameManager gm = GameManager.Instance;
+        foreach (CaseData caso in availableCases)
+            if (CasoVisivel(caso, gm)) return true;
+        return false;
     }
 
     // Função chamada quando o botão "Aceitar" de um cartão é clicado

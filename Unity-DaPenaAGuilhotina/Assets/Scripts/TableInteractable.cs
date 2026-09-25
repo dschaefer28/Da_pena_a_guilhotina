@@ -13,6 +13,9 @@ public class TableInteractable : MonoBehaviour, IInteractable
     [Tooltip("O que ele pensa se tentar mexer na mesa antes da hora?")]
     public DialogueData pensamentoBloqueado;
 
+    [Tooltip("Aviso quando não há casos cadastrados para a fase atual.")]
+    public string avisoSemCasos = "Não há novos casos na mesa por enquanto.";
+
     /// <summary>Falso enquanto o item obrigatório não estiver no inventário: o aviso de interação
     /// (PromptDeInteracao) só aparece sobre a mesa quando ela realmente responde.</summary>
     public bool PodeInteragir =>
@@ -33,6 +36,17 @@ public class TableInteractable : MonoBehaviour, IInteractable
         }
 
         if (caseSelectionUI.activeSelf) return;
+
+        // Sem nenhum caso cadastrado para a fase atual (CaseData.fase), avisa em vez de abrir o painel vazio.
+        CaseSelectionUI mesa = caseSelectionUI.GetComponent<CaseSelectionUI>();
+        if (mesa != null && !mesa.TemCasosNaFase())
+        {
+            int fase = GameManager.Instance != null ? GameManager.Instance.faseAtual : 0;
+            Debug.LogWarning($"[Mesa] Nenhum caso com fase {fase} na lista 'Available Cases' do painel da mesa.", mesa);
+            AvisoNaTela.Mostrar(avisoSemCasos);
+            return;
+        }
+
         caseSelectionUI.SetActive(true);
         Debug.Log("O jogador abriu as cartas sobre a mesa.");
     }

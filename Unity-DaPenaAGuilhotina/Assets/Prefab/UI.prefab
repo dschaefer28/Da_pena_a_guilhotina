@@ -4767,6 +4767,7 @@ GameObject:
   - component: {fileID: 3403234322070728552}
   - component: {fileID: 7657567633651206077}
   - component: {fileID: 2026820043679994935}
+  - component: {fileID: 6134696014951055631}
   m_Layer: 5
   m_Name: Cutscenes
   m_TagString: Untagged
@@ -4854,6 +4855,35 @@ MonoBehaviour:
   - texto: "Numa pequena tipografia, um novo aprendiz est\xE1 prestes a descobrir
       o poder de uma p\xE1gina bem escrita."
     duracao: 5
+--- !u!114 &6134696014951055631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6037214752926246677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b331b7aa68280449a5bdaf22b25948, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FimDeFase
+  cenaDoEscritorio: Jogo
+  cutscenes:
+  - fase: 2
+    legendas:
+    - texto: "Paris, 1789. A Bastilha caiu, e os panfletos da tipografia correm de
+        m\xE3o em m\xE3o."
+      duracao: 5
+    - texto: "O nome da casa j\xE1 \xE9 conhecido nas ruas. E nos gabinetes."
+      duracao: 4
+  - fase: 3
+    legendas:
+    - texto: "1793. O Terror governa a Fran\xE7a, e o Tribunal Revolucion\xE1rio
+        n\xE3o descansa."
+      duracao: 5
+    - texto: "Tudo o que foi impresso at\xE9 aqui ser\xE1 lembrado. Por uns, como
+        coragem. Por outros, como trai\xE7\xE3o."
+      duracao: 5
 --- !u!1 &6174460398447187986
 GameObject:
   m_ObjectHideFlags: 0

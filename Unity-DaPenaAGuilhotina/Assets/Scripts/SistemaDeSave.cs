@@ -17,7 +17,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class SistemaDeSave
 {
-    private const int VersaoAtual = 1;
+    private const int VersaoAtual = 2; // 2: fase atual e casos concluídos
     private const string CenaPadrao = "Jogo";
 
     [Serializable]
@@ -58,6 +58,9 @@ public static class SistemaDeSave
         public int opiniaoEstado;
         public string casoEscolhido;
         public List<string> casosJaSelecionados = new List<string>();
+        public int faseAtual;
+        public RotaFinal rotaFinal;
+        public List<string> casosConcluidos = new List<string>();
         public List<ItemSalvo> inventario = new List<ItemSalvo>();
         public List<PanfletoSalvo> panfletosPublicados = new List<PanfletoSalvo>();
         public List<RevelacaoSalva> revelacoesPendentes = new List<RevelacaoSalva>();
@@ -96,6 +99,8 @@ public static class SistemaDeSave
             opiniaoPublica = gm.opiniaoPublicaAtual,
             opiniaoEstado = gm.opiniaoEstadoAtual,
             casoEscolhido = gm.casoEscolhido != null ? gm.casoEscolhido.name : null,
+            faseAtual = gm.faseAtual,
+            rotaFinal = gm.rotaFinal,
             pistasVerificadas = new List<string>(gm.pistasVerificadas)
         };
 
@@ -104,6 +109,9 @@ public static class SistemaDeSave
 
         foreach (CaseData caso in gm.casosJaSelecionados)
             if (caso != null) dados.casosJaSelecionados.Add(caso.name);
+
+        foreach (CaseData caso in gm.casosConcluidos)
+            if (caso != null) dados.casosConcluidos.Add(caso.name);
 
         foreach (Item item in gm.inventarioSalvo)
             if (item != null) dados.inventario.Add(new ItemSalvo { itemID = item.itemID, quantidade = item.itemAmt });
@@ -194,6 +202,13 @@ public static class SistemaDeSave
             if (caso != null) gm.casosJaSelecionados.Add(caso);
         }
 
+        gm.casosConcluidos = new List<CaseData>();
+        foreach (string nome in dados.casosConcluidos)
+        {
+            CaseData caso = BuscarCaso(catalogo, nome);
+            if (caso != null) gm.casosConcluidos.Add(caso);
+        }
+
         gm.inventarioSalvo = new List<Item>();
         foreach (ItemSalvo salvo in dados.inventario)
         {
@@ -219,6 +234,11 @@ public static class SistemaDeSave
                 caso = BuscarCaso(catalogo, r.caso), texto = r.texto, povo = r.povo, estado = r.estado
             });
 
+        if (dados.versao < 2) MigrarProgressaoDeFases(gm);
+        else gm.faseAtual = Mathf.Clamp(dados.faseAtual, 1, GameManager.UltimaFase);
+        gm.rotaFinal = dados.rotaFinal;
+        if (gm.faseAtual == GameManager.UltimaFase && gm.rotaFinal == RotaFinal.Nenhuma) gm.DefinirRota();
+
         Debug.Log($"[SistemaDeSave] Save de {dados.dataHora} carregado na cena '{dados.cena}'.");
     }
 
@@ -229,6 +249,20 @@ public static class SistemaDeSave
         bool havia = dadosPendentesTutorial != null;
         dadosPendentesTutorial = null;
         return havia;
+    }
+
+    /// <summary>Save da versão 1 (sem fases): deduz a fase pelos casos escolhidos e conclui os que já têm panfleto.</summary>
+    private static void MigrarProgressaoDeFases(GameManager gm)
+    {
+        foreach (var p in gm.panfletosPublicados)
+            if (p.caso != null && !gm.casosConcluidos.Contains(p.caso)) gm.casosConcluidos.Add(p.caso);
+
+        bool saiuDoTutorial = gm.casosJaSelecionados.Count > 0;
+        gm.faseAtual = saiuDoTutorial ? 2 : 1;
+        // O panfleto do tutorial não fica em panfletosPublicados: quem já escolheu um caso concluiu o tutorial.
+        if (saiuDoTutorial)
+            foreach (CaseData caso in CatalogoDeSave.Instancia.casos)
+                if (caso != null && caso.fase == 1 && !gm.casosConcluidos.Contains(caso)) gm.casosConcluidos.Add(caso);
     }
 
     private static CaseData BuscarCaso(CatalogoDeSave catalogo, string nome)

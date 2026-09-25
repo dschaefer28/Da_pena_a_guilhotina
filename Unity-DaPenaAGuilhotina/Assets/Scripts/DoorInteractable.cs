@@ -8,6 +8,11 @@ public class DoorInteractable : MonoBehaviour, IInteractable
     [Tooltip("O nome exato da cena de destino (Ex: Fase2)")]
     public string cenaDestino = "Fase2";
 
+    [Tooltip("Marque na porta do escritório: ela leva à cena do caso em andamento (CaseData.nextSceneName) " +
+             "e fica trancada enquanto não houver caso aceito. 'Cena Destino' vira só o valor reserva.")]
+    public bool destinoPeloCaso = false;
+    public string avisoSemCaso = "Preciso aceitar um caso na mesa antes de sair.";
+
     [Header("Áudio (FMOD)")]
     [Tooltip("Som de porta abrindo, tocado junto com o fade da troca de cena (documento: Transição de Cena).")]
     public EventReference somPorta;
@@ -40,7 +45,25 @@ public class DoorInteractable : MonoBehaviour, IInteractable
             return; // Corta a viagem
         }
 
-        Debug.Log($"Salvando inventário e retornando para a cena: {cenaDestino}...");
+        string destino = cenaDestino;
+        if (destinoPeloCaso)
+        {
+            GameManager gm = GameManager.Instance;
+            if (gm == null || !gm.CasoAtualEmAndamento)
+            {
+                AvisoNaTela.Mostrar(avisoSemCaso);
+                return;
+            }
+            if (!string.IsNullOrEmpty(gm.casoEscolhido.nextSceneName)) destino = gm.casoEscolhido.nextSceneName;
+        }
+
+        if (string.IsNullOrEmpty(destino) || !Application.CanStreamedLevelBeLoaded(destino))
+        {
+            Debug.LogError($"[DoorInteractable] Cena '{destino}' não está nas Build Settings.", this);
+            return;
+        }
+
+        Debug.Log($"Salvando inventário e indo para a cena: {destino}...");
         if (GameManager.Instance != null && GameManager.Instance.inventoryManager != null)
         {
             GameManager.Instance.inventoryManager.SalvarEstadoAtual();
@@ -49,8 +72,8 @@ public class DoorInteractable : MonoBehaviour, IInteractable
         AudioSeguro.TocarUmaVez(somPorta, transform.position);
         Time.timeScale = 1f; // garante que a próxima cena não abra congelada
         if (SceneTransitionManager.Instance != null)
-            SceneTransitionManager.Instance.LoadScene(cenaDestino);
+            SceneTransitionManager.Instance.LoadScene(destino);
         else
-            SceneManager.LoadScene(cenaDestino);
+            SceneManager.LoadScene(destino);
     }
 }

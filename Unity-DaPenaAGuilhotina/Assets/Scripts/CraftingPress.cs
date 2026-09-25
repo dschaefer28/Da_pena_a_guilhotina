@@ -82,7 +82,9 @@ public class CraftingPress : MonoBehaviour
 
         if (recipeDictionary.TryGetValue(attemptKey, out Recipe validRecipe) && validRecipe.resultItem != null)
         {
-            Imprimir(validRecipe.resultItem, validRecipe.publicOpinionImpact, validRecipe.stateOpinionImpact, validRecipe.moneyReward);
+            // Receita exata (ex: o panfleto do tutorial): conclui o caso em andamento.
+            if (Imprimir(validRecipe.resultItem, validRecipe.publicOpinionImpact, validRecipe.stateOpinionImpact, validRecipe.moneyReward))
+                GameManager.Instance.ConcluirCaso(GameManager.Instance.casoEscolhido);
         }
         else
         {
@@ -135,7 +137,10 @@ public class CraftingPress : MonoBehaviour
         }
 
         if (Imprimir(panfleto, versao.povo, versao.estado, versao.ouro))
+        {
             GameManager.Instance.RegistrarPanfletoDeCaso(a.caso, nivel, versao);
+            GameManager.Instance.ConcluirCaso(a.caso);
+        }
         return true;
     }
 

@@ -119,6 +119,104 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &99585573
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 99585574}
+  - component: {fileID: 99585576}
+  - component: {fileID: 99585575}
+  m_Layer: 0
+  m_Name: CheckpointTribunal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &99585574
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99585573}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 292087537}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &99585575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99585573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f27beee2615d0b4d9dbaf6b98deec12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CheckpointDoTribunal
+  cenaDoTribunal: Tribunal
+  dialogoNaoPronto: {fileID: 11400000, guid: a72d65f9cced69c4684cb35a772f4535, type: 2}
+  dialogoPronto: {fileID: 11400000, guid: 8da65efacc630f6489e9b06047643be9, type: 2}
+  avisoNaoPronto: "Dupaty: Ainda n\xE3o. Aceite o caso na mesa, investigue e imprima
+    o panfleto antes do julgamento."
+  avisoPronto: "Dupaty: As provas est\xE3o reunidas e o panfleto est\xE1 pronto.
+    Vamos ao Tribunal."
+--- !u!61 &99585576
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99585573}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1.6875, y: 6.4375}
+  m_EdgeRadius: 0
 --- !u!1 &152037312
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,9 +598,17 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 5fd838880685c144ca6ac66c3ae63255, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3662675020942740488, guid: 0297e90a85155ac4f97d902242847821, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 99585574}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0297e90a85155ac4f97d902242847821, type: 3}
+--- !u!4 &292087537 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3662675020942740488, guid: 0297e90a85155ac4f97d902242847821, type: 3}
+  m_PrefabInstance: {fileID: 292087536}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &412563808
 GameObject:
   m_ObjectHideFlags: 0
@@ -857,6 +963,7 @@ MonoBehaviour:
   painelOpcoes: {fileID: 0}
   painelCreditos: {fileID: 0}
   "painelDeConfirma\xE7\xE3o": {fileID: 0}
+  botaoContinuar: {fileID: 0}
 --- !u!4 &559079708
 Transform:
   m_ObjectHideFlags: 0
@@ -1015,6 +1122,7 @@ MonoBehaviour:
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: Joystick
     mensagem: "Use {mover} para andar pelo escrit\xF3rio."
     icone: {fileID: 0}
@@ -1022,6 +1130,7 @@ MonoBehaviour:
     tipoDeAvanco: 1
     nomeDoEvento: jogador_andou
     nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: PauseButton
     mensagem: "A qualquer momento, use {pausa} para abrir o menu de pausa: l\xE1
       voc\xEA ajusta o volume e a velocidade do texto, ou volta ao menu principal.
@@ -1031,6 +1140,7 @@ MonoBehaviour:
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: explica_interacao
     mensagem: "V\xE1 at\xE9 Charles Dupaty, o homem com o contorno destacado, e use
       {interagir} para conversar. Fale com ele at\xE9 o fim."
@@ -1039,6 +1149,7 @@ MonoBehaviour:
     tipoDeAvanco: 1
     nomeDoEvento: dialogo_finalizado
     nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: falar_segunda_personagem
     mensagem: "Agora fale com Marie Bradier do mesmo jeito. No fim da conversa voc\xEA
       recebe a primeira pista."
@@ -1047,6 +1158,7 @@ MonoBehaviour:
     tipoDeAvanco: 1
     nomeDoEvento: item_recebido
     nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: InventoryButton
     mensagem: "Pista recebida! Use {inventario} para abrir o invent\xE1rio: \xE9
       l\xE1 que ficam suas pistas e panfletos."
@@ -1055,6 +1167,7 @@ MonoBehaviour:
     tipoDeAvanco: 1
     nomeDoEvento: inventario_alternado
     nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: segunda_pista
     mensagem: "Feche o invent\xE1rio e volte at\xE9 Charles Dupaty: agora ele tem
       a segunda pista."
@@ -1063,6 +1176,7 @@ MonoBehaviour:
     tipoDeAvanco: 1
     nomeDoEvento: item_recebido
     nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: ir_para_porao
     mensagem: "Com as duas pistas, siga a seta at\xE9 o al\xE7ap\xE3o e use {interagir}
       para descer ao por\xE3o."
@@ -1071,6 +1185,7 @@ MonoBehaviour:
     tipoDeAvanco: 2
     nomeDoEvento: 
     nomeDaCena: Porao
+    salvarAoConcluir: 0
   - etapaId: explicar_prensa
     mensagem: "Este \xE9 o por\xE3o. Aproxime-se da prensa e use {interagir} para
       abri-la."
@@ -1079,6 +1194,7 @@ MonoBehaviour:
     tipoDeAvanco: 1
     nomeDoEvento: prensa_aberta
     nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: colocar_itens_prensa
     mensagem: "{Toque} numa pista do invent\xE1rio e depois numa Entrada da prensa.
       Fa\xE7a o mesmo com a outra pista."
@@ -1087,6 +1203,7 @@ MonoBehaviour:
     tipoDeAvanco: 1
     nomeDoEvento: entradas_prensa_cheias
     nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: misturar_itens
     mensagem: Com as duas entradas cheias, {toque} em Misturar para imprimir o panfleto.
     icone: {fileID: 0}
@@ -1094,6 +1211,7 @@ MonoBehaviour:
     tipoDeAvanco: 1
     nomeDoEvento: panfleto_gerado
     nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: explicar_efeito_barras
     mensagem: "Veja as barras no alto: a de cima \xE9 a Opini\xE3o do Povo, a de
       baixo a Opini\xE3o do Estado, e embaixo est\xE1 o seu ouro. Cada panfleto agrada
@@ -1103,6 +1221,7 @@ MonoBehaviour:
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: coletar_resultado_prensa
     mensagem: "{Toque} no panfleto em Resultado e depois em Espa\xE7o livre no invent\xE1rio
       para guard\xE1-lo."
@@ -1111,6 +1230,7 @@ MonoBehaviour:
     tipoDeAvanco: 1
     nomeDoEvento: panfleto_guardado
     nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: voltar_escritorio
     mensagem: "Feche os pain\xE9is, v\xE1 at\xE9 a sa\xEDda do por\xE3o e use {interagir}
       para subir ao escrit\xF3rio."
@@ -1128,6 +1248,7 @@ MonoBehaviour:
     tipoDeAvanco: 1
     nomeDoEvento: caso_escolhido
     nomeDaCena: 
+    salvarAoConcluir: 0
 --- !u!4 &780209768
 Transform:
   m_ObjectHideFlags: 0
@@ -3577,6 +3698,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 293229140343442623, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
+      propertyPath: destinoPeloCaso
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2396127502576580076, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
       propertyPath: m_Name
       value: Porta

@@ -14,6 +14,26 @@ public class GameManager : MonoBehaviour
              "A Mesa de Casos (CaseSelectionUI) usa isso para bloquear cartões já selecionados.")]
     public List<CaseData> casosJaSelecionados = new List<CaseData>();
 
+    [Header("Progressão de Fases")]
+    [Tooltip("Fase em que o jogador está: 1 = tutorial, 2 e 3 = investigação, 4 = tribunal. " +
+             "Avança no escritório (FimDeFase) quando os casos exigidos da fase forem concluídos.")]
+    public int faseAtual = 1;
+    public const int UltimaFase = 4;
+
+    [Tooltip("Quantos casos o jogador precisa concluir em cada fase para avançar (elemento 0 = Fase 1). " +
+             "Documento: a partir da Fase 3 o jogador escolhe mais de um caso por fase.")]
+    public int[] casosPorFase = { 1, 1, 2, 1 };
+
+    [Tooltip("Casos cujo panfleto já foi impresso. Um caso concluído libera a Mesa de Casos para o próximo.")]
+    public List<CaseData> casosConcluidos = new List<CaseData>();
+
+    [Header("Rota Final (Fase 4)")]
+    [Tooltip("Travada ao entrar na Fase 4 pelo desnível entre Povo e Estado. Define o caso da Fase 4 e o final.")]
+    public RotaFinal rotaFinal = RotaFinal.Nenhuma;
+    [Tooltip("Diferença mínima entre Opinião Pública e Opinião do Estado para a rota pender para um lado. " +
+             "Abaixo disso, a rota é a C (equilíbrio).")]
+    [Min(0)] public int margemDaRota = 20;
+
     [Header("Status Globais (HUD)")]
     public int capitalAtual = 0;
     public int opiniaoPublicaAtual = 50; 
@@ -143,6 +163,63 @@ public class GameManager : MonoBehaviour
 
     /// <summary>Usado pela Mesa de Casos (CaseSelectionUI) para bloquear cartões já escolhidos antes.</summary>
     public bool CasoJaFoiSelecionado(CaseData caso) => caso != null && casosJaSelecionados.Contains(caso);
+
+    // ===== Progressão de Fases =====
+
+    /// <summary>Há um caso aceito cujo panfleto ainda não foi impresso: trava a mesa e libera a porta do escritório.</summary>
+    public bool CasoAtualEmAndamento => casoEscolhido != null && !casosConcluidos.Contains(casoEscolhido);
+
+    public int CasosNecessariosNaFase =>
+        faseAtual >= 1 && faseAtual <= casosPorFase.Length ? Mathf.Max(1, casosPorFase[faseAtual - 1]) : 1;
+
+    public int CasosConcluidosNaFase
+    {
+        get
+        {
+            int total = 0;
+            foreach (CaseData caso in casosConcluidos)
+                if (caso != null && caso.fase == faseAtual) total++;
+            return total;
+        }
+    }
+
+    public bool FaseConcluida => CasosConcluidosNaFase >= CasosNecessariosNaFase;
+
+    /// <summary>Chamado pela prensa ao imprimir o panfleto do caso.</summary>
+    public void ConcluirCaso(CaseData caso)
+    {
+        if (caso == null || casosConcluidos.Contains(caso)) return;
+        casosConcluidos.Add(caso);
+        Debug.Log($"[FASES] Caso '{caso.name}' concluído ({CasosConcluidosNaFase}/{CasosNecessariosNaFase} da Fase {faseAtual}).");
+
+        if (!string.IsNullOrWhiteSpace(caso.caseTitle))
+            AvisoNaTela.Mostrar($"Caso concluído: {caso.caseTitle.Trim()}");
+    }
+
+    /// <summary>Passa para a próxima fase. Falso se já está na última.</summary>
+    public bool AvancarFase()
+    {
+        if (faseAtual >= UltimaFase) return false;
+        faseAtual++;
+        Debug.Log($"[FASES] Início da Fase {faseAtual}.");
+        if (faseAtual == UltimaFase) DefinirRota();
+        return true;
+    }
+
+    /// <summary>Documento (Fase 4, "Definição de Rota"): Povo alto e Estado baixo = A; o contrário = B; equilíbrio = C.</summary>
+    public RotaFinal CalcularRota()
+    {
+        int desnivel = opiniaoPublicaAtual - opiniaoEstadoAtual;
+        if (desnivel >= margemDaRota) return RotaFinal.A_Guilhotina;
+        if (desnivel <= -margemDaRota) return RotaFinal.B_Tirano;
+        return RotaFinal.C_Equilibrio;
+    }
+
+    public void DefinirRota()
+    {
+        rotaFinal = CalcularRota();
+        Debug.Log($"[FASES] Rota final travada: {rotaFinal} (Povo {opiniaoPublicaAtual} x Estado {opiniaoEstadoAtual}).");
+    }
 
     public void AplicarImpactoPanfleto(int impactoPublico, int impactoEstado, int ouro)
     {

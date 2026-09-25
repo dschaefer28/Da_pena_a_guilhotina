@@ -17,5 +17,6 @@ MonoBehaviour:
   objectiveText: 
   moneyReward: 0
   publicOpinionReward: 0
+  fase: 1
   npcDialogueRoute: {fileID: 0}
   nextSceneName: Fase2

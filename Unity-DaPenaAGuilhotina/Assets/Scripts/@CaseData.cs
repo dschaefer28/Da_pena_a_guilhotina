@@ -16,11 +16,20 @@ public class CaseData : ScriptableObject
              "Mesmo padrão de sinal do publicOpinionReward: positivo = tendência de aumento, negativo = queda.")]
     public int stateOpinionReward; // Ex: -30 (desagrada a coroa) ou +20 (serve bem ao Estado)
 
+    [Header("Progressão")]
+    [Tooltip("Fase em que este caso aparece na Mesa de Casos (1 = tutorial, 2, 3 ou 4).")]
+    [Range(1, GameManager.UltimaFase)]
+    public int fase = 2;
+
+    [Tooltip("Só para casos da Fase 4: a mesa entrega apenas o caso da rota travada (Povo x Estado). " +
+             "Nenhuma = aparece em qualquer rota.")]
+    public RotaFinal rota = RotaFinal.Nenhuma;
+
     [Header("Conexão com a Próxima Fase")]
     [Tooltip("O roteiro de diálogo que será ativado no NPC da Fase 2 se este caso for escolhido.")]
     public DialogueData npcDialogueRoute; 
     
-    [Tooltip("Nome da cena da Fase 2 para carregar após aceitar o caso (opcional).")]
+    [Tooltip("Cena da investigação deste caso (ex: Fase2, Fase3). A porta do escritório leva para ela enquanto o caso estiver em andamento.")]
     public string nextSceneName = "Fase2";
 
     [Header("Panfleto do Caso (Fato x Boato)")]
