@@ -1709,6 +1709,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: c58f27ed9b03f3a499f8062499574c16, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: idDaInteracao
+      value: Joalheiro
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: casoObrigatorio
       value: 
       objectReference: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
@@ -1939,6 +1943,10 @@ PrefabInstance:
       propertyPath: dialogoPadrao
       value: 
       objectReference: {fileID: 11400000, guid: f27d773ce1be70b4c96caa2674644288, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: idDaInteracao
+      value: "Jean-Baptiste R\xE9veillon"
+      objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: casoObrigatorio
       value: 
@@ -2305,6 +2313,10 @@ PrefabInstance:
       propertyPath: dialogoPadrao
       value: 
       objectReference: {fileID: 11400000, guid: b4c2cea48397acf48a53804e9fda36e7, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: idDaInteracao
+      value: Operario
+      objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: casoObrigatorio
       value: 

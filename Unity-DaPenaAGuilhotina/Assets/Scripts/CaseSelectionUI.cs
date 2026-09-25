@@ -123,16 +123,16 @@ public class CaseSelectionUI : MonoBehaviour
     // Função chamada quando o botão "Aceitar" de um cartão é clicado
     private void ConfirmarEscolha(CaseData casoEscolhido)
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.ConfirmarCaso(casoEscolhido);
-        }
-        else
+        if (GameManager.Instance == null)
         {
             Debug.LogError("GameManager não encontrado na cena!");
+            FecharPainel();
+            return;
         }
 
-        FecharPainel();
+        // O GameManager recusa (e avisa) caso concluído, troca de caso em andamento etc.; aí a mesa continua aberta.
+        if (GameManager.Instance.ConfirmarCaso(casoEscolhido)) FecharPainel();
+        else GerarCartoesNaTela();
     }
 
     // Função para o botão "X" fechar a tela sem escolher nada

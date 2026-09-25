@@ -8,7 +8,8 @@ using UnityEngine.SceneManagement;
 /// Save em um único arquivo JSON (Application.persistentDataPath/save.json — funciona igual no Windows e no Android).
 ///
 /// Guarda o que sobrevive entre cenas: os dados do GameManager, a etapa do tutorial, as cutscenes/dicas já
-/// vistas e a cena onde o jogador estava. O resto da cena (NPCs, portas...) já se monta sozinho a partir disso,
+/// vistas e a cena onde o jogador estava. O estado dos NPCs e objetos investigados (horas pagas, pistas recolhidas,
+/// recompensas entregues) vem do RegistroDaInvestigacao; o resto da cena (portas...) se monta sozinho a partir disso,
 /// do mesmo jeito que acontece ao subir do porão para o escritório.
 ///
 /// Salvar: SistemaDeSave.Salvar() com a cena já rodando (ex: o TutorialStep com "Salvar Ao Concluir").
@@ -17,25 +18,27 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class SistemaDeSave
 {
-    private const int VersaoAtual = 2; // 2: fase atual e casos concluídos
+    // 2: fase atual e casos concluídos
+    // 3: registro da investigação por caso + ID estável (horas pagas, loot, recompensas de NPC)
+    public const int VersaoAtual = 3;
     private const string CenaPadrao = "Jogo";
 
     [Serializable]
-    private class ItemSalvo
+    public class ItemSalvo
     {
         public string itemID;
         public int quantidade;
     }
 
     [Serializable]
-    private class PanfletoSalvo
+    public class PanfletoSalvo
     {
         public string caso;
         public NivelDoPanfleto nivel;
     }
 
     [Serializable]
-    private class RevelacaoSalva
+    public class RevelacaoSalva
     {
         public string caso;
         public string texto;
@@ -44,7 +47,7 @@ public static class SistemaDeSave
     }
 
     [Serializable]
-    private class DadosDeSave
+    public class DadosDeSave
     {
         public int versao;
         public string cena;
@@ -62,12 +65,20 @@ public static class SistemaDeSave
         public RotaFinal rotaFinal;
         public int horasDoCaso;
         public int horasRestantes;
+        [Tooltip("Só saves v1/v2: \"cena/nomeDoGameObject\" pagos no caso atual. Lido para migração; v3 grava vazio.")]
         public List<string> interacoesPagas = new List<string>();
         public List<string> casosConcluidos = new List<string>();
         public List<ItemSalvo> inventario = new List<ItemSalvo>();
         public List<PanfletoSalvo> panfletosPublicados = new List<PanfletoSalvo>();
         public List<RevelacaoSalva> revelacoesPendentes = new List<RevelacaoSalva>();
         public List<string> pistasVerificadas = new List<string>();
+
+        // v3: RegistroDaInvestigacao
+        public List<string> interacoesPagasPorCaso = new List<string>();
+        public List<string> lootsColetados = new List<string>();
+        public List<string> recompensasEntregues = new List<string>();
+        public List<string> casosComEstadoLegado = new List<string>();
+        public List<string> interacoesPagasLegadas = new List<string>();
     }
 
     public static string CaminhoDoArquivo => Path.Combine(Application.persistentDataPath, "save.json");
@@ -92,12 +103,37 @@ public static class SistemaDeSave
         // O inventário da tela é a fonte mais atual (o inventarioSalvo só é atualizado ao trocar de cena).
         if (gm.inventoryManager != null) gm.inventoryManager.SalvarEstadoAtual();
 
+        DadosDeSave dados = CapturarDados(gm, SceneManager.GetActiveScene().name,
+            TutorialManager.Instance != null ? TutorialManager.Instance.IndiceAtual : 0);
+
+        foreach (string chave in ProgressoDoJogo.ChavesDaPartida)
+            if (PlayerPrefs.GetInt(chave, 0) == 1) dados.chavesMarcadas.Add(chave);
+
+        try
+        {
+            // Grava num arquivo temporário e só depois troca: se o jogo fechar no meio, o save antigo continua inteiro.
+            string temporario = CaminhoDoArquivo + ".tmp";
+            File.WriteAllText(temporario, JsonUtility.ToJson(dados, true));
+            if (File.Exists(CaminhoDoArquivo)) File.Delete(CaminhoDoArquivo);
+            File.Move(temporario, CaminhoDoArquivo);
+            Debug.Log($"[SistemaDeSave] Jogo salvo na cena '{dados.cena}' ({CaminhoDoArquivo}).");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[SistemaDeSave] Falha ao salvar: {e.Message}");
+        }
+    }
+
+    /// <summary>Monta os dados do save a partir do GameManager (sem tocar em disco, PlayerPrefs nem cena).</summary>
+    public static DadosDeSave CapturarDados(GameManager gm, string cena, int etapaTutorial)
+    {
+        RegistroDaInvestigacao registro = gm.registroDaInvestigacao ?? new RegistroDaInvestigacao();
         var dados = new DadosDeSave
         {
             versao = VersaoAtual,
-            cena = SceneManager.GetActiveScene().name,
+            cena = cena,
             dataHora = DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
-            etapaTutorial = TutorialManager.Instance != null ? TutorialManager.Instance.IndiceAtual : 0,
+            etapaTutorial = etapaTutorial,
             capital = gm.capitalAtual,
             opiniaoPublica = gm.opiniaoPublicaAtual,
             opiniaoEstado = gm.opiniaoEstadoAtual,
@@ -106,12 +142,13 @@ public static class SistemaDeSave
             rotaFinal = gm.rotaFinal,
             horasDoCaso = gm.horasDoCaso,
             horasRestantes = gm.horasRestantes,
-            interacoesPagas = new List<string>(gm.interacoesPagas),
-            pistasVerificadas = new List<string>(gm.pistasVerificadas)
+            pistasVerificadas = new List<string>(gm.pistasVerificadas),
+            interacoesPagasPorCaso = new List<string>(registro.interacoesPagas),
+            lootsColetados = new List<string>(registro.lootsColetados),
+            recompensasEntregues = new List<string>(registro.recompensasEntregues),
+            casosComEstadoLegado = new List<string>(registro.casosComEstadoLegado),
+            interacoesPagasLegadas = new List<string>(registro.interacoesPagasLegadas)
         };
-
-        foreach (string chave in ProgressoDoJogo.ChavesDaPartida)
-            if (PlayerPrefs.GetInt(chave, 0) == 1) dados.chavesMarcadas.Add(chave);
 
         foreach (CaseData caso in gm.casosJaSelecionados)
             if (caso != null) dados.casosJaSelecionados.Add(caso.name);
@@ -131,19 +168,7 @@ public static class SistemaDeSave
                 caso = r.caso != null ? r.caso.name : null, texto = r.texto, povo = r.povo, estado = r.estado
             });
 
-        try
-        {
-            // Grava num arquivo temporário e só depois troca: se o jogo fechar no meio, o save antigo continua inteiro.
-            string temporario = CaminhoDoArquivo + ".tmp";
-            File.WriteAllText(temporario, JsonUtility.ToJson(dados, true));
-            if (File.Exists(CaminhoDoArquivo)) File.Delete(CaminhoDoArquivo);
-            File.Move(temporario, CaminhoDoArquivo);
-            Debug.Log($"[SistemaDeSave] Jogo salvo na cena '{dados.cena}' ({CaminhoDoArquivo}).");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"[SistemaDeSave] Falha ao salvar: {e.Message}");
-        }
+        return dados;
     }
 
     // ===== Carregar =====
@@ -174,8 +199,8 @@ public static class SistemaDeSave
         if (!ExisteSave) return null;
         try
         {
-            DadosDeSave dados = JsonUtility.FromJson<DadosDeSave>(File.ReadAllText(CaminhoDoArquivo));
-            if (dados == null || dados.versao <= 0) throw new Exception("arquivo vazio ou inválido");
+            DadosDeSave dados = DesserializarDados(File.ReadAllText(CaminhoDoArquivo));
+            if (dados == null) throw new Exception("arquivo vazio ou inválido");
             return dados;
         }
         catch (Exception e)
@@ -193,7 +218,28 @@ public static class SistemaDeSave
         dadosPendentesGameManager = null;
 
         CatalogoDeSave catalogo = CatalogoDeSave.Instancia;
-        if (catalogo == null) return;
+        if (catalogo == null)
+        {
+            Debug.LogError("[SistemaDeSave] Sem CatalogoDeSave: o save não pôde ser aplicado e a partida começa com os valores iniciais.");
+            return;
+        }
+
+        AplicarDados(dados, gm, catalogo);
+        Debug.Log($"[SistemaDeSave] Save de {dados.dataHora} carregado na cena '{dados.cena}'.");
+    }
+
+    /// <summary>Lê um JSON de save (qualquer versão). Nulo se estiver vazio ou inválido.</summary>
+    public static DadosDeSave DesserializarDados(string json)
+    {
+        DadosDeSave dados = JsonUtility.FromJson<DadosDeSave>(json);
+        return dados != null && dados.versao > 0 ? dados : null;
+    }
+
+    /// <summary>Preenche o GameManager com os dados do save, migrando versões antigas sem apagar progresso.</summary>
+    public static void AplicarDados(DadosDeSave dados, GameManager gm, CatalogoDeSave catalogo)
+    {
+        if (dados.versao > VersaoAtual)
+            Debug.LogWarning($"[SistemaDeSave] Save versão {dados.versao} é mais novo que o jogo (versão {VersaoAtual}); campos desconhecidos serão ignorados.");
 
         gm.capitalAtual = dados.capital;
         gm.opiniaoPublicaAtual = dados.opiniaoPublica;
@@ -240,15 +286,56 @@ public static class SistemaDeSave
                 caso = BuscarCaso(catalogo, r.caso), texto = r.texto, povo = r.povo, estado = r.estado
             });
 
-        if (dados.versao < 2) MigrarProgressaoDeFases(gm);
+        if (dados.versao < 2) MigrarProgressaoDeFases(gm, catalogo);
         else gm.faseAtual = Mathf.Clamp(dados.faseAtual, 1, GameManager.UltimaFase);
         gm.rotaFinal = dados.rotaFinal;
         gm.horasDoCaso = dados.horasDoCaso;
         gm.horasRestantes = dados.horasRestantes;
-        gm.interacoesPagas = dados.interacoesPagas != null ? new List<string>(dados.interacoesPagas) : new List<string>();
-        if (gm.faseAtual == GameManager.UltimaFase && gm.rotaFinal == RotaFinal.Nenhuma) gm.DefinirRota();
 
-        Debug.Log($"[SistemaDeSave] Save de {dados.dataHora} carregado na cena '{dados.cena}'.");
+        gm.registroDaInvestigacao = new RegistroDaInvestigacao
+        {
+            interacoesPagas = Copia(dados.interacoesPagasPorCaso),
+            lootsColetados = Copia(dados.lootsColetados),
+            recompensasEntregues = Copia(dados.recompensasEntregues),
+            casosComEstadoLegado = Copia(dados.casosComEstadoLegado),
+            interacoesPagasLegadas = Copia(dados.interacoesPagasLegadas)
+        };
+        if (dados.versao < 3) MigrarRegistroDaInvestigacao(dados, gm);
+
+        if (gm.faseAtual == GameManager.UltimaFase && gm.rotaFinal == RotaFinal.Nenhuma) gm.DefinirRota();
+    }
+
+    private static List<string> Copia(List<string> lista) => lista != null ? new List<string>(lista) : new List<string>();
+
+    /// <summary>
+    /// Save v1/v2: as horas pagas eram "cena/nomeDoGameObject" do caso em andamento, sem registro de loot nem de
+    /// recompensas. Migração determinística, sem reset: as chaves antigas continuam valendo para aquele caso
+    /// (RelogioDeInvestigacao as converte para o ID novo na primeira interação, sem cobrar), e o caso é marcado como
+    /// "estado legado" — lá, uma pista que o jogador ainda tem conta como já entregue, como na regra antiga.
+    /// Homônimos na mesma cena dividem a chave antiga: todos contam como pagos (o jogo antigo cobrava assim).
+    /// </summary>
+    private static void MigrarRegistroDaInvestigacao(DadosDeSave dados, GameManager gm)
+    {
+        List<string> antigas = dados.interacoesPagas ?? new List<string>();
+        CaseData caso = gm.casoEscolhido;
+        if (caso == null || !gm.CasoAtualEmAndamento)
+        {
+            if (antigas.Count > 0)
+                Debug.Log($"[SistemaDeSave] Migração v{dados.versao}→v{VersaoAtual}: {antigas.Count} interação(ões) paga(s) " +
+                          "de um caso já encerrado foram descartadas (o relógio só vale para o caso em andamento).");
+            return;
+        }
+
+        RegistroDaInvestigacao registro = gm.registroDaInvestigacao;
+        if (!registro.casosComEstadoLegado.Contains(caso.name)) registro.casosComEstadoLegado.Add(caso.name);
+        foreach (string antiga in antigas)
+        {
+            if (string.IsNullOrEmpty(antiga)) continue;
+            string chave = RegistroDaInvestigacao.Chave(caso, antiga);
+            if (!registro.interacoesPagasLegadas.Contains(chave)) registro.interacoesPagasLegadas.Add(chave);
+        }
+        Debug.Log($"[SistemaDeSave] Migração v{dados.versao}→v{VersaoAtual}: caso '{caso.name}' em andamento com " +
+                  $"{antigas.Count} interação(ões) paga(s) pela chave antiga (cena/nome). Horas restantes preservadas: {gm.horasRestantes}.");
     }
 
     /// <summary>Chamado pelo TutorialManager.Start: a etapa salva substitui o PlayerPrefs "tutorial concluído".</summary>
@@ -261,7 +348,7 @@ public static class SistemaDeSave
     }
 
     /// <summary>Save da versão 1 (sem fases): deduz a fase pelos casos escolhidos e conclui os que já têm panfleto.</summary>
-    private static void MigrarProgressaoDeFases(GameManager gm)
+    private static void MigrarProgressaoDeFases(GameManager gm, CatalogoDeSave catalogo)
     {
         foreach (var p in gm.panfletosPublicados)
             if (p.caso != null && !gm.casosConcluidos.Contains(p.caso)) gm.casosConcluidos.Add(p.caso);
@@ -270,7 +357,7 @@ public static class SistemaDeSave
         gm.faseAtual = saiuDoTutorial ? 2 : 1;
         // O panfleto do tutorial não fica em panfletosPublicados: quem já escolheu um caso concluiu o tutorial.
         if (saiuDoTutorial)
-            foreach (CaseData caso in CatalogoDeSave.Instancia.casos)
+            foreach (CaseData caso in catalogo.casos)
                 if (caso != null && caso.fase == 1 && !gm.casosConcluidos.Contains(caso)) gm.casosConcluidos.Add(caso);
     }
 

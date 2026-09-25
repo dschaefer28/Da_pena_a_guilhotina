@@ -34,8 +34,9 @@ public class GameManager : MonoBehaviour
     [Tooltip("Horas do caso atual (0 = relógio desligado, ex: tutorial).")]
     public int horasDoCaso = 0;
     public int horasRestantes = 0;
-    [Tooltip("NPCs/objetos já pagos no caso atual: falar de novo com eles não gasta tempo.")]
-    public List<string> interacoesPagas = new List<string>();
+    [Tooltip("Interações pagas, objetos vasculhados e recompensas entregues, por caso e interação (ID estável). " +
+             "Falar de novo com o mesmo NPC no mesmo caso não gasta tempo nem repete recompensas.")]
+    public RegistroDaInvestigacao registroDaInvestigacao = new RegistroDaInvestigacao();
 
     [Header("Despesas da Tipografia")]
     [Tooltip("Moedas cobradas ao fim de cada fase (elemento 0 = Fase 1): aluguel, papel e tinta.")]
@@ -122,6 +123,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[SISTEMA] Cena '{scene.name}' carregada. Sincronizando HUD...");
         // Reencontra as dependências locais da cena recém-carregada (GameManager é persistente entre cenas)
         VincularDependenciasLocais();
+        IdDeInteracao.ValidarCena(scene);
         // Força todas as UIs da nova cena a buscarem os valores salvos
         ForcarAtualizacaoUI();
     }
@@ -140,23 +142,78 @@ public class GameManager : MonoBehaviour
         OnStatusChanged?.Invoke();
     }
 
-    public void ConfirmarCaso(CaseData caso)
+    /// <summary>Regra de domínio da Mesa de Casos (vale mesmo se a UI deixar passar um clique): um caso por vez,
+    /// da fase atual e da rota travada, nunca um já concluído ou já escolhido antes.</summary>
+    public bool PodeAceitarCaso(CaseData caso, out string motivo)
     {
+        motivo = null;
+        if (caso == null) { motivo = "Nenhum caso selecionado."; return false; }
+        if (casosConcluidos.Contains(caso)) { motivo = "Este caso já foi concluído."; return false; }
+        if (caso == casoEscolhido && CasoAtualEmAndamento) return true; // mesmo caso: nada a fazer
+        if (CasoAtualEmAndamento)
+        {
+            motivo = $"Termine o caso atual antes de aceitar outro: {TituloDe(casoEscolhido)}";
+            return false;
+        }
+        if (casosJaSelecionados.Contains(caso)) { motivo = "Este caso já foi escolhido antes."; return false; }
+        if (caso.fase != faseAtual) { motivo = "Este caso não pertence à fase atual."; return false; }
+        if (caso.rota != RotaFinal.Nenhuma && caso.rota != rotaFinal) { motivo = "Este caso não pertence a esta rota."; return false; }
+        return true;
+    }
+
+    /// <summary>Aceita o caso. Falso se a regra de domínio recusar. Confirmar de novo o caso em andamento não
+    /// reinicia o relógio (o orçamento de horas já gasto continua valendo).</summary>
+    public bool ConfirmarCaso(CaseData caso)
+    {
+        if (!PodeAceitarCaso(caso, out string motivo))
+        {
+            Debug.LogWarning($"[CASOS] Caso '{(caso != null ? caso.name : "-")}' recusado: {motivo}");
+            AvisoNaTela.Mostrar(motivo);
+            return false;
+        }
+        if (caso == casoEscolhido && CasoAtualEmAndamento)
+        {
+            Debug.Log($"[CASOS] '{caso.name}' já está em andamento: o relógio não foi reiniciado.");
+            return true;
+        }
+
         casoEscolhido = caso;
-        if (caso != null && !casosJaSelecionados.Contains(caso))
+        if (!casosJaSelecionados.Contains(caso))
             casosJaSelecionados.Add(caso);
         Debug.Log($"Caso escolhido e salvo: {caso.caseTitle}");
 
         // Documento (Tarefas Globais): pop-up quando um caso é escolhido e travado.
-        if (caso != null) AvisoNaTela.Mostrar($"Caso aceito: {(caso.caseTitle ?? caso.name).Trim()}");
+        AvisoNaTela.Mostrar($"Caso aceito: {TituloDe(caso)}");
         IniciarRelogio(caso);
 
         if (TutorialManager.Instance != null)
             TutorialManager.Instance.NotificarEvento(TutorialManager.EVENTO_CASO_ESCOLHIDO);
+        return true;
     }
+
+    private static string TituloDe(CaseData caso) =>
+        caso == null ? "-" : (string.IsNullOrWhiteSpace(caso.caseTitle) ? caso.name : caso.caseTitle).Trim();
+
+    /// <summary>Regra de domínio da prensa: só o caso em andamento pode ser publicado, e uma única vez.
+    /// A prensa checa isto ANTES de consumir as pistas.</summary>
+    public bool PodePublicarCaso(CaseData caso, out string motivo)
+    {
+        motivo = null;
+        if (caso == null) { motivo = "Não há caso em andamento para publicar."; return false; }
+        if (casosConcluidos.Contains(caso) || FoiPublicado(caso)) { motivo = "O panfleto deste caso já foi publicado."; return false; }
+        if (caso != casoEscolhido) { motivo = "Essas pistas não são do caso que estou investigando."; return false; }
+        return true;
+    }
+
+    public bool FoiPublicado(CaseData caso) => caso != null && panfletosPublicados.Exists(p => p.caso == caso);
 
     public void RegistrarPanfletoDeCaso(CaseData caso, NivelDoPanfleto nivel, ReceitaDeCaso.Versao versao)
     {
+        if (FoiPublicado(caso))
+        {
+            Debug.LogWarning($"[FATO x BOATO] '{(caso != null ? caso.name : "?")}' já tinha panfleto publicado: registro ignorado.");
+            return;
+        }
         panfletosPublicados.Add(new PanfletoPublicado { caso = caso, nivel = nivel });
 
         if (nivel != NivelDoPanfleto.Fatos && versao != null && versao.TemRevelacao)
@@ -204,22 +261,23 @@ public class GameManager : MonoBehaviour
 
     public bool FaseConcluida => CasosConcluidosNaFase >= CasosNecessariosNaFase;
 
-    /// <summary>Chamado pela prensa ao imprimir o panfleto do caso.</summary>
-    public void ConcluirCaso(CaseData caso)
+    /// <summary>Chamado pela prensa ao imprimir o panfleto do caso. Falso se já estava concluído.</summary>
+    public bool ConcluirCaso(CaseData caso)
     {
-        if (caso == null || casosConcluidos.Contains(caso)) return;
+        if (caso == null || casosConcluidos.Contains(caso)) return false;
         casosConcluidos.Add(caso);
         Debug.Log($"[FASES] Caso '{caso.name}' concluído ({CasosConcluidosNaFase}/{CasosNecessariosNaFase} da Fase {faseAtual}).");
 
         if (!string.IsNullOrWhiteSpace(caso.caseTitle))
             AvisoNaTela.Mostrar($"Caso concluído: {caso.caseTitle.Trim()}");
+        return true;
     }
 
     // ===== Tempo de investigação e despesas =====
 
+    // O que já foi pago fica no registroDaInvestigacao, separado por caso: não precisa limpar aqui.
     private void IniciarRelogio(CaseData caso)
     {
-        interacoesPagas.Clear();
         if (caso == null) { horasDoCaso = horasRestantes = 0; return; }
 
         horasDoCaso = caso.horasDeInvestigacao > 0 ? caso.horasDeInvestigacao : horasPorCaso;

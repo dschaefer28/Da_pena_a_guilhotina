@@ -58,21 +58,32 @@ public class CraftingPress : MonoBehaviour
     private InventoryManager Inventario =>
         GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
 
+    // Trava de reentrada: um segundo clique no mesmo frame (ou vindo de um ouvinte do evento) não imprime de novo.
+    private bool imprimindo;
+
     public void CombineItems()
+    {
+        if (imprimindo) return;
+        imprimindo = true;
+        try { Combinar(); }
+        finally { imprimindo = false; }
+    }
+
+    private void Combinar()
     {
         if (!SlotsConfigurados()) return;
 
         if (recipeDictionary == null) Start(); // caso CombineItems seja chamado antes do Start (ordem de execução)
 
-        if (slotInput1.item == null || slotInput2.item == null)
+        if (slotInput1.item == null || slotInput2.item == null || slotInput1.item.itemAmt <= 0 || slotInput2.item.itemAmt <= 0)
         {
             Debug.Log("Faltam ingredientes nos slots!");
             return;
         }
 
-        if (Inventario == null)
+        if (Inventario == null || GameManager.Instance == null)
         {
-            Debug.LogError("[CraftingPress] InventoryManager indisponível no GameManager.", this);
+            Debug.LogError("[CraftingPress] GameManager/InventoryManager indisponível.", this);
             return;
         }
 
@@ -82,15 +93,29 @@ public class CraftingPress : MonoBehaviour
 
         if (recipeDictionary.TryGetValue(attemptKey, out Recipe validRecipe) && validRecipe.resultItem != null)
         {
-            // Receita exata (ex: o panfleto do tutorial): conclui o caso em andamento.
+            // Receita exata (ex: o panfleto do tutorial): conclui o caso em andamento, uma única vez.
+            GameManager gm = GameManager.Instance;
+            CaseData caso = gm.casoEscolhido;
+            if (PistaDeOutroCaso(slotInput1.item, caso) || PistaDeOutroCaso(slotInput2.item, caso))
+            {
+                AvisoNaTela.Mostrar("Essas pistas não são do caso que estou investigando.");
+                return;
+            }
+            if (!gm.PodePublicarCaso(caso, out string motivo))
+            {
+                AvisoNaTela.Mostrar(motivo);
+                return;
+            }
             if (Imprimir(validRecipe.resultItem, validRecipe.publicOpinionImpact, validRecipe.stateOpinionImpact, validRecipe.moneyReward))
-                GameManager.Instance.ConcluirCaso(GameManager.Instance.casoEscolhido);
+                gm.ConcluirCaso(caso);
         }
         else
         {
             AvisoNaTela.Mostrar("Essa combinação não forma um panfleto.");
         }
     }
+
+    private static bool PistaDeOutroCaso(Item item, CaseData caso) => item.caso != null && item.caso != caso;
 
     /// <summary>
     /// Regra Fato x Boato (ReceitaDeCaso): duas pistas diferentes do caso atual sempre imprimem, e a
@@ -113,10 +138,10 @@ public class CraftingPress : MonoBehaviour
             AvisoNaTela.Mostrar("Essas pistas são de casos diferentes.");
             return true;
         }
-        CaseData casoAtual = GameManager.Instance.casoEscolhido;
-        if (casoAtual != null && a.caso != casoAtual)
+        // Só o caso em andamento, e uma única vez: validado ANTES de consumir as pistas.
+        if (!GameManager.Instance.PodePublicarCaso(a.caso, out string motivo))
         {
-            AvisoNaTela.Mostrar("Essas pistas não são do caso que estou investigando.");
+            AvisoNaTela.Mostrar(motivo);
             return true;
         }
 
@@ -146,6 +171,7 @@ public class CraftingPress : MonoBehaviour
 
     private bool Imprimir(Item panfleto, int povo, int estado, int ouro)
     {
+        if (panfleto == null) return false;
         if (slotOutput.item != null && slotOutput.item.itemID != panfleto.itemID)
         {
             AvisoNaTela.Mostrar("Tire o panfleto pronto da prensa primeiro.");

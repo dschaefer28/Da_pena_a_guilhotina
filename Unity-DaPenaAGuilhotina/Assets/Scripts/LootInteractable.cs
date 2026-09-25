@@ -22,16 +22,39 @@ public class LootInteractable : MonoBehaviour, IInteractable
     public List<Transform> pontosDeSpawn;
 
     [Header("Configurações")]
+    [Tooltip("ID estável e ÚNICO nesta cena. O que já foi vasculhado e pago é guardado por caso + este ID (sobrevive " +
+             "a troca de cena e ao save). Vazio = caminho na hierarquia. Preencha com Ferramentas > Investigação > " +
+             "Gerar IDs de interação. Não troque depois que houver saves.")]
+    public string idDaInteracao;
     public bool destroyAfterLoot = false;
     [Tooltip("Horas de investigação gastas ao vasculhar este objeto (RelogioDeInvestigacao), mesmo que não haja " +
              "nada útil para o caso: procurar no lugar errado também custa tempo.")]
     [Min(0)] public int custoEmHoras = 1;
-    private bool alreadyLooted = false;
 
-    public bool PodeInteragir => !alreadyLooted;
+    /// <summary>"cena/id" desta interação (ver IdDeInteracao).</summary>
+    public string ChaveDaInteracao => IdDeInteracao.ChaveDaCena(this, idDaInteracao);
+
+    /// <summary>Pista deste objeto já guardada no caso atual (outro caso tem estado próprio).</summary>
+    private bool ColetadoNoCasoAtual
+    {
+        get
+        {
+            GameManager gm = GameManager.Instance;
+            return gm != null && gm.registroDaInvestigacao.LootColetado(gm.casoEscolhido, ChaveDaInteracao);
+        }
+    }
+
+    public bool PodeInteragir => !ColetadoNoCasoAtual;
 
     private void Start()
     {
+        // Pista já recolhida neste caso (antes de trocar de cena ou carregar o save): o objeto não reaparece.
+        if (destroyAfterLoot && ColetadoNoCasoAtual)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         // Se ativado, a estante (ou objeto) se teletransporta para um local aleatório da sala no início da fase
         if (aleatorizarPosicao && pontosDeSpawn != null)
         {
@@ -49,13 +72,12 @@ public class LootInteractable : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (alreadyLooted) return;
-
         if (GameManager.Instance == null)
         {
             Debug.LogWarning("[LootInteractable] GameManager ausente.");
             return;
         }
+        if (ColetadoNoCasoAtual) return;
 
         CaseData casoAtual = GameManager.Instance.casoEscolhido;
         if (casoAtual == null)
@@ -64,7 +86,8 @@ public class LootInteractable : MonoBehaviour, IInteractable
             return;
         }
 
-        if (!RelogioDeInvestigacao.TentarGastar(this, custoEmHoras)) return;
+        // A primeira busca cobra, mesmo que o objeto esteja vazio; repetir no mesmo caso é de graça.
+        if (!RelogioDeInvestigacao.TentarGastar(this, idDaInteracao, custoEmHoras)) return;
 
         if (pistasPossiveis == null || pistasPossiveis.Count == 0)
         {
@@ -97,6 +120,17 @@ public class LootInteractable : MonoBehaviour, IInteractable
             return;
         }
 
+        RegistroDaInvestigacao registro = GameManager.Instance.registroDaInvestigacao;
+
+        // Save v2 (sem registro de loot): quem já tem a pista a recolheu pela regra antiga.
+        if (registro.CasoComEstadoLegado(casoAtual) && inventory.HasItem(itemCorreto.itemID))
+        {
+            registro.RegistrarLoot(casoAtual, ChaveDaInteracao);
+            AvisoNaTela.Mostrar("Você já vasculhou aqui.");
+            if (destroyAfterLoot) Destroy(gameObject);
+            return;
+        }
+
         Item itemClone = itemCorreto.Clone();
         itemClone.itemAmt = Mathf.Max(1, amountToGive);
 
@@ -105,14 +139,13 @@ public class LootInteractable : MonoBehaviour, IInteractable
         if (foiGuardado)
         {
             Debug.Log($"Você encontrou: {itemCorreto.name}!");
-
+            registro.RegistrarLoot(casoAtual, ChaveDaInteracao);
             if (destroyAfterLoot) Destroy(gameObject);
-            else alreadyLooted = true;
         }
         else
         {
-            // Inventário cheio: mantém o loot disponível para tentar de novo depois
-            Debug.Log("Inventário cheio — volte para pegar esta pista mais tarde.");
+            // Inventário cheio: nada é registrado (a busca já foi paga), e o jogador pode voltar sem pagar de novo
+            AvisoNaTela.Mostrar("Inventário cheio. Libere espaço e volte para pegar esta pista.");
         }
     }
 }

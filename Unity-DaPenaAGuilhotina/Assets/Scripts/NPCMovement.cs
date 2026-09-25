@@ -25,6 +25,10 @@ public struct CasoReacao
 public class NPCMovement : MonoBehaviour, IInteractable
 {
     [Header("Configurações Base")]
+    [Tooltip("ID estável e ÚNICO nesta cena. Cobrança de horas e recompensas entregues são guardadas por caso + este ID " +
+             "(não pelo nome do GameObject). Vazio = caminho na hierarquia. Preencha com Ferramentas > Investigação > " +
+             "Gerar IDs de interação. Não troque depois que houver saves: o progresso guardado aponta para ele.")]
+    public string idDaInteracao;
     public bool canInteract = true;
     [Tooltip("Desmarque isso para NPCs Mentores (como Dupaty) para permitir falar com eles várias vezes.")]
     public bool disableAfterDialogue = true;
@@ -50,10 +54,22 @@ public class NPCMovement : MonoBehaviour, IInteractable
     public GameObject visualIndicator;
     public UnityEvent OnDialogueComplete;
 
-    // Guarda temporariamente a lista de itens que o NPC vai dar ao fim da conversa atual
+    // Itens que o NPC vai dar ao fim da conversa atual, e de qual caso/etapa eles são
     private List<Item> recompensasPendentes = new List<Item>();
+    private CaseData casoDaConversa;
+    private string etapaDaConversa;
+    private bool aguardandoFimDoDialogo;
 
     void Start() { UpdateVisualFeedback(); }
+
+    private void OnDestroy()
+    {
+        if (aguardandoFimDoDialogo && GameManager.Instance != null && GameManager.Instance.dialogueSystem != null)
+            GameManager.Instance.dialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
+    }
+
+    /// <summary>"cena/id" desta interação (ver IdDeInteracao).</summary>
+    public string ChaveDaInteracao => IdDeInteracao.ChaveDaCena(this, idDaInteracao);
 
     // Usado pelo Player (alvo mais próximo) e pelo aviso de interação: só conta como interagível
     // enquanto ainda responde. Mesma regra dos dois primeiros "return" de Interact().
@@ -71,13 +87,10 @@ public class NPCMovement : MonoBehaviour, IInteractable
         }
 
         DialogueSystem dialogueSystem = GameManager.Instance.dialogueSystem;
-        if (dialogueSystem == null) return;
-
-        if (!RelogioDeInvestigacao.TentarGastar(this, custoEmHoras)) return;
+        if (dialogueSystem == null || dialogueSystem.IsDialogueActive) return;
 
         DialogueData dialogoParaTocar = dialogoPadrao;
-        recompensasPendentes.Clear(); // Limpa a lista antes de cada interação
-
+        List<Item> recompensasDaEtapa = null;
         CaseData casoAtual = GameManager.Instance.casoEscolhido;
 
         if (casoAtual != null && reacoesDeCaso != null)
@@ -95,68 +108,97 @@ public class NPCMovement : MonoBehaviour, IInteractable
                     if (temAPista && reacao.dialogoComPista != null)
                     {
                         dialogoParaTocar = reacao.dialogoComPista;
-                        PrepararRecompensas(reacao.recompensasDoDialogo);
+                        recompensasDaEtapa = reacao.recompensasDoDialogo;
                     }
                     else if (reacao.dialogoInicialDoCaso != null)
                     {
                         dialogoParaTocar = reacao.dialogoInicialDoCaso;
-                        PrepararRecompensas(reacao.recompensasDoDialogo);
+                        recompensasDaEtapa = reacao.recompensasDoDialogo;
                     }
-                    
-                    break; 
+
+                    break;
                 }
             }
         }
 
-        if (dialogoParaTocar != null)
+        // Sem fala para tocar a interação não acontece: não cobra horas nem deixa o fim do diálogo pendurado.
+        if (dialogoParaTocar == null || dialogoParaTocar.talkScript == null || dialogoParaTocar.talkScript.Count == 0)
         {
-            dialogueSystem.dialogueData = dialogoParaTocar;
-            dialogueSystem.OnDialogueEnded += HandleDialogueEnded;
-            dialogueSystem.Next();
+            Debug.LogWarning($"[NPC] {gameObject.name}: nenhum diálogo configurado para este estado do jogo.", this);
+            return;
         }
-        else
-        {
-            Debug.LogWarning("Nenhum diálogo configurado para este estado do jogo.");
-        }
+
+        if (!RelogioDeInvestigacao.TentarGastar(this, idDaInteracao, custoEmHoras)) return;
+
+        casoDaConversa = casoAtual;
+        etapaDaConversa = RegistroDaInvestigacao.EtapaReacao;
+        PrepararRecompensas(recompensasDaEtapa);
+
+        dialogueSystem.dialogueData = dialogoParaTocar;
+        dialogueSystem.OnDialogueEnded -= HandleDialogueEnded; // nunca inscrever duas vezes
+        dialogueSystem.OnDialogueEnded += HandleDialogueEnded;
+        aguardandoFimDoDialogo = true;
+        dialogueSystem.Next();
     }
 
-    // Rotina auxiliar para verificar e listar os itens que faltam no inventário
+    /// <summary>Lista o que ainda não foi entregue NESTE caso/interação/etapa. Não depende do que está no
+    /// inventário agora: uma pista gasta na prensa não volta ao revisitar o NPC.</summary>
     private void PrepararRecompensas(List<Item> itensConfigurados)
     {
-        if (itensConfigurados != null && GameManager.Instance.inventoryManager != null)
+        recompensasPendentes.Clear();
+        if (itensConfigurados == null || casoDaConversa == null) return;
+
+        GameManager gm = GameManager.Instance;
+        RegistroDaInvestigacao registro = gm.registroDaInvestigacao;
+        string interacao = ChaveDaInteracao;
+        foreach (Item item in itensConfigurados)
         {
-            foreach (Item item in itensConfigurados)
+            if (item == null || string.IsNullOrEmpty(item.itemID) || recompensasPendentes.Contains(item)) continue;
+            if (registro.RecompensaEntregue(casoDaConversa, interacao, etapaDaConversa, item.itemID)) continue;
+
+            // Save v2 (sem registro de entregas): quem já tem a pista a recebeu pela regra antiga.
+            if (registro.CasoComEstadoLegado(casoDaConversa) && gm.inventoryManager != null && gm.inventoryManager.HasItem(item.itemID))
             {
-                if (item != null && !GameManager.Instance.inventoryManager.HasItem(item.itemID))
-                {
-                    recompensasPendentes.Add(item);
-                }
+                registro.RegistrarRecompensa(casoDaConversa, interacao, etapaDaConversa, item.itemID);
+                continue;
             }
+            recompensasPendentes.Add(item);
         }
     }
 
     private void HandleDialogueEnded()
     {
-        DialogueSystem dialogueSystem = GameManager.Instance.dialogueSystem;
+        aguardandoFimDoDialogo = false;
+        GameManager gm = GameManager.Instance;
+        DialogueSystem dialogueSystem = gm != null ? gm.dialogueSystem : null;
         if (dialogueSystem != null) dialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
 
-        // Entrega todos os itens da lista de uma vez
-        if (recompensasPendentes.Count > 0 && GameManager.Instance.inventoryManager != null)
+        // Entrega item por item e só registra o que entrou de fato. Inventário cheio: o que faltou fica para
+        // a próxima conversa (que não cobra horas de novo, já está paga).
+        bool faltouEntregar = false;
+        if (recompensasPendentes.Count > 0 && gm != null && gm.inventoryManager != null)
         {
+            string interacao = ChaveDaInteracao;
             foreach (Item itemPendente in recompensasPendentes)
             {
                 Item recompensa = itemPendente.Clone();
                 recompensa.itemAmt = 1;
-                GameManager.Instance.inventoryManager.AddItem(recompensa);
-                Debug.Log($"[SISTEMA] O NPC {gameObject.name} te entregou: {recompensa.name}");
+                if (gm.inventoryManager.AddItem(recompensa))
+                {
+                    gm.registroDaInvestigacao.RegistrarRecompensa(casoDaConversa, interacao, etapaDaConversa, itemPendente.itemID);
+                    Debug.Log($"[SISTEMA] O NPC {gameObject.name} te entregou: {recompensa.name}");
+                }
+                else faltouEntregar = true;
             }
-            
-            recompensasPendentes.Clear();
-            DisableInteraction();
+            if (faltouEntregar)
+                AvisoNaTela.Mostrar("Inventário cheio. Libere espaço e fale de novo para receber o que faltou.");
         }
+        recompensasPendentes.Clear();
 
-        if (disableAfterDialogue) DisableInteraction();
-        
+        // Só desliga quem foi configurado para isso (disableAfterDialogue); com entrega pendente, continua
+        // acessível para o jogador voltar e receber o resto.
+        if (disableAfterDialogue && !faltouEntregar) DisableInteraction();
+
         if (!blockEvents)
         {
             OnDialogueComplete?.Invoke();
