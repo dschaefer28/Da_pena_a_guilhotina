@@ -2595,8 +2595,8 @@ RectTransform:
   m_Children:
   - {fileID: 8380309505375552641}
   - {fileID: 742576507388969076}
-  - {fileID: 6110697964221987649}
   - {fileID: 5968679415757805455}
+  - {fileID: 6110697964221987649}
   - {fileID: 5827515608162278835}
   - {fileID: 5390888461262581397}
   - {fileID: 332773289177034058}
@@ -5221,7 +5221,7 @@ MonoBehaviour:
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
-  m_ChildControlHeight: 0
+  m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0

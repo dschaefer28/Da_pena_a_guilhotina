@@ -26,6 +26,8 @@ public class CaseSelectionUI : MonoBehaviour
         // 1. Limpeza de Segurança: Destrói cartões velhos caso o jogador feche e abra a mesa de novo
         foreach (Transform child in cardsContainer)
         {
+            // Destroy só age no fim do frame; desativar antes tira o cartão velho do layout já neste frame.
+            child.gameObject.SetActive(false);
             Destroy(child.gameObject);
         }
 
