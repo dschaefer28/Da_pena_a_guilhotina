@@ -8,6 +8,7 @@ public enum STATE
     DISABLED,
     WAITING,
     TYPING,
+    AWAITING_REPLY, // fala com escolhas já exibida por inteiro; o próximo avanço passa a vez ao protagonista
     CHOOSING
 }
 
@@ -20,6 +21,9 @@ public class DialogueSystem : MonoBehaviour
     public event Action<string, string> OnDialogueLineStarted;
     public event Action<List<Choice>> OnChoicesAvailable;
     public event Action OnChoicesCleared;
+    // Avançar durante a escolha (tecla Interagir, botão virtual...) pede à HUD que confirme a opção
+    // selecionada: só ela sabe qual resposta está destacada.
+    public event Action OnConfirmChoiceRequested;
 
     public bool IsDialogueActive { get; private set; }
 
@@ -75,6 +79,13 @@ public class DialogueSystem : MonoBehaviour
             else EndDialogue();
             return;
         }
+        if (state == STATE.AWAITING_REPLY)
+        {
+            state = STATE.CHOOSING;
+            SetupChoices(dialogueData.talkScript[currentText - 1]);
+            return;
+        }
+        if (state == STATE.CHOOSING) { OnConfirmChoiceRequested?.Invoke(); return; }
     }
 
     public void Next()
@@ -130,11 +141,11 @@ public class DialogueSystem : MonoBehaviour
     {
         StopCurrentAudio();
         Dialogue currentDialogue = dialogueData.talkScript[currentText - 1];
-        if (currentDialogue.choices != null && currentDialogue.choices.Count > 0) 
+        if (currentDialogue.choices != null && currentDialogue.choices.Count > 0)
         {
-            state = STATE.CHOOSING;
-            SetupChoices(currentDialogue);
-        } 
+            // As respostas só aparecem no próximo avanço: primeiro o jogador lê a fala inteira.
+            state = STATE.AWAITING_REPLY;
+        }
         else 
         {
             state = STATE.WAITING;
