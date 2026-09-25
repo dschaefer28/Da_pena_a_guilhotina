@@ -1,10 +1,25 @@
 fileFormatVersion: 2
-guid: 68498530004c77d41aedfb36cb2082f7
+guid: b3de0378356a5cf4cb886c58c2efcb74
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -9168735068763562810
-    second: barra_0
+      213: 5794594196612586580
+    second: barra2_0
+  - first:
+      213: -1793611709291775379
+    second: barra2_1
+  - first:
+      213: 4213017908731670649
+    second: barra2_2
+  - first:
+      213: 8578447378592456989
+    second: barra2_3
+  - first:
+      213: 313517090171679651
+    second: barra2_4
+  - first:
+      213: 1447469358928257113
+    second: barra2_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +141,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: barra_0
+      name: barra2_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 8
-        width: 459
-        height: 524
+        x: 511
+        y: 551
+        width: 10
+        height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +156,118 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6cc5ea2780c12c080800000000000000
-      internalID: -9168735068763562810
+      spriteID: 45c12a288b88a6050800000000000000
+      internalID: 5794594196612586580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: barra2_1
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 31
+        width: 1914
+        height: 514
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6abea247afcb17e0800000000000000
+      internalID: -1793611709291775379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: barra2_2
+      rect:
+        serializedVersion: 2
+        x: 1983
+        y: 471
+        width: 10
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9707f4a6775a77a30800000000000000
+      internalID: 4213017908731670649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: barra2_3
+      rect:
+        serializedVersion: 2
+        x: 1983
+        y: 447
+        width: 10
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d116265b074cc0770800000000000000
+      internalID: 8578447378592456989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: barra2_4
+      rect:
+        serializedVersion: 2
+        x: 1983
+        y: 111
+        width: 10
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a372b6e126d95400800000000000000
+      internalID: 313517090171679651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: barra2_5
+      rect:
+        serializedVersion: 2
+        x: 1983
+        y: 55
+        width: 10
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9506e2286b1761410800000000000000
+      internalID: 1447469358928257113
       vertices: []
       indices: 
       edges: []
@@ -161,7 +286,12 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      barra_0: -9168735068763562810
+      barra2_0: 5794594196612586580
+      barra2_1: -1793611709291775379
+      barra2_2: 4213017908731670649
+      barra2_3: 8578447378592456989
+      barra2_4: 313517090171679651
+      barra2_5: 1447469358928257113
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
