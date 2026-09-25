@@ -10,7 +10,7 @@ using UnityEngine;
 /// </summary>
 public class Fase1Desfecho : MonoBehaviour
 {
-    private const string Chave = "fase1_cutscene_vista";
+    public const string Chave = "fase1_cutscene_vista";
 
     [Tooltip("Marque para a cutscene tocar de novo a cada teste (ignora o PlayerPrefs).")]
     public bool forcarRepetir = false;

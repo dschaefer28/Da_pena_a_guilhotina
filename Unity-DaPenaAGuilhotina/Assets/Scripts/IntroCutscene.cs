@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class IntroCutscene : MonoBehaviour
 {
-    private const string Chave = "intro_cutscene_vista";
+    public const string Chave = "intro_cutscene_vista";
     private const string CenaAlvo = "Jogo";
 
     [Tooltip("Marque para a cutscene tocar de novo a cada teste (ignora o PlayerPrefs).")]

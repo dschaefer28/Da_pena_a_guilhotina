@@ -324,10 +324,7 @@ public static class TutorialRoteiroTool
     [MenuItem("Ferramentas/Tutorial/3 - Resetar progresso (tutorial, cutscenes e dicas)")]
     public static void ResetarProgresso()
     {
-        foreach (string chave in new[] { TutorialManager.CHAVE_TUTORIAL_CONCLUIDO, TutorialManager.CHAVE_DICA_FATO_BOATO,
-                                         "fase1_cutscene_vista", "intro_cutscene_vista" })
-            PlayerPrefs.DeleteKey(chave);
-        PlayerPrefs.Save();
+        ProgressoDoJogo.ApagarProgresso();
         Debug.Log("[TutorialRoteiroTool] Progresso do tutorial, das cutscenes e das dicas apagado. O próximo Play começa do zero.");
     }
 

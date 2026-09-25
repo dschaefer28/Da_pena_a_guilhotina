@@ -1119,6 +1119,7 @@ MonoBehaviour:
     tipoDeAvanco: 2
     nomeDoEvento: 
     nomeDaCena: Jogo
+    salvarAoConcluir: 1
   - etapaId: mesa_de_casos
     mensagem: "Novos clientes deixaram cartas na mesa. Siga a seta, use {interagir}
       na mesa e escolha o seu pr\xF3ximo caso."

@@ -14,12 +14,28 @@ public class MenuPrincipalManager : MonoBehaviour
     [SerializeField] private GameObject painelOpcoes;
     [SerializeField] private GameObject painelCreditos;
     [SerializeField] private GameObject painelDeConfirmação;
+    [Tooltip("Botão Continuar: só aparece quando existe um save.")]
+    [SerializeField] private GameObject botaoContinuar;
+
+    private void Start()
+    {
+        if (botaoContinuar != null) botaoContinuar.SetActive(SistemaDeSave.ExisteSave);
+    }
+
+    // Novo Jogo: o tutorial e as cutscenes começam do zero. O save antigo só é substituído no próximo ponto de save.
     public void Jogar()
     {
+        ProgressoDoJogo.ComecarNovoJogo();
         if (SceneTransitionManager.Instance != null)
             SceneTransitionManager.Instance.LoadScene(nomeDoLevelDeJogo);
         else
             SceneManager.LoadScene(nomeDoLevelDeJogo);
+    }
+
+    // Continuar: volta ao último ponto de save, com o tutorial na etapa em que estava.
+    public void Continuar()
+    {
+        if (!SistemaDeSave.Carregar() && botaoContinuar != null) botaoContinuar.SetActive(false);
     }
 
     public void AbrirOpcoes()

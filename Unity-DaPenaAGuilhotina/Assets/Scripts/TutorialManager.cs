@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,6 +43,9 @@ public class TutorialStep
 
     [Tooltip("Só é usado quando 'Tipo De Avanco' = Carregamento De Cena. Nome exato da cena (ex: Porao).")]
     public string nomeDaCena;
+
+    [Tooltip("Ponto de save: ao concluir esta etapa o jogo é salvo (SistemaDeSave), já com a cena seguinte montada.")]
+    public bool salvarAoConcluir;
 }
 
 /// <summary>
@@ -210,7 +214,9 @@ public class TutorialManager : MonoBehaviour
             mensagem = "Feche os painéis, vá até a saída do porão e use {interagir} para subir ao escritório.",
             controle = ControleTutorial.Interagir,
             tipoDeAvanco = TipoDeAvanco.CarregamentoDeCena,
-            nomeDaCena = "Jogo"
+            nomeDaCena = "Jogo",
+            // Primeiro panfleto impresso e de volta ao escritório: fim do aprendizado, ponto de save.
+            salvarAoConcluir = true
         },
         new TutorialStep
         {
@@ -248,6 +254,9 @@ public class TutorialManager : MonoBehaviour
     /// <summary>Verdadeiro quando todas as etapas já foram concluídas (ou o tutorial foi pulado).</summary>
     public bool TutorialConcluido => indiceAtual >= etapas.Count;
 
+    /// <summary>Posição no roteiro (etapas.Count = concluído). Guardada pelo SistemaDeSave.</summary>
+    public int IndiceAtual => indiceAtual;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -271,8 +280,16 @@ public class TutorialManager : MonoBehaviour
 
         ValidarEtapaIdsUnicos();
 
-        bool jaConcluido = PlayerPrefs.GetInt(CHAVE_TUTORIAL_CONCLUIDO, 0) == 1;
-        indiceAtual = (jaConcluido && !forcarReiniciar) ? etapas.Count : 0;
+        if (SistemaDeSave.ConsumirEtapaDoTutorial(out int etapaSalva))
+        {
+            // Continuar do menu: retoma exatamente a etapa em que o jogo foi salvo.
+            indiceAtual = Mathf.Clamp(etapaSalva, 0, etapas.Count);
+        }
+        else
+        {
+            bool jaConcluido = PlayerPrefs.GetInt(CHAVE_TUTORIAL_CONCLUIDO, 0) == 1;
+            indiceAtual = (jaConcluido && !forcarReiniciar) ? etapas.Count : 0;
+        }
 
         VincularDependenciasLocais();
         BroadcastEtapaAtual();
@@ -479,6 +496,7 @@ public class TutorialManager : MonoBehaviour
     {
         if (indiceAtual < 0 || indiceAtual >= etapas.Count) return;
 
+        if (etapas[indiceAtual].salvarAoConcluir) StartCoroutine(SalvarComACenaPronta());
         indiceAtual++;
         if (indiceAtual >= etapas.Count)
         {
@@ -487,6 +505,14 @@ public class TutorialManager : MonoBehaviour
             OnTutorialConcluido?.Invoke();
         }
         BroadcastEtapaAtual();
+    }
+
+    // Etapas de troca de cena concluem no sceneLoaded, antes do Start da cena nova: o inventário ainda está vazio
+    // (restaura no Start) e a cutscene da Fase 1 ainda não marcou que tocou. Um frame depois tudo já está montado.
+    private IEnumerator SalvarComACenaPronta()
+    {
+        yield return null;
+        SistemaDeSave.Salvar();
     }
 
     /// <summary>Pula o tutorial inteiro (ex: para um botão "Pular Tutorial" no menu de opções).</summary>

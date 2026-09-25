@@ -63,6 +63,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject); // Torna o GameManager imortal
         VincularDependenciasLocais();
+        // Continuar do menu: preenche os dados do save antes de o inventário da cena restaurar os itens (Start).
+        SistemaDeSave.AplicarPendente(this);
     }
 
     // ARQUITETURA: Assina o evento nativo da Unity para troca de cenas
