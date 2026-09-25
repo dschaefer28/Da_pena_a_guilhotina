@@ -14,6 +14,7 @@ public static class ProgressoDoJogo
     {
         TutorialManager.CHAVE_TUTORIAL_CONCLUIDO,
         TutorialManager.CHAVE_DICA_FATO_BOATO,
+        TutorialManager.CHAVE_DICA_TEMPO,
         IntroCutscene.Chave,
         Fase1Desfecho.Chave
     };

@@ -28,6 +28,9 @@ public class NPCMovement : MonoBehaviour, IInteractable
     public bool canInteract = true;
     [Tooltip("Desmarque isso para NPCs Mentores (como Dupaty) para permitir falar com eles várias vezes.")]
     public bool disableAfterDialogue = true;
+    [Tooltip("Horas de investigação gastas na primeira conversa com este NPC no caso (RelogioDeInvestigacao). " +
+             "Só conta na cena de investigação do caso em andamento.")]
+    [Min(0)] public int custoEmHoras = 1;
 
     [Header("Diálogo de Fallback (Padrão)")]
     [Tooltip("Diálogo padrão quando nenhum caso foi escolhido ainda (Ex: 'Vá até a mesa pegar um caso').")]
@@ -70,7 +73,9 @@ public class NPCMovement : MonoBehaviour, IInteractable
         DialogueSystem dialogueSystem = GameManager.Instance.dialogueSystem;
         if (dialogueSystem == null) return;
 
-        DialogueData dialogoParaTocar = dialogoPadrao; 
+        if (!RelogioDeInvestigacao.TentarGastar(this, custoEmHoras)) return;
+
+        DialogueData dialogoParaTocar = dialogoPadrao;
         recompensasPendentes.Clear(); // Limpa a lista antes de cada interação
 
         CaseData casoAtual = GameManager.Instance.casoEscolhido;

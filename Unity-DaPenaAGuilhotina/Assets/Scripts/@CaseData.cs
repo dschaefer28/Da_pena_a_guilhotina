@@ -25,6 +25,9 @@ public class CaseData : ScriptableObject
              "Nenhuma = aparece em qualquer rota.")]
     public RotaFinal rota = RotaFinal.Nenhuma;
 
+    [Tooltip("Horas para investigar este caso. 0 = usa o padrão do GameManager (Horas Por Caso).")]
+    [Min(0)] public int horasDeInvestigacao = 0;
+
     [Header("Conexão com a Próxima Fase")]
     [Tooltip("O roteiro de diálogo que será ativado no NPC da Fase 2 se este caso for escolhido.")]
     public DialogueData npcDialogueRoute; 

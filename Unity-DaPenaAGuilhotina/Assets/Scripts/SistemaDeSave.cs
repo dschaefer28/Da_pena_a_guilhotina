@@ -60,6 +60,9 @@ public static class SistemaDeSave
         public List<string> casosJaSelecionados = new List<string>();
         public int faseAtual;
         public RotaFinal rotaFinal;
+        public int horasDoCaso;
+        public int horasRestantes;
+        public List<string> interacoesPagas = new List<string>();
         public List<string> casosConcluidos = new List<string>();
         public List<ItemSalvo> inventario = new List<ItemSalvo>();
         public List<PanfletoSalvo> panfletosPublicados = new List<PanfletoSalvo>();
@@ -101,6 +104,9 @@ public static class SistemaDeSave
             casoEscolhido = gm.casoEscolhido != null ? gm.casoEscolhido.name : null,
             faseAtual = gm.faseAtual,
             rotaFinal = gm.rotaFinal,
+            horasDoCaso = gm.horasDoCaso,
+            horasRestantes = gm.horasRestantes,
+            interacoesPagas = new List<string>(gm.interacoesPagas),
             pistasVerificadas = new List<string>(gm.pistasVerificadas)
         };
 
@@ -237,6 +243,9 @@ public static class SistemaDeSave
         if (dados.versao < 2) MigrarProgressaoDeFases(gm);
         else gm.faseAtual = Mathf.Clamp(dados.faseAtual, 1, GameManager.UltimaFase);
         gm.rotaFinal = dados.rotaFinal;
+        gm.horasDoCaso = dados.horasDoCaso;
+        gm.horasRestantes = dados.horasRestantes;
+        gm.interacoesPagas = dados.interacoesPagas != null ? new List<string>(dados.interacoesPagas) : new List<string>();
         if (gm.faseAtual == GameManager.UltimaFase && gm.rotaFinal == RotaFinal.Nenhuma) gm.DefinirRota();
 
         Debug.Log($"[SistemaDeSave] Save de {dados.dataHora} carregado na cena '{dados.cena}'.");

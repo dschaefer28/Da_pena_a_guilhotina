@@ -83,6 +83,7 @@ public class TutorialManager : MonoBehaviour
 
     public const string CHAVE_TUTORIAL_CONCLUIDO = "tutorial_concluido";
     public const string CHAVE_DICA_FATO_BOATO = "dica_fato_boato_vista";
+    public const string CHAVE_DICA_TEMPO = "dica_tempo_vista";
 
     [Header("Configuração")]
     [Tooltip("Marque para o tutorial rodar de novo mesmo que já tenha sido concluído antes " +
@@ -99,6 +100,12 @@ public class TutorialManager : MonoBehaviour
     public string dicaFatoBoato =
         "Nem toda pista é verdade. No inventário, {apontar} uma pista para ler quem contou. " +
         "Pistas \"não verificadas\" podem ser boatos: procure outra fonte que confirme antes de imprimir.";
+
+    [TextArea(3, 5)]
+    [Tooltip("Mostrada na primeira investigação com o relógio ativo (RelogioDeInvestigacao).")]
+    public string dicaTempo =
+        "O dia é curto. Cada pessoa com quem você conversa e cada lugar que vasculha gasta horas (veja no alto da tela). " +
+        "Falar de novo com quem já ouviu não custa nada. Escolha bem: não dá tempo de investigar tudo.";
 
     [Header("Etapas do Tutorial (em ordem)")]
     [Tooltip("Este roteiro é o padrão para um TutorialManager novo. A cena 'Jogo' já tem sua própria lista " +
@@ -197,7 +204,8 @@ public class TutorialManager : MonoBehaviour
         new TutorialStep
         {
             etapaId = "explicar_efeito_barras",
-            mensagem = "Veja as barras no alto: a de cima é a Opinião do Povo, a de baixo a Opinião do Estado, e embaixo está o seu ouro. " +
+            mensagem = "Veja as barras no alto: a de cima é a Opinião do Povo, a de baixo a Opinião do Estado, e embaixo está o seu ouro, " +
+                       "que paga o aluguel, o papel e a tinta no fim de cada período. " +
                        "Cada panfleto agrada uns e irrita outros. Quando terminar de olhar, {continuar}.",
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },

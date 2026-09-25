@@ -24,6 +24,12 @@ public class FimDeFase : MonoBehaviour
     [Tooltip("Cena onde a fase é encerrada (o escritório, para onde o jogador volta do porão).")]
     public string cenaDoEscritorio = "Jogo";
 
+    [Header("Despesas (GameManager.despesasPorFase)")]
+    [Tooltip("Legenda das despesas cobradas ao fim da fase. {0} = valor.")]
+    public string textoDespesas = "Fim do período. Aluguel, papel e tinta custaram {0} moedas à tipografia.";
+    [Tooltip("Acrescentado quando o dinheiro não bastou.")]
+    public string textoDivida = "Sem dinheiro para tudo, você agora deve aos credores, e eles vão cobrar em tempo.";
+
     public List<CutsceneDaFase> cutscenes = new List<CutsceneDaFase>
     {
         new CutsceneDaFase
@@ -54,11 +60,23 @@ public class FimDeFase : MonoBehaviour
         if (gm == null || gm.faseAtual >= GameManager.UltimaFase || !gm.FaseConcluida) return;
 
         int faseEncerrada = gm.faseAtual;
-        // Avança já, antes da cutscene: se a cena trocar no meio dela, a fase não fica pendente.
+        // Cobra e avança já, antes da cutscene: se a cena trocar no meio dela, nada fica pendente.
+        int despesa = gm.PagarDespesasDaFase(faseEncerrada);
         gm.AvancarFase();
 
-        List<CutsceneLegendas.Linha> legendas = LegendasDa(faseEncerrada);
-        if (legendas != null && legendas.Count > 0 && CutsceneLegendas.Instance != null)
+        var legendas = new List<CutsceneLegendas.Linha>();
+        List<CutsceneLegendas.Linha> daFase = LegendasDa(faseEncerrada);
+        if (daFase != null) legendas.AddRange(daFase);
+
+        if (despesa > 0)
+        {
+            string texto = string.Format(textoDespesas, despesa);
+            if (gm.Endividado) texto += " " + textoDivida;
+            if (legendas.Count > 0) legendas.Add(new CutsceneLegendas.Linha { texto = texto, duracao = 5f });
+            else AvisoNaTela.Mostrar(texto);
+        }
+
+        if (legendas.Count > 0 && CutsceneLegendas.Instance != null)
             CutsceneLegendas.Instance.Tocar(legendas);
 
         StartCoroutine(SalvarNoProximoFrame());

@@ -1213,9 +1213,7 @@ MonoBehaviour:
     nomeDaCena: 
     salvarAoConcluir: 0
   - etapaId: explicar_efeito_barras
-    mensagem: "Veja as barras no alto: a de cima \xE9 a Opini\xE3o do Povo, a de
-      baixo a Opini\xE3o do Estado, e embaixo est\xE1 o seu ouro. Cada panfleto agrada
-      uns e irrita outros. Quando terminar de olhar, {continuar}."
+    mensagem: "Veja as barras no alto: a de cima \xE9 a Opini\xE3o do Povo, a de baixo a Opini\xE3o do Estado, e embaixo est\xE1 o seu ouro, que paga o aluguel, o papel e a tinta no fim de cada per\xEDodo. Cada panfleto agrada uns e irrita outros. Quando terminar de olhar, {continuar}."
     icone: {fileID: 0}
     controle: 0
     tipoDeAvanco: 0

@@ -4768,6 +4768,7 @@ GameObject:
   - component: {fileID: 7657567633651206077}
   - component: {fileID: 2026820043679994935}
   - component: {fileID: 6134696014951055631}
+  - component: {fileID: 6892228440637199434}
   m_Layer: 5
   m_Name: Cutscenes
   m_TagString: Untagged
@@ -4868,6 +4869,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FimDeFase
   cenaDoEscritorio: Jogo
+  textoDespesas: "Fim do per\xEDodo. Aluguel, papel e tinta custaram {0} moedas \xE0
+    tipografia."
+  textoDivida: "Sem dinheiro para tudo, voc\xEA agora deve aos credores, e eles v\xE3o
+    cobrar em tempo."
   cutscenes:
   - fase: 2
     legendas:
@@ -4884,6 +4889,20 @@ MonoBehaviour:
     - texto: "Tudo o que foi impresso at\xE9 aqui ser\xE1 lembrado. Por uns, como
         coragem. Por outros, como trai\xE7\xE3o."
       duracao: 5
+--- !u!114 &6892228440637199434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6037214752926246677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8812b7dd09f1d4da86e2307f14ef04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HudDoRelogio
+  fonte: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  formato: "Tempo de investiga\xE7\xE3o: {0}h / {1}h"
 --- !u!1 &6174460398447187986
 GameObject:
   m_ObjectHideFlags: 0

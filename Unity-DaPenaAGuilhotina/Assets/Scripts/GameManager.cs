@@ -27,6 +27,24 @@ public class GameManager : MonoBehaviour
     [Tooltip("Casos cujo panfleto já foi impresso. Um caso concluído libera a Mesa de Casos para o próximo.")]
     public List<CaseData> casosConcluidos = new List<CaseData>();
 
+    [Header("Tempo de Investigação")]
+    [Tooltip("Horas que o jogador tem para investigar cada caso, se o CaseData não definir outro valor. " +
+             "Cada NPC ou objeto investigado pela primeira vez gasta horas (RelogioDeInvestigacao).")]
+    [Min(1)] public int horasPorCaso = 4;
+    [Tooltip("Horas do caso atual (0 = relógio desligado, ex: tutorial).")]
+    public int horasDoCaso = 0;
+    public int horasRestantes = 0;
+    [Tooltip("NPCs/objetos já pagos no caso atual: falar de novo com eles não gasta tempo.")]
+    public List<string> interacoesPagas = new List<string>();
+
+    [Header("Despesas da Tipografia")]
+    [Tooltip("Moedas cobradas ao fim de cada fase (elemento 0 = Fase 1): aluguel, papel e tinta.")]
+    public int[] despesasPorFase = { 0, 25, 50, 0 };
+    [Tooltip("Horas de investigação perdidas por caso enquanto o jogador estiver endividado (capital negativo).")]
+    [Min(0)] public int horasPerdidasPorDivida = 1;
+
+    public bool Endividado => capitalAtual < 0;
+
     [Header("Rota Final (Fase 4)")]
     [Tooltip("Travada ao entrar na Fase 4 pelo desnível entre Povo e Estado. Define o caso da Fase 4 e o final.")]
     public RotaFinal rotaFinal = RotaFinal.Nenhuma;
@@ -131,6 +149,7 @@ public class GameManager : MonoBehaviour
 
         // Documento (Tarefas Globais): pop-up quando um caso é escolhido e travado.
         if (caso != null) AvisoNaTela.Mostrar($"Caso aceito: {(caso.caseTitle ?? caso.name).Trim()}");
+        IniciarRelogio(caso);
 
         if (TutorialManager.Instance != null)
             TutorialManager.Instance.NotificarEvento(TutorialManager.EVENTO_CASO_ESCOLHIDO);
@@ -194,6 +213,33 @@ public class GameManager : MonoBehaviour
 
         if (!string.IsNullOrWhiteSpace(caso.caseTitle))
             AvisoNaTela.Mostrar($"Caso concluído: {caso.caseTitle.Trim()}");
+    }
+
+    // ===== Tempo de investigação e despesas =====
+
+    private void IniciarRelogio(CaseData caso)
+    {
+        interacoesPagas.Clear();
+        if (caso == null) { horasDoCaso = horasRestantes = 0; return; }
+
+        horasDoCaso = caso.horasDeInvestigacao > 0 ? caso.horasDeInvestigacao : horasPorCaso;
+        if (Endividado && horasPerdidasPorDivida > 0)
+        {
+            horasDoCaso = Mathf.Max(1, horasDoCaso - horasPerdidasPorDivida);
+            AvisoNaTela.Mostrar($"Endividado: os credores tomam parte do seu dia (-{horasPerdidasPorDivida}h de investigação).");
+        }
+        horasRestantes = horasDoCaso;
+    }
+
+    /// <summary>Cobra as despesas da fase que terminou. Devolve o valor cobrado (o capital pode ficar negativo = dívida).</summary>
+    public int PagarDespesasDaFase(int fase)
+    {
+        int valor = fase >= 1 && fase <= despesasPorFase.Length ? Mathf.Max(0, despesasPorFase[fase - 1]) : 0;
+        if (valor == 0) return 0;
+        capitalAtual -= valor;
+        Debug.Log($"[DESPESAS] Fase {fase}: -{valor} moedas. Capital: {capitalAtual}.");
+        ForcarAtualizacaoUI();
+        return valor;
     }
 
     /// <summary>Passa para a próxima fase. Falso se já está na última.</summary>

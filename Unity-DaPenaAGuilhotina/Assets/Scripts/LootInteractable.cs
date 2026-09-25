@@ -23,6 +23,9 @@ public class LootInteractable : MonoBehaviour, IInteractable
 
     [Header("Configurações")]
     public bool destroyAfterLoot = false;
+    [Tooltip("Horas de investigação gastas ao vasculhar este objeto (RelogioDeInvestigacao), mesmo que não haja " +
+             "nada útil para o caso: procurar no lugar errado também custa tempo.")]
+    [Min(0)] public int custoEmHoras = 1;
     private bool alreadyLooted = false;
 
     public bool PodeInteragir => !alreadyLooted;
@@ -61,9 +64,11 @@ public class LootInteractable : MonoBehaviour, IInteractable
             return;
         }
 
+        if (!RelogioDeInvestigacao.TentarGastar(this, custoEmHoras)) return;
+
         if (pistasPossiveis == null || pistasPossiveis.Count == 0)
         {
-            Debug.Log("Não há pistas úteis para o seu caso atual aqui.");
+            AvisoNaTela.Mostrar("Nada de útil para o caso aqui.");
             return;
         }
 
@@ -81,7 +86,7 @@ public class LootInteractable : MonoBehaviour, IInteractable
         // Se o caso atual não estiver na lista deste móvel, o móvel não entrega nada.
         if (itemCorreto == null)
         {
-            Debug.Log("Não há pistas úteis para o seu caso atual aqui.");
+            AvisoNaTela.Mostrar("Nada de útil para o caso aqui.");
             return;
         }
 
