@@ -20,5 +20,7 @@ MonoBehaviour:
   objectiveText: terminar o caso
   moneyReward: 5
   publicOpinionReward: 50
+  stateOpinionReward: 0
   npcDialogueRoute: {fileID: 11400000, guid: b4c2cea48397acf48a53804e9fda36e7, type: 2}
   nextSceneName: Fase2
+  receitaDoPanfleto: {fileID: 11400000, guid: 24b892ea53f1745409603d7bc35ace17, type: 2}

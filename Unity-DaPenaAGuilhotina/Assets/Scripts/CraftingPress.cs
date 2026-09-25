@@ -17,6 +17,9 @@ public class CraftingPress : MonoBehaviour
     // NOVO: Evento Observer disparado toda vez que a prensa gera um panfleto novo (usado pelo tutorial).
     public event Action OnPanfletoGerado;
 
+    /// <summary>Último panfleto impresso nesta prensa (o tutorial usa para saber quando o jogador o guardou).</summary>
+    public Item UltimoPanfleto { get; private set; }
+
     private void Start()
     {
         recipeDictionary = new Dictionary<string, Recipe>();
@@ -73,38 +76,91 @@ public class CraftingPress : MonoBehaviour
             return;
         }
 
+        if (TentarPanfletoDeCaso()) return;
+
         string attemptKey = $"{slotInput1.item.itemID}_{slotInput2.item.itemID}";
 
         if (recipeDictionary.TryGetValue(attemptKey, out Recipe validRecipe) && validRecipe.resultItem != null)
         {
-            if (slotOutput.item == null || slotOutput.item.itemID == validRecipe.resultItem.itemID)
-            {
-                ConsumeItem(slotInput1);
-                ConsumeItem(slotInput2);
-                ProduceItem(validRecipe.resultItem);
-                
-                // Dispara a consequência matemática da receita (GDD)
-                GameManager.Instance.AplicarImpactoPanfleto(
-                    validRecipe.publicOpinionImpact,
-                    validRecipe.stateOpinionImpact,
-                    validRecipe.moneyReward
-                );
-
-                OnPanfletoGerado?.Invoke();
-
-                // Avisa o jogador (mesmo popup de "item recebido" já usado no resto do jogo), já que
-                // ProduceItem coloca o panfleto direto no slot de saída da prensa, sem passar por AddItem.
-                Inventario.NotificarItemRecebido(validRecipe.resultItem);
-            }
-            else
-            {
-                Debug.Log("O slot de saída está ocupado com outro item!");
-            }
+            Imprimir(validRecipe.resultItem, validRecipe.publicOpinionImpact, validRecipe.stateOpinionImpact, validRecipe.moneyReward);
         }
         else
         {
-            Debug.Log("Combinação inválida! Esta mistura não gera um panfleto reconhecido.");
+            AvisoNaTela.Mostrar("Essa combinação não forma um panfleto.");
         }
+    }
+
+    /// <summary>
+    /// Regra Fato x Boato (ReceitaDeCaso): duas pistas diferentes do caso atual sempre imprimem, e a
+    /// confiabilidade delas escolhe a versão. Retorna true se tratou a mistura (imprimindo ou explicando o
+    /// porquê de não imprimir); false devolve o par para as receitas exatas (Recipe).
+    /// </summary>
+    private bool TentarPanfletoDeCaso()
+    {
+        Item a = slotInput1.item;
+        Item b = slotInput2.item;
+        if (!a.EhPista || !b.EhPista) return false;
+
+        if (a.itemID == b.itemID)
+        {
+            AvisoNaTela.Mostrar("Preciso de duas pistas diferentes.");
+            return true;
+        }
+        if (a.caso != b.caso)
+        {
+            AvisoNaTela.Mostrar("Essas pistas são de casos diferentes.");
+            return true;
+        }
+        CaseData casoAtual = GameManager.Instance.casoEscolhido;
+        if (casoAtual != null && a.caso != casoAtual)
+        {
+            AvisoNaTela.Mostrar("Essas pistas não são do caso que estou investigando.");
+            return true;
+        }
+
+        ReceitaDeCaso receita = a.caso.receitaDoPanfleto;
+        if (receita == null)
+        {
+            Debug.LogWarning($"[CraftingPress] O caso '{a.caso.name}' não tem Receita Do Panfleto; tentando as receitas exatas.", a.caso);
+            return false;
+        }
+
+        NivelDoPanfleto nivel = ReceitaDeCaso.Classificar(a, b);
+        ReceitaDeCaso.Versao versao = receita.VersaoDe(nivel);
+        Item panfleto = receita.PanfletoDe(versao);
+        if (panfleto == null)
+        {
+            Debug.LogError($"[CraftingPress] '{receita.name}' não tem panfleto para a versão {nivel}.", receita);
+            return true;
+        }
+
+        if (Imprimir(panfleto, versao.povo, versao.estado, versao.ouro))
+            GameManager.Instance.RegistrarPanfletoDeCaso(a.caso, nivel, versao);
+        return true;
+    }
+
+    private bool Imprimir(Item panfleto, int povo, int estado, int ouro)
+    {
+        if (slotOutput.item != null && slotOutput.item.itemID != panfleto.itemID)
+        {
+            AvisoNaTela.Mostrar("Tire o panfleto pronto da prensa primeiro.");
+            return false;
+        }
+
+        ConsumeItem(slotInput1);
+        ConsumeItem(slotInput2);
+        ProduceItem(panfleto);
+        UltimoPanfleto = panfleto;
+
+        // Dispara a consequência matemática da receita (GDD)
+        GameManager.Instance.AplicarImpactoPanfleto(povo, estado, ouro);
+
+        OnPanfletoGerado?.Invoke();
+
+        // Avisa o jogador (mesmo popup de "item recebido" já usado no resto do jogo), já que
+        // ProduceItem coloca o panfleto direto no slot de saída da prensa, sem passar por AddItem.
+        Inventario.NotificarItemRecebido(panfleto);
+        return true;
     }
 
     private void ConsumeItem(UISlotHandler slot)

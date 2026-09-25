@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daa124a2bcbce4043846ab3905a2fb1b, type: 3}
   m_Name: Item_operario1
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  itemID: 
+  itemID: pista_operario_1
   itemImg: {fileID: 0}
   itemAmt: 0
+  itemName: 
+  descricao: 
+  fonte: 
+  caso: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
+  confiabilidade: 1
+  verificadaPor: []

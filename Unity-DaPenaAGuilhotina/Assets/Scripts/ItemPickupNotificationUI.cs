@@ -26,13 +26,19 @@ public class ItemPickupNotificationUI : MonoBehaviour
     public TextMeshProUGUI textoMensagem;
 
     [Header("Configurações")]
-    [Tooltip("Use {0} no lugar onde o nome do item deve aparecer.")]
-    public string formatoMensagem = "Você recebeu: {0}";
+    [Tooltip("Use {0} no lugar onde o nome do item deve aparecer. Aceita rich text do TMP.")]
+    [TextArea(2, 3)]
+    public string formatoMensagem = "<size=75%><color=#FAD98C>Você recebeu</color></size>\n{0}";
     [Tooltip("Por quantos segundos o popup fica visível antes de sumir sozinho.")]
     [Min(0.1f)] public float duracaoExibicao = 2.5f;
+    [Tooltip("Largura máxima do texto: mensagens curtas deixam o popup estreito, as longas quebram linha aqui.")]
+    [Min(100f)] public float larguraMaximaTexto = 520f;
+    [Tooltip("Duração do fade de entrada/saída (0 = aparece e some seco).")]
+    [Min(0f)] public float duracaoFade = 0.2f;
 
     private InventoryManager inventoryManagerAtual;
-    private readonly Queue<Item> filaDeItens = new Queue<Item>();
+    // Itens recebidos e avisos de texto (AvisoNaTela) dividem a mesma fila, para nunca se sobreporem.
+    private readonly Queue<(string texto, Sprite icone)> filaDeItens = new Queue<(string, Sprite)>();
     private Coroutine exibicaoEmAndamento;
 
     void Start()
@@ -44,12 +50,21 @@ public class ItemPickupNotificationUI : MonoBehaviour
     void OnEnable()
     {
         VincularInventario();
+        AvisoNaTela.OnAviso += HandleAviso;
     }
 
     void OnDisable()
     {
         if (inventoryManagerAtual != null)
             inventoryManagerAtual.OnItemAdicionado -= HandleItemAdicionado;
+        // Esquece a referência: senão, ao reativar com o mesmo inventário, VincularInventario achava que já
+        // estava inscrito e o popup parava de aparecer.
+        inventoryManagerAtual = null;
+        AvisoNaTela.OnAviso -= HandleAviso;
+        // Desativar mata a corrotina; sem zerar isso a fila nunca mais andaria.
+        exibicaoEmAndamento = null;
+        filaDeItens.Clear();
+        if (painelPopup != null) painelPopup.SetActive(false);
     }
 
     // Segue o mesmo padrão do GameManager/HUDManager: o InventoryManager é recriado a cada
@@ -76,8 +91,17 @@ public class ItemPickupNotificationUI : MonoBehaviour
     private void HandleItemAdicionado(Item item)
     {
         if (item == null) return;
+        Enfileirar(string.Format(formatoMensagem, item.NomeExibicao), item.itemImg);
+    }
 
-        filaDeItens.Enqueue(item);
+    private void HandleAviso(string texto, Sprite icone) => Enfileirar(texto, icone);
+
+    private void Enfileirar(string texto, Sprite icone)
+    {
+        // Objeto inativo não roda corrotina (ex: UI da cena antiga durante a troca de cena).
+        if (!isActiveAndEnabled) return;
+
+        filaDeItens.Enqueue((texto, icone));
         if (exibicaoEmAndamento == null)
             exibicaoEmAndamento = StartCoroutine(ExibirFila());
     }
@@ -88,25 +112,51 @@ public class ItemPickupNotificationUI : MonoBehaviour
     {
         while (filaDeItens.Count > 0)
         {
-            Item item = filaDeItens.Dequeue();
-            MostrarPopup(item);
+            var (texto, icone) = filaDeItens.Dequeue();
+            MostrarPopup(texto, icone);
+            yield return Fade(0f, 1f);
             yield return new WaitForSecondsRealtime(duracaoExibicao);
+            yield return Fade(1f, 0f);
             if (painelPopup != null) painelPopup.SetActive(false);
         }
         exibicaoEmAndamento = null;
     }
 
-    private void MostrarPopup(Item item)
+    private IEnumerator Fade(float de, float para)
+    {
+        CanvasGroup grupo = painelPopup != null ? painelPopup.GetComponent<CanvasGroup>() : null;
+        if (grupo == null) yield break;
+        for (float t = 0f; t < duracaoFade; t += Time.unscaledDeltaTime)
+        {
+            grupo.alpha = Mathf.Lerp(de, para, t / duracaoFade);
+            yield return null;
+        }
+        grupo.alpha = para;
+    }
+
+    private void MostrarPopup(string texto, Sprite icone)
     {
         if (imagemItem != null)
         {
-            imagemItem.sprite = item.itemImg;
-            imagemItem.gameObject.SetActive(item.itemImg != null);
+            imagemItem.sprite = icone;
+            imagemItem.gameObject.SetActive(icone != null);
         }
 
         if (textoMensagem != null)
-            textoMensagem.text = string.Format(formatoMensagem, item.NomeExibicao);
+        {
+            textoMensagem.text = texto;
+            // O popup se ajusta ao texto (ContentSizeFitter), mas sem limite uma frase longa viraria uma
+            // linha só atravessando a tela: a largura do texto é a da frase, até larguraMaximaTexto.
+            LayoutElement le = textoMensagem.GetComponent<LayoutElement>();
+            if (le != null) le.preferredWidth = Mathf.Min(textoMensagem.GetPreferredValues(texto).x + 2f, larguraMaximaTexto);
+        }
 
-        if (painelPopup != null) painelPopup.SetActive(true);
+        if (painelPopup != null)
+        {
+            painelPopup.SetActive(true);
+            // Recalcula já, para o primeiro frame não aparecer com o tamanho da mensagem anterior.
+            var rect = painelPopup.transform as RectTransform;
+            if (rect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+        }
     }
 }

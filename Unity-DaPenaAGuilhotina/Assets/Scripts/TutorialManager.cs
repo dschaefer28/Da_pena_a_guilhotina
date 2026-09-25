@@ -70,13 +70,31 @@ public class TutorialManager : MonoBehaviour
     public const string EVENTO_ITEM_RECEBIDO = "item_recebido";
     public const string EVENTO_PANFLETO_GERADO = "panfleto_gerado";
     public const string EVENTO_INVENTARIO_ALTERNADO = "inventario_alternado";
+    // Gatilhos que verificam a ação de verdade, em vez de confiar no "Continuar" (aprender fazendo).
+    public const string EVENTO_JOGADOR_ANDOU = "jogador_andou";
+    public const string EVENTO_PRENSA_ABERTA = "prensa_aberta";
+    public const string EVENTO_ENTRADAS_PRENSA_CHEIAS = "entradas_prensa_cheias";
+    public const string EVENTO_PANFLETO_GUARDADO = "panfleto_guardado";
+    public const string EVENTO_CASO_ESCOLHIDO = "caso_escolhido";
 
-    private const string CHAVE_TUTORIAL_CONCLUIDO = "tutorial_concluido";
+    public const string CHAVE_TUTORIAL_CONCLUIDO = "tutorial_concluido";
+    public const string CHAVE_DICA_FATO_BOATO = "dica_fato_boato_vista";
 
     [Header("Configuração")]
     [Tooltip("Marque para o tutorial rodar de novo mesmo que já tenha sido concluído antes " +
-             "(útil para testar no Editor sem precisar apagar o PlayerPrefs).")]
+             "(útil para testar no Editor sem precisar apagar o PlayerPrefs). Deixe DESMARCADO no build. " +
+             "Para zerar o progresso sem isso, use o menu Ferramentas > Resetar Tutorial e Dicas.")]
     public bool forcarReiniciar = false;
+
+    [Tooltip("Distância (em unidades do mundo) que o jogador precisa andar para a etapa de movimento avançar.")]
+    [Min(0.1f)] public float distanciaParaAndou = 1.5f;
+
+    [Header("Dicas contextuais (aparecem uma vez, fora do roteiro)")]
+    [TextArea(3, 5)]
+    [Tooltip("Mostrada na primeira vez que o jogador recebe uma pista de caso (mecânica Fato x Boato, Fase 2).")]
+    public string dicaFatoBoato =
+        "Nem toda pista é verdade. No inventário, {apontar} uma pista para ler quem contou. " +
+        "Pistas \"não verificadas\" podem ser boatos: procure outra fonte que confirme antes de imprimir.";
 
     [Header("Etapas do Tutorial (em ordem)")]
     [Tooltip("Este roteiro é o padrão para um TutorialManager novo. A cena 'Jogo' já tem sua própria lista " +
@@ -85,7 +103,8 @@ public class TutorialManager : MonoBehaviour
     {
         // Um roteiro só para Windows e Android: os marcadores {mover} {interagir} {inventario} {pausa}
         // {continuar} {toque}/{Toque} viram "a tecla E" ou "o botão Interagir" conforme o aparelho
-        // (DispositivoDeControle). Mensagens curtas: uma ação por etapa, como nos tutoriais contextuais.
+        // (DispositivoDeControle). Uma ação por etapa, e toda etapa que pede uma ação só avança quando
+        // o jogo detecta a ação (EventoDeJogo) — "Continuar" fica só para as mensagens de leitura.
         new TutorialStep
         {
             etapaId = "boas_vindas",
@@ -96,21 +115,23 @@ public class TutorialManager : MonoBehaviour
         new TutorialStep
         {
             etapaId = "Joystick",
-            mensagem = "Use {mover} para andar pelo escritório. Dê alguns passos e depois {continuar}.",
+            mensagem = "Use {mover} para andar pelo escritório.",
             controle = ControleTutorial.Mover,
-            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
+            tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
+            nomeDoEvento = EVENTO_JOGADOR_ANDOU
         },
         new TutorialStep
         {
-            etapaId = "Personagem",
-            mensagem = "Vá até Charles Dupaty, o homem com o contorno destacado. Quando estiver perto dele, {continuar}.",
-            controle = ControleTutorial.Mover,
+            // Junto dos outros controles, antes da história começar (não no meio da busca pelas pistas).
+            etapaId = "PauseButton",
+            mensagem = "A qualquer momento, use {pausa} para abrir o menu de pausa: lá você ajusta o volume e a velocidade do texto, ou volta ao menu principal. Quando quiser, {continuar}.",
+            controle = ControleTutorial.Pausa,
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "explica_interacao",
-            mensagem = "Perto de alguém, use {interagir} para conversar. Fale com Dupaty até o fim da conversa.",
+            mensagem = "Vá até Charles Dupaty, o homem com o contorno destacado, e use {interagir} para conversar. Fale com ele até o fim.",
             controle = ControleTutorial.Interagir,
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
             nomeDoEvento = EVENTO_DIALOGO_FINALIZADO
@@ -126,36 +147,15 @@ public class TutorialManager : MonoBehaviour
         new TutorialStep
         {
             etapaId = "InventoryButton",
-            mensagem = "Pista recebida! Use {inventario} para abrir o inventário.",
+            mensagem = "Pista recebida! Use {inventario} para abrir o inventário: é lá que ficam suas pistas e panfletos.",
             controle = ControleTutorial.Inventario,
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
             nomeDoEvento = EVENTO_INVENTARIO_ALTERNADO
-        },
-        new TutorialStep
-        {
-            etapaId = "ver_item_inventario",
-            mensagem = "O inventário guarda suas pistas e panfletos. Quando terminar de olhar, {continuar}.",
-            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
-        },
-        new TutorialStep
-        {
-            etapaId = "fechar_inventario",
-            mensagem = "Feche o inventário com {inventario} ou no botão Fechar para voltar ao escritório.",
-            controle = ControleTutorial.Inventario,
-            tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
-            nomeDoEvento = EVENTO_INVENTARIO_ALTERNADO
-        },
-        new TutorialStep
-        {
-            etapaId = "PauseButton",
-            mensagem = "Use {pausa} para abrir o menu de pausa, com volume e velocidade do texto. Quando quiser, {continuar}.",
-            controle = ControleTutorial.Pausa,
-            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "segunda_pista",
-            mensagem = "Volte até Charles Dupaty e converse de novo: agora ele tem a segunda pista.",
+            mensagem = "Feche o inventário e volte até Charles Dupaty: agora ele tem a segunda pista.",
             controle = ControleTutorial.Interagir,
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
             nomeDoEvento = EVENTO_ITEM_RECEBIDO
@@ -171,21 +171,17 @@ public class TutorialManager : MonoBehaviour
         new TutorialStep
         {
             etapaId = "explicar_prensa",
-            mensagem = "Este é o porão. Aproxime-se da prensa e use {interagir} para abri-la. Depois, {continuar}.",
+            mensagem = "Este é o porão. Aproxime-se da prensa e use {interagir} para abri-la.",
             controle = ControleTutorial.Interagir,
-            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
-        },
-        new TutorialStep
-        {
-            etapaId = "explicar_barras_status",
-            mensagem = "Repare nas barras no alto: Opinião Pública, Opinião do Estado e o seu capital. Cada panfleto impresso mexe nelas de um jeito diferente.",
-            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
+            tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
+            nomeDoEvento = EVENTO_PRENSA_ABERTA
         },
         new TutorialStep
         {
             etapaId = "colocar_itens_prensa",
-            mensagem = "{Toque} numa pista do inventário e depois em uma Entrada da prensa. Faça o mesmo com a outra pista. Então {continuar}.",
-            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
+            mensagem = "{Toque} numa pista do inventário e depois numa Entrada da prensa. Faça o mesmo com a outra pista.",
+            tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
+            nomeDoEvento = EVENTO_ENTRADAS_PRENSA_CHEIAS
         },
         new TutorialStep
         {
@@ -197,14 +193,16 @@ public class TutorialManager : MonoBehaviour
         new TutorialStep
         {
             etapaId = "explicar_efeito_barras",
-            mensagem = "Viu as barras mudarem? Foi o seu panfleto. Uns agradam o povo e irritam o Estado; outros, o contrário. Fique de olho nelas.",
+            mensagem = "Veja as barras no alto: a de cima é a Opinião do Povo, a de baixo a Opinião do Estado, e embaixo está o seu ouro. " +
+                       "Cada panfleto agrada uns e irrita outros. Quando terminar de olhar, {continuar}.",
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep
         {
             etapaId = "coletar_resultado_prensa",
-            mensagem = "{Toque} no panfleto em Resultado e depois em Espaço livre no inventário para guardá-lo. Então {continuar}.",
-            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
+            mensagem = "{Toque} no panfleto em Resultado e depois em Espaço livre no inventário para guardá-lo.",
+            tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
+            nomeDoEvento = EVENTO_PANFLETO_GUARDADO
         },
         new TutorialStep
         {
@@ -213,6 +211,14 @@ public class TutorialManager : MonoBehaviour
             controle = ControleTutorial.Interagir,
             tipoDeAvanco = TipoDeAvanco.CarregamentoDeCena,
             nomeDaCena = "Jogo"
+        },
+        new TutorialStep
+        {
+            etapaId = "mesa_de_casos",
+            mensagem = "Novos clientes deixaram cartas na mesa. Siga a seta, use {interagir} na mesa e escolha o seu próximo caso.",
+            controle = ControleTutorial.Interagir,
+            tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
+            nomeDoEvento = EVENTO_CASO_ESCOLHIDO
         }
     };
 
@@ -225,10 +231,16 @@ public class TutorialManager : MonoBehaviour
     /// pode se inscrever aqui em vez de mexer neste script.</summary>
     public event Action OnTutorialConcluido;
 
+    /// <summary>Pedido de dica contextual (texto já com marcadores). O TutorialStepUI da cena mostra no popup.</summary>
+    public event Action<string> OnDicaSolicitada;
+
     private int indiceAtual = -1;
     private DialogueSystem dialogueSystemAtual;
     private InventoryManager inventoryManagerAtual;
     private CraftingPress craftingPressAtual;
+    private Transform jogador;
+    private Vector3 ultimaPosicaoJogador;
+    private float distanciaAndada;
 
     /// <summary>ID da etapa atual, ou null se o tutorial ainda não começou/já terminou.</summary>
     public string EtapaAtualId => EtapaAtualObjeto()?.etapaId;
@@ -281,11 +293,38 @@ public class TutorialManager : MonoBehaviour
         Debug.Log($"[TutorialManager] Cena '{scene.name}' carregada. Etapa atual: {(etapa?.etapaId ?? "(nenhuma)")}, " +
                   $"tipoDeAvanco: {(etapa != null ? etapa.tipoDeAvanco.ToString() : "-")}, nomeDaCena esperado: '{etapa?.nomeDaCena}'.");
 
+        // O jogador pode sair de uma cena antes de terminar as últimas etapas dela (ex: subir do porão sem
+        // guardar o panfleto — o save já leva o que ficou na prensa). Se só faltavam etapas "dispensáveis"
+        // até a etapa que espera esta cena, o tutorial pula até ela em vez de ficar preso numa instrução
+        // de outra cena.
+        int alvo = IndiceDaProximaEtapaDeCena(scene.name);
+        if (alvo > indiceAtual)
+        {
+            Debug.Log($"[TutorialManager] Saiu antes do fim das etapas de '{etapa?.etapaId}': pulando para '{etapas[alvo].etapaId}'.");
+            indiceAtual = alvo;
+            etapa = etapas[alvo];
+        }
+
         if (etapa != null && etapa.tipoDeAvanco == TipoDeAvanco.CarregamentoDeCena && etapa.nomeDaCena == scene.name)
         {
             Debug.Log($"[TutorialManager] Cena bateu com a etapa '{etapa.etapaId}' — avançando automaticamente.");
             CompletarEtapaAtual();
         }
+    }
+
+    /// <summary>Índice da próxima etapa que espera a cena <paramref name="cena"/> carregar, desde que todas as
+    /// etapas até lá possam ser dispensadas (leitura, ou guardar o panfleto). -1 se não houver.</summary>
+    private int IndiceDaProximaEtapaDeCena(string cena)
+    {
+        for (int i = Mathf.Max(indiceAtual, 0); i < etapas.Count; i++)
+        {
+            TutorialStep e = etapas[i];
+            if (e.tipoDeAvanco == TipoDeAvanco.CarregamentoDeCena) return e.nomeDaCena == cena ? i : -1;
+            bool dispensavel = e.tipoDeAvanco == TipoDeAvanco.CliqueDoJogador ||
+                               (e.tipoDeAvanco == TipoDeAvanco.EventoDeJogo && e.nomeDoEvento == EVENTO_PANFLETO_GUARDADO);
+            if (!dispensavel) return -1;
+        }
+        return -1;
     }
 
     private void VincularDependenciasLocais()
@@ -295,6 +334,7 @@ public class TutorialManager : MonoBehaviour
         {
             inventoryManagerAtual.OnItemAdicionado -= HandleItemAdicionado;
             inventoryManagerAtual.OnInventoryToggled -= HandleInventarioAlternado;
+            inventoryManagerAtual.OnSlotAlterado -= HandleSlotAlterado;
         }
         if (craftingPressAtual != null) craftingPressAtual.OnPanfletoGerado -= HandlePanfletoGerado;
 
@@ -309,13 +349,68 @@ public class TutorialManager : MonoBehaviour
         {
             inventoryManagerAtual.OnItemAdicionado += HandleItemAdicionado;
             inventoryManagerAtual.OnInventoryToggled += HandleInventarioAlternado;
+            inventoryManagerAtual.OnSlotAlterado += HandleSlotAlterado;
         }
         if (craftingPressAtual != null) craftingPressAtual.OnPanfletoGerado += HandlePanfletoGerado;
+
+        PlayerMove player = FindAnyObjectByType<PlayerMove>();
+        jogador = player != null ? player.transform : null;
+        if (jogador != null) ultimaPosicaoJogador = jogador.position;
+        distanciaAndada = 0f;
+    }
+
+    void Update()
+    {
+        // Etapa de movimento: só avança depois de o jogador andar de verdade (não basta clicar Continuar).
+        TutorialStep etapa = EtapaAtualObjeto();
+        if (jogador == null || etapa == null || etapa.tipoDeAvanco != TipoDeAvanco.EventoDeJogo ||
+            etapa.nomeDoEvento != EVENTO_JOGADOR_ANDOU) return;
+
+        Vector3 posicao = jogador.position;
+        distanciaAndada += Vector2.Distance(posicao, ultimaPosicaoJogador);
+        ultimaPosicaoJogador = posicao;
+        if (distanciaAndada >= distanciaParaAndou)
+        {
+            distanciaAndada = 0f;
+            NotificarEvento(EVENTO_JOGADOR_ANDOU);
+        }
     }
 
     private void HandleDialogoFinalizado() => NotificarEvento(EVENTO_DIALOGO_FINALIZADO);
-    private void HandleItemAdicionado(Item item) => NotificarEvento(EVENTO_ITEM_RECEBIDO);
     private void HandlePanfletoGerado() => NotificarEvento(EVENTO_PANFLETO_GERADO);
+
+    private void HandleItemAdicionado(Item item)
+    {
+        NotificarEvento(EVENTO_ITEM_RECEBIDO);
+        if (item != null && item.EhPista) SolicitarDicaUmaVez(CHAVE_DICA_FATO_BOATO, dicaFatoBoato);
+    }
+
+    // Entradas da prensa cheias / panfleto guardado no inventário: os dois só existem como mudança de slot.
+    private void HandleSlotAlterado(UISlotHandler slot)
+    {
+        if (craftingPressAtual == null || slot == null) return;
+
+        if ((slot == craftingPressAtual.slotInput1 || slot == craftingPressAtual.slotInput2) &&
+            craftingPressAtual.slotInput1 != null && craftingPressAtual.slotInput1.item != null &&
+            craftingPressAtual.slotInput2 != null && craftingPressAtual.slotInput2.item != null)
+        {
+            NotificarEvento(EVENTO_ENTRADAS_PRENSA_CHEIAS);
+        }
+
+        Item panfleto = craftingPressAtual.UltimoPanfleto;
+        bool slotDaPrensa = slot == craftingPressAtual.slotInput1 || slot == craftingPressAtual.slotInput2 || slot == craftingPressAtual.slotOutput;
+        if (!slotDaPrensa && panfleto != null && slot.item != null && slot.item.itemID == panfleto.itemID)
+            NotificarEvento(EVENTO_PANFLETO_GUARDADO);
+    }
+
+    /// <summary>Dica contextual fora do roteiro (ex: Fato x Boato na Fase 2): mostrada uma única vez por save.</summary>
+    public void SolicitarDicaUmaVez(string chave, string texto)
+    {
+        if (string.IsNullOrWhiteSpace(texto) || PlayerPrefs.GetInt(chave, 0) == 1) return;
+        PlayerPrefs.SetInt(chave, 1);
+        PlayerPrefs.Save();
+        OnDicaSolicitada?.Invoke(texto);
+    }
     // Dispara tanto ao abrir quanto ao fechar o inventário — o mesmo comportamento que o botão de
     // inventário já disparava manualmente (só na cena Jogo). Fazer isso aqui, ouvindo o InventoryManager
     // diretamente, garante que funcione em qualquer cena (inclusive Porao), mesmo sem um botão configurado

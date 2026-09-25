@@ -5,7 +5,7 @@ using UnityEngine;
 /// Desfecho da Fase 1 (documento de tarefas): depois que o jogador imprime o primeiro panfleto e volta
 /// ao escritório, toca a cutscene (tela preta com legendas) explicando as consequências da publicação.
 /// Roda uma vez só (PlayerPrefs). Fica no prefab UI; o texto das legendas é editável no Inspector.
-/// O gatilho é o fim do tutorial (TutorialManager.OnTutorialConcluido), que acontece ao carregar a
+/// O gatilho é o tutorial chegar à etapa "Etapa Gatilho" (mesa_de_casos), que acontece ao carregar a
 /// cena Jogo vindo do porão com o panfleto.
 /// </summary>
 public class Fase1Desfecho : MonoBehaviour
@@ -14,6 +14,10 @@ public class Fase1Desfecho : MonoBehaviour
 
     [Tooltip("Marque para a cutscene tocar de novo a cada teste (ignora o PlayerPrefs).")]
     public bool forcarRepetir = false;
+
+    [Tooltip("Etapa do tutorial em que o jogador está ao voltar do porão com o panfleto. A cutscene toca quando " +
+             "o tutorial chega nela (ou já terminou).")]
+    public string etapaGatilho = "mesa_de_casos";
 
     public List<CutsceneLegendas.Linha> legendas = new List<CutsceneLegendas.Linha>
     {
@@ -27,7 +31,8 @@ public class Fase1Desfecho : MonoBehaviour
         // Só a instância da cena recém-carregada decide: o fim do tutorial dispara no sceneLoaded, quando a
         // cópia deste objeto na cena antiga (Porão) ainda existe — se ela tocasse a cutscene, seria destruída
         // no meio da rotina. Aqui, no Start da cena nova, o estado já está completo.
-        if (TutorialManager.Instance != null && TutorialManager.Instance.TutorialConcluido && ChegouDoPorao())
+        // O tutorial não termina mais ao subir do porão (ainda falta a Mesa de Casos): basta ter chegado à etapa.
+        if (TutorialManager.Instance != null && TutorialManager.Instance.EtapaJaFoiAlcancada(etapaGatilho) && ChegouDoPorao())
             TentarTocar();
     }
 
@@ -36,6 +41,9 @@ public class Fase1Desfecho : MonoBehaviour
     {
         var gm = GameManager.Instance;
         if (gm == null || gm.inventarioSalvo == null) return false;
+        // Já escolheu um caso na mesa = já saiu da Fase 1. Sem isso, quem pulou o tutorial via a cutscene da
+        // Fase 1 no meio da Fase 2 (os panfletos dos casos também têm "panfleto" no itemID).
+        if (gm.casosJaSelecionados.Count > 0) return false;
         foreach (var item in gm.inventarioSalvo)
             if (item != null && !string.IsNullOrEmpty(item.itemID) && item.itemID.ToLowerInvariant().Contains("panfleto")) return true;
         return false;

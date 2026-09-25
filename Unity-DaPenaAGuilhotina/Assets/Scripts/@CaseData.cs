@@ -23,6 +23,10 @@ public class CaseData : ScriptableObject
     [Tooltip("Nome da cena da Fase 2 para carregar após aceitar o caso (opcional).")]
     public string nextSceneName = "Fase2";
 
+    [Header("Panfleto do Caso (Fato x Boato)")]
+    [Tooltip("Define o que a prensa imprime com as pistas deste caso, conforme sejam fatos ou boatos.")]
+    public ReceitaDeCaso receitaDoPanfleto;
+
 #if UNITY_EDITOR
     private void OnValidate()
     {

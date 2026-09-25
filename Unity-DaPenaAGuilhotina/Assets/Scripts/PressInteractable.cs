@@ -47,6 +47,8 @@ public class PressInteractable : MonoBehaviour, IInteractable
         }
 
         pressUIPanel.SetActive(vaiAbrir);
+        if (vaiAbrir && TutorialManager.Instance != null)
+            TutorialManager.Instance.NotificarEvento(TutorialManager.EVENTO_PRENSA_ABERTA);
 
         // Mesmo tratamento do PauseMenu: desliga o raycast dos controles mobile enquanto
         // a prensa está aberta, para o toque ir pros botões da UI em vez do joystick/botões.

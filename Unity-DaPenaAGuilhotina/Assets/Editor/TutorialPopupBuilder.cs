@@ -54,16 +54,7 @@ public static class TutorialPopupBuilder
             ConfigurarPainel(popup, moldura);
             GarantirCanvasProprio(popup.gameObject);
 
-            RectTransform popupItem = itens.Find("PopupItemRecebido") as RectTransform;
-            if (popupItem != null)
-            {
-                GarantirCanvasProprio(popupItem.gameObject);
-                // Aviso "Você recebeu" fica à esquerda, no meio da altura (onde já aparecia na cena Jogo).
-                popupItem.anchorMin = popupItem.anchorMax = new Vector2(0f, 0.5f);
-                popupItem.pivot = new Vector2(0f, 0.5f);
-                popupItem.anchoredPosition = new Vector2(16f, 0f);
-                popupItem.localScale = Vector3.one;
-            }
+            ConfigurarPopupItem(itens, moldura, fonteTitulo);
 
             // Busca em profundidade: depois da primeira execução, TextoEtapa/IconeEtapa passam a viver dentro de "Corpo".
             TextMeshProUGUI texto = Achar(popup, "TextoEtapa")?.GetComponent<TextMeshProUGUI>();
@@ -86,6 +77,7 @@ public static class TutorialPopupBuilder
             stepUI.textoMensagem = texto;
             stepUI.imagemIcone = icone;
             stepUI.botaoContinuar = botao;
+            stepUI.botaoPular = ConfigurarBotaoPular(popup, fonteTitulo);
             stepUI.containerGlifos = glifos;
             stepUI.fonteGlifos = fonteTitulo;
             // Revelações apontam para objetos de cena (botões mobile): ficam como override em cada cena,
@@ -278,6 +270,185 @@ public static class TutorialPopupBuilder
         InventarioListaBuilder.ConfigurarTexto(rotulo, 24f, TextAlignmentOptions.Center, fonte);
         rotulo.enableAutoSizing = false;
         InventarioListaBuilder.Esticar(rotulo.rectTransform, Vector2.zero, Vector2.zero);
+    }
+
+    /// <summary>Só o botão "Pular tutorial", sem refazer o resto do popup.</summary>
+    [MenuItem("Ferramentas/Tutorial/1b - Adicionar botão Pular tutorial ao popup (UI.prefab)")]
+    public static void AplicarBotaoPular()
+    {
+        GameObject raiz = PrefabUtility.LoadPrefabContents(CaminhoPrefabUI);
+        try
+        {
+            Transform itens = raiz.transform.Find("ItensPoupUp");
+            RectTransform popup = itens != null ? itens.Find("PopupTutorial") as RectTransform : null;
+            TutorialStepUI stepUI = itens != null ? itens.GetComponentInChildren<TutorialStepUI>(true) : null;
+            if (popup == null || stepUI == null)
+            {
+                Debug.LogError("[TutorialPopupBuilder] ItensPoupUp/PopupTutorial ou o TutorialStepUI não existem no UI.prefab.");
+                return;
+            }
+            stepUI.botaoPular = ConfigurarBotaoPular(popup, InventarioListaBuilder.ObterFonte(popup));
+            EditorUtility.SetDirty(stepUI);
+            PrefabUtility.SaveAsPrefabAsset(raiz, CaminhoPrefabUI);
+            Debug.Log("[TutorialPopupBuilder] Botão Pular tutorial aplicado em " + CaminhoPrefabUI + ".");
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(raiz);
+        }
+    }
+
+    /// <summary>Só o popup "Você recebeu" / avisos, sem refazer o popup do tutorial.</summary>
+    [MenuItem("Ferramentas/Tutorial/1c - Aplicar layout do popup de item recebido (UI.prefab)")]
+    public static void AplicarPopupItem()
+    {
+        GameObject raiz = PrefabUtility.LoadPrefabContents(CaminhoPrefabUI);
+        try
+        {
+            Transform itens = raiz.transform.Find("ItensPoupUp");
+            if (itens == null || itens.Find("PopupItemRecebido") == null)
+            {
+                Debug.LogError("[TutorialPopupBuilder] ItensPoupUp/PopupItemRecebido não existe no UI.prefab.");
+                return;
+            }
+            ConfigurarPopupItem(itens, ObterMoldura(), InventarioListaBuilder.ObterFonte((RectTransform)itens));
+            PrefabUtility.SaveAsPrefabAsset(raiz, CaminhoPrefabUI);
+            Debug.Log("[TutorialPopupBuilder] Popup de item recebido aplicado em " + CaminhoPrefabUI + ".");
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(raiz);
+        }
+    }
+
+    // Aviso curto no alto, centralizado: longe da HUD (canto superior esquerdo), do popup do tutorial e da
+    // caixa de diálogo (rodapé) e dos botões mobile. Mesma moldura e fonte do popup do tutorial; o tamanho
+    // acompanha o texto (ItemPickupNotificationUI limita a largura).
+    private static void ConfigurarPopupItem(Transform itens, Sprite moldura, TMP_FontAsset fonte)
+    {
+        RectTransform popup = itens.Find("PopupItemRecebido") as RectTransform;
+        if (popup == null) return;
+
+        GarantirCanvasProprio(popup.gameObject);
+        popup.anchorMin = popup.anchorMax = new Vector2(0.5f, 1f);
+        popup.pivot = new Vector2(0.5f, 1f);
+        popup.anchoredPosition = new Vector2(0f, -28f);
+        popup.localScale = Vector3.one;
+
+        Image fundo = popup.GetComponent<Image>();
+        if (fundo == null) fundo = popup.gameObject.AddComponent<Image>();
+        if (moldura != null)
+        {
+            fundo.sprite = moldura;
+            fundo.type = Image.Type.Sliced;
+            fundo.pixelsPerUnitMultiplier = 0.32f;
+            fundo.color = Color.white;
+        }
+        else
+        {
+            fundo.color = new Color(0.13f, 0.11f, 0.12f, 0.95f);
+        }
+        // Aviso não bloqueia clique/toque no que estiver por baixo.
+        fundo.raycastTarget = false;
+
+        HorizontalLayoutGroup hl = popup.GetComponent<HorizontalLayoutGroup>();
+        if (hl == null) hl = popup.gameObject.AddComponent<HorizontalLayoutGroup>();
+        hl.padding = new RectOffset(30, 34, 22, 22);
+        hl.spacing = 18f;
+        hl.childAlignment = TextAnchor.MiddleLeft;
+        hl.childControlWidth = true;
+        hl.childControlHeight = true;
+        hl.childForceExpandWidth = false;
+        hl.childForceExpandHeight = false;
+
+        ContentSizeFitter fitter = popup.GetComponent<ContentSizeFitter>();
+        if (fitter == null) fitter = popup.gameObject.AddComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        if (popup.GetComponent<CanvasGroup>() == null) popup.gameObject.AddComponent<CanvasGroup>();
+
+        Image icone = popup.Find("IconeItem")?.GetComponent<Image>();
+        if (icone != null)
+        {
+            icone.transform.SetAsFirstSibling();
+            LayoutElement le = icone.GetComponent<LayoutElement>();
+            if (le == null) le = icone.gameObject.AddComponent<LayoutElement>();
+            le.minWidth = le.preferredWidth = 80f;
+            le.minHeight = le.preferredHeight = 80f;
+            le.flexibleWidth = 0f;
+            icone.preserveAspect = true;
+            icone.color = Color.white;
+            icone.raycastTarget = false;
+        }
+
+        TextMeshProUGUI texto = popup.Find("TextoMensagem")?.GetComponent<TextMeshProUGUI>();
+        if (texto != null)
+        {
+            texto.transform.SetAsLastSibling();
+            LayoutElement le = texto.GetComponent<LayoutElement>();
+            if (le == null) le = texto.gameObject.AddComponent<LayoutElement>();
+            le.preferredWidth = 400f; // trocado em runtime conforme a mensagem
+            le.flexibleWidth = 0f;
+
+            if (fonte != null) texto.font = fonte;
+            texto.text = "<size=75%><color=#FAD98C>Você recebeu</color></size>\nNome do item";
+            texto.fontSize = 32f;
+            texto.enableAutoSizing = false;
+            texto.fontStyle = FontStyles.Normal;
+            texto.alignment = TextAlignmentOptions.MidlineLeft;
+            texto.textWrappingMode = TextWrappingModes.Normal;
+            texto.overflowMode = TextOverflowModes.Overflow;
+            texto.lineSpacing = -8f;
+            texto.color = Color.white;
+            texto.raycastTarget = false;
+        }
+
+        ItemPickupNotificationUI notificacao = itens.GetComponentInChildren<ItemPickupNotificationUI>(true);
+        if (notificacao != null)
+        {
+            notificacao.painelPopup = popup.gameObject;
+            notificacao.imagemItem = icone;
+            notificacao.textoMensagem = texto;
+            notificacao.formatoMensagem = "<size=75%><color=#FAD98C>Você recebeu</color></size>\n{0}";
+            EditorUtility.SetDirty(notificacao);
+        }
+
+        popup.gameObject.SetActive(false);
+    }
+
+    // Link discreto no canto inferior esquerdo (o Continuar fica no direito): útil em playtest e na apresentação.
+    private static Button ConfigurarBotaoPular(RectTransform popup, TMP_FontAsset fonte)
+    {
+        Transform t = popup.Find("BotaoPular");
+        RectTransform r = t as RectTransform;
+        if (r == null) r = InventarioListaBuilder.CriarRect("BotaoPular", popup);
+        r.SetAsLastSibling();
+        r.anchorMin = r.anchorMax = Vector2.zero;
+        r.pivot = Vector2.zero;
+        r.anchoredPosition = new Vector2(Margem, MargemInferior);
+        r.sizeDelta = new Vector2(220f, TamanhoBotao.y);
+        r.localScale = Vector3.one;
+
+        // Image transparente só para receber o clique/toque.
+        Image alvo = r.GetComponent<Image>();
+        if (alvo == null) alvo = r.gameObject.AddComponent<Image>();
+        alvo.sprite = null;
+        alvo.color = new Color(0f, 0f, 0f, 0f);
+        alvo.raycastTarget = true;
+
+        Button botao = r.GetComponent<Button>();
+        if (botao == null) botao = r.gameObject.AddComponent<Button>();
+        botao.targetGraphic = alvo;
+        botao.transition = Selectable.Transition.None;
+
+        TextMeshProUGUI rotulo = r.GetComponentInChildren<TextMeshProUGUI>(true);
+        if (rotulo == null) rotulo = InventarioListaBuilder.CriarTexto("Texto", r, "Pular tutorial", 20f, TextAlignmentOptions.MidlineLeft, fonte);
+        rotulo.text = "<u>Pular tutorial</u>";
+        InventarioListaBuilder.ConfigurarTexto(rotulo, 20f, TextAlignmentOptions.MidlineLeft, fonte);
+        rotulo.color = InventarioListaBuilder.CorTextoVazio;
+        InventarioListaBuilder.Esticar(rotulo.rectTransform, Vector2.zero, Vector2.zero);
+        return botao;
     }
 
     private static void ConfigurarCutscenes(Transform raizUI, TMP_FontAsset fonte)

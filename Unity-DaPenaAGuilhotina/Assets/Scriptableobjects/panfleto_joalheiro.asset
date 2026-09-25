@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daa124a2bcbce4043846ab3905a2fb1b, type: 3}
   m_Name: panfleto_joalheiro
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  itemID: 
+  itemID: panfleto_joias
   itemImg: {fileID: 0}
   itemAmt: 0
+  itemName: 
+  descricao: 
+  fonte: 
+  caso: {fileID: 0}
+  confiabilidade: 0
+  verificadaPor: []

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using FMODUnity;
 
-public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
+public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler,
     IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
     private bool draggingItem;
@@ -96,6 +96,7 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         }
 
         MouseManager.instance.UpdateHeldItem(this);
+        AtualizarFicha(); // o item deste slot acabou de trocar (pegou, soltou ou trocou)
     }
 
     public void OnPointerDown(PointerEventData eventData) => suppressClick = false;
@@ -132,8 +133,28 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             MouseManager.instance.UpdateHeldItem(this);
     }
 
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        // No toque, o "exit" chega logo depois de soltar o dedo; a ficha do item segurado deve ficar.
+        bool segurandoItem = MouseManager.instance != null && MouseManager.instance.heldItem != null;
+        bool toque = eventData is UnityEngine.InputSystem.UI.ExtendedPointerEventData ext
+            ? ext.pointerType == UnityEngine.InputSystem.UI.UIPointerType.Touch
+            : eventData.pointerId >= 0;
+        if (!toque || !segurandoItem) FichaDaPista.Esconder(transform as RectTransform);
+    }
+
+    private void AtualizarFicha()
+    {
+        if (item != null) FichaDaPista.Mostrar(item, transform as RectTransform);
+        // Slot ficou vazio porque o item foi para a mão (toque no celular): a ficha continua, do item segurado.
+        else if (MouseManager.instance != null && MouseManager.instance.heldItem != null)
+            FichaDaPista.Mostrar(MouseManager.instance.heldItem, transform as RectTransform);
+        else FichaDaPista.Esconder(transform as RectTransform);
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
+        AtualizarFicha();
         if (item == null || somHover.IsNull) return;
 
         // Instância manual para poder mexer em volume e pitch antes de tocar (sem exceção se o FMOD falhar)

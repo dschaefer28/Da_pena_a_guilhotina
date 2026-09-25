@@ -73,6 +73,7 @@ public static class TutorialRoteiroTool
 
             log.Append(GarantirPromptNoPlayer());
             log.Append(CorrigirReferenciasDoGerenciador(cena));
+            if (cena.name == "Jogo") log.Append(GarantirSetaDaMesa());
 
             EditorSceneManager.MarkSceneDirty(cena);
             EditorSceneManager.SaveScene(cena);
@@ -259,6 +260,10 @@ public static class TutorialRoteiroTool
             }
             Undo.RecordObject(alvo, "Aplicar roteiro padrão do tutorial");
             alvo.etapas = copia;
+            alvo.dicaFatoBoato = padrao.dicaFatoBoato;
+            // Ligado, o tutorial recomeçava em todo início de jogo (inclusive no build). Para testar do
+            // zero, use o menu "3 - Resetar progresso".
+            alvo.forcarReiniciar = false;
             EditorUtility.SetDirty(alvo);
         }
         finally
@@ -288,6 +293,42 @@ public static class TutorialRoteiroTool
             }
         }
         return corrigidos > 0 ? $" GerenciadorCena1: {corrigidos} referência(s) de NPC trocada(s) de prefab para objeto da cena;" : string.Empty;
+    }
+
+    // Etapa "mesa_de_casos": uma cópia da seta do alçapão, acima da Mesa de Casos.
+    private const string EtapaSetaMesa = "mesa_de_casos";
+    private const float AlturaSetaAcimaDaMesa = 0.9f;
+
+    private static string GarantirSetaDaMesa()
+    {
+        IndicadorDeEtapaTutorial modelo = null;
+        foreach (var ind in Object.FindObjectsByType<IndicadorDeEtapaTutorial>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            if (ind.etapaId == EtapaSetaMesa) return " seta da mesa já existe;";
+            if (modelo == null) modelo = ind;
+        }
+        TableInteractable mesa = Object.FindAnyObjectByType<TableInteractable>(FindObjectsInactive.Include);
+        if (modelo == null || mesa == null) return " (sem seta modelo ou mesa para a seta da mesa);";
+
+        GameObject seta = Object.Instantiate(modelo.gameObject, modelo.transform.parent);
+        seta.name = "SetaMesa";
+        Collider2D col = mesa.GetComponent<Collider2D>();
+        Vector3 topo = col != null ? new Vector3(col.bounds.center.x, col.bounds.max.y, 0f) : mesa.transform.position;
+        seta.transform.position = new Vector3(topo.x, topo.y + AlturaSetaAcimaDaMesa, modelo.transform.position.z);
+        seta.GetComponent<IndicadorDeEtapaTutorial>().etapaId = EtapaSetaMesa;
+        Undo.RegisterCreatedObjectUndo(seta, "Seta da Mesa de Casos");
+        return " seta da mesa criada;";
+    }
+
+    // Tirar o "Forçar Reiniciar" do TutorialManager exige outro jeito de testar o tutorial do zero.
+    [MenuItem("Ferramentas/Tutorial/3 - Resetar progresso (tutorial, cutscenes e dicas)")]
+    public static void ResetarProgresso()
+    {
+        foreach (string chave in new[] { TutorialManager.CHAVE_TUTORIAL_CONCLUIDO, TutorialManager.CHAVE_DICA_FATO_BOATO,
+                                         "fase1_cutscene_vista", "intro_cutscene_vista" })
+            PlayerPrefs.DeleteKey(chave);
+        PlayerPrefs.Save();
+        Debug.Log("[TutorialRoteiroTool] Progresso do tutorial, das cutscenes e das dicas apagado. O próximo Play começa do zero.");
     }
 
     private static string GarantirPromptNoPlayer()

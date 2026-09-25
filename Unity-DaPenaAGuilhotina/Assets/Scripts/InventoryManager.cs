@@ -102,7 +102,7 @@ public class InventoryManager : MonoBehaviour
         activeSlot.slotImg.sprite = item.itemImg;
         activeSlot.itemCount.text = item.itemAmt.ToString();
         activeSlot.slotImg.gameObject.SetActive(true);
-        if (activeSlot.itemNameText != null) activeSlot.itemNameText.text = item.NomeExibicao;
+        if (activeSlot.itemNameText != null) activeSlot.itemNameText.text = TextoDaLinha(item);
         activeSlot.AtualizarObjetoVazio();
         ConfigureInventory();
         OnSlotAlterado?.Invoke(activeSlot);
@@ -117,7 +117,7 @@ public class InventoryManager : MonoBehaviour
         if (activeSlot.itemCount != null)
             activeSlot.itemCount.text = activeSlot.item.itemAmt.ToString();
         if (activeSlot.itemNameText != null)
-            activeSlot.itemNameText.text = activeSlot.item.NomeExibicao;
+            activeSlot.itemNameText.text = TextoDaLinha(activeSlot.item);
         ConfigureInventory();
         OnSlotAlterado?.Invoke(activeSlot);
     }
@@ -190,6 +190,59 @@ public class InventoryManager : MonoBehaviour
             bool visivel = slot.item != null || !vagaJaVisivel;
             if (slot.item == null && visivel) vagaJaVisivel = true;
             slot.DefinirVisivelNaLista(visivel);
+
+            // Uma pista pode mudar de "não verificada" para "confirmada" quando OUTRO item chega.
+            if (slot.item != null && slot.itemNameText != null) slot.itemNameText.text = TextoDaLinha(slot.item);
+        }
+    }
+
+    // ===== Fato x Boato =====
+
+    /// <summary>Nome do item na lista; pistas ganham a etiqueta da situação (não verificada / confirmada / boato).</summary>
+    public string TextoDaLinha(Item item)
+    {
+        if (item == null) return string.Empty;
+        if (!item.EhPista) return item.NomeExibicao;
+        return $"{item.NomeExibicao} <size=75%>({item.RotuloSituacao(PistaVerificada(item))})</size>";
+    }
+
+    /// <summary>Verdadeiro se o jogador já descobriu a verdade desta pista (tem ou já teve um item de "Verificada Por").</summary>
+    public bool PistaVerificada(Item pista)
+    {
+        if (pista == null || !pista.EhPista) return false;
+        var gm = GameManager.Instance;
+        if (gm != null && gm.pistasVerificadas.Contains(pista.itemID)) return true;
+        if (pista.verificadaPor == null) return false;
+        foreach (Item prova in pista.verificadaPor)
+            if (prova != null && HasItem(prova.itemID)) return true;
+        return false;
+    }
+
+    private IEnumerable<Item> ItensNaGrade()
+    {
+        if (inventoryGrid == null) yield break;
+        for (int i = 0; i < inventoryGrid.transform.childCount; i++)
+        {
+            UISlotHandler slot = inventoryGrid.transform.GetChild(i).GetComponent<UISlotHandler>();
+            if (slot != null && slot.item != null) yield return slot.item;
+        }
+    }
+
+    /// <summary>Grava no GameManager as pistas que acabaram de ser verificadas e, se pedido, avisa o jogador.</summary>
+    private void RegistrarVerificacoes(bool avisar)
+    {
+        var gm = GameManager.Instance;
+        if (gm == null) return;
+
+        foreach (Item item in ItensNaGrade())
+        {
+            if (!item.EhPista || gm.pistasVerificadas.Contains(item.itemID) || !PistaVerificada(item)) continue;
+
+            gm.pistasVerificadas.Add(item.itemID);
+            if (!avisar) continue;
+            string resultado = item.confiabilidade == Confiabilidade.Fato ? "Pista confirmada" : "Boato desmentido";
+            // Mesmo visual do "Você recebeu" (título dourado + nome) no popup de avisos.
+            AvisoNaTela.Mostrar($"<size=75%><color=#FAD98C>{resultado}</color></size>\n{item.NomeExibicao}", item.itemImg);
         }
     }
 
@@ -219,7 +272,7 @@ public class InventoryManager : MonoBehaviour
             if (slot != null && slot.item != null && slot.item.itemID == itemToAdd.itemID)
             {
                 StackInInventory(slot, itemToAdd);
-                if (!restaurandoInventario) OnItemAdicionado?.Invoke(itemToAdd);
+                if (!restaurandoInventario) { OnItemAdicionado?.Invoke(itemToAdd); RegistrarVerificacoes(avisar: true); }
                 return true;
             }
         }
@@ -231,7 +284,7 @@ public class InventoryManager : MonoBehaviour
             {
                 Item newItem = itemToAdd.Clone();
                 PlaceInInventory(slot, newItem);
-                if (!restaurandoInventario) OnItemAdicionado?.Invoke(itemToAdd);
+                if (!restaurandoInventario) { OnItemAdicionado?.Invoke(itemToAdd); RegistrarVerificacoes(avisar: true); }
                 return true;
             }
         }
@@ -303,7 +356,17 @@ public class InventoryManager : MonoBehaviour
                 itensParaSalvar.Add(clone);
             }
         }
-        
+
+        // Itens fora da grade também vão junto: o que ficou nas entradas/resultado da prensa e o que está
+        // "na mão" (tocado e ainda não solto). Sem isso, sair do porão com o panfleto na prensa o apagava —
+        // e sem panfleto a Marie não sai do escritório, a cutscene da Fase 1 não toca e a porta não abre.
+        CraftingPress prensa = FindAnyObjectByType<CraftingPress>(FindObjectsInactive.Include);
+        if (prensa != null)
+            foreach (UISlotHandler slot in new[] { prensa.slotInput1, prensa.slotInput2, prensa.slotOutput })
+                if (slot != null && slot.item != null && slot.item.itemAmt > 0) itensParaSalvar.Add(slot.item.Clone());
+        if (MouseManager.instance != null && MouseManager.instance.heldItem != null && MouseManager.instance.heldItem.itemAmt > 0)
+            itensParaSalvar.Add(MouseManager.instance.heldItem.Clone());
+
         GameManager.Instance.inventarioSalvo = itensParaSalvar;
         Debug.Log($"[SISTEMA] Inventário Salvo: {itensParaSalvar.Count} itens.");
     }
@@ -323,6 +386,7 @@ public class InventoryManager : MonoBehaviour
             AddItem(clone);
         }
         restaurandoInventario = false;
+        RegistrarVerificacoes(avisar: false); // verdade descoberta em outra cena continua valendo, sem repetir o popup
         Debug.Log("[SISTEMA] Inventário Restaurado com segurança.");
     }
 }

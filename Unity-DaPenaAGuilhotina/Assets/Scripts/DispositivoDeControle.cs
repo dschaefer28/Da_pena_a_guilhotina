@@ -20,7 +20,7 @@ public enum ControleTutorial
 /// controles mobile aparecem na tela (MobileUIManager), então texto e botões nunca discordam.
 ///
 /// Marcadores aceitos nas mensagens: {mover} {interagir} {inventario} {pausa} {continuar}
-/// {toque} (verbo: "toque"/"clique") e {Toque} (com maiúscula).
+/// {toque} (verbo: "toque"/"clique"), {Toque} (com maiúscula) e {apontar} ("passe o mouse sobre"/"toque em").
 /// </summary>
 public static class DispositivoDeControle
 {
@@ -84,6 +84,8 @@ public static class DispositivoDeControle
         sb.Replace("{Continuar}", Capitalizar(Frase(ControleTutorial.Continuar)));
         sb.Replace("{toque}", EhToque ? "toque" : "clique");
         sb.Replace("{Toque}", EhToque ? "Toque" : "Clique");
+        // Como ver a ficha de uma pista no inventário (FichaDaPista): hover no PC, dedo pressionado no celular.
+        sb.Replace("{apontar}", EhToque ? "toque em" : "passe o mouse sobre");
         return sb.ToString();
     }
 

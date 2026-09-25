@@ -20,7 +20,32 @@ public class GameManager : MonoBehaviour
     public int opiniaoEstadoAtual = 50; 
 
     [Header("Persistência (Entre Cenas)")]
-    public List<Item> inventarioSalvo = new List<Item>(); 
+    public List<Item> inventarioSalvo = new List<Item>();
+
+    [Serializable]
+    public class PanfletoPublicado
+    {
+        public CaseData caso;
+        public NivelDoPanfleto nivel;
+    }
+
+    [Serializable]
+    public class RevelacaoPendente
+    {
+        public CaseData caso;
+        public string texto;
+        public int povo;
+        public int estado;
+    }
+
+    [Header("Fato x Boato")]
+    [Tooltip("Histórico de panfletos de caso impressos e a versão de cada um (útil para o Tribunal na Fase 4).")]
+    public List<PanfletoPublicado> panfletosPublicados = new List<PanfletoPublicado>();
+    [Tooltip("Boatos publicados que ainda vão ser expostos. Consumidos pelo RevelacaoDeBoatos na cena seguinte.")]
+    public List<RevelacaoPendente> revelacoesPendentes = new List<RevelacaoPendente>();
+    [Tooltip("itemIDs de pistas cuja verdade o jogador já descobriu. Guardado aqui para a ficha não voltar a " +
+             "'não verificada' quando o item que confirmou a pista for gasto na prensa.")]
+    public List<string> pistasVerificadas = new List<string>();
 
     [Header("Dependências Globais")]
     public InventoryManager inventoryManager;
@@ -81,6 +106,37 @@ public class GameManager : MonoBehaviour
         if (caso != null && !casosJaSelecionados.Contains(caso))
             casosJaSelecionados.Add(caso);
         Debug.Log($"Caso escolhido e salvo: {caso.caseTitle}");
+
+        // Documento (Tarefas Globais): pop-up quando um caso é escolhido e travado.
+        if (caso != null) AvisoNaTela.Mostrar($"Caso aceito: {(caso.caseTitle ?? caso.name).Trim()}");
+
+        if (TutorialManager.Instance != null)
+            TutorialManager.Instance.NotificarEvento(TutorialManager.EVENTO_CASO_ESCOLHIDO);
+    }
+
+    public void RegistrarPanfletoDeCaso(CaseData caso, NivelDoPanfleto nivel, ReceitaDeCaso.Versao versao)
+    {
+        panfletosPublicados.Add(new PanfletoPublicado { caso = caso, nivel = nivel });
+
+        if (nivel != NivelDoPanfleto.Fatos && versao != null && versao.TemRevelacao)
+        {
+            revelacoesPendentes.Add(new RevelacaoPendente
+            {
+                caso = caso,
+                texto = versao.textoRevelacao,
+                povo = versao.penalidadePovo,
+                estado = versao.penalidadeEstado
+            });
+        }
+        Debug.Log($"[FATO x BOATO] Panfleto de '{(caso != null ? caso.caseTitle : "?")}' publicado como {nivel}.");
+    }
+
+    /// <summary>Devolve e limpa as revelações pendentes (quem chama aplica as penalidades).</summary>
+    public List<RevelacaoPendente> ConsumirRevelacoes()
+    {
+        var lista = new List<RevelacaoPendente>(revelacoesPendentes);
+        revelacoesPendentes.Clear();
+        return lista;
     }
 
     /// <summary>Usado pela Mesa de Casos (CaseSelectionUI) para bloquear cartões já escolhidos antes.</summary>

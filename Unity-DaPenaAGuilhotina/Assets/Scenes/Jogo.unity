@@ -119,6 +119,111 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &152037312
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 152037315}
+  - component: {fileID: 152037314}
+  - component: {fileID: 152037313}
+  m_Layer: 0
+  m_Name: SetaMesa
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &152037313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152037312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5257c2bd591f43839bff85c50c66d647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  etapaId: mesa_de_casos
+--- !u!212 &152037314
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152037312}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: -1155998521
+  m_SortingLayer: 1
+  m_SortingOrder: 3
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 21300000, guid: 747c043ab5db443d8c2c18dbdbbf21d2, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
+--- !u!4 &152037315
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152037312}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.46338296, y: 0.80567443, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &171746703 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8663636028168379045, guid: f725072d2077ebb4d89d2afca230bd5b, type: 3}
@@ -896,7 +1001,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5b9aa55f25898548bd9806b346c4604, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialManager
-  forcarReiniciar: 1
+  forcarReiniciar: 0
+  distanciaParaAndou: 1.5
+  dicaFatoBoato: "Nem toda pista \xE9 verdade. No invent\xE1rio, {apontar} uma pista
+    para ler quem contou. Pistas \"n\xE3o verificadas\" podem ser boatos: procure
+    outra fonte que confirme antes de imprimir."
   etapas:
   - etapaId: boas_vindas
     mensagem: "Bem-vindo ao seu primeiro dia na tipografia! Estes s\xE3o os controles
@@ -907,24 +1016,24 @@ MonoBehaviour:
     nomeDoEvento: 
     nomeDaCena: 
   - etapaId: Joystick
-    mensagem: "Use {mover} para andar pelo escrit\xF3rio. D\xEA alguns passos e depois
-      {continuar}."
+    mensagem: "Use {mover} para andar pelo escrit\xF3rio."
     icone: {fileID: 0}
     controle: 1
-    tipoDeAvanco: 0
-    nomeDoEvento: 
+    tipoDeAvanco: 1
+    nomeDoEvento: jogador_andou
     nomeDaCena: 
-  - etapaId: Personagem
-    mensagem: "V\xE1 at\xE9 Charles Dupaty, o homem com o contorno destacado. Quando
-      estiver perto dele, {continuar}."
+  - etapaId: PauseButton
+    mensagem: "A qualquer momento, use {pausa} para abrir o menu de pausa: l\xE1
+      voc\xEA ajusta o volume e a velocidade do texto, ou volta ao menu principal.
+      Quando quiser, {continuar}."
     icone: {fileID: 0}
-    controle: 1
+    controle: 4
     tipoDeAvanco: 0
     nomeDoEvento: 
     nomeDaCena: 
   - etapaId: explica_interacao
-    mensagem: "Perto de algu\xE9m, use {interagir} para conversar. Fale com Dupaty
-      at\xE9 o fim da conversa."
+    mensagem: "V\xE1 at\xE9 Charles Dupaty, o homem com o contorno destacado, e use
+      {interagir} para conversar. Fale com ele at\xE9 o fim."
     icone: {fileID: 0}
     controle: 2
     tipoDeAvanco: 1
@@ -939,39 +1048,16 @@ MonoBehaviour:
     nomeDoEvento: item_recebido
     nomeDaCena: 
   - etapaId: InventoryButton
-    mensagem: "Pista recebida! Use {inventario} para abrir o invent\xE1rio."
+    mensagem: "Pista recebida! Use {inventario} para abrir o invent\xE1rio: \xE9
+      l\xE1 que ficam suas pistas e panfletos."
     icone: {fileID: 0}
     controle: 3
     tipoDeAvanco: 1
     nomeDoEvento: inventario_alternado
-    nomeDaCena: 
-  - etapaId: ver_item_inventario
-    mensagem: "O invent\xE1rio guarda suas pistas e panfletos. Quando terminar de
-      olhar, {continuar}."
-    icone: {fileID: 0}
-    controle: 0
-    tipoDeAvanco: 0
-    nomeDoEvento: 
-    nomeDaCena: 
-  - etapaId: fechar_inventario
-    mensagem: "Feche o invent\xE1rio com {inventario} ou no bot\xE3o Fechar para
-      voltar ao escrit\xF3rio."
-    icone: {fileID: 0}
-    controle: 3
-    tipoDeAvanco: 1
-    nomeDoEvento: inventario_alternado
-    nomeDaCena: 
-  - etapaId: PauseButton
-    mensagem: Use {pausa} para abrir o menu de pausa, com volume e velocidade do
-      texto. Quando quiser, {continuar}.
-    icone: {fileID: 0}
-    controle: 4
-    tipoDeAvanco: 0
-    nomeDoEvento: 
     nomeDaCena: 
   - etapaId: segunda_pista
-    mensagem: "Volte at\xE9 Charles Dupaty e converse de novo: agora ele tem a segunda
-      pista."
+    mensagem: "Feche o invent\xE1rio e volte at\xE9 Charles Dupaty: agora ele tem
+      a segunda pista."
     icone: {fileID: 0}
     controle: 2
     tipoDeAvanco: 1
@@ -987,27 +1073,19 @@ MonoBehaviour:
     nomeDaCena: Porao
   - etapaId: explicar_prensa
     mensagem: "Este \xE9 o por\xE3o. Aproxime-se da prensa e use {interagir} para
-      abri-la. Depois, {continuar}."
+      abri-la."
     icone: {fileID: 0}
     controle: 2
-    tipoDeAvanco: 0
-    nomeDoEvento: 
-    nomeDaCena: 
-  - etapaId: explicar_barras_status
-    mensagem: "Repare nas barras no alto: Opini\xE3o P\xFAblica, Opini\xE3o do Estado
-      e o seu capital. Cada panfleto impresso mexe nelas de um jeito diferente."
-    icone: {fileID: 0}
-    controle: 0
-    tipoDeAvanco: 0
-    nomeDoEvento: 
+    tipoDeAvanco: 1
+    nomeDoEvento: prensa_aberta
     nomeDaCena: 
   - etapaId: colocar_itens_prensa
-    mensagem: "{Toque} numa pista do invent\xE1rio e depois em uma Entrada da prensa.
-      Fa\xE7a o mesmo com a outra pista. Ent\xE3o {continuar}."
+    mensagem: "{Toque} numa pista do invent\xE1rio e depois numa Entrada da prensa.
+      Fa\xE7a o mesmo com a outra pista."
     icone: {fileID: 0}
     controle: 0
-    tipoDeAvanco: 0
-    nomeDoEvento: 
+    tipoDeAvanco: 1
+    nomeDoEvento: entradas_prensa_cheias
     nomeDaCena: 
   - etapaId: misturar_itens
     mensagem: Com as duas entradas cheias, {toque} em Misturar para imprimir o panfleto.
@@ -1017,8 +1095,9 @@ MonoBehaviour:
     nomeDoEvento: panfleto_gerado
     nomeDaCena: 
   - etapaId: explicar_efeito_barras
-    mensagem: "Viu as barras mudarem? Foi o seu panfleto. Uns agradam o povo e irritam
-      o Estado; outros, o contr\xE1rio. Fique de olho nelas."
+    mensagem: "Veja as barras no alto: a de cima \xE9 a Opini\xE3o do Povo, a de
+      baixo a Opini\xE3o do Estado, e embaixo est\xE1 o seu ouro. Cada panfleto agrada
+      uns e irrita outros. Quando terminar de olhar, {continuar}."
     icone: {fileID: 0}
     controle: 0
     tipoDeAvanco: 0
@@ -1026,11 +1105,11 @@ MonoBehaviour:
     nomeDaCena: 
   - etapaId: coletar_resultado_prensa
     mensagem: "{Toque} no panfleto em Resultado e depois em Espa\xE7o livre no invent\xE1rio
-      para guard\xE1-lo. Ent\xE3o {continuar}."
+      para guard\xE1-lo."
     icone: {fileID: 0}
     controle: 0
-    tipoDeAvanco: 0
-    nomeDoEvento: 
+    tipoDeAvanco: 1
+    nomeDoEvento: panfleto_guardado
     nomeDaCena: 
   - etapaId: voltar_escritorio
     mensagem: "Feche os pain\xE9is, v\xE1 at\xE9 a sa\xEDda do por\xE3o e use {interagir}
@@ -1040,6 +1119,14 @@ MonoBehaviour:
     tipoDeAvanco: 2
     nomeDoEvento: 
     nomeDaCena: Jogo
+  - etapaId: mesa_de_casos
+    mensagem: "Novos clientes deixaram cartas na mesa. Siga a seta, use {interagir}
+      na mesa e escolha o seu pr\xF3ximo caso."
+    icone: {fileID: 0}
+    controle: 2
+    tipoDeAvanco: 1
+    nomeDoEvento: caso_escolhido
+    nomeDaCena: 
 --- !u!4 &780209768
 Transform:
   m_ObjectHideFlags: 0
@@ -2426,22 +2513,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1589325444282527361, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_isOrthographic
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1589325444282527361, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4287420922
-      objectReference: {fileID: 0}
-    - target: {fileID: 1589325444282527361, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_TextStyleHashCode
-      value: -1183493901
-      objectReference: {fileID: 0}
-    - target: {fileID: 1589325444282527361, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_ActiveFontFeatures.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1808680645023636998, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_fontSize
       value: 32
@@ -2694,10 +2765,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI
       objectReference: {fileID: 0}
-    - target: {fileID: 4435758163309159927, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4294967295
-      objectReference: {fileID: 0}
     - target: {fileID: 4515689126786708504, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_fontSize
       value: 32
@@ -2817,10 +2884,6 @@ PrefabInstance:
     - target: {fileID: 5304430477598029801, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_TextStyleHashCode
       value: -1183493901
-      objectReference: {fileID: 0}
-    - target: {fileID: 5316180587521241248, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5415784620585461318, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_fontColor32.rgba
@@ -2914,10 +2977,6 @@ PrefabInstance:
       propertyPath: m_overflowMode
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 5952057542437194866, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6099204980964350073, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_fontColor32.rgba
       value: 1946157055
@@ -2925,10 +2984,6 @@ PrefabInstance:
     - target: {fileID: 6099204980964350073, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_TextStyleHashCode
       value: -1183493901
-      objectReference: {fileID: 0}
-    - target: {fileID: 6122393649401394870, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6156844252207125912, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_fontSize
@@ -2965,10 +3020,6 @@ PrefabInstance:
     - target: {fileID: 6174460398447187986, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6395618742357938519, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6431859585009390161, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_fontSize
@@ -3230,10 +3281,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1.6374
       objectReference: {fileID: 0}
-    - target: {fileID: 8281215023314630182, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_fontSize
-      value: 25
-      objectReference: {fileID: 0}
     - target: {fileID: 8496695696265672994, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -3247,23 +3294,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8496695696265672994, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8496695696265672994, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8496695696265672994, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8496695696265672994, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8496695696265672994, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8533373331140444825, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
@@ -3288,14 +3319,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8533373331140444825, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8533373331140444825, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8533373331140444825, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8741556641402068951, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
@@ -3976,3 +3999,4 @@ SceneRoots:
   - {fileID: 1778687601}
   - {fileID: 2326748046899083334}
   - {fileID: 780209768}
+  - {fileID: 152037315}
