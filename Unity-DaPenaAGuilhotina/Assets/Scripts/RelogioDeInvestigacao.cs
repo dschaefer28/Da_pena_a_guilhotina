@@ -49,9 +49,11 @@ public static class RelogioDeInvestigacao
         if (registro.InteracaoPaga(caso, chave)) return true;
 
         // Save v2: a interação foi paga com a chave antiga (cena/nome). Converte para a chave nova sem cobrar.
-        if (registro.PagaNoSaveAntigo(caso, IdDeInteracao.ChaveAntiga(alvo)))
+        string chaveAntiga = IdDeInteracao.ChaveAntiga(alvo);
+        if (registro.PagaNoSaveAntigo(caso, chaveAntiga))
         {
             registro.RegistrarPagamento(caso, chave);
+            AvisarHomonimos(alvo, chaveAntiga);
             return true;
         }
 
@@ -73,4 +75,16 @@ public static class RelogioDeInvestigacao
     }
 
     public static void NotificarMudanca() => OnHorasMudaram?.Invoke();
+
+    // Save v2: a chave antiga (cena/nome) não distingue homônimos. Todos contam como pagos (como no jogo antigo);
+    // aqui a ambiguidade fica registrada com os IDs novos envolvidos.
+    private static void AvisarHomonimos(Component alvo, string chaveAntiga)
+    {
+        var ids = new System.Collections.Generic.List<string>();
+        foreach (var par in IdDeInteracao.InteracoesDaCena(alvo.gameObject.scene))
+            if (IdDeInteracao.ChaveAntiga(par.Key) == chaveAntiga) ids.Add(IdDeInteracao.ChaveDaCena(par.Key, par.Value));
+        if (ids.Count > 1)
+            Debug.LogWarning($"[SistemaDeSave] Chave antiga ambígua '{chaveAntiga}' (save v2): vale para {string.Join(", ", ids)}. " +
+                             "Todas contam como pagas, como no jogo antigo.");
+    }
 }

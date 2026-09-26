@@ -62,6 +62,9 @@ public class PauseMenu : MonoBehaviour
 
     private void Pausar()
     {
+        // Biblioteca aberta (ou fechada pelo mesmo Esc neste frame): o Esc era dela, não do pause.
+        if (BibliotecaUI.BloqueiaPausa) return;
+
         // Não deixa pausar com o inventário aberto (evita os dois modais brigando pela tela/raycast).
         var inventoryManager = GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
         if (inventoryManager != null && inventoryManager.inventoryUI != null && inventoryManager.inventoryUI.activeSelf)

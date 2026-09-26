@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Item_operario2
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_operario_2
-  itemImg: {fileID: 0}
+  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 0
-  itemName: 
-  descricao: 
-  fonte: 
+  itemName: A ordem do comandante
+  descricao: "Cartaz com a ordem do comandante: 'dispersar a multid\xE3o por todos
+    os meios', afixado antes de qualquer viol\xEAncia."
+  fonte: Cartaz arrancado de um muro
   caso: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
   confiabilidade: 1
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

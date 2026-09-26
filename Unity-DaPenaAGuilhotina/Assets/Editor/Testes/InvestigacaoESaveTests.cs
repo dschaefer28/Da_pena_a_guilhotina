@@ -139,6 +139,7 @@ public class InvestigacaoESaveTests
     public void ConfirmarCaso_RecusaTrocaDeCasoEmAndamento_ECasoConcluido()
     {
         GameManager gm = CriarGameManager();
+        gm.casosPorFase = new[] { 1, 3, 2, 1 }; // três casos na fase de teste, para exercitar a sequência
         CaseData casoA = CriarCaso("CasoA"), casoB = CriarCaso("CasoB"), casoC = CriarCaso("CasoC");
 
         Assert.IsTrue(gm.ConfirmarCaso(casoA));
@@ -151,6 +152,8 @@ public class InvestigacaoESaveTests
         Assert.IsFalse(gm.ConfirmarCaso(CriarCaso("CasoFase3", fase: 3)), "caso de outra fase");
         Assert.IsTrue(gm.ConcluirCaso(casoB));
         Assert.IsTrue(gm.ConfirmarCaso(casoC));
+        Assert.IsTrue(gm.ConcluirCaso(casoC));
+        Assert.IsFalse(gm.ConfirmarCaso(CriarCaso("CasoD")), "cota da fase atingida");
     }
 
     [Test]

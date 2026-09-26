@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Item_joalheiro2
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_joias_2
-  itemImg: {fileID: 0}
+  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 0
-  itemName: 
-  descricao: 
-  fonte: 
+  itemName: A assinatura da encomenda
+  descricao: Carta de encomenda assinada 'Marie Antoinette de France'. Nos documentos
+    oficiais, a Rainha assina apenas 'Marie Antoinette'.
+  fonte: "Pap\xE9is esquecidos na taverna"
   caso: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
   confiabilidade: 1
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

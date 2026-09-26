@@ -27,7 +27,8 @@ MonoBehaviour:
     povo: 75
     estado: -25
     ouro: 25
-    textoRevelacao: 
+    textoRevelacao: "Nenhum agitador pago foi encontrado. O boato publicado pela
+      tipografia n\xE3o se sustentou."
     penalidadePovo: -30
     penalidadeEstado: -5
   calunia:
@@ -35,6 +36,17 @@ MonoBehaviour:
     povo: 90
     estado: -35
     ouro: 40
-    textoRevelacao: 
+    textoRevelacao: "Ningu\xE9m provou que o oper\xE1rio ateou fogo \xE0 f\xE1brica:
+      a acusa\xE7\xE3o era an\xF4nima e falsa, e manchou o nome da tipografia."
     penalidadePovo: -50
     penalidadeEstado: -15
+  soAlegacoes:
+    panfleto: {fileID: 0}
+    povo: 25
+    estado: -8
+    ouro: 5
+    textoRevelacao: "O panfleto do oper\xE1rio s\xF3 repetia o que ele contou. Faltou
+      prova, e o caso esfriou."
+    penalidadePovo: -5
+    penalidadeEstado: 0
+  qualificadores: []

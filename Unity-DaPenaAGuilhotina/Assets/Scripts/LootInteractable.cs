@@ -86,25 +86,28 @@ public class LootInteractable : MonoBehaviour, IInteractable
             return;
         }
 
-        // A primeira busca cobra, mesmo que o objeto esteja vazio; repetir no mesmo caso é de graça.
-        if (!RelogioDeInvestigacao.TentarGastar(this, idDaInteracao, custoEmHoras)) return;
+        // Procura na lista qual é o item configurado para o caso atual. Caso já concluído não recolhe mais nada.
+        Item itemCorreto = null;
+        if (pistasPossiveis != null && GameManager.Instance.CasoAtualEmAndamento)
+            foreach (var loot in pistasPossiveis)
+                if (loot.caso == casoAtual) { itemCorreto = loot.itemParaDar; break; }
 
-        if (pistasPossiveis == null || pistasPossiveis.Count == 0)
+        InventoryManager inventory = GameManager.Instance.inventoryManager;
+        if (itemCorreto != null && inventory == null)
         {
-            AvisoNaTela.Mostrar("Nada de útil para o caso aqui.");
+            Debug.LogWarning("[LootInteractable] InventoryManager ausente no GameManager.");
             return;
         }
 
-        // Procura na lista qual é o item correto configurado para o caso atual
-        Item itemCorreto = null;
-        foreach (var loot in pistasPossiveis)
+        // Inventário cheio (não há descarte): se a pista não cabe, a busca não cobra horas.
+        if (itemCorreto != null && !inventory.TemEspacoPara(itemCorreto))
         {
-            if (loot.caso == casoAtual)
-            {
-                itemCorreto = loot.itemParaDar;
-                break;
-            }
+            AvisoNaTela.Mostrar("Inventário cheio: não há onde guardar o que está aqui. Libere espaço antes de vasculhar.");
+            return;
         }
+
+        // A primeira busca cobra, mesmo que o objeto esteja vazio; repetir no mesmo caso é de graça.
+        if (!RelogioDeInvestigacao.TentarGastar(this, idDaInteracao, custoEmHoras)) return;
 
         // Se o caso atual não estiver na lista deste móvel, o móvel não entrega nada.
         if (itemCorreto == null)
@@ -113,17 +116,10 @@ public class LootInteractable : MonoBehaviour, IInteractable
             return;
         }
 
-        InventoryManager inventory = GameManager.Instance.inventoryManager;
-        if (inventory == null)
-        {
-            Debug.LogWarning("[LootInteractable] InventoryManager ausente no GameManager.");
-            return;
-        }
-
         RegistroDaInvestigacao registro = GameManager.Instance.registroDaInvestigacao;
 
         // Save v2 (sem registro de loot): quem já tem a pista a recolheu pela regra antiga.
-        if (registro.CasoComEstadoLegado(casoAtual) && inventory.HasItem(itemCorreto.itemID))
+        if (registro.CasoComEstadoLegado(casoAtual) && inventory.PossuiEmQualquerLugar(itemCorreto.itemID))
         {
             registro.RegistrarLoot(casoAtual, ChaveDaInteracao);
             AvisoNaTela.Mostrar("Você já vasculhou aqui.");

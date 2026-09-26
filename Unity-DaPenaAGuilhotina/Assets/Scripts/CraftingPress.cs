@@ -58,7 +58,8 @@ public class CraftingPress : MonoBehaviour
     private InventoryManager Inventario =>
         GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
 
-    // Trava de reentrada: um segundo clique no mesmo frame (ou vindo de um ouvinte do evento) não imprime de novo.
+    // Trava de reentrada: protege contra uma impressão aninhada (ex.: um ouvinte do OnPanfletoGerado que chamasse
+    // CombineItems). Cliques repetidos em sequência são barrados pela regra de domínio (GameManager.PodePublicarCaso).
     private bool imprimindo;
 
     public void CombineItems()
@@ -101,12 +102,19 @@ public class CraftingPress : MonoBehaviour
                 AvisoNaTela.Mostrar("Essas pistas não são do caso que estou investigando.");
                 return;
             }
+            // Receitas exatas só concluem casos sem receita de caso (o tutorial). Um caso com ReceitaDeCaso é
+            // publicado pela regra Fato x Boato: itens sem caso (ex.: os do tutorial) não podem concluí-lo por aqui.
+            if (caso != null && caso.receitaDoPanfleto != null)
+            {
+                AvisoNaTela.Mostrar("Essa combinação não forma um panfleto.");
+                return;
+            }
             if (!gm.PodePublicarCaso(caso, out string motivo))
             {
                 AvisoNaTela.Mostrar(motivo);
                 return;
             }
-            if (Imprimir(validRecipe.resultItem, validRecipe.publicOpinionImpact, validRecipe.stateOpinionImpact, validRecipe.moneyReward))
+            if (Imprimir(validRecipe.resultItem, validRecipe.publicOpinionImpact, validRecipe.stateOpinionImpact, validRecipe.moneyReward, out _))
                 gm.ConcluirCaso(caso);
         }
         else
@@ -126,6 +134,11 @@ public class CraftingPress : MonoBehaviour
     {
         Item a = slotInput1.item;
         Item b = slotInput2.item;
+        if (a.EhSuporte || b.EhSuporte)
+        {
+            AvisoNaTela.Mostrar("Documentos de apoio não vão nas entradas: selecione-os no campo Suporte.");
+            return true;
+        }
         if (!a.EhPista || !b.EhPista) return false;
 
         if (a.itemID == b.itemID)
@@ -152,25 +165,78 @@ public class CraftingPress : MonoBehaviour
             return false;
         }
 
-        NivelDoPanfleto nivel = ReceitaDeCaso.Classificar(a, b);
-        ReceitaDeCaso.Versao versao = receita.VersaoDe(nivel);
-        Item panfleto = receita.PanfletoDe(versao);
-        if (panfleto == null)
+        // Cálculo único (versão → apoio → [linha editorial no Prompt 5]); nada nos assets é alterado.
+        ResultadoDoPanfleto resultado = CalculadoraDePanfleto.Calcular(receita, a, b, SuportesSelecionadosNoInventario());
+        if (resultado.panfleto == null)
         {
-            Debug.LogError($"[CraftingPress] '{receita.name}' não tem panfleto para a versão {nivel}.", receita);
+            Debug.LogError($"[CraftingPress] '{receita.name}' não tem panfleto para a versão {resultado.nivel}.", receita);
             return true;
         }
 
-        if (Imprimir(panfleto, versao.povo, versao.estado, versao.ouro))
+        if (Imprimir(resultado.panfleto, resultado.povo, resultado.estado, resultado.ouro, out Vector3Int aplicado))
         {
-            GameManager.Instance.RegistrarPanfletoDeCaso(a.caso, nivel, versao);
+            GameManager.Instance.RegistrarPanfletoDeCaso(a.caso, resultado, aplicado);
             GameManager.Instance.ConcluirCaso(a.caso);
+            LimparSuportes(); // os documentos continuam no inventário: só a seleção é desfeita
         }
         return true;
     }
 
-    private bool Imprimir(Item panfleto, int povo, int estado, int ouro)
+    // ===== Documentos de apoio (Prompt 3): selecionados à parte, nunca consumidos =====
+
+    private readonly List<string> idsDeSuporte = new List<string>();
+    private CaseData casoDaSelecao;
+
+    /// <summary>Disparado quando a seleção de apoio muda (a UI de suporte e a prévia escutam).</summary>
+    public event Action OnSuportesAlterados;
+
+    public bool SuporteSelecionado(Item suporte) => suporte != null && idsDeSuporte.Contains(suporte.itemID);
+
+    /// <summary>Marca/desmarca um documento de apoio do caso em andamento. Falso se não for elegível.</summary>
+    public bool AlternarSuporte(Item suporte)
     {
+        GameManager gm = GameManager.Instance;
+        DescartarSelecaoDeOutroCaso();
+        if (gm == null || suporte == null || !suporte.EhSuporte || suporte.caso != gm.casoEscolhido) return false;
+
+        if (!idsDeSuporte.Remove(suporte.itemID)) idsDeSuporte.Add(suporte.itemID);
+        casoDaSelecao = gm.casoEscolhido;
+        OnSuportesAlterados?.Invoke();
+        return true;
+    }
+
+    public void LimparSuportes()
+    {
+        if (idsDeSuporte.Count == 0) return;
+        idsDeSuporte.Clear();
+        OnSuportesAlterados?.Invoke();
+    }
+
+    /// <summary>Seleção resolvida contra o inventário atual: só documentos que o jogador ainda tem, do caso em andamento.</summary>
+    public List<Item> SuportesSelecionadosNoInventario()
+    {
+        DescartarSelecaoDeOutroCaso();
+        var itens = new List<Item>();
+        InventoryManager inventario = Inventario;
+        if (inventario == null) return itens;
+        foreach (string id in idsDeSuporte)
+        {
+            Item item = inventario.ItemNaGrade(id);
+            if (item != null) itens.Add(item);
+        }
+        return CalculadoraDePanfleto.SuportesValidos(GameManager.Instance != null ? GameManager.Instance.casoEscolhido : null, itens);
+    }
+
+    // Uma seleção feita em outro caso nunca atravessa para o caso atual.
+    private void DescartarSelecaoDeOutroCaso()
+    {
+        GameManager gm = GameManager.Instance;
+        if (idsDeSuporte.Count > 0 && (gm == null || casoDaSelecao != gm.casoEscolhido)) LimparSuportes();
+    }
+
+    private bool Imprimir(Item panfleto, int povo, int estado, int ouro, out Vector3Int aplicado)
+    {
+        aplicado = Vector3Int.zero;
         if (panfleto == null) return false;
         if (slotOutput.item != null && slotOutput.item.itemID != panfleto.itemID)
         {
@@ -184,7 +250,7 @@ public class CraftingPress : MonoBehaviour
         UltimoPanfleto = panfleto;
 
         // Dispara a consequência matemática da receita (GDD)
-        GameManager.Instance.AplicarImpactoPanfleto(povo, estado, ouro);
+        aplicado = GameManager.Instance.AplicarImpactoPanfleto(povo, estado, ouro);
 
         OnPanfletoGerado?.Invoke();
 

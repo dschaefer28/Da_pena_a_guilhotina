@@ -22,6 +22,7 @@ public class PlayerInteraction : MonoBehaviour
         {
             if (PauseMenu.Instance != null && PauseMenu.Instance.IsOpen) return false;
             if (CutsceneLegendas.EmExibicao) return false;
+            if (BibliotecaUI.Aberta) return false;
             var inventoryManager = GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
             if (inventoryManager != null && inventoryManager.inventoryUI != null && inventoryManager.inventoryUI.activeSelf) return false;
             return true;

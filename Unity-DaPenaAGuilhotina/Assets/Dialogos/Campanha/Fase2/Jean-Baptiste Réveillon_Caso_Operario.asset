@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
+  m_Name: "Jean-Baptiste R\xE9veillon_Caso_Operario"
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  talkScript:
+  - name: "Jean R\xE9veillon"
+    text: "Aqueles homens n\xE3o estavam com fome, estavam pagos!"
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: "Jean R\xE9veillon"
+    text: "Agitadores do duque de Orl\xE9ans distribu\xEDram dinheiro na v\xE9spera.
+      Anote isso."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []

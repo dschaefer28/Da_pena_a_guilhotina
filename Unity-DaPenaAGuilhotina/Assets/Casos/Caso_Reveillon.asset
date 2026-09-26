@@ -20,9 +20,15 @@ MonoBehaviour:
     pela fome. Como resultado, a multid\xE3o invadiu e saqueou sua f\xE1brica e resid\xEAncia,
     o que culminou em um violento massacre do povo perpetrado pela Guarda Francesa."
   objectiveText: 'terminar o caso '
-  moneyReward: 70
-  publicOpinionReward: -50
-  stateOpinionReward: 0
+  moneyReward: 50
+  publicOpinionReward: -20
+  stateOpinionReward: 50
+  fase: 2
+  rota: 0
+  horasDeInvestigacao: 0
   npcDialogueRoute: {fileID: 11400000, guid: f27d773ce1be70b4c96caa2674644288, type: 2}
   nextSceneName: Fase2
   receitaDoPanfleto: {fileID: 11400000, guid: cf9a2794fffef3d469bc6ea79d8a34e9, type: 2}
+  alegacoesIniciais:
+  - {fileID: 11400000, guid: 926ceee11e80ba8489082eb7cceab01f, type: 2}
+  - {fileID: 11400000, guid: 05109096ebc4323458aa8d8954f30ddb, type: 2}

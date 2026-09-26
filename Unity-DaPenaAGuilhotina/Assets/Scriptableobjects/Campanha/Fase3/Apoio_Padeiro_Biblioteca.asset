@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa124a2bcbce4043846ab3905a2fb1b, type: 3}
+  m_Name: Apoio_Padeiro_Biblioteca
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  itemID: apoio_biblioteca_padeiro
+  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemAmt: 1
+  itemName: "Registro da Halle aux Bl\xE9s"
+  descricao: "Livro oficial do mercado de trigo: quanta farinha o padeiro Fran\xE7ois
+    comprou no m\xEAs da fome."
+  fonte: Biblioteca (compra)
+  caso: {fileID: 11400000, guid: 178eabcdb503f204f95a3b35d983e066, type: 2}
+  confiabilidade: 0
+  verificadaPor: []
+  documentoDeSuporte: 1
+  qualidade: 1

@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2581bd120f010649b20a64ab7f37907, type: 3}
+  m_Name: ReceitaDeCaso_Varennes
+  m_EditorClassIdentifier: Assembly-CSharp::ReceitaDeCaso
+  caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
+  panfletoPadrao: {fileID: 11400000, guid: 999fd53f1add1ba4d991296a7967c5e8, type: 2}
+  soFatos:
+    panfleto: {fileID: 0}
+    povo: -20
+    estado: 30
+    ouro: 45
+    textoRevelacao: 
+    penalidadePovo: 0
+    penalidadeEstado: 0
+  comBoato:
+    panfleto: {fileID: 0}
+    povo: -30
+    estado: 40
+    ouro: 60
+    textoRevelacao: "O 'ouro austr\xEDaco' do cocheiro nunca apareceu. O boato publicado
+      foi desmascarado."
+    penalidadePovo: -10
+    penalidadeEstado: -10
+  calunia:
+    panfleto: {fileID: 0}
+    povo: -40
+    estado: 50
+    ouro: 75
+    textoRevelacao: "Os cavalos da Guarda estavam s\xE3os. A tipografia \xE9 acusada
+      de inventar hist\xF3rias."
+    penalidadePovo: -20
+    penalidadeEstado: -15
+  soAlegacoes:
+    panfleto: {fileID: 0}
+    povo: -8
+    estado: 12
+    ouro: 18
+    textoRevelacao: "O panfleto s\xF3 trazia a palavra do cocheiro. A Corte ignorou;
+      o povo desconfiou."
+    penalidadePovo: 0
+    penalidadeEstado: -5
+  qualificadores:
+  - id: apoio_varennes
+    descricao: "Documento oficial de qualidade superior refor\xE7a o panfleto (valor
+      provis\xF3rio)."
+    suportesAceitos:
+    - {fileID: 11400000, guid: b0b663dd9e55f67418efc4cb98ebbe5e, type: 2}
+    - {fileID: 11400000, guid: 46a912874897d4b479b0eb6865b60655, type: 2}
+    qualidadeMinima: 1
+    niveis: 
+    povo: 0
+    estado: 10
+    ouro: 20

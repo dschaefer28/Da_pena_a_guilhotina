@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
+  m_Name: Caso_Varennes
+  m_EditorClassIdentifier: Assembly-CSharp::CaseData
+  caseTitle: A Carruagem de Varennes
+  caseDescription: "Junho de 1791. A fam\xEDlia real foi presa em Varennes tentando
+    fugir. O cocheiro Joubert, que conduziu a berlinda, \xE9 acusado de ter ajudado
+    a fuga. Ele pede que a tipografia prove que s\xF3 cumpria um contrato."
+  objectiveText: Descobrir o papel do cocheiro na fuga do Rei.
+  moneyReward: 45
+  publicOpinionReward: -20
+  stateOpinionReward: 30
+  fase: 3
+  rota: 0
+  horasDeInvestigacao: 0
+  npcDialogueRoute: {fileID: 11400000, guid: 64c8e2d5365744f4fac78199324ed899, type: 2}
+  nextSceneName: Fase3
+  receitaDoPanfleto: {fileID: 11400000, guid: 9bc79d2d9dcf99a4693851bd36a4d239, type: 2}
+  alegacoesIniciais:
+  - {fileID: 11400000, guid: 82f66b5f8fb9d0b418435344804b6984, type: 2}
+  - {fileID: 11400000, guid: 384e8345cd0c6b546a2bbab6f40bd8dc, type: 2}

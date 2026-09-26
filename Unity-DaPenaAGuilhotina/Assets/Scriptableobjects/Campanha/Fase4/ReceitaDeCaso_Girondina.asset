@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2581bd120f010649b20a64ab7f37907, type: 3}
+  m_Name: ReceitaDeCaso_Girondina
+  m_EditorClassIdentifier: Assembly-CSharp::ReceitaDeCaso
+  caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
+  panfletoPadrao: {fileID: 11400000, guid: 9dfc42c63bb48a14ab8b24355b600d22, type: 2}
+  soFatos:
+    panfleto: {fileID: 0}
+    povo: 10
+    estado: 10
+    ouro: 30
+    textoRevelacao: 
+    penalidadePovo: 0
+    penalidadeEstado: 0
+  comBoato:
+    panfleto: {fileID: 0}
+    povo: 15
+    estado: 15
+    ouro: 45
+    textoRevelacao: "Nenhum foragido foi achado na casa da vi\xFAva. O boato impresso
+      foi desmentido."
+    penalidadePovo: -10
+    penalidadeEstado: -10
+  calunia:
+    panfleto: {fileID: 0}
+    povo: 20
+    estado: 20
+    ouro: 60
+    textoRevelacao: "O 'patriota envenenado' morreu de febre. A cal\xFAnia voltou-se
+      contra a tipografia."
+    penalidadePovo: -15
+    penalidadeEstado: -15
+  soAlegacoes:
+    panfleto: {fileID: 0}
+    povo: 4
+    estado: 4
+    ouro: 12
+    textoRevelacao: "O panfleto s\xF3 repetia a palavra da vi\xFAva. N\xE3o convenceu
+      ningu\xE9m."
+    penalidadePovo: -5
+    penalidadeEstado: -5
+  qualificadores:
+  - id: apoio_girondina
+    descricao: "Documento oficial de qualidade superior refor\xE7a o panfleto (valor
+      provis\xF3rio)."
+    suportesAceitos:
+    - {fileID: 11400000, guid: 5884edf3fbfea4a49a60a89fa57dc947, type: 2}
+    - {fileID: 11400000, guid: 7b74039f15e5d8b44aa1446ad19923ee, type: 2}
+    qualidadeMinima: 1
+    niveis: 
+    povo: 5
+    estado: 5
+    ouro: 15

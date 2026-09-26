@@ -18,9 +18,15 @@ MonoBehaviour:
     relatando que a guarda n\xE3o queria apenas conter o levante, mas atirar para
     matar os trabalhadores que se reuniram em busca de comida e sal\xE1rios dignos."
   objectiveText: terminar o caso
-  moneyReward: 5
-  publicOpinionReward: 50
-  stateOpinionReward: 0
+  moneyReward: 10
+  publicOpinionReward: 60
+  stateOpinionReward: -20
+  fase: 2
+  rota: 0
+  horasDeInvestigacao: 0
   npcDialogueRoute: {fileID: 11400000, guid: b4c2cea48397acf48a53804e9fda36e7, type: 2}
   nextSceneName: Fase2
   receitaDoPanfleto: {fileID: 11400000, guid: 24b892ea53f1745409603d7bc35ace17, type: 2}
+  alegacoesIniciais:
+  - {fileID: 11400000, guid: ae007878725f10d4e9780a7a3b312739, type: 2}
+  - {fileID: 11400000, guid: e9138a04cd285e645979f943436bc980, type: 2}

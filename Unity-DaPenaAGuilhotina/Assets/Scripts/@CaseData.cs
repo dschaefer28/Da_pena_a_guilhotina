@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NovoCaso", menuName = "ScriptableObject/Caso de Investigacao")]
@@ -38,6 +39,22 @@ public class CaseData : ScriptableObject
     [Header("Panfleto do Caso (Fato x Boato)")]
     [Tooltip("Define o que a prensa imprime com as pistas deste caso, conforme sejam fatos ou boatos.")]
     public ReceitaDeCaso receitaDoPanfleto;
+
+    [Header("Alegações iniciais do cliente (saída sem bloqueio)")]
+    [Tooltip("Proposta de design (não literal dos PDFs): duas afirmações do cliente, entregues ao aceitar o caso e " +
+             "explicitamente NÃO verificadas. Garantem que o caso sempre pode ser publicado mesmo se o tempo acabar sem " +
+             "pistas: as duas juntas usam a versão 'Só Alegações' da receita (ganho menor, consequência própria). " +
+             "Use itens do próprio caso com confiabilidade Boato e fonte 'Carta do cliente'. Arquivadas ao concluir o caso.")]
+    public List<Item> alegacoesIniciais = new List<Item>();
+
+    /// <summary>Verdadeiro se o item é uma das alegações iniciais deste caso (compara itemID).</summary>
+    public bool EhAlegacao(Item item)
+    {
+        if (item == null || string.IsNullOrEmpty(item.itemID) || alegacoesIniciais == null) return false;
+        foreach (Item alegacao in alegacoesIniciais)
+            if (alegacao != null && alegacao.itemID == item.itemID) return true;
+        return false;
+    }
 
 #if UNITY_EDITOR
     private void OnValidate()

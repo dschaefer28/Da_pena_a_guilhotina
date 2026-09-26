@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
+  m_Name: Caso_Jornalista
+  m_EditorClassIdentifier: Assembly-CSharp::CaseData
+  caseTitle: O Redator do Velho Sans-culotte
+  caseDescription: "1793. Lucien Marchand, redator de um jornal que pediu clem\xEAncia
+    e o fim do Terror, ser\xE1 julgado pelo Tribunal Revolucion\xE1rio por 'conspira\xE7\xE3o
+    contra a Rep\xFAblica'. O povo l\xEA o seu jornal; o Comit\xEA quer silenci\xE1-lo."
+  objectiveText: Reunir provas para a defesa de Marchand.
+  moneyReward: 15
+  publicOpinionReward: 20
+  stateOpinionReward: -20
+  fase: 4
+  rota: 1
+  horasDeInvestigacao: 0
+  npcDialogueRoute: {fileID: 11400000, guid: 066517ab89b41924da81acf62b6cbcf5, type: 2}
+  nextSceneName: Fase4
+  receitaDoPanfleto: {fileID: 11400000, guid: 59d3ea1e628ca4945982133026437d6a, type: 2}
+  alegacoesIniciais:
+  - {fileID: 11400000, guid: b5700d836e83a264caa19a887fb68f43, type: 2}
+  - {fileID: 11400000, guid: 53bfcc0b637944442baf7ffc8e7bc524, type: 2}

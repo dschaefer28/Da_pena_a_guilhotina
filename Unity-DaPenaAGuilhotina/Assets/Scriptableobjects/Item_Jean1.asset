@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Item_Jean1
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_jean_1
-  itemImg: {fileID: 0}
+  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 0
-  itemName: 
-  descricao: 
-  fonte: 
+  itemName: O discurso na assembleia
+  descricao: "Ata da assembleia do distrito: R\xE9veillon prop\xF4s baixar os sal\xE1rios
+    e o pre\xE7o do p\xE3o ao mesmo tempo; n\xE3o disse que o povo devia passar fome."
+  fonte: Ata da assembleia eleitoral
   caso: {fileID: 11400000, guid: 5c0733705941aa94db8fdec6796223e7, type: 2}
   confiabilidade: 1
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
+  m_Name: ViuvaFrancois_Caso_ChampDeMars
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  talkScript:
+  - name: "Vi\xFAva Fran\xE7ois"
+    text: "As vizinhas do mercado dizem que os peticion\xE1rios atiraram primeiro
+      e a Guarda s\xF3 se defendeu."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []

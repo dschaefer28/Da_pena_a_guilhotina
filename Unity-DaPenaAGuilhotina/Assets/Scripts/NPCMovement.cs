@@ -20,6 +20,22 @@ public struct CasoReacao
     
     [Tooltip("Lista de itens entregues ao jogador ao fim do diálogo (Ex: Decreto/Papel).")]
     public List<Item> recompensasDoDialogo; // Transformado em Lista
+
+    [Header("Etapas complementares (Prompt 3)")]
+    [Tooltip("Conversas posteriores que entregam pistas/documentos complementares quando os pré-requisitos já foram " +
+             "obtidos (mesmo que gastos depois). Têm prioridade sobre a fala normal enquanto houver algo a entregar.")]
+    public List<EtapaComplementar> etapasComplementares;
+}
+
+[System.Serializable]
+public struct EtapaComplementar
+{
+    [Tooltip("ID estável da etapa (vai para o registro de recompensas). Não troque depois que houver saves.")]
+    public string id;
+    [Tooltip("Evidências que o jogador precisa ter obtido alguma vez (GameManager.evidenciasObtidas).")]
+    public List<Item> requisitos;
+    public DialogueData dialogo;
+    public List<Item> recompensas;
 }
 
 public class NPCMovement : MonoBehaviour, IInteractable
@@ -91,6 +107,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
 
         DialogueData dialogoParaTocar = dialogoPadrao;
         List<Item> recompensasDaEtapa = null;
+        string etapa = RegistroDaInvestigacao.EtapaReacao;
         CaseData casoAtual = GameManager.Instance.casoEscolhido;
 
         if (casoAtual != null && reacoesDeCaso != null)
@@ -116,6 +133,15 @@ public class NPCMovement : MonoBehaviour, IInteractable
                         recompensasDaEtapa = reacao.recompensasDoDialogo;
                     }
 
+                    // Etapa complementar só depois que a fala normal não tem mais nada a entregar.
+                    if (!TemRecompensaPendente(recompensasDaEtapa, casoAtual, etapa) &&
+                        EtapaComplementarPendente(reacao, casoAtual, out EtapaComplementar complementar))
+                    {
+                        dialogoParaTocar = complementar.dialogo;
+                        recompensasDaEtapa = complementar.recompensas;
+                        etapa = complementar.id;
+                    }
+
                     break;
                 }
             }
@@ -128,17 +154,78 @@ public class NPCMovement : MonoBehaviour, IInteractable
             return;
         }
 
-        if (!RelogioDeInvestigacao.TentarGastar(this, idDaInteracao, custoEmHoras)) return;
-
         casoDaConversa = casoAtual;
-        etapaDaConversa = RegistroDaInvestigacao.EtapaReacao;
-        PrepararRecompensas(recompensasDaEtapa);
+        etapaDaConversa = etapa;
+        // Recompensas só para o caso em andamento: um caso concluído (ou nenhum) só conversa.
+        PrepararRecompensas(GameManager.Instance.CasoAtualEmAndamento ? recompensasDaEtapa : null);
+
+        // Inventário cheio (não há descarte): se nada do que o NPC entregaria cabe, a conversa não cobra horas.
+        InventoryManager inventario = GameManager.Instance.inventoryManager;
+        if (recompensasPendentes.Count > 0 && inventario != null && !recompensasPendentes.Exists(inventario.TemEspacoPara))
+        {
+            recompensasPendentes.Clear();
+            AvisoNaTela.Mostrar("Inventário cheio: não há onde guardar o que ele tem para você. Libere espaço antes de conversar.");
+            return;
+        }
+
+        if (!RelogioDeInvestigacao.TentarGastar(this, idDaInteracao, custoEmHoras))
+        {
+            recompensasPendentes.Clear();
+            return;
+        }
 
         dialogueSystem.dialogueData = dialogoParaTocar;
         dialogueSystem.OnDialogueEnded -= HandleDialogueEnded; // nunca inscrever duas vezes
         dialogueSystem.OnDialogueEnded += HandleDialogueEnded;
         aguardandoFimDoDialogo = true;
         dialogueSystem.Next();
+    }
+
+    private bool TemRecompensaPendente(List<Item> recompensas, CaseData caso, string etapa)
+    {
+        if (recompensas == null) return false;
+        foreach (Item r in recompensas)
+            if (AindaPendente(r, caso, etapa)) return true;
+        return false;
+    }
+
+    /// <summary>Mesmo critério para escolher a etapa e para entregar: não registrado como entregue neste
+    /// caso/interação/etapa e, num caso vindo de save v2 (sem registro), o jogador ainda não tem o item.</summary>
+    private bool AindaPendente(Item item, CaseData caso, string etapa)
+    {
+        if (item == null || string.IsNullOrEmpty(item.itemID)) return false;
+        GameManager gm = GameManager.Instance;
+        if (gm.registroDaInvestigacao.RecompensaEntregue(caso, ChaveDaInteracao, etapa, item.itemID)) return false;
+        return !(gm.registroDaInvestigacao.CasoComEstadoLegado(caso) && gm.inventoryManager != null &&
+                 gm.inventoryManager.PossuiEmQualquerLugar(item.itemID));
+    }
+
+    /// <summary>Primeira etapa complementar com todos os pré-requisitos já obtidos e alguma recompensa ainda não entregue.</summary>
+    private bool EtapaComplementarPendente(CasoReacao reacao, CaseData caso, out EtapaComplementar pendente)
+    {
+        pendente = default;
+        if (reacao.etapasComplementares == null) return false;
+        GameManager gm = GameManager.Instance;
+        foreach (EtapaComplementar e in reacao.etapasComplementares)
+        {
+            if (string.IsNullOrWhiteSpace(e.id) || e.id == RegistroDaInvestigacao.EtapaReacao || e.dialogo == null || e.recompensas == null)
+            {
+                Debug.LogWarning($"[NPC] {name}: etapa complementar ignorada (id vazio, id reservado \"{RegistroDaInvestigacao.EtapaReacao}\", sem fala ou sem recompensas).", this);
+                continue;
+            }
+            bool requisitosOk = true;
+            if (e.requisitos != null)
+                foreach (Item r in e.requisitos)
+                    if (r != null && !gm.EvidenciaObtida(r)) { requisitosOk = false; break; }
+            if (!requisitosOk) continue;
+
+            if (TemRecompensaPendente(e.recompensas, caso, e.id))
+            {
+                pendente = e;
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>Lista o que ainda não foi entregue NESTE caso/interação/etapa. Não depende do que está no
@@ -154,15 +241,11 @@ public class NPCMovement : MonoBehaviour, IInteractable
         foreach (Item item in itensConfigurados)
         {
             if (item == null || string.IsNullOrEmpty(item.itemID) || recompensasPendentes.Contains(item)) continue;
-            if (registro.RecompensaEntregue(casoDaConversa, interacao, etapaDaConversa, item.itemID)) continue;
+            if (AindaPendente(item, casoDaConversa, etapaDaConversa)) { recompensasPendentes.Add(item); continue; }
 
-            // Save v2 (sem registro de entregas): quem já tem a pista a recebeu pela regra antiga.
-            if (registro.CasoComEstadoLegado(casoDaConversa) && gm.inventoryManager != null && gm.inventoryManager.HasItem(item.itemID))
-            {
+            // Save v2 (sem registro de entregas): quem já tem a pista a recebeu pela regra antiga — registra agora.
+            if (registro.CasoComEstadoLegado(casoDaConversa) && !registro.RecompensaEntregue(casoDaConversa, interacao, etapaDaConversa, item.itemID))
                 registro.RegistrarRecompensa(casoDaConversa, interacao, etapaDaConversa, item.itemID);
-                continue;
-            }
-            recompensasPendentes.Add(item);
         }
     }
 

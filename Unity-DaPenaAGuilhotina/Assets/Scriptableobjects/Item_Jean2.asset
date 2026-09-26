@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Item_Jean2
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_jean_2
-  itemImg: {fileID: 0}
+  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 0
-  itemName: 
-  descricao: 
-  fonte: 
+  itemName: "Os sal\xE1rios da manufatura"
+  descricao: "C\xF3pia do livro de sal\xE1rios publicada por uma gazeta: R\xE9veillon
+    pagava acima da m\xE9dia do bairro e manteve os sal\xE1rios no inverno."
+  fonte: Gazeta vendida na banca
   caso: {fileID: 11400000, guid: 5c0733705941aa94db8fdec6796223e7, type: 2}
   confiabilidade: 1
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

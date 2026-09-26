@@ -20,7 +20,9 @@ public static class SistemaDeSave
 {
     // 2: fase atual e casos concluídos
     // 3: registro da investigação por caso + ID estável (horas pagas, loot, recompensas de NPC)
-    public const int VersaoAtual = 3;
+    // 4: biblioteca (compras), evidências obtidas e histórico completo de cada publicação
+    // 5: histórico guarda também o que foi aplicado de fato (depois do limite 0–100)
+    public const int VersaoAtual = 5;
     private const string CenaPadrao = "Jogo";
 
     [Serializable]
@@ -35,6 +37,15 @@ public static class SistemaDeSave
     {
         public string caso;
         public NivelDoPanfleto nivel;
+        // v4: snapshot da publicação (saves antigos chegam sem isto e viram "legado")
+        public bool legado;
+        public List<string> pistas = new List<string>();
+        public List<string> suportes = new List<string>();
+        public List<string> qualificadores = new List<string>();
+        public int povo, estado, ouro, penalidadePovo, penalidadeEstado;
+        // v5
+        public bool aplicadoConhecido;
+        public int povoAplicado, estadoAplicado, ouroAplicado;
     }
 
     [Serializable]
@@ -79,6 +90,10 @@ public static class SistemaDeSave
         public List<string> recompensasEntregues = new List<string>();
         public List<string> casosComEstadoLegado = new List<string>();
         public List<string> interacoesPagasLegadas = new List<string>();
+
+        // v4
+        public List<string> comprasDaBiblioteca = new List<string>();
+        public List<string> evidenciasObtidas = new List<string>();
     }
 
     public static string CaminhoDoArquivo => Path.Combine(Application.persistentDataPath, "save.json");
@@ -147,7 +162,9 @@ public static class SistemaDeSave
             lootsColetados = new List<string>(registro.lootsColetados),
             recompensasEntregues = new List<string>(registro.recompensasEntregues),
             casosComEstadoLegado = new List<string>(registro.casosComEstadoLegado),
-            interacoesPagasLegadas = new List<string>(registro.interacoesPagasLegadas)
+            interacoesPagasLegadas = new List<string>(registro.interacoesPagasLegadas),
+            comprasDaBiblioteca = new List<string>(gm.comprasDaBiblioteca),
+            evidenciasObtidas = new List<string>(gm.evidenciasObtidas)
         };
 
         foreach (CaseData caso in gm.casosJaSelecionados)
@@ -160,7 +177,13 @@ public static class SistemaDeSave
             if (item != null) dados.inventario.Add(new ItemSalvo { itemID = item.itemID, quantidade = item.itemAmt });
 
         foreach (var p in gm.panfletosPublicados)
-            dados.panfletosPublicados.Add(new PanfletoSalvo { caso = p.caso != null ? p.caso.name : null, nivel = p.nivel });
+            dados.panfletosPublicados.Add(new PanfletoSalvo
+            {
+                caso = p.caso != null ? p.caso.name : null, nivel = p.nivel, legado = p.legado,
+                pistas = Copia(p.pistas), suportes = Copia(p.suportes), qualificadores = Copia(p.qualificadores),
+                povo = p.povo, estado = p.estado, ouro = p.ouro, penalidadePovo = p.penalidadePovo, penalidadeEstado = p.penalidadeEstado,
+                aplicadoConhecido = p.aplicadoConhecido, povoAplicado = p.povoAplicado, estadoAplicado = p.estadoAplicado, ouroAplicado = p.ouroAplicado
+            });
 
         foreach (var r in gm.revelacoesPendentes)
             dados.revelacoesPendentes.Add(new RevelacaoSalva
@@ -277,7 +300,21 @@ public static class SistemaDeSave
 
         gm.panfletosPublicados = new List<GameManager.PanfletoPublicado>();
         foreach (PanfletoSalvo p in dados.panfletosPublicados)
-            gm.panfletosPublicados.Add(new GameManager.PanfletoPublicado { caso = BuscarCaso(catalogo, p.caso), nivel = p.nivel });
+            gm.panfletosPublicados.Add(new GameManager.PanfletoPublicado
+            {
+                caso = BuscarCaso(catalogo, p.caso), nivel = p.nivel,
+                // Publicações de saves < 4 não guardavam pistas nem valores: ficam marcadas, sem nada inventado.
+                legado = p.legado || dados.versao < 4,
+                pistas = Copia(p.pistas), suportes = Copia(p.suportes), qualificadores = Copia(p.qualificadores),
+                povo = p.povo, estado = p.estado, ouro = p.ouro, penalidadePovo = p.penalidadePovo, penalidadeEstado = p.penalidadeEstado,
+                // v < 5 não guardava o aplicado: fica como desconhecido (nada é recalculado nem inventado).
+                aplicadoConhecido = dados.versao >= 5 && p.aplicadoConhecido,
+                povoAplicado = p.povoAplicado, estadoAplicado = p.estadoAplicado, ouroAplicado = p.ouroAplicado
+            });
+        gm.comprasDaBiblioteca = Copia(dados.comprasDaBiblioteca);
+        gm.evidenciasObtidas = Copia(dados.evidenciasObtidas);
+        if (dados.versao < 4) // save antigo: o que está no inventário foi obtido, com certeza (nada além disso é deduzido)
+            foreach (Item item in gm.inventarioSalvo) gm.RegistrarEvidencia(item);
 
         gm.revelacoesPendentes = new List<GameManager.RevelacaoPendente>();
         foreach (RevelacaoSalva r in dados.revelacoesPendentes)
@@ -334,8 +371,18 @@ public static class SistemaDeSave
             string chave = RegistroDaInvestigacao.Chave(caso, antiga);
             if (!registro.interacoesPagasLegadas.Contains(chave)) registro.interacoesPagasLegadas.Add(chave);
         }
-        Debug.Log($"[SistemaDeSave] Migração v{dados.versao}→v{VersaoAtual}: caso '{caso.name}' em andamento com " +
-                  $"{antigas.Count} interação(ões) paga(s) pela chave antiga (cena/nome). Horas restantes preservadas: {gm.horasRestantes}.");
+
+        // Save v1 não tinha relógio: um caso em andamento chegaria sem orçamento (tempo ilimitado). Recebe o
+        // orçamento do caso, uma vez, sem a perda por dívida (que só vale ao aceitar um caso novo).
+        if (dados.versao < 2 && gm.horasDoCaso <= 0)
+        {
+            gm.horasDoCaso = gm.horasRestantes = caso.horasDeInvestigacao > 0 ? caso.horasDeInvestigacao : gm.horasPorCaso;
+            Debug.Log($"[SistemaDeSave] Save v1: caso '{caso.name}' em andamento recebeu o orçamento de {gm.horasDoCaso}h.");
+        }
+
+        Debug.Log($"[SistemaDeSave] Migração v{dados.versao}→v{VersaoAtual}: caso '{caso.name}' em andamento; chaves antigas " +
+                  $"(cena/nome) mantidas como pagas: [{string.Join(", ", antigas)}]. Homônimos que dividirem uma chave serão " +
+                  $"listados na primeira interação. Horas restantes preservadas: {gm.horasRestantes}.");
     }
 
     /// <summary>Chamado pelo TutorialManager.Start: a etapa salva substitui o PlayerPrefs "tutorial concluído".</summary>

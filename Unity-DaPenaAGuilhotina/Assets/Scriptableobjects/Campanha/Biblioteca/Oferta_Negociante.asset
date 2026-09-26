@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bcff127c3ec1c141afcf378dbde7cae, type: 3}
+  m_Name: Oferta_Negociante
+  m_EditorClassIdentifier: Assembly-CSharp::OfertaDaBiblioteca
+  id: biblioteca_negociante
+  titulo: "Livros do Comit\xEA de Subsist\xEAncia"
+  descricao: "Livros oficiais de entradas e sa\xEDdas de gr\xE3os da se\xE7\xE3o,
+    m\xEAs a m\xEAs."
+  preco: 30
+  faseMinima: 3
+  caso: {fileID: 11400000, guid: 08a12328210a2ab45b8948af72c05f4e, type: 2}
+  item: {fileID: 11400000, guid: 75c90c803f3921941af6f487c71a4fd9, type: 2}

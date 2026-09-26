@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
+  m_Name: Caso_Negociante
+  m_EditorClassIdentifier: Assembly-CSharp::CaseData
+  caseTitle: "O Negociante de Gr\xE3os"
+  caseDescription: "1793. O Comit\xEA encomenda \xE0 tipografia um panfleto contra
+    o negociante Garnier, acusado de a\xE7ambarcar gr\xE3os e burlar a Lei do M\xE1ximo.
+    Um trabalho bem pago, com o Estado ao seu lado."
+  objectiveText: "Provar as acusa\xE7\xF5es contra Garnier."
+  moneyReward: 60
+  publicOpinionReward: -15
+  stateOpinionReward: 25
+  fase: 4
+  rota: 2
+  horasDeInvestigacao: 0
+  npcDialogueRoute: {fileID: 11400000, guid: f53c487eb24e62d42b5ecca5b5ba38b2, type: 2}
+  nextSceneName: Fase4
+  receitaDoPanfleto: {fileID: 11400000, guid: 1c04d51daf49a6a42ab3385950bfcc5e, type: 2}
+  alegacoesIniciais:
+  - {fileID: 11400000, guid: 4c37a83011454e74bbedbdafaa2d6b0a, type: 2}
+  - {fileID: 11400000, guid: 91a682519e75b17418f88c4f8b75dc3d, type: 2}

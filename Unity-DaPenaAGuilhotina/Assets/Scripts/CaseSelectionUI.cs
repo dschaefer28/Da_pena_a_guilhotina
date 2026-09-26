@@ -80,30 +80,40 @@ public class CaseSelectionUI : MonoBehaviour
             if (opiniaoPopular != null) opiniaoPopular.text = FormatarTendencia("Opinião Popular", caso.publicOpinionReward);
             if (opiniaoEstado != null) opiniaoEstado.text = FormatarTendencia("Opinião do Estado", caso.stateOpinionReward);
 
-            // 5. Documento (Interlúdio, "Mesa de Casos"): bloquear visualmente casos já selecionados antes.
-            bool jaSelecionado = GameManager.Instance != null && GameManager.Instance.CasoJaFoiSelecionado(caso);
-            if (jaSelecionado)
+            // 5. Documento (Interlúdio, "Mesa de Casos"): três estados. Concluído e em andamento ficam bloqueados;
+            // os disponíveis só aceitam clique quando não há outro caso em andamento (o GameManager confere de novo).
+            EstadoDoCaso estado = EstadoDe(caso, gm);
+            if (titulo != null && estado != EstadoDoCaso.Disponivel)
+                titulo.text += estado == EstadoDoCaso.Concluido ? " (concluído)" : " (em andamento)";
+            if (estado == EstadoDoCaso.Concluido)
             {
-                if (botaoAceitar != null) botaoAceitar.interactable = false;
-                if (titulo != null) titulo.text += " (já escolhido)";
                 CanvasGroup grupoDoCartao = novoCartao.GetComponent<CanvasGroup>();
                 if (grupoDoCartao == null) grupoDoCartao = novoCartao.AddComponent<CanvasGroup>();
                 grupoDoCartao.alpha = 0.45f;
             }
-            else if (botaoAceitar != null && casoEmAndamento)
+
+            if (botaoAceitar != null)
             {
-                botaoAceitar.interactable = false;
-            }
-            else if (botaoAceitar != null)
-            {
-                // Adiciona a ação de clique via código
-                botaoAceitar.onClick.AddListener(() => ConfirmarEscolha(caso));
+                // Mesma regra do domínio (um por vez, fase ainda aberta...), para o botão não prometer o que será recusado.
+                bool podeAceitar = estado == EstadoDoCaso.Disponivel && (gm == null || gm.PodeAceitarCaso(caso, out _));
+                botaoAceitar.interactable = podeAceitar;
+                if (podeAceitar) botaoAceitar.onClick.AddListener(() => ConfirmarEscolha(caso));
             }
         }
     }
 
+    public enum EstadoDoCaso { Disponivel, EmAndamento, Concluido }
+
+    public static EstadoDoCaso EstadoDe(CaseData caso, GameManager gm)
+    {
+        if (gm == null || caso == null) return EstadoDoCaso.Disponivel;
+        if (gm.casosConcluidos.Contains(caso)) return EstadoDoCaso.Concluido;
+        if (gm.casoEscolhido == caso || gm.CasoJaFoiSelecionado(caso)) return EstadoDoCaso.EmAndamento;
+        return EstadoDoCaso.Disponivel;
+    }
+
     // A mesa mostra só os casos da fase atual; na Fase 4, só o da rota travada (documento, "Filtro Dinâmico de Casos").
-    private static bool CasoVisivel(CaseData caso, GameManager gm)
+    public static bool CasoVisivel(CaseData caso, GameManager gm)
     {
         if (caso == null) return false;
         if (gm == null) return true;

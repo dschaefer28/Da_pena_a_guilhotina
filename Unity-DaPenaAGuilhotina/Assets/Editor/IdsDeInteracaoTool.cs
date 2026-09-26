@@ -8,8 +8,9 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Preenche o "Id Da Interacao" de NPCMovement e LootInteractable nas cenas do build. Idempotente: IDs já
 /// preenchidos e únicos não mudam; só recebem ID os vazios e as cópias repetidas (a primeira na ordem da hierarquia
-/// fica com o ID). O ID gerado é o caminho na hierarquia — o mesmo valor que o jogo usa quando o campo está vazio,
-/// então saves feitos antes de rodar a ferramenta continuam apontando para o mesmo NPC/objeto.
+/// fica com o ID). O ID gerado é IdDeInteracao.IdPadrao (caminho na hierarquia, com "#2", "#3"... para irmãos de
+/// mesmo nome) — o mesmo valor que o jogo usa quando o campo está vazio, então saves feitos antes de rodar a
+/// ferramenta continuam apontando para o mesmo NPC/objeto (salvo se o ID padrão já estiver ocupado por outro).
 /// </summary>
 public static class IdsDeInteracaoTool
 {
@@ -93,8 +94,9 @@ public static class IdsDeInteracaoTool
                 continue;
             }
 
+            // Mesmo valor que o jogo usa com o campo vazio (IdPadrao); só muda se já estiver ocupado por outro ID.
             string baseId = IdDeInteracao.CaminhoNaHierarquia(par.Key.transform);
-            string novo = baseId;
+            string novo = IdDeInteracao.IdPadrao(par.Key.transform);
             for (int n = 2; usados.Contains(novo); n++) novo = baseId + "#" + n;
             usados.Add(novo);
 

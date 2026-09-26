@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
+  m_Name: Caso_Assignats
+  m_EditorClassIdentifier: Assembly-CSharp::CaseData
+  caseTitle: Os Assignats Falsos
+  caseDescription: "1792. Notas falsas de assignat inundam Paris. O gravador Morel,
+    colega de of\xEDcio da tipografia, foi preso acusado de fabric\xE1-las. Ele jura
+    que as chapas foram roubadas da sua oficina."
+  objectiveText: Descobrir quem imprimiu os assignats falsos.
+  moneyReward: 35
+  publicOpinionReward: 10
+  stateOpinionReward: 10
+  fase: 3
+  rota: 0
+  horasDeInvestigacao: 0
+  npcDialogueRoute: {fileID: 11400000, guid: 9b750ab595a349e44a1866a3723238e8, type: 2}
+  nextSceneName: Fase3
+  receitaDoPanfleto: {fileID: 11400000, guid: 986d31c686cc99f41afda7909d5bc9b7, type: 2}
+  alegacoesIniciais:
+  - {fileID: 11400000, guid: 8c51baa68ea7fc843b0502c280451ebd, type: 2}
+  - {fileID: 11400000, guid: 896a0ff2302027948b78d43105257d88, type: 2}

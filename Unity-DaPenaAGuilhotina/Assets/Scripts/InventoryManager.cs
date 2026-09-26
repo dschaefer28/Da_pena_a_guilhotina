@@ -75,6 +75,7 @@ public class InventoryManager : MonoBehaviour
                 Debug.Log("Não é possível abrir o inventário durante um diálogo.");
                 return;
             }
+            if (vaiAbrir && BibliotecaUI.Aberta) return; // um modal por vez
 
             inventoryUI.SetActive(vaiAbrir);
             if (vaiAbrir) ConfigureInventory();
@@ -202,6 +203,7 @@ public class InventoryManager : MonoBehaviour
     public string TextoDaLinha(Item item)
     {
         if (item == null) return string.Empty;
+        if (item.EhSuporte) return $"{item.NomeExibicao} <size=75%>({item.RotuloDeApoio})</size>";
         if (!item.EhPista) return item.NomeExibicao;
         return $"{item.NomeExibicao} <size=75%>({item.RotuloSituacao(PistaVerificada(item))})</size>";
     }
@@ -272,7 +274,7 @@ public class InventoryManager : MonoBehaviour
             if (slot != null && slot.item != null && slot.item.itemID == itemToAdd.itemID)
             {
                 StackInInventory(slot, itemToAdd);
-                if (!restaurandoInventario) { OnItemAdicionado?.Invoke(itemToAdd); RegistrarVerificacoes(avisar: true); }
+                if (!restaurandoInventario) AoReceberItemNovo(itemToAdd);
                 return true;
             }
         }
@@ -284,7 +286,7 @@ public class InventoryManager : MonoBehaviour
             {
                 Item newItem = itemToAdd.Clone();
                 PlaceInInventory(slot, newItem);
-                if (!restaurandoInventario) { OnItemAdicionado?.Invoke(itemToAdd); RegistrarVerificacoes(avisar: true); }
+                if (!restaurandoInventario) AoReceberItemNovo(itemToAdd);
                 return true;
             }
         }
@@ -293,6 +295,25 @@ public class InventoryManager : MonoBehaviour
         Debug.Log("Inventário cheio! Não foi possível pegar o item.");
         return false;
     }
+
+    // Item que entrou de verdade (não é a restauração ao trocar de cena): popup, verificações e histórico de evidências.
+    private void AoReceberItemNovo(Item item)
+    {
+        if (GameManager.Instance != null) GameManager.Instance.RegistrarEvidencia(item);
+        OnItemAdicionado?.Invoke(item);
+        RegistrarVerificacoes(avisar: true);
+    }
+
+    /// <summary>Item da grade com este itemID (ou null).</summary>
+    public Item ItemNaGrade(string itemID)
+    {
+        foreach (Item item in ItensNaGrade())
+            if (item.itemID == itemID) return item;
+        return null;
+    }
+
+    /// <summary>Itens da grade (para listas como a de documentos de apoio da prensa).</summary>
+    public List<Item> ItensDaGrade() => new List<Item>(ItensNaGrade());
 
     // NOVO MÉTODO: Retorna verdadeiro se a pista/item já estiver no inventário
     public bool HasItem(string searchItemID)
@@ -388,5 +409,52 @@ public class InventoryManager : MonoBehaviour
         restaurandoInventario = false;
         RegistrarVerificacoes(avisar: false); // verdade descoberta em outra cena continua valendo, sem repetir o popup
         Debug.Log("[SISTEMA] Inventário Restaurado com segurança.");
+
+        // Alegações iniciais que não couberam ao aceitar o caso (inventário cheio) entram assim que houver espaço.
+        GameManager.Instance.EntregarAlegacoesPendentes();
+    }
+
+    /// <summary>Tira da grade (e das entradas da prensa) todos os itens que atendem à condição. Devolve quantos
+    /// slots foram esvaziados.</summary>
+    public int RemoverItens(Predicate<Item> condicao)
+    {
+        if (condicao == null || inventoryGrid == null) return 0;
+        int removidos = 0;
+        for (int i = 0; i < inventoryGrid.transform.childCount; i++)
+        {
+            UISlotHandler slot = inventoryGrid.transform.GetChild(i).GetComponent<UISlotHandler>();
+            if (slot == null || slot.item == null || !condicao(slot.item)) continue;
+            ClearItemSlot(slot);
+            removidos++;
+        }
+        CraftingPress prensa = FindAnyObjectByType<CraftingPress>(FindObjectsInactive.Include);
+        if (prensa != null)
+            foreach (UISlotHandler slot in new[] { prensa.slotInput1, prensa.slotInput2 })
+                if (slot != null && slot.item != null && condicao(slot.item)) { ClearItemSlot(slot); removidos++; }
+        if (removidos > 0) ConfigureInventory();
+        return removidos;
+    }
+
+    /// <summary>Verdadeiro se o item cabe agora (empilha num igual ou há slot vazio na grade).</summary>
+    public bool TemEspacoPara(Item item)
+    {
+        if (item == null || inventoryGrid == null) return false;
+        for (int i = 0; i < inventoryGrid.transform.childCount; i++)
+        {
+            UISlotHandler slot = inventoryGrid.transform.GetChild(i).GetComponent<UISlotHandler>();
+            if (slot != null && (slot.item == null || slot.item.itemID == item.itemID)) return true;
+        }
+        return false;
+    }
+
+    /// <summary>Tem o item na grade, nas entradas/saída da prensa ou na mão (item tocado e ainda não solto).</summary>
+    public bool PossuiEmQualquerLugar(string itemID)
+    {
+        if (HasItem(itemID)) return true;
+        CraftingPress prensa = FindAnyObjectByType<CraftingPress>(FindObjectsInactive.Include);
+        if (prensa != null)
+            foreach (UISlotHandler slot in new[] { prensa.slotInput1, prensa.slotInput2, prensa.slotOutput })
+                if (slot != null && slot.item != null && slot.item.itemID == itemID) return true;
+        return MouseManager.instance != null && MouseManager.instance.heldItem != null && MouseManager.instance.heldItem.itemID == itemID;
     }
 }

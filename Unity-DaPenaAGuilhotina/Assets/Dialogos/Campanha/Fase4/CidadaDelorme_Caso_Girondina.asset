@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
+  m_Name: CidadaDelorme_Caso_Girondina
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  talkScript:
+  - name: "Cidad\xE3 Delorme"
+    text: "S\xE3o s\xF3 cartas de um marido para a esposa. Leia, por favor."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: "Cidad\xE3 Delorme"
+    text: "Se houver conspira\xE7\xE3o nelas, eu mesma subo ao cadafalso."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []

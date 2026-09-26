@@ -27,7 +27,8 @@ MonoBehaviour:
     povo: 70
     estado: -20
     ouro: 35
-    textoRevelacao: 
+    textoRevelacao: 'Soube-se que a Rainha nunca encomendou o colar em segredo: o
+      boato impresso pela tipografia caiu por terra.'
     penalidadePovo: -30
     penalidadeEstado: -5
   calunia:
@@ -35,6 +36,17 @@ MonoBehaviour:
     povo: 90
     estado: -30
     ouro: 50
-    textoRevelacao: 
+    textoRevelacao: "O libelo contra a Rainha e o Cardeal n\xE3o tinha prova alguma.
+      A tipografia \xE9 chamada de caluniadora."
     penalidadePovo: -50
     penalidadeEstado: -15
+  soAlegacoes:
+    panfleto: {fileID: 0}
+    povo: 20
+    estado: -5
+    ouro: 8
+    textoRevelacao: "O panfleto do Caso das Joias s\xF3 repetia a vers\xE3o do joalheiro.
+      Sem provas, os leitores o esqueceram depressa."
+    penalidadePovo: -5
+    penalidadeEstado: 0
+  qualificadores: []

@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: panfleto_joalheiro
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: panfleto_joias
-  itemImg: {fileID: 0}
+  itemImg: {fileID: -6434777298250132992, guid: b2bb80b0c42cdd84889695ff162a2962, type: 3}
   itemAmt: 0
-  itemName: 
+  itemName: 'Panfleto: Caso das Joias'
   descricao: 
   fonte: 
   caso: {fileID: 0}
   confiabilidade: 0
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

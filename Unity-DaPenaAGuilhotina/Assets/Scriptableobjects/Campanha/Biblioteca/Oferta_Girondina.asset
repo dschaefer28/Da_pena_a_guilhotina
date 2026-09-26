@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bcff127c3ec1c141afcf378dbde7cae, type: 3}
+  m_Name: Oferta_Girondina
+  m_EditorClassIdentifier: Assembly-CSharp::OfertaDaBiblioteca
+  id: biblioteca_girondina
+  titulo: "Correspond\xEAncia arquivada na Conven\xE7\xE3o"
+  descricao: "Cartas do deputado Delorme arquivadas na Conven\xE7\xE3o, com o carimbo
+    do arquivo."
+  preco: 25
+  faseMinima: 3
+  caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
+  item: {fileID: 11400000, guid: 5884edf3fbfea4a49a60a89fa57dc947, type: 2}

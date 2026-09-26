@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2581bd120f010649b20a64ab7f37907, type: 3}
+  m_Name: ReceitaDeCaso_Assignats
+  m_EditorClassIdentifier: Assembly-CSharp::ReceitaDeCaso
+  caso: {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}
+  panfletoPadrao: {fileID: 11400000, guid: 03a5275b8fbda6240827535a29dd3f8c, type: 2}
+  soFatos:
+    panfleto: {fileID: 0}
+    povo: 15
+    estado: 10
+    ouro: 35
+    textoRevelacao: 
+    penalidadePovo: 0
+    penalidadeEstado: 0
+  comBoato:
+    panfleto: {fileID: 0}
+    povo: 20
+    estado: 15
+    ouro: 50
+    textoRevelacao: "Ningu\xE9m viu o gravador vender nota alguma. O boato impresso
+      foi desmentido."
+    penalidadePovo: -10
+    penalidadeEstado: -10
+  calunia:
+    panfleto: {fileID: 0}
+    povo: 25
+    estado: 20
+    ouro: 65
+    textoRevelacao: "Morel nunca teve contato com emigrados. A cal\xFAnia custou
+      caro \xE0 tipografia."
+    penalidadePovo: -15
+    penalidadeEstado: -15
+  soAlegacoes:
+    panfleto: {fileID: 0}
+    povo: 5
+    estado: 4
+    ouro: 14
+    textoRevelacao: "O panfleto s\xF3 repetia a defesa do gravador. Os leitores esperavam
+      provas."
+    penalidadePovo: -5
+    penalidadeEstado: 0
+  qualificadores:
+  - id: apoio_assignats
+    descricao: "Documento oficial de qualidade superior refor\xE7a o panfleto (valor
+      provis\xF3rio)."
+    suportesAceitos:
+    - {fileID: 11400000, guid: 490948fb0e7da0144b4a48d8f065c313, type: 2}
+    qualidadeMinima: 1
+    niveis: 
+    povo: 5
+    estado: 10
+    ouro: 15

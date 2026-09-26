@@ -12,6 +12,14 @@ public enum Confiabilidade
     Calunia
 }
 
+/// <summary>Qualidade da evidência (Prompt 3). INDEPENDENTE da Confiabilidade: um documento caro pode ser boato, e o
+/// preço nunca muda a verdade. Só entra no cálculo por regras explícitas da receita (ReceitaDeCaso.qualificadores).</summary>
+public enum QualidadeDaEvidencia
+{
+    Comum,
+    Superior
+}
+
 [CreateAssetMenu(fileName = "Item", menuName = "ScriptableObjects/Items")]
 public class Item : ScriptableObject
 {
@@ -40,8 +48,23 @@ public class Item : ScriptableObject
              "a verdade é revelada na ficha (\"confirmada\" / \"boato\" / \"calúnia\").")]
     public List<Item> verificadaPor = new List<Item>();
 
+    [Header("Documento de apoio (biblioteca, Prompt 3)")]
+    [Tooltip("Documento complementar do caso: não vai nos dois slots da prensa, e sim no campo Suporte, e não é gasto " +
+             "na impressão. Só reforça o panfleto se a receita do caso tiver um qualificador que o aceite.")]
+    public bool documentoDeSuporte;
+    [Tooltip("Qualidade da evidência. Não altera a confiabilidade.")]
+    public QualidadeDaEvidencia qualidade = QualidadeDaEvidencia.Comum;
+
     /// <summary>Nome pronto para exibição em UI (usa itemName se configurado, senão cai no nome do asset).</summary>
     public string NomeExibicao => string.IsNullOrWhiteSpace(itemName) ? name : itemName;
+
+    /// <summary>Documento de apoio de um caso (vai no campo Suporte da prensa).</summary>
+    public bool EhSuporte => documentoDeSuporte && caso != null;
+
+    /// <summary>Etiqueta do documento de apoio (informação conhecida: qualidade, não verdade).</summary>
+    public string RotuloDeApoio =>
+        !EhSuporte ? string.Empty
+        : qualidade == QualidadeDaEvidencia.Superior ? "<color=#C9A94E>apoio · qualidade superior</color>" : "<color=#9E9E9E>apoio</color>";
 
     /// <summary>Verdadeiro para pistas que entram na regra Fato x Boato da prensa.</summary>
     public bool EhPista => caso != null && confiabilidade != Confiabilidade.NaoEPista;
@@ -77,8 +100,10 @@ public class Item : ScriptableObject
 
         if (confiabilidade != Confiabilidade.NaoEPista && caso == null)
             Debug.LogWarning($"[Item] '{name}' tem confiabilidade {confiabilidade} mas nenhum caso: a prensa vai tratá-lo como item comum.", this);
-        if (caso != null && confiabilidade == Confiabilidade.NaoEPista)
-            Debug.LogWarning($"[Item] '{name}' tem caso mas está como NaoEPista: escolha Fato, Boato ou Calunia.", this);
+        if (caso != null && confiabilidade == Confiabilidade.NaoEPista && !documentoDeSuporte)
+            Debug.LogWarning($"[Item] '{name}' tem caso mas está como NaoEPista: escolha Fato, Boato ou Calunia (ou marque Documento De Suporte).", this);
+        if (documentoDeSuporte && confiabilidade != Confiabilidade.NaoEPista)
+            Debug.LogWarning($"[Item] '{name}' é documento de suporte: deixe a confiabilidade em NaoEPista (ele não é uma das duas pistas).", this);
     }
 #endif
 }

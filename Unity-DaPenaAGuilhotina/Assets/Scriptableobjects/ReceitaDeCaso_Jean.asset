@@ -27,7 +27,8 @@ MonoBehaviour:
     povo: -25
     estado: 60
     ouro: 70
-    textoRevelacao: 
+    textoRevelacao: "N\xE3o se provou que R\xE9veillon mandou a Guarda atirar: ele
+      pediu prote\xE7\xE3o, n\xE3o o fogo. O boato impresso desmoronou."
     penalidadePovo: -10
     penalidadeEstado: -25
   calunia:
@@ -35,6 +36,17 @@ MonoBehaviour:
     povo: -35
     estado: 75
     ouro: 90
-    textoRevelacao: 
+    textoRevelacao: "Ningu\xE9m encontrou prova de que R\xE9veillon servia aos ingleses:
+      a cal\xFAnia voltou-se contra a tipografia."
     penalidadePovo: -15
     penalidadeEstado: -45
+  soAlegacoes:
+    panfleto: {fileID: 0}
+    povo: -8
+    estado: 20
+    ouro: 20
+    textoRevelacao: "O panfleto sobre R\xE9veillon s\xF3 repetia a defesa dele. Nem
+      a Corte lhe deu cr\xE9dito."
+    penalidadePovo: 0
+    penalidadeEstado: -5
+  qualificadores: []

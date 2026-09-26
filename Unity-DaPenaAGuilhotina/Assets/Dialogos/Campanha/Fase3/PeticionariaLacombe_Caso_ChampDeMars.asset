@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
+  m_Name: PeticionariaLacombe_Caso_ChampDeMars
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  talkScript:
+  - name: "Peticion\xE1ria Lacombe"
+    text: "Assin\xE1vamos uma peti\xE7\xE3o. S\xF3 isso! E eles atiraram."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: "Peticion\xE1ria Lacombe"
+    text: "Guardei a folha. O sangue ainda est\xE1 nela."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []

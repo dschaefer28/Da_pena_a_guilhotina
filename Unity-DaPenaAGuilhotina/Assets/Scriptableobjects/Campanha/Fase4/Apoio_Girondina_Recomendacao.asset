@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa124a2bcbce4043846ab3905a2fb1b, type: 3}
+  m_Name: Apoio_Girondina_Recomendacao
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  itemID: apoio_girondina_recomendacao
+  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemAmt: 1
+  itemName: "Carta de recomenda\xE7\xE3o da se\xE7\xE3o"
+  descricao: "A se\xE7\xE3o atesta que a cidad\xE3 Delorme doou roupas e p\xE3o aos
+    volunt\xE1rios de 1792."
+  fonte: "Cidad\xE3 Delorme"
+  caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
+  confiabilidade: 0
+  verificadaPor: []
+  documentoDeSuporte: 1
+  qualidade: 1

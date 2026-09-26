@@ -106,7 +106,30 @@ public static class IdDeInteracao
     }
 
     public static string IdEfetivo(Component alvo, string idSerializado) =>
-        string.IsNullOrWhiteSpace(idSerializado) ? CaminhoNaHierarquia(alvo.transform) : idSerializado.Trim();
+        string.IsNullOrWhiteSpace(idSerializado) ? IdPadrao(alvo.transform) : idSerializado.Trim();
+
+    /// <summary>ID usado quando o campo está vazio — e o mesmo que a ferramenta grava: o caminho na hierarquia e,
+    /// para o 2º, 3º... irmão com o mesmo nome, "#2", "#3" (pela ordem entre os irmãos).</summary>
+    public static string IdPadrao(Transform t)
+    {
+        if (t == null) return string.Empty;
+        string caminho = CaminhoNaHierarquia(t);
+        int ordem = 0;
+        if (t.parent != null)
+        {
+            for (int i = 0; i < t.parent.childCount && t.parent.GetChild(i) != t; i++)
+                if (t.parent.GetChild(i).name == t.name) ordem++;
+        }
+        else if (t.gameObject.scene.IsValid() && t.gameObject.scene.isLoaded)
+        {
+            foreach (GameObject raiz in t.gameObject.scene.GetRootGameObjects())
+            {
+                if (raiz.transform == t) break;
+                if (raiz.name == t.name) ordem++;
+            }
+        }
+        return ordem == 0 ? caminho : caminho + "#" + (ordem + 1);
+    }
 
     /// <summary>Chave do save v2 (RelogioDeInvestigacao antigo): "cena/nomeDoGameObject".</summary>
     public static string ChaveAntiga(Component alvo) =>

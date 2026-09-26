@@ -61,11 +61,22 @@ public class GameManager : MonoBehaviour
     [Header("Persistência (Entre Cenas)")]
     public List<Item> inventarioSalvo = new List<Item>();
 
+    /// <summary>Histórico de uma publicação com SNAPSHOT dos valores aplicados: mudar receitas depois não altera
+    /// publicações já feitas. "legado" = veio de um save anterior à versão 4, sem esses detalhes.</summary>
     [Serializable]
     public class PanfletoPublicado
     {
         public CaseData caso;
         public NivelDoPanfleto nivel;
+        public bool legado;
+        public List<string> pistas = new List<string>();
+        public List<string> suportes = new List<string>();
+        public List<string> qualificadores = new List<string>();
+        public int povo, estado, ouro;
+        public int penalidadePovo, penalidadeEstado;
+        [Tooltip("O que mudou de fato na HUD (Povo/Estado limitados a 0–100). Falso em publicações de saves < 5.")]
+        public bool aplicadoConhecido;
+        public int povoAplicado, estadoAplicado, ouroAplicado;
     }
 
     [Serializable]
@@ -85,6 +96,13 @@ public class GameManager : MonoBehaviour
     [Tooltip("itemIDs de pistas cuja verdade o jogador já descobriu. Guardado aqui para a ficha não voltar a " +
              "'não verificada' quando o item que confirmou a pista for gasto na prensa.")]
     public List<string> pistasVerificadas = new List<string>();
+    [Tooltip("itemIDs de toda evidência de caso (pista ou documento) que já entrou no inventário, mesmo se gasta " +
+             "depois na prensa. Pré-requisito das etapas complementares dos NPCs.")]
+    public List<string> evidenciasObtidas = new List<string>();
+
+    [Header("Biblioteca (Fase 3 em diante)")]
+    [Tooltip("\"oferta|caso\" das compras feitas (OfertaDaBiblioteca.ChaveDeCompra).")]
+    public List<string> comprasDaBiblioteca = new List<string>();
 
     [Header("Dependências Globais")]
     public InventoryManager inventoryManager;
@@ -157,6 +175,7 @@ public class GameManager : MonoBehaviour
         }
         if (casosJaSelecionados.Contains(caso)) { motivo = "Este caso já foi escolhido antes."; return false; }
         if (caso.fase != faseAtual) { motivo = "Este caso não pertence à fase atual."; return false; }
+        if (FaseConcluida) { motivo = "Os casos desta fase já foram concluídos."; return false; }
         if (caso.rota != RotaFinal.Nenhuma && caso.rota != rotaFinal) { motivo = "Este caso não pertence a esta rota."; return false; }
         return true;
     }
@@ -185,10 +204,53 @@ public class GameManager : MonoBehaviour
         // Documento (Tarefas Globais): pop-up quando um caso é escolhido e travado.
         AvisoNaTela.Mostrar($"Caso aceito: {TituloDe(caso)}");
         IniciarRelogio(caso);
+        EntregarAlegacoesPendentes();
 
         if (TutorialManager.Instance != null)
             TutorialManager.Instance.NotificarEvento(TutorialManager.EVENTO_CASO_ESCOLHIDO);
         return true;
+    }
+
+    /// <summary>Interação fictícia usada para registrar a entrega das alegações iniciais (uma vez por caso).</summary>
+    public const string InteracaoAlegacoes = "mesa/alegacoes_do_cliente";
+
+    /// <summary>Entrega as alegações iniciais do caso em andamento que ainda não entraram no inventário. Chamado ao
+    /// aceitar o caso e sempre que o inventário de uma cena é restaurado: com o inventário cheio, fica para depois.</summary>
+    public void EntregarAlegacoesPendentes()
+    {
+        CaseData caso = casoEscolhido;
+        if (caso == null || !CasoAtualEmAndamento || caso.alegacoesIniciais == null || inventoryManager == null) return;
+
+        bool faltou = false;
+        foreach (Item alegacao in caso.alegacoesIniciais)
+        {
+            if (alegacao == null || string.IsNullOrEmpty(alegacao.itemID)) continue;
+            if (registroDaInvestigacao.RecompensaEntregue(caso, InteracaoAlegacoes, RegistroDaInvestigacao.EtapaReacao, alegacao.itemID)) continue;
+
+            Item copia = alegacao.Clone();
+            copia.itemAmt = 1;
+            if (inventoryManager.AddItem(copia))
+                registroDaInvestigacao.RegistrarRecompensa(caso, InteracaoAlegacoes, RegistroDaInvestigacao.EtapaReacao, alegacao.itemID);
+            else
+                faltou = true;
+        }
+        if (faltou) AvisoNaTela.Mostrar("Inventário cheio: libere espaço para guardar a carta do cliente.");
+    }
+
+    /// <summary>
+    /// Ao concluir um caso, o que só servia a ele sai do inventário (a grade tem 24 espaços e não há descarte):
+    /// - alegações do cliente: sempre;
+    /// - sobras de pistas e documentos de apoio: nos casos antes da Fase 4 (o caso da Fase 4 leva suas provas ao
+    ///   tribunal). O histórico (evidenciasObtidas, panfletosPublicados) continua guardando tudo.
+    /// Panfletos não têm caso e ficam.
+    /// </summary>
+    private void ArquivarSobrasDoCaso(CaseData caso)
+    {
+        if (caso == null || inventoryManager == null) return;
+        bool tudoDoCaso = caso.fase < UltimaFase;
+        int removidos = inventoryManager.RemoverItens(item => caso.EhAlegacao(item) || (tudoDoCaso && item.caso == caso));
+        if (removidos > 0)
+            AvisoNaTela.Mostrar(tudoDoCaso ? "Os papéis do caso foram arquivados na tipografia." : "As alegações do cliente foram arquivadas com o caso.");
     }
 
     private static string TituloDe(CaseData caso) =>
@@ -207,26 +269,156 @@ public class GameManager : MonoBehaviour
 
     public bool FoiPublicado(CaseData caso) => caso != null && panfletosPublicados.Exists(p => p.caso == caso);
 
+    /// <summary>Compatibilidade: registra a partir de uma versão da receita, sem pistas/suportes.</summary>
     public void RegistrarPanfletoDeCaso(CaseData caso, NivelDoPanfleto nivel, ReceitaDeCaso.Versao versao)
     {
+        RegistrarPanfletoDeCaso(caso, new ResultadoDoPanfleto
+        {
+            nivel = nivel,
+            povo = versao != null ? versao.povo : 0,
+            estado = versao != null ? versao.estado : 0,
+            ouro = versao != null ? versao.ouro : 0,
+            penalidadePovo = versao != null ? versao.penalidadePovo : 0,
+            penalidadeEstado = versao != null ? versao.penalidadeEstado : 0,
+            textoRevelacao = versao != null ? versao.textoRevelacao : null,
+        });
+    }
+
+    /// <summary>Guarda a publicação (snapshot dos valores calculados e, se informado, do que foi de fato aplicado
+    /// depois do limite 0–100) e agenda a revelação, uma única vez por caso.</summary>
+    public void RegistrarPanfletoDeCaso(CaseData caso, ResultadoDoPanfleto resultado, Vector3Int? aplicado = null)
+    {
+        if (resultado == null) return;
         if (FoiPublicado(caso))
         {
             Debug.LogWarning($"[FATO x BOATO] '{(caso != null ? caso.name : "?")}' já tinha panfleto publicado: registro ignorado.");
             return;
         }
-        panfletosPublicados.Add(new PanfletoPublicado { caso = caso, nivel = nivel });
+        panfletosPublicados.Add(new PanfletoPublicado
+        {
+            caso = caso,
+            nivel = resultado.nivel,
+            pistas = new List<string>(resultado.pistas),
+            suportes = new List<string>(resultado.suportes),
+            qualificadores = new List<string>(resultado.qualificadores),
+            povo = resultado.povo, estado = resultado.estado, ouro = resultado.ouro,
+            penalidadePovo = resultado.penalidadePovo, penalidadeEstado = resultado.penalidadeEstado,
+            aplicadoConhecido = aplicado.HasValue,
+            povoAplicado = aplicado?.x ?? 0, estadoAplicado = aplicado?.y ?? 0, ouroAplicado = aplicado?.z ?? 0,
+        });
 
-        if (nivel != NivelDoPanfleto.Fatos && versao != null && versao.TemRevelacao)
+        if (resultado.nivel != NivelDoPanfleto.Fatos && resultado.TemRevelacao)
         {
             revelacoesPendentes.Add(new RevelacaoPendente
             {
                 caso = caso,
-                texto = versao.textoRevelacao,
-                povo = versao.penalidadePovo,
-                estado = versao.penalidadeEstado
+                texto = resultado.textoRevelacao,
+                povo = resultado.penalidadePovo,
+                estado = resultado.penalidadeEstado
             });
         }
-        Debug.Log($"[FATO x BOATO] Panfleto de '{(caso != null ? caso.caseTitle : "?")}' publicado como {nivel}.");
+        Debug.Log($"[FATO x BOATO] Panfleto de '{(caso != null ? caso.caseTitle : "?")}' publicado como {resultado.nivel}" +
+                  (resultado.suportes.Count > 0 ? $" com apoio de {string.Join(", ", resultado.suportes)}." : "."));
+    }
+
+    // ===== Evidências e Biblioteca =====
+
+    /// <summary>Registra que um item entrou no inventário (chamado pelo InventoryManager.AddItem). Vale para qualquer
+    /// item com itemID — assim um pré-requisito continua cumprido mesmo depois de o item ser gasto.</summary>
+    public void RegistrarEvidencia(Item item)
+    {
+        if (item == null || string.IsNullOrEmpty(item.itemID)) return;
+        if (!evidenciasObtidas.Contains(item.itemID)) evidenciasObtidas.Add(item.itemID);
+    }
+
+    /// <summary>O jogador já obteve esta evidência alguma vez (mesmo se a gastou). Saves antigos: vale o que ele tem
+    /// (grade, prensa ou mão).</summary>
+    public bool EvidenciaObtida(Item item) =>
+        item != null && !string.IsNullOrEmpty(item.itemID) &&
+        (evidenciasObtidas.Contains(item.itemID) || (inventoryManager != null && inventoryManager.PossuiEmQualquerLugar(item.itemID)));
+
+    public enum EstadoDaOferta
+    {
+        Disponivel,
+        Comprada,
+        JaObtida,              // o próprio documento já veio por outro caminho
+        ApoioEquivalente,      // outro documento já obtido ativa o mesmo reforço: comprar não mudaria nada
+        CasoNaoAceito,         // nenhum caso em andamento
+        OutroCasoEmAndamento,
+        CasoConcluido,
+        FaseBloqueada,
+        Invalida
+    }
+    public enum ResultadoDaCompra { Comprada, JaComprada, SaldoInsuficiente, Indisponivel, InventarioCheio, Invalida }
+
+    public EstadoDaOferta EstadoDe(OfertaDaBiblioteca oferta)
+    {
+        if (oferta == null || oferta.caso == null || oferta.item == null || string.IsNullOrEmpty(oferta.id)) return EstadoDaOferta.Invalida;
+        if (comprasDaBiblioteca.Contains(oferta.ChaveDeCompra)) return EstadoDaOferta.Comprada;
+        if (faseAtual < oferta.faseMinima) return EstadoDaOferta.FaseBloqueada;
+        if (casosConcluidos.Contains(oferta.caso)) return EstadoDaOferta.CasoConcluido;
+        if (CasoAtualEmAndamento && casoEscolhido != oferta.caso) return EstadoDaOferta.OutroCasoEmAndamento;
+        if (!CasoAtualEmAndamento || casoEscolhido != oferta.caso) return EstadoDaOferta.CasoNaoAceito;
+        if (EvidenciaObtida(oferta.item)) return EstadoDaOferta.JaObtida;
+        if (ReforcoJaGarantido(oferta)) return EstadoDaOferta.ApoioEquivalente;
+        return EstadoDaOferta.Disponivel;
+    }
+
+    // Todo qualificador que aceita o documento da oferta já é ativado por outro documento que o jogador obteve.
+    private bool ReforcoJaGarantido(OfertaDaBiblioteca oferta)
+    {
+        ReceitaDeCaso receita = oferta.caso.receitaDoPanfleto;
+        if (receita == null || receita.qualificadores == null) return false;
+        bool algum = false;
+        foreach (ReceitaDeCaso.Qualificador q in receita.qualificadores)
+        {
+            if (q == null || !q.Aceita(oferta.item)) continue;
+            algum = true;
+            bool garantido = q.suportesAceitos.Exists(s => s != null && s.itemID != oferta.item.itemID && q.Aceita(s) && EvidenciaObtida(s));
+            if (!garantido) return false;
+        }
+        return algum;
+    }
+
+    private bool comprando;
+
+    /// <summary>Compra transacional: valida tudo, entrega o item e SÓ ENTÃO cobra. Sem crédito: capital negativo ou
+    /// menor que o preço recusa. Inventário cheio recusa sem cobrar. Cada oferta+caso é comprada uma vez.</summary>
+    public ResultadoDaCompra ComprarNaBiblioteca(OfertaDaBiblioteca oferta, Func<Item, bool> entregar = null)
+    {
+        if (comprando) return ResultadoDaCompra.Indisponivel; // clique repetido durante a mesma compra
+        comprando = true;
+        try
+        {
+            switch (EstadoDe(oferta))
+            {
+                case EstadoDaOferta.Invalida: return ResultadoDaCompra.Invalida;
+                case EstadoDaOferta.Comprada: return ResultadoDaCompra.JaComprada;
+                case EstadoDaOferta.Disponivel: break;
+                default: return ResultadoDaCompra.Indisponivel;
+            }
+            if (capitalAtual < 0 || capitalAtual < oferta.preco) return ResultadoDaCompra.SaldoInsuficiente;
+            if (entregar == null)
+            {
+                if (inventoryManager == null) return ResultadoDaCompra.Indisponivel;
+                entregar = inventoryManager.AddItem;
+            }
+
+            Item copia = oferta.item.Clone();
+            copia.itemAmt = 1;
+            if (!entregar(copia)) return ResultadoDaCompra.InventarioCheio;
+
+            capitalAtual -= oferta.preco;
+            comprasDaBiblioteca.Add(oferta.ChaveDeCompra);
+            RegistrarEvidencia(oferta.item);
+            Debug.Log($"[BIBLIOTECA] '{oferta.id}' comprado por {oferta.preco}. Capital: {capitalAtual}.");
+            ForcarAtualizacaoUI();
+            return ResultadoDaCompra.Comprada;
+        }
+        finally
+        {
+            comprando = false;
+        }
     }
 
     /// <summary>Devolve e limpa as revelações pendentes (quem chama aplica as penalidades).</summary>
@@ -270,6 +462,7 @@ public class GameManager : MonoBehaviour
 
         if (!string.IsNullOrWhiteSpace(caso.caseTitle))
             AvisoNaTela.Mostrar($"Caso concluído: {caso.caseTitle.Trim()}");
+        ArquivarSobrasDoCaso(caso);
         return true;
     }
 
@@ -325,8 +518,11 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[FASES] Rota final travada: {rotaFinal} (Povo {opiniaoPublicaAtual} x Estado {opiniaoEstadoAtual}).");
     }
 
-    public void AplicarImpactoPanfleto(int impactoPublico, int impactoEstado, int ouro)
+    /// <summary>Aplica o impacto (Povo/Estado limitados a 0–100). Devolve o que mudou DE FATO (x = Povo, y = Estado,
+    /// z = Ouro), que o histórico da publicação guarda junto do valor calculado.</summary>
+    public Vector3Int AplicarImpactoPanfleto(int impactoPublico, int impactoEstado, int ouro)
     {
+        int povoAntes = opiniaoPublicaAtual, estadoAntes = opiniaoEstadoAtual;
         opiniaoPublicaAtual += impactoPublico;
         opiniaoEstadoAtual += impactoEstado;
         capitalAtual += ouro;
@@ -336,5 +532,6 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"[PANFLETO] Povo: {opiniaoPublicaAtual} | Estado: {opiniaoEstadoAtual} | Ouro: {capitalAtual}");
         ForcarAtualizacaoUI(); // Atualiza a tela imediatamente após o craft
+        return new Vector3Int(opiniaoPublicaAtual - povoAntes, opiniaoEstadoAtual - estadoAntes, ouro);
     }
 }

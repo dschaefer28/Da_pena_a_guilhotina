@@ -17,11 +17,15 @@ public static class AudioSeguro
     /// <summary>Verdadeiro enquanto o FMOD respondeu normalmente nesta sessão.</summary>
     public static bool Disponivel => !sistemaIndisponivel;
 
+    // Fora do Play Mode (ferramentas e testes do Editor) o RuntimeManager não existe: acessá-lo só gera erro no
+    // console. Num build o jogo está sempre em Play, então nada muda para o jogador.
+    private static bool SemRuntime => sistemaIndisponivel || !Application.isPlaying;
+
     public static bool BanksCarregados
     {
         get
         {
-            if (sistemaIndisponivel) return true; // não há o que esperar
+            if (SemRuntime) return true; // não há o que esperar
             try { return RuntimeManager.HaveAllBanksLoaded; }
             catch (Exception e) { Registrar(e); return true; }
         }
@@ -29,14 +33,14 @@ public static class AudioSeguro
 
     public static void TocarUmaVez(EventReference evento)
     {
-        if (sistemaIndisponivel || evento.IsNull) return;
+        if (SemRuntime || evento.IsNull) return;
         try { RuntimeManager.PlayOneShot(evento); }
         catch (Exception e) { Registrar(e); }
     }
 
     public static void TocarUmaVez(EventReference evento, Vector3 posicao)
     {
-        if (sistemaIndisponivel || evento.IsNull) return;
+        if (SemRuntime || evento.IsNull) return;
         try { RuntimeManager.PlayOneShot(evento, posicao); }
         catch (Exception e) { Registrar(e); }
     }
@@ -45,7 +49,7 @@ public static class AudioSeguro
     public static bool TentarCriar(EventReference evento, out FMOD.Studio.EventInstance instancia)
     {
         instancia = default;
-        if (sistemaIndisponivel || evento.IsNull) return false;
+        if (SemRuntime || evento.IsNull) return false;
         try
         {
             instancia = RuntimeManager.CreateInstance(evento);
@@ -70,7 +74,7 @@ public static class AudioSeguro
 
     public static void DefinirVolumeDoBus(string caminhoDoBus, float volume01)
     {
-        if (sistemaIndisponivel) return;
+        if (SemRuntime) return;
         try { RuntimeManager.GetBus(caminhoDoBus).setVolume(volume01); }
         catch (Exception e) { Registrar(e); }
     }

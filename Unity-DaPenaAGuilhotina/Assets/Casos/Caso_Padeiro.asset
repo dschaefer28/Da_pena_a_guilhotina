@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
+  m_Name: Caso_Padeiro
+  m_EditorClassIdentifier: Assembly-CSharp::CaseData
+  caseTitle: O Padeiro de Notre-Dame
+  caseDescription: "Outubro de 1789. O padeiro Denis Fran\xE7ois foi enforcado por
+    uma multid\xE3o que o acusava de esconder p\xE3o. A vi\xFAva quer limpar o nome
+    do marido e saber quem espalhou a acusa\xE7\xE3o."
+  objectiveText: "Descobrir se o padeiro escondia p\xE3o."
+  moneyReward: 30
+  publicOpinionReward: -15
+  stateOpinionReward: 20
+  fase: 3
+  rota: 0
+  horasDeInvestigacao: 0
+  npcDialogueRoute: {fileID: 11400000, guid: 47c61edc41ce92345844df2290ece2a1, type: 2}
+  nextSceneName: Fase3
+  receitaDoPanfleto: {fileID: 11400000, guid: 2eabac54e86347848a7b69181332d947, type: 2}
+  alegacoesIniciais:
+  - {fileID: 11400000, guid: dfe8e624e42bb274888b15a9b0cee236, type: 2}
+  - {fileID: 11400000, guid: 0835a6b423836b04d9f979c76d3f1624, type: 2}

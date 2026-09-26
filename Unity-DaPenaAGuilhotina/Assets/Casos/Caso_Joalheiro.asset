@@ -20,9 +20,15 @@ MonoBehaviour:
     o joalheiro e humilhar a Coroa, argumentando que a reputa\xE7\xE3o da Rainha
     era t\xE3o leviana perante o povo que a fraude se tornou totalmente cr\xEDvel."
   objectiveText: 'terminar o caso '
-  moneyReward: 50
-  publicOpinionReward: -20
-  stateOpinionReward: 0
+  moneyReward: 20
+  publicOpinionReward: 50
+  stateOpinionReward: -10
+  fase: 2
+  rota: 0
+  horasDeInvestigacao: 0
   npcDialogueRoute: {fileID: 11400000, guid: c58f27ed9b03f3a499f8062499574c16, type: 2}
   nextSceneName: Fase2
   receitaDoPanfleto: {fileID: 11400000, guid: 2a35a3edcd65c2c46a6c46425134af44, type: 2}
+  alegacoesIniciais:
+  - {fileID: 11400000, guid: aaea79cd888e1094eac20a410c0f8435, type: 2}
+  - {fileID: 11400000, guid: fe32e3b7916d7d2439c4b809097ac25c, type: 2}
