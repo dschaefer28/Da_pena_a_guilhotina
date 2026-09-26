@@ -67,10 +67,18 @@ public class CampanhaTests
                 if (i.caso == caso && i.confiabilidade == Confiabilidade.Fato) { fato = i; break; }
             }
             Assert.IsNotNull(fato, caso.name);
-            ResultadoDoPanfleto atalho = CalculadoraDePanfleto.Calcular(r, fato, caso.alegacoesIniciais[0], null);
+            ResultadoDoPanfleto atalho = CalculadoraDePanfleto.CalcularAntesDaLinha(r, fato, caso.alegacoesIniciais[0], null);
             Assert.AreEqual(NivelDoPanfleto.Alegacoes, atalho.nivel, caso.name);
             Assert.Less(atalho.ouro, r.soFatos.ouro, caso.name);
             Assert.Less(Mathf.Abs(atalho.povo) + Mathf.Abs(atalho.estado), Mathf.Abs(r.soFatos.povo) + Mathf.Abs(r.soFatos.estado), caso.name);
+
+            // A linha editorial soma o mesmo modificador às duas versões: com qualquer tom o atalho continua rendendo menos.
+            foreach (LinhaEditorial linha in LinhasEditoriais.Opcoes)
+            {
+                ResultadoDoPanfleto atalhoComTom = CalculadoraDePanfleto.Calcular(r, fato, caso.alegacoesIniciais[0], null, linha);
+                Assert.AreEqual(NivelDoPanfleto.Alegacoes, atalhoComTom.nivel, $"{caso.name} {linha}: o tom não muda a versão");
+                Assert.Less(atalhoComTom.ouro, r.soFatos.ouro + atalhoComTom.editorialOuro, $"{caso.name} {linha}");
+            }
         }
     }
 

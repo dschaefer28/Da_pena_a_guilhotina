@@ -73,7 +73,21 @@ Documentos de apoio: confiabilidade `NaoEPista`, qualidade **Superior**, não v�
 | Negociante (B) | Livros do Comitê de Subsistência (30) | — | 0 / +10 / +25 |
 | Girondina (C) | Correspondência arquivada na Convenção (25) | **Cidadã Delorme**, etapa `carta_da_secao`, depois de obter "A denúncia retirada" → Carta de recomendação da seção | +5 / +5 / +15 |
 
-## Exemplos de percurso até cada rota (só versões Fatos, sem revelações nem apoio)
+## Linha editorial (Prompt 5, provisório)
+
+A partir da Fase 2, depois de escolher as duas pistas, o jogador escolhe a linha editorial na prensa (o tutorial imprime direto). O modificador é somado **depois** da versão e do apoio e é o mesmo em todas as versões da receita, então não revela a verdade das pistas. Configurado em cada `ReceitaDeCaso` (bloco `linhaEditorial`) por **Ferramentas > Campanha > 4**.
+
+| Fase (casos) | Defesa do povo | Agradar a Coroa / o Comitê | Sensacionalista |
+|---|---|---|---|
+| 2 (Joias, Réveillon, Operário) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar a Coroa") | 0 / 0 / +15; perda da revelação +50% |
+| 3 (Padeiro, Varennes, Champ de Mars, Assignats) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar a Coroa") | 0 / 0 / +20; perda +50% |
+| 4 (Jornalista, Negociante, Girondina) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar o Comitê") | 0 / 0 / +20; perda +50% |
+
+- **Agravamento:** só no sensacionalista e só se a versão impressa tiver revelação (Com Boato, Calúnia ou Só Alegações). Só as perdas crescem, arredondadas para longe de zero. Ex.: Joias Com Boato (pen −30/−5) sensacionalista → −45/−8. A versão Fatos nunca recebe penalidade.
+- **Exemplo do Prompt 3:** Champ de Mars Fatos + Ata = 40/−5/50 **antes** da linha; com Defesa do povo = 50/−10/50.
+- **Rota:** Defesa e Agradar deslocam o desnível Povo × Estado em 15 pontos por publicação (margem da rota: 20).
+
+## Exemplos de percurso até cada rota (só versões Fatos, sem revelações, sem apoio e sem linha editorial)
 
 Início 50/50; tutorial (+15/−10) → 65/40. Margem da rota: 20. Valores limitados a 0..100.
 

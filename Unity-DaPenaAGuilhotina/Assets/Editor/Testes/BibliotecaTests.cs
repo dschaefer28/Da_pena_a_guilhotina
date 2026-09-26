@@ -43,18 +43,19 @@ public class BibliotecaTests
         Item ata = Carregar<Item>(Pasta + "Fase3/Apoio_ChampDeMars_Biblioteca.asset");
         Item deOutroCaso = Carregar<Item>(Pasta + "Fase3/Apoio_Padeiro_Biblioteca.asset");
 
-        ResultadoDoPanfleto sem = CalculadoraDePanfleto.Calcular(receita, f1, f2, null);
+        // O exemplo do Prompt 3 é a etapa "versão → apoio"; a linha editorial (Prompt 5) soma depois (LinhaEditorialTests).
+        ResultadoDoPanfleto sem = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, null);
         Assert.AreEqual(NivelDoPanfleto.Fatos, sem.nivel);
         AssertValores(sem, 20, -10, 30, "sem apoio");
 
-        ResultadoDoPanfleto com = CalculadoraDePanfleto.Calcular(receita, f1, f2, new[] { ata });
+        ResultadoDoPanfleto com = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, new[] { ata });
         AssertValores(com, 40, -5, 50, "com o apoio exigido");
         CollectionAssert.AreEqual(new[] { "apoio_champdemars" }, com.qualificadores);
 
-        ResultadoDoPanfleto repetido = CalculadoraDePanfleto.Calcular(receita, f1, f2, new[] { ata, ata, ata });
+        ResultadoDoPanfleto repetido = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, new[] { ata, ata, ata });
         AssertValores(repetido, 40, -5, 50, "o mesmo bônus não empilha");
 
-        ResultadoDoPanfleto outro = CalculadoraDePanfleto.Calcular(receita, f1, f2, new[] { deOutroCaso });
+        ResultadoDoPanfleto outro = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, new[] { deOutroCaso });
         AssertValores(outro, 20, -10, 30, "documento de outro caso não vale");
 
         Assert.AreEqual(20, receita.soFatos.povo, "calcular não altera o asset compartilhado");
@@ -71,8 +72,8 @@ public class BibliotecaTests
 
         Assert.AreEqual(Confiabilidade.NaoEPista, ata.confiabilidade);
         Assert.IsFalse(ata.EhPista, "documento de apoio não é uma das duas pistas");
-        ResultadoDoPanfleto sem = CalculadoraDePanfleto.Calcular(champ.receitaDoPanfleto, fato, boato, null);
-        ResultadoDoPanfleto com = CalculadoraDePanfleto.Calcular(champ.receitaDoPanfleto, fato, boato, new[] { ata });
+        ResultadoDoPanfleto sem = CalculadoraDePanfleto.CalcularAntesDaLinha(champ.receitaDoPanfleto, fato, boato, null);
+        ResultadoDoPanfleto com = CalculadoraDePanfleto.CalcularAntesDaLinha(champ.receitaDoPanfleto, fato, boato, new[] { ata });
         Assert.AreEqual(NivelDoPanfleto.ComBoato, sem.nivel);
         Assert.AreEqual(sem.nivel, com.nivel, "o documento caro não transforma boato em fato");
         Assert.AreEqual(sem.penalidadePovo, com.penalidadePovo, "nem apaga a penalidade da revelação");
@@ -210,8 +211,8 @@ public class BibliotecaTests
         receita.qualificadores.Add(new ReceitaDeCaso.Qualificador { id = "q2", suportesAceitos = new List<Item> { a }, povo = 10 });
         criados.AddRange(new Object[] { caso, receita });
 
-        ResultadoDoPanfleto ab = CalculadoraDePanfleto.Calcular(receita, Pista("p1"), Pista("p2"), new[] { a, b });
-        ResultadoDoPanfleto ba = CalculadoraDePanfleto.Calcular(receita, Pista("p3"), Pista("p4"), new[] { b, a });
+        ResultadoDoPanfleto ab = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, Pista("p1"), Pista("p2"), new[] { a, b });
+        ResultadoDoPanfleto ba = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, Pista("p3"), Pista("p4"), new[] { b, a });
         Assert.AreEqual(11, ab.povo);
         Assert.AreEqual(ab.povo, ba.povo, "a ordem da seleção não muda o resultado");
         Assert.AreEqual(2, CalculadoraDePanfleto.ReforcosPossiveis(receita, new[] { b, a }));

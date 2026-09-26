@@ -22,7 +22,8 @@ public static class SistemaDeSave
     // 3: registro da investigação por caso + ID estável (horas pagas, loot, recompensas de NPC)
     // 4: biblioteca (compras), evidências obtidas e histórico completo de cada publicação
     // 5: histórico guarda também o que foi aplicado de fato (depois do limite 0–100)
-    public const int VersaoAtual = 5;
+    // 6: linha editorial da publicação (tom, modificador e agravamento) e da revelação pendente
+    public const int VersaoAtual = 6;
     private const string CenaPadrao = "Jogo";
 
     [Serializable]
@@ -46,6 +47,9 @@ public static class SistemaDeSave
         // v5
         public bool aplicadoConhecido;
         public int povoAplicado, estadoAplicado, ouroAplicado;
+        // v6 (ausente em saves antigos = 0 = Neutra: publicação legada, neutra)
+        public LinhaEditorial linha;
+        public int editorialPovo, editorialEstado, editorialOuro, agravamentoPovo, agravamentoEstado;
     }
 
     [Serializable]
@@ -55,6 +59,7 @@ public static class SistemaDeSave
         public string texto;
         public int povo;
         public int estado;
+        public LinhaEditorial linha; // v6
     }
 
     [Serializable]
@@ -182,13 +187,15 @@ public static class SistemaDeSave
                 caso = p.caso != null ? p.caso.name : null, nivel = p.nivel, legado = p.legado,
                 pistas = Copia(p.pistas), suportes = Copia(p.suportes), qualificadores = Copia(p.qualificadores),
                 povo = p.povo, estado = p.estado, ouro = p.ouro, penalidadePovo = p.penalidadePovo, penalidadeEstado = p.penalidadeEstado,
-                aplicadoConhecido = p.aplicadoConhecido, povoAplicado = p.povoAplicado, estadoAplicado = p.estadoAplicado, ouroAplicado = p.ouroAplicado
+                aplicadoConhecido = p.aplicadoConhecido, povoAplicado = p.povoAplicado, estadoAplicado = p.estadoAplicado, ouroAplicado = p.ouroAplicado,
+                linha = p.linha, editorialPovo = p.editorialPovo, editorialEstado = p.editorialEstado, editorialOuro = p.editorialOuro,
+                agravamentoPovo = p.agravamentoPovo, agravamentoEstado = p.agravamentoEstado
             });
 
         foreach (var r in gm.revelacoesPendentes)
             dados.revelacoesPendentes.Add(new RevelacaoSalva
             {
-                caso = r.caso != null ? r.caso.name : null, texto = r.texto, povo = r.povo, estado = r.estado
+                caso = r.caso != null ? r.caso.name : null, texto = r.texto, povo = r.povo, estado = r.estado, linha = r.linha
             });
 
         return dados;
@@ -309,7 +316,12 @@ public static class SistemaDeSave
                 povo = p.povo, estado = p.estado, ouro = p.ouro, penalidadePovo = p.penalidadePovo, penalidadeEstado = p.penalidadeEstado,
                 // v < 5 não guardava o aplicado: fica como desconhecido (nada é recalculado nem inventado).
                 aplicadoConhecido = dados.versao >= 5 && p.aplicadoConhecido,
-                povoAplicado = p.povoAplicado, estadoAplicado = p.estadoAplicado, ouroAplicado = p.ouroAplicado
+                povoAplicado = p.povoAplicado, estadoAplicado = p.estadoAplicado, ouroAplicado = p.ouroAplicado,
+                // v < 6 não tinha linha editorial: a publicação fica neutra, sem modificador nem agravamento inventados.
+                linha = dados.versao >= 6 ? p.linha : LinhaEditorial.Neutra,
+                editorialPovo = dados.versao >= 6 ? p.editorialPovo : 0, editorialEstado = dados.versao >= 6 ? p.editorialEstado : 0,
+                editorialOuro = dados.versao >= 6 ? p.editorialOuro : 0,
+                agravamentoPovo = dados.versao >= 6 ? p.agravamentoPovo : 0, agravamentoEstado = dados.versao >= 6 ? p.agravamentoEstado : 0
             });
         gm.comprasDaBiblioteca = Copia(dados.comprasDaBiblioteca);
         gm.evidenciasObtidas = Copia(dados.evidenciasObtidas);
@@ -320,7 +332,8 @@ public static class SistemaDeSave
         foreach (RevelacaoSalva r in dados.revelacoesPendentes)
             gm.revelacoesPendentes.Add(new GameManager.RevelacaoPendente
             {
-                caso = BuscarCaso(catalogo, r.caso), texto = r.texto, povo = r.povo, estado = r.estado
+                caso = BuscarCaso(catalogo, r.caso), texto = r.texto, povo = r.povo, estado = r.estado,
+                linha = dados.versao >= 6 ? r.linha : LinhaEditorial.Neutra
             });
 
         if (dados.versao < 2) MigrarProgressaoDeFases(gm, catalogo);

@@ -4900,6 +4900,8 @@ MonoBehaviour:
   introducaoRevelacoes: "Alguns dias depois, a verdade chega \xE0s ruas de Paris."
   textoPadraoRevelacao: "O panfleto sobre o {0} foi desmentido. A tipografia perdeu
     a confian\xE7a de quem o leu."
+  textoAgravamentoSensacionalista: O exagero da manchete fez o desmentido correr
+    ainda mais depressa.
   cutscenes:
   - fase: 2
     legendas:
@@ -9356,6 +9358,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2878328312246378604, guid: 60fc7d7288f4653439b29fda33ba8400, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8551660677361136394}
+    - targetCorrespondingSourceObject: {fileID: 2878328312246378604, guid: 60fc7d7288f4653439b29fda33ba8400, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 332168738224438076}
   m_SourcePrefab: {fileID: 100100000, guid: 60fc7d7288f4653439b29fda33ba8400, type: 3}
 --- !u!224 &332773289177034058 stripped
 RectTransform:
@@ -9386,6 +9391,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SuportesDaPrensaUI
   faseMinima: 3
   fonte: {fileID: 0}
+--- !u!114 &332168738224438076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3495474965941123319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e91ae6ea9990eb40ba5083f31c6eb37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinhaEditorialDaPrensaUI
+  fonte: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  titulo: Linha editorial
+  pergunta: Como o panfleto vai contar este caso?
+  descricaoDefesaDoPovo: Toma o partido das ruas contra os poderosos.
+  descricaoAgradarOPoder: Escreve o que quem governa quer ler.
+  descricaoSensacionalista: 'Manchete escandalosa: vende mais. Se algo for falso,
+    o desmentido pesa mais.'
+  nota: "O tom muda o panfleto, n\xE3o a verdade das pistas."
 --- !u!1 &6336305602381615018 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4655771969782011697, guid: 60fc7d7288f4653439b29fda33ba8400, type: 3}

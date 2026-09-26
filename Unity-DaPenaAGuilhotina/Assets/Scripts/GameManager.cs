@@ -72,11 +72,17 @@ public class GameManager : MonoBehaviour
         public List<string> pistas = new List<string>();
         public List<string> suportes = new List<string>();
         public List<string> qualificadores = new List<string>();
+        [Tooltip("Valores calculados (versão + apoio + linha editorial), antes do limite 0–100.")]
         public int povo, estado, ouro;
+        [Tooltip("Penalidade da revelação já com o agravamento do sensacionalista, se houver.")]
         public int penalidadePovo, penalidadeEstado;
         [Tooltip("O que mudou de fato na HUD (Povo/Estado limitados a 0–100). Falso em publicações de saves < 5.")]
         public bool aplicadoConhecido;
         public int povoAplicado, estadoAplicado, ouroAplicado;
+        [Tooltip("Linha editorial escolhida. Neutra = tutorial/receita sem linha ou publicação de save < 6 (legada, neutra).")]
+        public LinhaEditorial linha;
+        [Tooltip("Parte de povo/estado/ouro que veio da linha editorial, e parte da penalidade que veio do sensacionalista.")]
+        public int editorialPovo, editorialEstado, editorialOuro, agravamentoPovo, agravamentoEstado;
     }
 
     [Serializable]
@@ -86,6 +92,8 @@ public class GameManager : MonoBehaviour
         public string texto;
         public int povo;
         public int estado;
+        [Tooltip("Linha editorial do panfleto desmentido (a cutscene conta quando o sensacionalista agravou a perda).")]
+        public LinhaEditorial linha;
     }
 
     [Header("Fato x Boato")]
@@ -305,8 +313,12 @@ public class GameManager : MonoBehaviour
             penalidadePovo = resultado.penalidadePovo, penalidadeEstado = resultado.penalidadeEstado,
             aplicadoConhecido = aplicado.HasValue,
             povoAplicado = aplicado?.x ?? 0, estadoAplicado = aplicado?.y ?? 0, ouroAplicado = aplicado?.z ?? 0,
+            linha = resultado.linha,
+            editorialPovo = resultado.editorialPovo, editorialEstado = resultado.editorialEstado, editorialOuro = resultado.editorialOuro,
+            agravamentoPovo = resultado.agravamentoPovo, agravamentoEstado = resultado.agravamentoEstado,
         });
 
+        // Fatos nunca gera revelação, com qualquer linha editorial: o sensacionalista só agrava uma mentira que existe.
         if (resultado.nivel != NivelDoPanfleto.Fatos && resultado.TemRevelacao)
         {
             revelacoesPendentes.Add(new RevelacaoPendente
@@ -314,11 +326,13 @@ public class GameManager : MonoBehaviour
                 caso = caso,
                 texto = resultado.textoRevelacao,
                 povo = resultado.penalidadePovo,
-                estado = resultado.penalidadeEstado
+                estado = resultado.penalidadeEstado,
+                linha = resultado.linha
             });
         }
         Debug.Log($"[FATO x BOATO] Panfleto de '{(caso != null ? caso.caseTitle : "?")}' publicado como {resultado.nivel}" +
-                  (resultado.suportes.Count > 0 ? $" com apoio de {string.Join(", ", resultado.suportes)}." : "."));
+                  (resultado.linha != LinhaEditorial.Neutra ? $", linha {resultado.linha}" : string.Empty) +
+                  (resultado.suportes.Count > 0 ? $", com apoio de {string.Join(", ", resultado.suportes)}." : "."));
     }
 
     // ===== Evidências e Biblioteca =====

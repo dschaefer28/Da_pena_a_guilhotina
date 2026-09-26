@@ -1,12 +1,12 @@
 # Prompts para Claude Code — Da Pena à Guilhotina
 
-Preparado em 25/09/2026 a partir dos dois PDFs e de inspeção estática do repositório. **Atualizado em 26/09/2026:** Prompts 0 a 3 concluídos; a verificação completa de 26/09 adiantou partes dos Prompts 6 e 7 (marcadas como "Já feito" em cada prompt). O estado atual do projeto está sempre em `docs/STATUS_IMPLEMENTACAO_TCC.md`, que prevalece sobre o diagnóstico inicial abaixo.
+Preparado em 25/09/2026 a partir dos dois PDFs e de inspeção estática do repositório. **Atualizado em 26/09/2026:** Prompts 0 a 3 e 5 concluídos; a verificação completa de 26/09 adiantou partes dos Prompts 6 e 7 (marcadas como "Já feito" em cada prompt). O estado atual do projeto está sempre em `docs/STATUS_IMPLEMENTACAO_TCC.md`, que prevalece sobre o diagnóstico inicial abaixo.
 
 ## Como usar
 
 1. Abra o Claude Code na raiz `Da_pena_a_guilhotina`. O projeto Unity está na subpasta `Unity-DaPenaAGuilhotina`.
 2. Envie o **Prompt base** e peça a leitura de `docs/STATUS_IMPLEMENTACAO_TCC.md`.
-3. Os Prompts 0 a 3 já foram executados. Ordem recomendada daqui em diante: **5 → 6 → 7 → 8**. O **Prompt 4 é opcional**: as propostas C e D são "proposta, não implementada" no documento de dificuldade, e o 4 exige reescrever as pistas de 7 casos em pares contraditórios. Decidam em grupo se ele entra no TCC.
+3. Os Prompts 0 a 3 e o 5 já foram executados. Ordem recomendada daqui em diante: **6 → 7 → 8**. O **Prompt 4 é opcional**: as propostas C e D são "proposta, não implementada" no documento de dificuldade, e o 4 exige reescrever as pistas de 7 casos em pares contraditórios. Decidam em grupo se ele entra no TCC.
 4. Um prompt por vez. Confira o resultado de cada etapa antes da próxima.
 5. Em uma conversa nova, reenvie o prompt base, peça a leitura dos relatórios já gerados e envie somente a próxima etapa.
 6. Não é necessário reenviar os PDFs a cada etapa: os requisitos operacionais estão abaixo. Mantenha os originais como referência para resolver dúvidas.
@@ -298,7 +298,9 @@ Documente que confirmação conjunta reduz dicas por tentativa, mas não impede
 matematicamente busca exaustiva; não prometa proteção que não foi implementada.
 ```
 
-## Prompt 5 — linha editorial e composição de resultados (D)
+## Prompt 5 — linha editorial e composição de resultados (D) (concluído em 26/09)
+
+Resultado, arquivos e testes em `STATUS_IMPLEMENTACAO_TCC.md` §10. Menu de configuração: Ferramentas > Campanha > 4 - Aplicar linha editorial.
 
 ```text
 Aplicando o prompt base, acrescente à prensa escolha de linha editorial a partir

@@ -16,6 +16,7 @@ public enum NivelDoPanfleto
 /// do panfleto"). Diferente de Recipe (par exato de itens), aqui QUALQUER par de pistas do caso vira panfleto:
 /// a prensa nunca recusa, mas a versão muda. Boatos rendem mais na hora e cobram depois — quando a mentira é
 /// exposta no fim da fase (FimDeFase / GameManager.EncerrarFase). Ligada ao caso pelo campo CaseData.receitaDoPanfleto.
+/// Os valores finais são compostos pela CalculadoraDePanfleto: versão → apoio → linha editorial.
 /// </summary>
 [CreateAssetMenu(fileName = "ReceitaDeCaso", menuName = "ScriptableObjects/Receita de Caso (Fato x Boato)")]
 public class ReceitaDeCaso : ScriptableObject
@@ -88,8 +89,67 @@ public class ReceitaDeCaso : ScriptableObject
              "Ganho menor que o de Fato + Fato e uma consequência própria.")]
     public Versao soAlegacoes = new Versao();
 
+    [Serializable]
+    public class ModificadorEditorial
+    {
+        public int povo;
+        public int estado;
+        public int ouro;
+
+        public bool Zerado => povo == 0 && estado == 0 && ouro == 0;
+    }
+
+    /// <summary>
+    /// Linha editorial (Prompt 5): somada DEPOIS da versão e do apoio, igual em todas as versões — assim a escolha
+    /// nunca depende nem revela a verdade das pistas. Desligada = publicação neutra (compatibilidade com receitas
+    /// antigas); ligada = a prensa exige uma das três opções antes de publicar.
+    /// </summary>
+    [Serializable]
+    public class ConfiguracaoEditorial
+    {
+        [Tooltip("Liga a escolha obrigatória da linha editorial neste caso (Fase 2 em diante). Desligada, o panfleto sai " +
+                 "neutro, sem modificador — só para dados antigos; o validador da campanha acusa casos novos sem ela.")]
+        public bool ativa;
+
+        [Tooltip("Defesa do povo: Povo positivo e Estado negativo.")]
+        public ModificadorEditorial defesaDoPovo = new ModificadorEditorial();
+
+        [Tooltip("Agradar a Coroa / o Comitê: Estado positivo e Povo negativo.")]
+        public ModificadorEditorial agradarOPoder = new ModificadorEditorial();
+        [Tooltip("Rótulo da opção neste caso. Vazio = padrão da fase (\"Agradar a Coroa\" até a Fase 3, \"Agradar o Comitê\" na 4).")]
+        public string rotuloAgradarOPoder;
+
+        [Tooltip("Sensacionalista: ouro adicional agora.")]
+        public ModificadorEditorial sensacionalista = new ModificadorEditorial();
+        [Tooltip("Sensacionalista: quanto a PERDA da revelação cresce, em %, quando a versão impressa tem boato, calúnia ou " +
+                 "alegação não verificada. Determinístico (sem sorteio). Na versão Fatos nada é cobrado.")]
+        [Min(0)] public int agravamentoPercentual;
+
+        public ModificadorEditorial De(LinhaEditorial linha)
+        {
+            switch (linha)
+            {
+                case LinhaEditorial.DefesaDoPovo: return defesaDoPovo;
+                case LinhaEditorial.AgradarOPoder: return agradarOPoder;
+                case LinhaEditorial.Sensacionalista: return sensacionalista;
+                default: return null;
+            }
+        }
+
+        /// <summary>Nunca foi preenchida (asset anterior ao Prompt 5): a ferramenta de setup só configura estas.</summary>
+        public bool Vazia =>
+            !ativa && (defesaDoPovo == null || defesaDoPovo.Zerado) && (agradarOPoder == null || agradarOPoder.Zerado) &&
+            (sensacionalista == null || sensacionalista.Zerado) && agravamentoPercentual == 0 && string.IsNullOrWhiteSpace(rotuloAgradarOPoder);
+    }
+
     [Header("Reforço por documentos de apoio (biblioteca / pistas complementares)")]
     public List<Qualificador> qualificadores = new List<Qualificador>();
+
+    [Header("Linha editorial (Fase 2 em diante)")]
+    public ConfiguracaoEditorial linhaEditorial = new ConfiguracaoEditorial();
+
+    /// <summary>A prensa só publica este caso com uma das três linhas editoriais escolhida pelo jogador.</summary>
+    public bool ExigeLinhaEditorial => linhaEditorial != null && linhaEditorial.ativa;
 
     /// <summary>Verdadeiro se algum qualificador desta receita aceita o documento (informação conhecida: não
     /// depende da confiabilidade das pistas).</summary>

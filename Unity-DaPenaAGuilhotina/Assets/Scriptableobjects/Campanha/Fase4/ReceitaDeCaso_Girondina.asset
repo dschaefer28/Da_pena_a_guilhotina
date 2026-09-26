@@ -61,3 +61,19 @@ MonoBehaviour:
     povo: 5
     estado: 5
     ouro: 15
+  linhaEditorial:
+    ativa: 1
+    defesaDoPovo:
+      povo: 10
+      estado: -5
+      ouro: 0
+    agradarOPoder:
+      povo: -5
+      estado: 10
+      ouro: 0
+    rotuloAgradarOPoder: 
+    sensacionalista:
+      povo: 0
+      estado: 0
+      ouro: 20
+    agravamentoPercentual: 50

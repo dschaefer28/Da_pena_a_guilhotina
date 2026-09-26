@@ -82,6 +82,7 @@ public static class ValidadorDaCampanha
 
         foreach (CaseData caso in casos) ValidarDadosDoCaso(caso, catalogo, cenasDoBuild, r);
         ValidarBiblioteca(ui, casos, catalogo, r);
+        ValidarLinhaEditorial(ui, casos, r);
 
         // Oportunidades: abre cada cena de investigação uma vez (aditiva, sem salvar) e avalia os casos dela.
         var porCena = new Dictionary<string, List<CaseData>>();
@@ -188,6 +189,42 @@ public static class ValidadorDaCampanha
             }
         }
         r.resumo.Add($"Biblioteca: {porCaso} oferta(s).");
+    }
+
+    // Prompt 5: todo caso da Fase 2 em diante exige a escolha explícita entre as três linhas, com a direção de cada uma
+    // (Defesa: +Povo/−Estado; Agradar: +Estado/−Povo; Sensacionalista: +ouro e agravamento). O tutorial fica simples.
+    private static void ValidarLinhaEditorial(GameObject ui, List<CaseData> casos, Resultado r)
+    {
+        if (ui.GetComponentInChildren<LinhaEditorialDaPrensaUI>(true) == null)
+            r.problemas.Add("LinhaEditorialDaPrensaUI não está no painel da prensa (rode Ferramentas > Campanha > 4).");
+
+        int ativas = 0;
+        foreach (CaseData caso in casos)
+        {
+            ReceitaDeCaso receita = caso.receitaDoPanfleto;
+            if (receita == null) continue;
+            if (caso.fase < 2)
+            {
+                if (receita.ExigeLinhaEditorial) r.avisos.Add($"'{receita.name}' (tutorial) exige linha editorial: o tutorial deveria continuar simples.");
+                continue;
+            }
+            if (!receita.ExigeLinhaEditorial)
+            {
+                r.problemas.Add($"'{receita.name}': caso da Fase {caso.fase} sem linha editorial (publicaria neutro, sem a escolha).");
+                continue;
+            }
+            ativas++;
+            ReceitaDeCaso.ConfiguracaoEditorial c = receita.linhaEditorial;
+            if (c.defesaDoPovo == null || c.defesaDoPovo.povo <= 0 || c.defesaDoPovo.estado >= 0)
+                r.problemas.Add($"'{receita.name}': Defesa do povo precisa de Povo positivo e Estado negativo.");
+            if (c.agradarOPoder == null || c.agradarOPoder.estado <= 0 || c.agradarOPoder.povo >= 0)
+                r.problemas.Add($"'{receita.name}': {LinhasEditoriais.Rotulo(LinhaEditorial.AgradarOPoder, receita)} precisa de Estado positivo e Povo negativo.");
+            if (c.sensacionalista == null || c.sensacionalista.ouro <= 0)
+                r.problemas.Add($"'{receita.name}': Sensacionalista precisa de ouro adicional.");
+            if (c.agravamentoPercentual <= 0)
+                r.problemas.Add($"'{receita.name}': Sensacionalista sem agravamento da penalidade de boato.");
+        }
+        r.resumo.Add($"Linha editorial: {ativas} receita(s) com as três opções.");
     }
 
     // Etapas complementares: id estável, único por reação, diferente do id reservado da etapa normal; requisitos e

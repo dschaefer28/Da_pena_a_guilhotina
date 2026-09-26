@@ -37,6 +37,9 @@ public class FimDeFase : MonoBehaviour
     [TextArea(2, 4)]
     [Tooltip("Usado quando a versão do panfleto não tem texto de revelação próprio. {0} = título do caso.")]
     public string textoPadraoRevelacao = "O panfleto sobre o {0} foi desmentido. A tipografia perdeu a confiança de quem o leu.";
+    [TextArea(2, 4)]
+    [Tooltip("Acrescentado à revelação de um panfleto sensacionalista (a perda foi agravada pela linha editorial).")]
+    public string textoAgravamentoSensacionalista = "O exagero da manchete fez o desmentido correr ainda mais depressa.";
 
     public List<CutsceneDaFase> cutscenes = new List<CutsceneDaFase>
     {
@@ -100,10 +103,16 @@ public class FimDeFase : MonoBehaviour
 
     private string TextoDa(GameManager.RevelacaoPendente revelacao)
     {
-        if (!string.IsNullOrWhiteSpace(revelacao.texto)) return revelacao.texto;
-        string titulo = revelacao.caso == null ? "caso"
-            : (string.IsNullOrWhiteSpace(revelacao.caso.caseTitle) ? revelacao.caso.name : revelacao.caso.caseTitle).Trim();
-        return string.Format(textoPadraoRevelacao, titulo);
+        string texto = revelacao.texto;
+        if (string.IsNullOrWhiteSpace(texto))
+        {
+            string titulo = revelacao.caso == null ? "caso"
+                : (string.IsNullOrWhiteSpace(revelacao.caso.caseTitle) ? revelacao.caso.name : revelacao.caso.caseTitle).Trim();
+            texto = string.Format(textoPadraoRevelacao, titulo);
+        }
+        if (revelacao.linha == LinhaEditorial.Sensacionalista && !string.IsNullOrWhiteSpace(textoAgravamentoSensacionalista))
+            texto = texto.TrimEnd() + " " + textoAgravamentoSensacionalista.Trim();
+        return texto;
     }
 
     private List<CutsceneLegendas.Linha> LegendasDa(int fase)

@@ -62,15 +62,29 @@ public class CraftingPress : MonoBehaviour
     // CombineItems). Cliques repetidos em sequência são barrados pela regra de domínio (GameManager.PodePublicarCaso).
     private bool imprimindo;
 
-    public void CombineItems()
+    /// <summary>
+    /// Linha editorial (Prompt 5): o par é de um caso que exige escolha e ele passou em todas as validações, mas nada
+    /// foi consumido. A UI da prensa (LinhaEditorialDaPrensaUI) mostra as três opções e responde com
+    /// ImprimirComLinhaEditorial; cancelar é só não responder. Recebe apenas a receita: a escolha não pode depender
+    /// da verdade das pistas.
+    /// </summary>
+    public event Action<ReceitaDeCaso> OnLinhaEditorialPedida;
+
+    /// <summary>Botão Misturar (onClick no UI_Inventory.prefab). Casos com linha editorial pedem a escolha antes.</summary>
+    public void CombineItems() => Tentar(LinhaEditorial.Neutra);
+
+    /// <summary>Imprime com a linha editorial escolhida. Valida tudo de novo a partir do estado atual dos slots.</summary>
+    public void ImprimirComLinhaEditorial(LinhaEditorial linha) => Tentar(linha);
+
+    private void Tentar(LinhaEditorial linha)
     {
         if (imprimindo) return;
         imprimindo = true;
-        try { Combinar(); }
+        try { Combinar(linha); }
         finally { imprimindo = false; }
     }
 
-    private void Combinar()
+    private void Combinar(LinhaEditorial linha)
     {
         if (!SlotsConfigurados()) return;
 
@@ -88,7 +102,7 @@ public class CraftingPress : MonoBehaviour
             return;
         }
 
-        if (TentarPanfletoDeCaso()) return;
+        if (TentarPanfletoDeCaso(linha)) return;
 
         string attemptKey = $"{slotInput1.item.itemID}_{slotInput2.item.itemID}";
 
@@ -130,7 +144,7 @@ public class CraftingPress : MonoBehaviour
     /// confiabilidade delas escolhe a versão. Retorna true se tratou a mistura (imprimindo ou explicando o
     /// porquê de não imprimir); false devolve o par para as receitas exatas (Recipe).
     /// </summary>
-    private bool TentarPanfletoDeCaso()
+    private bool TentarPanfletoDeCaso(LinhaEditorial linha)
     {
         Item a = slotInput1.item;
         Item b = slotInput2.item;
@@ -165,8 +179,24 @@ public class CraftingPress : MonoBehaviour
             return false;
         }
 
-        // Cálculo único (versão → apoio → [linha editorial no Prompt 5]); nada nos assets é alterado.
-        ResultadoDoPanfleto resultado = CalculadoraDePanfleto.Calcular(receita, a, b, SuportesSelecionadosNoInventario());
+        if (receita.ExigeLinhaEditorial && !LinhasEditoriais.Escolhivel(linha))
+        {
+            // Tudo validado e nada consumido: falta só a escolha. A saída ocupada é conferida já, para não pedir o tom
+            // e recusar depois. Sem olhar a versão (a recusa não pode variar com a verdade das pistas): qualquer item
+            // na saída recusa — o panfleto deste caso nunca está lá, porque cada caso é publicado uma vez só.
+            if (slotOutput.item != null)
+            {
+                AvisoNaTela.Mostrar("Tire o panfleto pronto da prensa primeiro.");
+                return true;
+            }
+            if (OnLinhaEditorialPedida != null) OnLinhaEditorialPedida(receita);
+            else AvisoNaTela.Mostrar("Escolha a linha editorial do panfleto antes de imprimir.");
+            return true;
+        }
+
+        // Cálculo único (versão → apoio → linha editorial); nada nos assets é alterado.
+        ResultadoDoPanfleto resultado = CalculadoraDePanfleto.Calcular(receita, a, b, SuportesSelecionadosNoInventario(), linha);
+        if (resultado == null) return true; // defensivo: a linha já foi conferida acima
         if (resultado.panfleto == null)
         {
             Debug.LogError($"[CraftingPress] '{receita.name}' não tem panfleto para a versão {resultado.nivel}.", receita);
@@ -238,11 +268,7 @@ public class CraftingPress : MonoBehaviour
     {
         aplicado = Vector3Int.zero;
         if (panfleto == null) return false;
-        if (slotOutput.item != null && slotOutput.item.itemID != panfleto.itemID)
-        {
-            AvisoNaTela.Mostrar("Tire o panfleto pronto da prensa primeiro.");
-            return false;
-        }
+        if (SaidaOcupadaPor(panfleto)) return false;
 
         ConsumeItem(slotInput1);
         ConsumeItem(slotInput2);
@@ -257,6 +283,14 @@ public class CraftingPress : MonoBehaviour
         // Avisa o jogador (mesmo popup de "item recebido" já usado no resto do jogo), já que
         // ProduceItem coloca o panfleto direto no slot de saída da prensa, sem passar por AddItem.
         Inventario.NotificarItemRecebido(panfleto);
+        return true;
+    }
+
+    // A saída guarda um panfleto diferente do que sairia: avisa e recusa (nada é consumido).
+    private bool SaidaOcupadaPor(Item panfleto)
+    {
+        if (panfleto == null || slotOutput.item == null || slotOutput.item.itemID == panfleto.itemID) return false;
+        AvisoNaTela.Mostrar("Tire o panfleto pronto da prensa primeiro.");
         return true;
     }
 

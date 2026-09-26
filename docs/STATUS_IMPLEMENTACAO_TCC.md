@@ -4,19 +4,20 @@ Atualizado em 26/09/2026. Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminh
 
 Estados usados: **validado** (testado em runtime ou em teste automatizado), **existente não validado** (código/asset presente, sem teste de runtime), **parcial**, **ausente**.
 
-Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achados corrigidos (§7); **verificação completa contra os dois PDFs em 26/09, com correções que adiantaram partes dos Prompts 6 e 7 (§9)**. Próximo recomendado: **Prompt 5**; depois o que resta dos Prompts 6 e 7, e o Prompt 8. O **Prompt 4 é opcional** (decisão do grupo, ver §8).
+Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achados corrigidos (§7); **verificação completa contra os dois PDFs em 26/09, com correções que adiantaram partes dos Prompts 6 e 7 (§9)**; **Prompt 5 (linha editorial) concluído em 26/09 (§10)**. Próximo recomendado: **o que resta dos Prompts 6 e 7**, depois o Prompt 8. O **Prompt 4 é opcional** (decisão do grupo, ver §8).
 
 Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4–6:
 - **Alegações:** qualquer impressão com alegação usa a versão Só Alegações.
 - **Arquivamento:** sobras dos casos anteriores à Fase 4 são arquivadas ao concluir.
 - **Inventário cheio:** interação sem espaço para o que entregaria não cobra horas.
-- **Save:** passou para a versão 5.
+- **Save:** passou para a versão 6 (linha editorial, Prompt 5).
 - **Biblioteca:** tem estados por situação.
 - **Pistas:** os nomes são neutros.
 - **Revelações (26/09):** aplicadas no fim da fase por `GameManager.EncerrarFase`, na ordem revelações → despesas → avanço de fase/rota, e mostradas na cutscene do `FimDeFase`. `RevelacaoDeBoatos` foi removido.
 - **Tribunal (26/09):** as provas são os itens do caso da Fase 4 obtidos (histórico, inclusive os gastos na prensa) mais o panfleto dele. O réu é absolvido só se esse panfleto saiu na versão Fatos; o destino do jogador continua vindo só da rota.
 - **Final C (26/09):** "O Esquecido", definido pelo grupo: barras equilibradas, ninguém condena nem defende o jogador, que é apagado da história.
 - **Tutorial (26/09):** a explicação do status aparece ao abrir a prensa, antes de imprimir.
+- **Linha editorial (Prompt 5):** a partir da Fase 2, o Misturar pede Defesa do povo / Agradar a Coroa (o Comitê na Fase 4) / Sensacionalista antes de consumir as pistas. Cálculo: versão → apoio → linha. O exemplo do Prompt 3 (40/−5/50) é o valor antes da linha.
 
 Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não exibir ao jogador).
 
@@ -28,7 +29,7 @@ Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não e
 |---|---|
 | Unity | 6000.3.9f1 aberto no Editor durante o trabalho (projeto `Unity-DaPenaAGuilhotina`) |
 | Unity MCP | Operacional (`com.coplaydev.unity-mcp`): leitura de cenas, compilação, Play Mode, execução de código de Editor e Test Runner |
-| Testes | `com.unity.test-framework` 1.6.0. Não havia testes. Os testes novos ficam em `Assets/Editor/Testes/` (assembly `Assembly-CSharp-Editor`, sem asmdef, porque os scripts do jogo não têm asmdef). Em 26/09: 46 testes EditMode |
+| Testes | `com.unity.test-framework` 1.6.0. Não havia testes. Os testes novos ficam em `Assets/Editor/Testes/` (assembly `Assembly-CSharp-Editor`, sem asmdef, porque os scripts do jogo não têm asmdef). Em 26/09: 46 testes EditMode; 57 depois do Prompt 5 |
 | Compilação | Sem erros. Avisos antigos: `FindObjectOfType` obsoleto em `GameManager`; `Caso_Tutorial` sem `caseTitle`/`npcDialogueRoute` (OnValidate) |
 | Save real do jogador | Até 25/09: não foi lido nem alterado. Em 26/09: ver §9.7 (um save de teste criado e apagado com autorização; duas PlayerPrefs de dica ficaram marcadas) |
 
@@ -65,7 +66,7 @@ Estado na data do diagnóstico (25/09), com anotações dos Prompts 1–3. O est
 | Revelação de boatos | `RevelacaoDeBoatos` | **ausente em cena**: o componente não está em nenhuma cena/prefab; `revelacoesPendentes` nunca é consumido |
 | Biblioteca e qualidade | `BibliotecaUI`, `OfertaDaBiblioteca` (7), `Item.qualidade`/`documentoDeSuporte`, `ReceitaDeCaso.qualificadores`, `CalculadoraDePanfleto`, `SuportesDaPrensaUI` | **validado** após Prompt 3 (testes + Play Mode); visual não conferido em tela |
 | Dedução ativa (C) | verificação automática em `InventoryManager.PistaVerificada`/`RegistrarVerificacoes` | ausente |
-| Linha editorial (D) | — | ausente |
+| Linha editorial (D) | — | ausente (implementada no Prompt 5, ver §10) |
 | Tribunal e rota | `CheckpointDoTribunal` (filho do Dupaty, cena Jogo), `TribunalManager` (cena Tribunal), `GameManager.CalcularRota` (margem 20) | existente não validado |
 | Save | `SistemaDeSave` (v2 no diagnóstico; v3 no Prompt 1; v4 no Prompt 3), `CatalogoDeSave` (no diagnóstico: 12 itens e 4 casos; hoje inclui o conteúdo das Fases 2–4) | **validado** (testes + Continuar com save real v3, ver §7) |
 | Conteúdo | 11 `CaseData`: tutorial, 3 da Fase 2, 4 da Fase 3, 3 da Fase 4 (um por rota) | **validado** (validador + Play Mode); conteúdo novo **provisório** |
@@ -391,12 +392,11 @@ Save e PlayerPrefs do jogador restaurados de novo depois dos testes (hash idênt
 
 ## 8. Próximo prompt
 
-**Recomendado: Prompt 5 — linha editorial (D).** É barato (uma escolha a mais na prensa e três modificadores por receita) e dá ao jogador controle consciente das barras, que decidem o final. Pontos de partida:
-- **Cálculo:** `CalculadoraDePanfleto.Calcular` já tem o lugar reservado para os modificadores editoriais (versão → apoio → tom).
-- **Revelações:** o agravamento do sensacionalista entra em `GameManager.revelacoesPendentes`, aplicadas por `EncerrarFase` no fim da fase.
-- **Histórico:** `GameManager.PanfletoPublicado` já guarda snapshot dos valores; o tom entra ali (save sobe para a versão 6).
+~~Prompt 5 — linha editorial (D)~~ Concluído em 26/09 (§10).
 
-Depois: o que resta dos Prompts 6 e 7 (o que já foi feito está em §9) e o Prompt 8.
+**Recomendado agora: o que resta dos Prompts 6 e 7** (o que já foi feito está em §9 e §10), depois o Prompt 8. Pontos de atenção vindos do Prompt 5:
+- **Prompt 6/8 (balanceamento):** a linha editorial desloca o desnível Povo × Estado em até 15 pontos por publicação (3 publicações antes da rota). A rota B ficou alcançável com "Agradar"; conferir as três rotas com decisões reais.
+- **Prompt 7 (dicas):** a janela de linha editorial já explica cada opção; falta só a dica de primeira vez prevista no Prompt 7, se o grupo quiser.
 
 **Prompt 4 — dedução ativa (C), opcional.** Se o grupo decidir incluir, os pontos de partida continuam valendo:
 - **Histórico:** `GameManager.evidenciasObtidas` já guarda as pistas obtidas, inclusive as gastas.
@@ -476,3 +476,105 @@ Teclado e toque físicos, aparelho Android real, Continuar com save real depois 
 - Um `save.json` de teste foi criado pelo fim da Fase 1 e apagado com autorização.
 - As PlayerPrefs `dica_fato_boato_vista` e `dica_tempo_vista` ficaram marcadas no Editor; Novo Jogo ou Ferramentas > Tutorial > 3 zeram.
 - A EditorPref `DaPena_SimularCelularNoEditor` ficou em falso (o padrão).
+
+---
+
+## 10. Prompt 5 — linha editorial e composição de resultados (26/09/2026)
+
+### 10.1 Requisitos atendidos
+
+| Requisito | Implementação | Estado |
+|---|---|---|
+| Escolha da linha editorial na prensa, a partir da Fase 2, depois das duas pistas; tutorial sem etapa extra | `CraftingPress.CombineItems` (Misturar, mesmo `onClick` do prefab) valida tudo e, se a receita exige linha, **não consome nada** e dispara `OnLinhaEditorialPedida(receita)`. A janela `LinhaEditorialDaPrensaUI` cobre o painel da prensa (as barras de Povo/Estado continuam visíveis) com as três opções e Cancelar; a escolha chama `ImprimirComLinhaEditorial(linha)`, que valida de novo antes de consumir. O tutorial usa a receita exata (`Recipe`) e nunca pede a escolha | validado (testes + Play Mode) |
+| Três opções explícitas | `LinhaEditorial`: **Defesa do povo** (+Povo −Estado), **Agradar a Coroa / o Comitê** (+Estado −Povo; rótulo "Coroa" nas Fases 2–3, 1789–1792, e "Comitê" na Fase 4, 1793; a receita pode trocar o rótulo), **Sensacionalista** (+ouro, com a perda da revelação agravada em % configurável, sem sorteio) | validado |
+| Modificadores por receita, valores provisórios, fallback neutro | `ReceitaDeCaso.linhaEditorial` (`ConfiguracaoEditorial`: `ativa`, três `ModificadorEditorial`, `rotuloAgradarOPoder`, `agravamentoPercentual`). Desligada = publicação **Neutra**, sem modificador (assets antigos). `LinhaEditorial.Neutra` é só de compatibilidade: nunca aparece na janela | validado |
+| Casos novos exigem escolha explícita | Com a linha ligada, `CalculadoraDePanfleto.Calcular(..., Neutra)` devolve nulo e a prensa não imprime sem a escolha; o validador exige a linha ligada em todo caso da Fase 2 em diante, com a direção certa de cada modificador | validado |
+| Cálculo único e testável | `CalculadoraDePanfleto.Calcular(receita, a, b, suportes, linha)`: versão pela confiabilidade real → qualificadores de apoio → linha editorial → resultado. O clamp 0–100 continua só em `GameManager.AplicarImpactoPanfleto`. `CalcularAntesDaLinha` expõe as etapas 1–2 para teste | validado |
+| Tom/dedução/preço não mudam a verdade; prévia não detecta boato | A versão vem só de `ReceitaDeCaso.Classificar`. O modificador da linha é igual em todas as versões; a janela recebe só a receita e mostra a regra de cada opção (valores do modificador e "desmentido +50%"), nunca o resultado combinado | validado (teste da versão invariável; texto conferido em Play Mode) |
+| Histórico da publicação com snapshot | `PanfletoPublicado` guarda pistas, apoios, qualificadores, nível, **linha**, valores calculados, aplicados (após o limite), **parte editorial** (`editorialPovo/Estado/Ouro`) e **penalidade agravada** (`agravamentoPovo/Estado`, já somado em `penalidadePovo/Estado`). Mudar a receita depois não altera o que foi publicado | validado |
+| Penalidades no fluxo de revelações existente | A penalidade agravada entra em `GameManager.revelacoesPendentes` (com a linha) e é aplicada uma vez por `EncerrarFase`, antes da rota. O asset `Versao` não é alterado. A cutscene do `FimDeFase` acrescenta "O exagero da manchete fez o desmentido correr ainda mais depressa." às revelações de panfleto sensacionalista | validado (teste + Play Mode) |
+| Guardas de transação | Cancelar, Esc, fechar o inventário ou trocar de cena só fecham a janela: nada consumido e nenhuma escolha guardada (a linha é parâmetro de cada impressão, não estado). Escolher fecha a janela antes de imprimir. Duplo clique: a publicação única do Prompt 1 recusa. Saída ocupada: recusada **antes** de pedir a linha, sem olhar a versão (a recusa não varia com a verdade das pistas). A seleção de apoio de outro caso continua descartada (`DescartarSelecaoDeOutroCaso`) | validado |
+| Save antigo sem tom | Save **v6**: `PanfletoSalvo.linha/editorial*/agravamento*` e `RevelacaoSalva.linha`. Saves < 6 carregam como publicação **Neutra**, sem modificador nem agravamento inventados (mesmo se o JSON trouxer um campo `linha`) | validado (testes) |
+
+### 10.2 Decisões tomadas nesta etapa
+
+- **O que o sensacionalista agrava:** a perda da revelação que a versão já tem, em Com Boato, Calúnia e Só Alegações (a alegação do cliente é um boato não verificado). Fatos nunca recebe penalidade, com qualquer tom. Só perdas (valores negativos) crescem; arredondamento para longe de zero (−5 × 150% = −8).
+- **Modificador igual em todas as versões:** se variasse com a versão, a janela viraria detector de boatos.
+- **A janela mostra números do modificador**, que são informação conhecida e dão controle consciente das barras. Ela não mostra o resultado previsto.
+- **Exemplo do Prompt 3:** 20/−10/30 → 40/−5/50 continua valendo como etapa "versão → apoio". O panfleto final soma a linha escolhida (ex.: Champ de Mars com a Ata e Defesa do povo = 50/−10/50). Em §6.6 e §9.1, os valores "+40/−5/+50" na HUD são de antes da linha editorial.
+- **Mesa de casos:** a estimativa (`CaseData`) não inclui a linha, que só é escolhida na impressão.
+- **Tribunal:** o destino do réu continua pela versão (Fatos = absolvido); o tom não interfere (conferido em Play Mode: Jornalista, Fatos + Sensacionalista → réu absolvido).
+
+### 10.3 Arquivos
+
+- Código novo: `Scripts/LinhaEditorial.cs` (enum, opções, rótulo por fase), `Scripts/LinhaEditorialDaPrensaUI.cs` (janela, montada por código na primeira vez).
+- Código alterado: `ReceitaDeCaso.cs` (configuração editorial), `CalculadoraDePanfleto.cs` (etapa 3, `CalcularAntesDaLinha`, `Agravamento`), `CraftingPress.cs` (pedido da linha, `ImprimirComLinhaEditorial`, saída ocupada conferida antes), `GameManager.cs` (histórico e revelação com a linha), `SistemaDeSave.cs` (v6), `FimDeFase.cs` (texto do agravamento).
+- Editor: `LinhaEditorialSetupTool.cs` (novo, **Ferramentas > Campanha > 4 - Aplicar linha editorial**), `ValidadorDaCampanha.cs` (checagens da linha editorial).
+- Testes: `Testes/LinhaEditorialTests.cs` (novo, 8 testes), `ComponentesTests.cs` (+3 testes da prensa real). `BibliotecaTests` e `CampanhaTests` passaram a usar `CalcularAntesDaLinha` para os valores de antes da linha, e `CampanhaTests` confere o atalho de alegação nos três tons.
+- Assets: as 10 `ReceitaDeCaso` das Fases 2–4 (só o bloco `linhaEditorial` acrescentado); `Prefab/UI.prefab` (`LinhaEditorialDaPrensaUI` no `PainelPrensa`, com os textos; o `FimDeFase` ganhou o campo novo serializado com o valor padrão). **Nenhuma cena alterada.** Nenhum GUID, `.meta` existente, pacote ou ProjectSettings alterado.
+- Observação de git: os 10 `Assets/Casos/*.asset` aparecem como "M" no `git status` porque o Unity regravou os arquivos, mas o hash do blob é idêntico ao do HEAD e `git diff` sai vazio: não há mudança a commitar neles.
+
+### 10.4 Configuração realizada
+
+Ferramenta 4 executada via MCP: 10 receitas configuradas, 2 alterações no UI.prefab. Segunda execução: 0 receitas e 0 alterações (idempotente; só preenche receitas cuja linha nunca foi configurada, então valores editados no Inspector ficam). Ferramentas 1 e 3 reexecutadas: 0 alterações. Validador: **Campanha válida**, "Linha editorial: 10 receita(s) com as três opções", 0 avisos.
+
+Valores provisórios (Povo / Estado / Ouro), iguais em todas as versões de cada receita:
+
+| Fase | Defesa do povo | Agradar (rótulo) | Sensacionalista |
+|---|---|---|---|
+| 2 | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar a Coroa") | 0 / 0 / +15; perda da revelação +50% |
+| 3 | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar a Coroa") | 0 / 0 / +20; perda +50% |
+| 4 | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar o Comitê") | 0 / 0 / +20; perda +50% |
+
+### 10.5 Testes executados
+
+**EditMode: 57/57** (46 anteriores + 11 novos). Console sem erros.
+- `LinhaEditorialTests`: três tons × quatro versões (soma do modificador; versão e panfleto inalterados); sensacionalista agrava só a perda existente (Fatos sem penalidade, Com Boato −10/−5 → −15/−8, Calúnia −20/−10 → −30/−15, Só Alegações −5 → −8, asset intacto); caso novo sem escolha → nulo, receita antiga → neutra; rótulo Coroa/Comitê/personalizado sem mudar a regra; Champ de Mars real com apoio superior (40/−5/50 + linha, apoio uma vez, boato continua boato); histórico + revelação agravada aplicada uma vez no `EncerrarFase`; save v6 ida e volta; save v5 → neutra.
+- `ComponentesTests` (prensa real): Misturar pede a linha sem consumir, repetir pede de novo, duplo clique na opção publica uma vez (ouro 40 + 15), revelação −15/−8; sem janela não imprime; saída ocupada recusa antes de pedir e depois imprime com Defesa (50→80 / 50→35); receita exata do tutorial imprime sem pedir linha.
+
+**Play Mode (cena Fase2 aberta direto no Editor via MCP; estado montado por código; botões pelo `onClick`; teclado por eventos do Input System):**
+
+| Cenário | Resultado |
+|---|---|
+| Caso das Joias, fato + boato, Misturar | janela aberta; entradas intactas, saída vazia, 0 publicações; foco em Cancelar; layout dentro dos 720 px do painel |
+| Captura 1920×1080 | janela legível, barras visíveis. **Defeito encontrado e corrigido:** com alpha 0,97 os rótulos da prensa apareciam por baixo (espaço de cor Linear); o fundo passou a ser opaco |
+| Cancelar → Misturar → Sensacionalista (duplo clique) | nada consumido ao cancelar; 1 publicação ComBoato 70/−20/50 (35 + 15 de ouro), aplicado +35 (limite 100), penalidade −45/−8 (agravamento −15/−3), caso concluído |
+| Fim da fase | cutscene com o texto da revelação + frase do agravamento; Povo 100→55, Estado 20→12, aplicada uma vez |
+| Fase 4, rota A, Jornalista | rótulo "Agradar o Comitê"; campo Suporte visível ao lado; fechar o inventário com a janela aberta fecha a janela sem consumir; Fatos + Sensacionalista = 20/−20/35, sem penalidade nem revelação; réu absolvido |
+| Teclado (Negociante, rota B montada por código) | Esc fecha sem consumir e sem abrir o pause; tecla 2 publica "Agradar o Comitê" (−15/30/60 → −20/40/60) |
+
+**Não testado em runtime:** toque e teclado físicos, aparelho Android, a prensa aberta pelo alçapão/`PressInteractable` no Porão (o painel foi aberto por código na Fase2; é o mesmo prefab), tela 4:3 (o painel da prensa já saía da tela antes, §6.4).
+
+### 10.6 Limitações e pendências
+
+- **Balanceamento (Prompt 8):** Defesa/Agradar deslocam o desnível Povo × Estado em 15 por publicação; com 3 publicações antes da rota, o tom sozinho move até 45 pontos. Isso dá controle consciente da rota (a B ficou alcançável com "Agradar"), mas os valores são provisórios.
+- **Moldura:** a janela cobre o painel da prensa inteiro, inclusive a borda dourada.
+- **Texto do agravamento:** a frase entra em toda revelação de panfleto sensacionalista. O validador exige agravamento > 0, então a frase nunca aparece sem efeito.
+- **Dica de primeira vez para o tom:** fica para o Prompt 7. A janela já descreve cada opção.
+
+### 10.7 Conteúdo provisório
+
+Valores da tabela de §10.4, rótulos "Agradar a Coroa"/"Agradar o Comitê", textos da janela (título, pergunta, três descrições, nota "O tom muda o panfleto, não a verdade das pistas.") e a frase do agravamento no `FimDeFase`. Todos editáveis no Inspector (receitas, `LinhaEditorialDaPrensaUI` e `FimDeFase` no UI.prefab).
+
+### 10.8 Efeitos no ambiente de quem testou
+
+Não existia `save.json` e nenhum foi criado. As PlayerPrefs de progresso ficaram iguais às de antes (as cinco chaves já estavam marcadas). O tamanho da Game View foi trocado para 1920×1080 só durante a captura e voltou para "16:9 Landscape". `Application.runInBackground` só foi ligado durante a sessão de Play. O Editor voltou para a cena Jogo, sem alterações.
+
+### 10.9 Como revalidar
+
+1. **Ferramentas > Campanha > 4 - Aplicar linha editorial** duas vezes → "Receitas configuradas: 0; … Alterações no UI.prefab: 0". **Ferramentas > Campanha > 2** → "Campanha válida".
+2. Test Runner > EditMode > Run All → 57/57.
+3. Manual: Novo Jogo → tutorial (a prensa imprime direto, sem janela) → caso da Fase 2 → duas pistas na prensa → Misturar → conferir as três opções e Cancelar (nada gasto) → Misturar → Sensacionalista → HUD com o ouro extra → voltar ao escritório: se havia boato, a cutscene cita o exagero e a perda é maior. Na Fase 4 a opção 2 aparece como "Agradar o Comitê".
+
+---
+
+## 11. Correção dos fades de transição (26/09/2026)
+
+Relato do grupo: "os fades de transição entre cenas não funcionam". Duas causas, as duas corrigidas e medidas em Play Mode começando pelo menu (como o jogador).
+
+| # | Causa | Correção |
+|---|---|---|
+| 1 | Na cena `menu principal`, o objeto "Canvas" do `SceneTransitonManager` estava **desligado** (override salvo na cena). Como a cópia da primeira cena é a que sobrevive entre cenas, nenhum fade aparecia no jogo inteiro. Nos testes que começavam pela cena Jogo o fade funcionava, por isso passou na verificação de §9. O motivo provável do desligamento: o prefab tinha o CanvasGroup em Alpha 1, cobrindo a Game View no Editor | override removido da cena do menu; prefab com Alpha 0 e Blocks Raycasts desligado (invisível no Editor); `SceneTransitionManager.Awake` liga o objeto do fade sempre |
+| 2 | O primeiro frame depois de carregar uma cena é pesado. O fade contava o tempo real, então um frame lento consumia o meio segundo inteiro e a tela ia de clara a escura de uma vez | cada frame avança no máximo 1/30 s do fade; o clareamento começa um frame depois da cena carregar; uma transição que interrompe outra parte do alpha atual |
+
+Medição (frames com o fade entre 1% e 99%): menu → Jogo, 146 escurecendo e 151 clareando; Jogo → Porão (alçapão) e Porão → Jogo (porta), cerca de 150 por fade. Antes: 0 a 1 frame. Arquivos: `Scripts/SceneTransitionManager.cs`, `Prefab/SceneTransitonManager.prefab`, `Scenes/menu principal.unity` (só o override removido). EditMode 57/57. O save do jogador não foi alterado.

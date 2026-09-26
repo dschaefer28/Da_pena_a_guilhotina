@@ -17,6 +17,11 @@ public class ResultadoDoPanfleto
     public List<string> suportes = new List<string>();        // itemIDs dos documentos de apoio que valeram
     public List<string> qualificadores = new List<string>();  // IDs dos qualificadores aplicados
 
+    // Linha editorial (Prompt 5). Os valores acima já incluem estes: aqui fica só a parte de cada um, para o histórico.
+    public LinhaEditorial linha;
+    public int editorialPovo, editorialEstado, editorialOuro;   // modificador da linha somado a povo/estado/ouro
+    public int agravamentoPovo, agravamentoEstado;              // parte da penalidade que veio do sensacionalista
+
     public bool TemRevelacao => penalidadePovo != 0 || penalidadeEstado != 0 || !string.IsNullOrWhiteSpace(textoRevelacao);
 }
 
@@ -24,12 +29,29 @@ public class ResultadoDoPanfleto
 /// Cálculo único do panfleto de caso, em etapas que podem ser compostas:
 ///   1. versão pela confiabilidade REAL das duas pistas (ReceitaDeCaso.Classificar);
 ///   2. qualificação por documentos de apoio válidos (ReceitaDeCaso.qualificadores);
-///   3. (Prompt 5) modificadores da linha editorial entram aqui, depois da qualificação.
-/// O clamp de Povo/Estado fica no ponto de aplicação (GameManager.AplicarImpactoPanfleto).
+///   3. linha editorial (ReceitaDeCaso.linhaEditorial): o mesmo modificador em qualquer versão e, no sensacionalista,
+///      a perda da revelação agravada — só se a versão tiver revelação, nunca na versão Fatos;
+///   4. o impacto global é o resultado; o clamp de Povo/Estado fica no ponto de aplicação (GameManager.AplicarImpactoPanfleto).
+/// A linha editorial não muda a versão: tom, apoio e preço nunca transformam boato em fato.
 /// </summary>
 public static class CalculadoraDePanfleto
 {
-    public static ResultadoDoPanfleto Calcular(ReceitaDeCaso receita, Item a, Item b, IEnumerable<Item> suportesSelecionados)
+    /// <summary>Etapas 1 a 3. Nulo se faltar receita/pista, ou se a receita exige linha editorial e <paramref name="linha"/>
+    /// não é uma das três opções (a prensa pergunta antes; publicar "sem tom" um caso novo é recusado). Receita sem linha
+    /// editorial configurada: publicação neutra, a linha informada é ignorada.</summary>
+    public static ResultadoDoPanfleto Calcular(ReceitaDeCaso receita, Item a, Item b, IEnumerable<Item> suportesSelecionados, LinhaEditorial linha)
+    {
+        if (receita == null || a == null || b == null) return null;
+        if (receita.ExigeLinhaEditorial && !LinhasEditoriais.Escolhivel(linha)) return null;
+
+        ResultadoDoPanfleto resultado = CalcularAntesDaLinha(receita, a, b, suportesSelecionados);
+        if (receita.ExigeLinhaEditorial) AplicarLinhaEditorial(resultado, receita.linhaEditorial, linha);
+        return resultado;
+    }
+
+    /// <summary>Etapas 1 e 2 (versão e apoio), sem a linha editorial. A prensa nunca imprime com isto; serve para
+    /// conferir cada etapa isoladamente (ex.: o exemplo numérico do Prompt 3).</summary>
+    public static ResultadoDoPanfleto CalcularAntesDaLinha(ReceitaDeCaso receita, Item a, Item b, IEnumerable<Item> suportesSelecionados)
     {
         if (receita == null || a == null || b == null) return null;
 
@@ -64,6 +86,33 @@ public static class CalculadoraDePanfleto
         }
         return resultado;
     }
+
+    // 3. Linha editorial. O agravamento é da consequência que a versão JÁ tem (nada é inventado para Fatos) e só
+    // aumenta as perdas; arredonda para longe de zero, sem sorteio.
+    private static void AplicarLinhaEditorial(ResultadoDoPanfleto resultado, ReceitaDeCaso.ConfiguracaoEditorial config, LinhaEditorial linha)
+    {
+        resultado.linha = linha;
+        ReceitaDeCaso.ModificadorEditorial mod = config.De(linha);
+        if (mod != null)
+        {
+            resultado.editorialPovo = mod.povo;
+            resultado.editorialEstado = mod.estado;
+            resultado.editorialOuro = mod.ouro;
+            resultado.povo += mod.povo;
+            resultado.estado += mod.estado;
+            resultado.ouro += mod.ouro;
+        }
+
+        if (linha != LinhaEditorial.Sensacionalista || resultado.nivel == NivelDoPanfleto.Fatos || !resultado.TemRevelacao) return;
+        resultado.agravamentoPovo = Agravamento(resultado.penalidadePovo, config.agravamentoPercentual);
+        resultado.agravamentoEstado = Agravamento(resultado.penalidadeEstado, config.agravamentoPercentual);
+        resultado.penalidadePovo += resultado.agravamentoPovo;
+        resultado.penalidadeEstado += resultado.agravamentoEstado;
+    }
+
+    /// <summary>Parte extra de uma penalidade agravada em <paramref name="percentual"/>%: só perdas (valores negativos) crescem.</summary>
+    public static int Agravamento(int penalidade, int percentual) =>
+        penalidade < 0 && percentual > 0 ? (int)Math.Round(penalidade * percentual / 100.0, MidpointRounding.AwayFromZero) : 0;
 
     /// <summary>Quantos reforços os documentos selecionados podem ativar, SEM olhar a versão (verdade das pistas):
     /// é o número que a prévia pode mostrar. Documentos equivalentes (mesmo qualificador) contam uma vez.</summary>

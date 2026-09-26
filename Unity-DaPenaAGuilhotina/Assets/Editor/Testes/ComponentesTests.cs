@@ -406,6 +406,120 @@ public class ComponentesTests
         Assert.IsTrue(inv.HasItem("prova"), "o caso da Fase 4 leva as provas ao tribunal");
     }
 
+    // ===== Linha editorial (Prompt 5) =====
+
+    private ReceitaDeCaso ReceitaComLinha(CaseData caso)
+    {
+        ReceitaDeCaso r = Receita(caso);
+        r.comBoato = new ReceitaDeCaso.Versao { povo = 30, estado = -15, ouro = 40, penalidadePovo = -10, penalidadeEstado = -5 };
+        r.linhaEditorial = new ReceitaDeCaso.ConfiguracaoEditorial
+        {
+            ativa = true,
+            defesaDoPovo = new ReceitaDeCaso.ModificadorEditorial { povo = 10, estado = -5 },
+            agradarOPoder = new ReceitaDeCaso.ModificadorEditorial { povo = -5, estado = 10 },
+            sensacionalista = new ReceitaDeCaso.ModificadorEditorial { ouro = 15 },
+            agravamentoPercentual = 50
+        };
+        return r;
+    }
+
+    [Test]
+    public void Prensa_LinhaEditorial_PedeAntesDeConsumir_CancelarNaoGasta_DuploCliquePublicaUmaVez()
+    {
+        // Fase 4: as sobras ficam nas entradas ao concluir, então os cliques repetidos encontram pistas para consumir.
+        casoA.fase = 4;
+        gm.faseAtual = 4;
+        ReceitaDeCaso receita = ReceitaComLinha(casoA);
+        gm.ConfirmarCaso(casoA);
+        int pedidos = 0;
+        ReceitaDeCaso pedida = null;
+        prensa.OnLinhaEditorialPedida += r => { pedidos++; pedida = r; };
+
+        NasEntradas(Pista("f1", casoA), Pista("boato", casoA, Confiabilidade.Boato), quantidade: 2);
+        prensa.CombineItems();
+        Assert.AreEqual(1, pedidos, "Misturar pede a linha editorial");
+        Assert.AreSame(receita, pedida);
+        Assert.AreEqual(2, prensa.slotInput1.item.itemAmt, "nada consumido antes da escolha");
+        Assert.IsNull(prensa.slotOutput.item);
+        Assert.IsEmpty(gm.panfletosPublicados);
+        Assert.AreEqual(0, gm.capitalAtual);
+
+        // Cancelar = não responder. Misturar de novo pede de novo, sem gastar nada.
+        prensa.CombineItems();
+        Assert.AreEqual(2, pedidos);
+        Assert.AreEqual(2, prensa.slotInput1.item.itemAmt);
+
+        prensa.ImprimirComLinhaEditorial(LinhaEditorial.Sensacionalista);
+        prensa.ImprimirComLinhaEditorial(LinhaEditorial.Sensacionalista); // duplo clique
+        prensa.CombineItems();
+        Assert.AreEqual(1, gm.panfletosPublicados.Count, "publicado uma vez");
+        Assert.AreEqual(2, pedidos, "caso publicado não pede nova escolha");
+        Assert.AreEqual(1, prensa.slotInput1.item.itemAmt, "consumido uma vez");
+        Assert.AreEqual(55, gm.capitalAtual, "40 da versão + 15 do sensacionalista, uma vez");
+
+        GameManager.PanfletoPublicado p = gm.panfletosPublicados[0];
+        Assert.AreEqual(LinhaEditorial.Sensacionalista, p.linha);
+        Assert.AreEqual(NivelDoPanfleto.ComBoato, p.nivel);
+        Assert.AreEqual(-15, p.penalidadePovo);
+        Assert.AreEqual(1, gm.revelacoesPendentes.Count);
+        Assert.AreEqual(-15, gm.revelacoesPendentes[0].povo, "penalidade agravada vai para o fluxo de revelações");
+        Assert.AreEqual(-8, gm.revelacoesPendentes[0].estado);
+    }
+
+    [Test]
+    public void Prensa_LinhaEditorial_SemJanelaNaoImprime_SaidaOcupadaNaoPedeNemConsome()
+    {
+        ReceitaComLinha(casoA);
+        gm.ConfirmarCaso(casoA);
+        NasEntradas(Pista("f1", casoA), Pista("f2", casoA));
+
+        prensa.CombineItems(); // ninguém ouvindo: só avisa
+        Assert.IsNotNull(prensa.slotInput1.item);
+        Assert.IsEmpty(gm.panfletosPublicados);
+
+        int pedidos = 0;
+        prensa.OnLinhaEditorialPedida += _ => pedidos++;
+        inv.PlaceInInventory(prensa.slotOutput, Pista("panfleto_antigo", null, Confiabilidade.NaoEPista));
+        prensa.CombineItems();
+        Assert.AreEqual(0, pedidos, "com a saída ocupada a prensa recusa antes de pedir o tom");
+        prensa.ImprimirComLinhaEditorial(LinhaEditorial.DefesaDoPovo);
+        Assert.IsNotNull(prensa.slotInput1.item, "nada consumido");
+        Assert.IsEmpty(gm.panfletosPublicados);
+        Assert.AreEqual(50, gm.opiniaoPublicaAtual);
+
+        inv.ClearItemSlot(prensa.slotOutput);
+        prensa.ImprimirComLinhaEditorial(LinhaEditorial.DefesaDoPovo);
+        Assert.AreEqual(1, gm.panfletosPublicados.Count);
+        Assert.AreEqual(LinhaEditorial.DefesaDoPovo, gm.panfletosPublicados[0].linha);
+        Assert.AreEqual(80, gm.opiniaoPublicaAtual, "50 + 20 (Fatos) + 10 (Defesa)");
+        Assert.AreEqual(35, gm.opiniaoEstadoAtual, "50 - 10 - 5");
+        Assert.IsEmpty(gm.revelacoesPendentes);
+    }
+
+    [Test]
+    public void Prensa_ReceitaExataDoTutorial_ImprimeSemEtapaDeLinhaEditorial()
+    {
+        CaseData tutorial = Caso("CasoTutorial", 1);
+        gm.faseAtual = 1;
+        Item decreto = Pista("decreto", null, Confiabilidade.NaoEPista), carta = Pista("carta", null, Confiabilidade.NaoEPista);
+        Recipe receita = Criar<Recipe>("ReceitaTutorial");
+        receita.ingrediente1 = decreto; receita.ingrediente2 = carta;
+        receita.resultItem = Pista("panfleto_tutorial", null, Confiabilidade.NaoEPista);
+        receita.publicOpinionImpact = 15; receita.stateOpinionImpact = -10; receita.moneyReward = 20;
+        prensa.recipes = new List<Recipe> { receita };
+        gm.ConfirmarCaso(tutorial);
+        int pedidos = 0;
+        prensa.OnLinhaEditorialPedida += _ => pedidos++;
+
+        NasEntradas(decreto, carta);
+        prensa.CombineItems();
+        Assert.AreEqual(0, pedidos, "o tutorial não ganha etapa extra");
+        Assert.AreEqual("panfleto_tutorial", prensa.slotOutput.item.itemID);
+        CollectionAssert.Contains(gm.casosConcluidos, tutorial);
+        Assert.AreEqual(65, gm.opiniaoPublicaAtual);
+        Assert.AreEqual(20, gm.capitalAtual);
+    }
+
     // ===== Biblioteca com o inventário real =====
 
     [Test]
