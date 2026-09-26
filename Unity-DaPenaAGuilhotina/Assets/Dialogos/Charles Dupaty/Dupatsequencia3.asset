@@ -16,8 +16,7 @@ MonoBehaviour:
   - name: Charles Dupaty
     text: "A tortura para a instru\xE7\xE3o de processos j\xE1 foi formalmente abolida
       por Lu\xEDs XVI. Se eles os torturaram, est\xE3o agindo contra a pr\xF3pria
-      lei da Coroa. Vamos tornar os seus erros p\xFAblicos e salvar esses homens!
-      V\xE1 para o por\xE3o e escreva um memorial com suas descobertas."
+      lei da Coroa."
     dialogueAudio:
       Guid:
         Data1: -1877086842
@@ -26,3 +25,18 @@ MonoBehaviour:
         Data4: -1852382703
       Path: event:/Normal geral_01
     choices: []
+  - name: Charles Dupaty
+    text: "Seja preciso: estamos falando da tortura usada para arrancar uma confiss\xE3o
+      durante a instru\xE7\xE3o. N\xE3o escreva que esse documento aboliu toda forma
+      de supl\xEDcio."
+    dialogueAudio:
+      Guid:
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/Normal geral_01
+    choices:
+    - choiceText: "O relato mostra o que precisa ser ouvido. O decreto fundamenta
+        a cr\xEDtica ao procedimento."
+      nextDialogue: {fileID: 11400000, guid: cf5678993d679f04eaa177b9fa496913, type: 2}

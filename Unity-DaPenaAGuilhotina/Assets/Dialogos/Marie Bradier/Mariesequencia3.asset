@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: Marie Bradier
-    text: "Viu, eu acho... Mas quando pegaram meu marido e os outros, demoraram meses
-      para ele e sua esposa confirmarem, e eles n\xE3o pareciam ter certeza de nada,
+    text: "Viu, eu acho. Mas quando pegaram meu marido e os outros, demoraram meses
+      para ele e sua esposa confirmarem. Eles n\xE3o pareciam ter certeza de nada,
       e estavam errados de qualquer forma."
     dialogueAudio:
       Guid:
@@ -24,4 +24,8 @@ MonoBehaviour:
         Data3: -404866682
         Data4: -1175277728
       Path: event:/reclamar feminino_02
-    choices: []
+    choices:
+    - choiceText: A senhora sabe por que demoraram tanto?
+      nextDialogue: {fileID: 11400000, guid: db8d00167183e4947b1374a33ed1f2bc, type: 2}
+    - choiceText: Vou registrar essa demora e o que a senhora observou.
+      nextDialogue: {fileID: 11400000, guid: b81fc808942eb8841876a75118ac997f, type: 2}

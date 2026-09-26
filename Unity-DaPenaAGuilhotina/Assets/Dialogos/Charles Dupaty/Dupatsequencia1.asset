@@ -25,6 +25,10 @@ MonoBehaviour:
         Data4: -1852382703
       Path: event:/Normal geral_01
     choices:
+    - choiceText: Como devemos usar o relato de Marie sem afirmar mais do que sabemos?
+      nextDialogue: {fileID: 11400000, guid: a1c5ae4b18f466e49bffbbb051dad95a, type: 2}
+    - choiceText: "Como tornar esse sofrimento p\xFAblico sem explorar a fam\xEDlia?"
+      nextDialogue: {fileID: 11400000, guid: f1e14924ae76a0f46a31339a9f7db594, type: 2}
     - choiceText: "Mestre, se as falhas s\xE3o t\xE3o \xF3bvias, por que n\xE3o apelamos
         diretamente ao Parlamento?"
       nextDialogue: {fileID: 11400000, guid: 01222fe2072dd8e44a0ee4eb0c1d84fd, type: 2}

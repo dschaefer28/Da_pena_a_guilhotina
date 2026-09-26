@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
-  m_Name: Dupatsequencia2
+  m_Name: Dupat_JUR_3
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: Charles Dupaty
-    text: "Nobres protegem nobres, meu jovem. O Parlamento n\xE3o rasgar\xE1 uma
-      senten\xE7a para salvar camponeses, a menos que a verdade se torne um esc\xE2ndalo
-      p\xFAblico."
+    text: "Comece pelos atos e pelas falhas que conseguimos apontar. Se o texto depender
+      apenas de insultos, ser\xE1 f\xE1cil fugir das perguntas e discutir somente
+      a sua insol\xEAncia."
     dialogueAudio:
       Guid:
         Data1: -1877086842
@@ -25,7 +25,5 @@ MonoBehaviour:
         Data4: -1852382703
       Path: event:/Normal geral_01
     choices:
-    - choiceText: O memorial pode obrigar os magistrados a responder?
-      nextDialogue: {fileID: 11400000, guid: 097c2427d98038b47a1e596236407742, type: 2}
-    - choiceText: "Ent\xE3o precisamos sustentar publicamente o pedido de revis\xE3o."
+    - choiceText: "Que respondam ao argumento, ent\xE3o."
       nextDialogue: {fileID: 11400000, guid: cec35ce90c196254d8c7d77fa86a150f, type: 2}

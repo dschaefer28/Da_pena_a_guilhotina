@@ -513,6 +513,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 22473429104203323, guid: 0297e90a85155ac4f97d902242847821, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[0].dialogoDepoisDaEntrega
+      value: 
+      objectReference: {fileID: 11400000, guid: 3c4d74239c9fedf4fb3a707faf4d6671, type: 2}
+    - target: {fileID: 22473429104203323, guid: 0297e90a85155ac4f97d902242847821, type: 3}
       propertyPath: OnDialogueComplete.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -1590,7 +1594,7 @@ PrefabInstance:
     - target: {fileID: 8663636028168379045, guid: f725072d2077ebb4d89d2afca230bd5b, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].dialogoInicialDoCaso
       value: 
-      objectReference: {fileID: 11400000, guid: a7e42bc888792a24d8f5066c66a3e3fc, type: 2}
+      objectReference: {fileID: 11400000, guid: 637317ae5daf4a642ae020758fe60291, type: 2}
     - target: {fileID: 8663636028168379045, guid: f725072d2077ebb4d89d2afca230bd5b, type: 3}
       propertyPath: reacoesDeCaso.Array.data[1].dialogoInicialDoCaso
       value: 

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
+  m_Name: Marie_EMP_1
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  talkScript:
+  - name: Marie Bradier
+    text: "Que tudo termine antes de algu\xE9m nos escutar. Quando digo que Charles
+      estava comigo, parece que j\xE1 decidiram quanto vale a minha palavra."
+    dialogueAudio:
+      Guid:
+        Data1: 1666405146
+        Data2: 1151074371
+        Data3: -921428562
+        Data4: -1159192161
+      Path: event:/Normal feminino_01
+    choices:
+    - choiceText: O que gostaria que as pessoas soubessem sobre eles?
+      nextDialogue: {fileID: 11400000, guid: 255748bf9ec3cba4ca3676fb66b77562, type: 2}
+    - choiceText: Estou ouvindo. Vamos colocar seu relato em ordem.
+      nextDialogue: {fileID: 11400000, guid: b81fc808942eb8841876a75118ac997f, type: 2}

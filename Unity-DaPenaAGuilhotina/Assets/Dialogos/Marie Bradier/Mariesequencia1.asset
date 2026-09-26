@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Mariesequencia1
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: 'Marie Bradier '
-    text: "Um lorde, o Sr.Thomassin, foi atacado uma noite por tr\xEAs homens. Invadiram
+  - name: Marie Bradier
+    text: "Um lorde, o Sr. Thomassin, foi atacado uma noite por tr\xEAs homens. Invadiram
       sua casa, roubaram suas coisas e bateram nele e na esposa."
     dialogueAudio:
       Guid:
@@ -24,5 +24,9 @@ MonoBehaviour:
         Data4: -1175277728
       Path: event:/reclamar feminino_02
     choices:
-    - choiceText: E onde seu marido e os outros estavam nessa noite?
-      nextDialogue: {fileID: 11400000, guid: b81fc808942eb8841876a75118ac997f, type: 2}
+    - choiceText: Quero entender o que a senhora presenciou naquela noite.
+      nextDialogue: {fileID: 11400000, guid: 76e43983ef618f04b92a23d4cd215076, type: 2}
+    - choiceText: O que a senhora mais teme neste momento?
+      nextDialogue: {fileID: 11400000, guid: 925ecba321785044ba6c510258851314, type: 2}
+    - choiceText: "Como chegaram \xE0 conclus\xE3o de que foram eles?"
+      nextDialogue: {fileID: 11400000, guid: 086e49052358b2f4ab2e96765c9c3e0b, type: 2}

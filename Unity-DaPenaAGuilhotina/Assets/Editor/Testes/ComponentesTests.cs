@@ -254,6 +254,47 @@ public class ComponentesTests
     }
 
     [Test]
+    public void Npc_DepoisDaEntrega_TocaFalaCurta_SemEntregarDeNovo_CampoVazioRepeteAConversa()
+    {
+        // Mesmo arranjo do Dupaty no tutorial: sem pista fala o padrão; com a pista, a conversa que entrega o documento.
+        Item relato = Pista("relato", null, Confiabilidade.NaoEPista);
+        Item decreto = Pista("decreto", null, Confiabilidade.NaoEPista);
+        DialogueData conversa = Fala("conversa com pista"), lembrete = Fala("vá para a prensa");
+        NPCMovement mentor = Npc("Mentor", casoA, null, decreto);
+        CasoReacao r = mentor.reacoesDeCaso[0];
+        r.pistaNecessaria = relato; r.dialogoComPista = conversa; r.dialogoDepoisDaEntrega = lembrete;
+        mentor.reacoesDeCaso[0] = r;
+        gm.ConfirmarCaso(casoA);
+
+        mentor.Interact();
+        Assert.AreSame(mentor.dialogoPadrao, ds.dialogueData, "sem a pista: fala padrão, antes da entrega");
+        TerminarDialogo();
+        Assert.IsFalse(inv.HasItem("decreto"));
+
+        inv.AddItem(relato);
+        mentor.Interact();
+        Assert.AreSame(conversa, ds.dialogueData, "com a pista: a conversa da reação");
+        TerminarDialogo();
+        Assert.AreEqual(1, inv.ItemNaGrade("decreto").itemAmt);
+
+        mentor.Interact();
+        Assert.AreSame(lembrete, ds.dialogueData, "tudo entregue: só a fala curta");
+        TerminarDialogo();
+        Assert.AreEqual(1, inv.ItemNaGrade("decreto").itemAmt, "a fala curta não entrega de novo");
+
+        // Campo vazio: comportamento anterior (repete a conversa, sem entregar).
+        NPCMovement outro = Npc("Outro", casoA, null, Pista("carta", null, Confiabilidade.NaoEPista));
+        CasoReacao r2 = outro.reacoesDeCaso[0];
+        r2.pistaNecessaria = relato; r2.dialogoComPista = conversa;
+        outro.reacoesDeCaso[0] = r2;
+        outro.Interact(); TerminarDialogo();
+        outro.Interact();
+        Assert.AreSame(conversa, ds.dialogueData, "sem fala depois da entrega, repete a conversa");
+        TerminarDialogo();
+        Assert.AreEqual(1, inv.ItemNaGrade("carta").itemAmt);
+    }
+
+    [Test]
     public void Npc_CasoConcluido_SoConversa()
     {
         Item pista = Pista("p1", casoA);

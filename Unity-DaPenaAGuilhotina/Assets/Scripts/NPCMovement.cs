@@ -21,6 +21,10 @@ public struct CasoReacao
     [Tooltip("Lista de itens entregues ao jogador ao fim do diálogo (Ex: Decreto/Papel).")]
     public List<Item> recompensasDoDialogo; // Transformado em Lista
 
+    [Tooltip("Opcional. Fala curta depois que todas as recompensas desta reação já foram entregues (ex: 'Vá para o porão'). " +
+             "Vazio = repete a fala da reação, sem entregar nada de novo.")]
+    public DialogueData dialogoDepoisDaEntrega;
+
     [Header("Etapas complementares (Prompt 3)")]
     [Tooltip("Conversas posteriores que entregam pistas/documentos complementares quando os pré-requisitos já foram " +
              "obtidos (mesmo que gastos depois). Têm prioridade sobre a fala normal enquanto houver algo a entregar.")]
@@ -140,6 +144,14 @@ public class NPCMovement : MonoBehaviour, IInteractable
                         dialogoParaTocar = complementar.dialogo;
                         recompensasDaEtapa = complementar.recompensas;
                         etapa = complementar.id;
+                    }
+                    // Tudo desta reação já entregue: a fala curta (se houver) no lugar de repetir a conversa inteira.
+                    else if (reacao.dialogoDepoisDaEntrega != null && recompensasDaEtapa != null &&
+                             recompensasDaEtapa.Exists(r => r != null && !string.IsNullOrEmpty(r.itemID)) &&
+                             !TemRecompensaPendente(recompensasDaEtapa, casoAtual, etapa))
+                    {
+                        dialogoParaTocar = reacao.dialogoDepoisDaEntrega;
+                        recompensasDaEtapa = null;
                     }
 
                     break;

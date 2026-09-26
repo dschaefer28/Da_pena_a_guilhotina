@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
+  m_Name: Marie_INV_2
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  talkScript:
+  - name: Marie Bradier
+    text: "N\xE3o. Eu estava com meu marido. Nicolas estava na casa dele, com a mulher
+      e os filhos. Mas eu n\xE3o estava l\xE1 para ver."
+    dialogueAudio:
+      Guid:
+        Data1: 1666405146
+        Data2: 1151074371
+        Data3: -921428562
+        Data4: -1159192161
+      Path: event:/Normal feminino_01
+    choices:
+    - choiceText: "Ent\xE3o preciso distinguir o que a senhora viu do que est\xE1
+        me contando sobre ele."
+      nextDialogue: {fileID: 11400000, guid: 17e689ed48c47134f81d0a10eb814f90, type: 2}
