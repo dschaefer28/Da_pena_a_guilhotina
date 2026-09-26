@@ -1,18 +1,22 @@
 ﻿# Status de implementação — Da Pena à Guilhotina
 
-Atualizado em 25/09/2026. Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminhos relativos a `Unity-DaPenaAGuilhotina/`.
+Atualizado em 26/09/2026. Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminhos relativos a `Unity-DaPenaAGuilhotina/`.
 
 Estados usados: **validado** (testado em runtime ou em teste automatizado), **existente não validado** (código/asset presente, sem teste de runtime), **parcial**, **ausente**.
 
-Etapas: Prompt 0 (auditoria) concluído; Prompt 1 concluído; Prompt 2 concluído; **Prompt 3 concluído**; **verificação dos Prompts 0–3 concluída, com os achados corrigidos (§7)**; próximo liberado: **Prompt 4**.
+Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achados corrigidos (§7); **verificação completa contra os dois PDFs em 26/09, com correções que adiantaram partes dos Prompts 6 e 7 (§9)**. Próximo recomendado: **Prompt 5**; depois o que resta dos Prompts 6 e 7, e o Prompt 8. O **Prompt 4 é opcional** (decisão do grupo, ver §8).
 
-Regras que mudaram na verificação e prevalecem sobre o texto das seções 4–6:
+Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4–6:
 - **Alegações:** qualquer impressão com alegação usa a versão Só Alegações.
 - **Arquivamento:** sobras dos casos anteriores à Fase 4 são arquivadas ao concluir.
 - **Inventário cheio:** interação sem espaço para o que entregaria não cobra horas.
 - **Save:** passou para a versão 5.
 - **Biblioteca:** tem estados por situação.
 - **Pistas:** os nomes são neutros.
+- **Revelações (26/09):** aplicadas no fim da fase por `GameManager.EncerrarFase`, na ordem revelações → despesas → avanço de fase/rota, e mostradas na cutscene do `FimDeFase`. `RevelacaoDeBoatos` foi removido.
+- **Tribunal (26/09):** as provas são os itens do caso da Fase 4 obtidos (histórico, inclusive os gastos na prensa) mais o panfleto dele. O réu é absolvido só se esse panfleto saiu na versão Fatos; o destino do jogador continua vindo só da rota.
+- **Final C (26/09):** "O Esquecido", definido pelo grupo: barras equilibradas, ninguém condena nem defende o jogador, que é apagado da história.
+- **Tutorial (26/09):** a explicação do status aparece ao abrir a prensa, antes de imprimir.
 
 Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não exibir ao jogador).
 
@@ -24,28 +28,31 @@ Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não e
 |---|---|
 | Unity | 6000.3.9f1 aberto no Editor durante o trabalho (projeto `Unity-DaPenaAGuilhotina`) |
 | Unity MCP | Operacional (`com.coplaydev.unity-mcp`): leitura de cenas, compilação, Play Mode, execução de código de Editor e Test Runner |
-| Testes | `com.unity.test-framework` 1.6.0. Não havia testes. Os testes novos ficam em `Assets/Editor/Testes/` (assembly `Assembly-CSharp-Editor`, sem asmdef, porque os scripts do jogo não têm asmdef) |
+| Testes | `com.unity.test-framework` 1.6.0. Não havia testes. Os testes novos ficam em `Assets/Editor/Testes/` (assembly `Assembly-CSharp-Editor`, sem asmdef, porque os scripts do jogo não têm asmdef). Em 26/09: 46 testes EditMode |
 | Compilação | Sem erros. Avisos antigos: `FindObjectOfType` obsoleto em `GameManager`; `Caso_Tutorial` sem `caseTitle`/`npcDialogueRoute` (OnValidate) |
-| Save real do jogador | Não foi lido nem alterado (nenhum teste chamou `SistemaDeSave.Salvar`) |
+| Save real do jogador | Até 25/09: não foi lido nem alterado. Em 26/09: ver §9.7 (um save de teste criado e apagado com autorização; duas PlayerPrefs de dica ficaram marcadas) |
 
 ## 2. Premissas adotadas (seção "Decisões adotadas" do documento de prompts)
 
 1. Finais: A = Guilhotina, B = Tirano, C = Equilíbrio (código atual já segue).
 2. Tribunal: investigar → panfleto → Dupaty → tribunal.
 3. "Final da Fase 2" citado na Fase 3 = erro de numeração.
-4. Final C "O Exílio" (texto em `TribunalManager`) é provisório, pendente de validação autoral.
+4. ~~Final C "O Exílio"~~ Substituída em 26/09: Final C "O Esquecido", definido pelo grupo (ver §9.3). Textos ainda provisórios.
 5. Dedução ativa (C) nas Fases 3 e 4, por caso; sem confronto com NPC na 1ª versão.
 6. Linha editorial (D) a partir da Fase 2; tutorial com receita simples; tom não muda a verdade.
 7. Receita expandida mantém 2 slots; evidências complementares como qualificadores opcionais.
 8. Campanha: Fase 2 = 1 de 3 casos; Fase 3 = 2 distintos de 4; Fase 4 = 1 caso da rota.
 9. Sem bloqueio por falta de pistas (duas alegações não verificadas como saída de design, se necessário).
 10. Valores e textos novos são protótipos editáveis, rotulados como provisórios.
+11. (26/09, decisão do grupo) Pista melhor gera panfleto melhor; as barras decidem o final do jogador; o panfleto do caso da Fase 4 decide o destino do réu.
 
-Dependências entre etapas: 1 (estabilidade/save) → 2 (conteúdo) → 3 (biblioteca) → 4 (dedução) → 5 (tom) → 6 (consequências/tribunal) → 7 (UI/tutorial) → 8 (validação).
+Dependências entre etapas: 1 (estabilidade/save) → 2 (conteúdo) → 3 (biblioteca) → 4 (dedução) → 5 (tom) → 6 (consequências/tribunal) → 7 (UI/tutorial) → 8 (validação). Ordem recomendada a partir de 26/09: 5 → restante de 6 e 7 → 8; o 4 só se o grupo decidir incluí-lo (as propostas C e D são "proposta, não implementada" no documento de dificuldade, e o 4 exige reescrever as pistas de 7 casos em pares contraditórios).
 
 ## 3. Diagnóstico (Prompt 0)
 
 ### 3.1 Mapa de requisitos
+
+Estado na data do diagnóstico (25/09), com anotações dos Prompts 1–3. O estado depois de 26/09 está em §9.
 
 | Requisito | Evidência (arquivo / campo) | Estado |
 |---|---|---|
@@ -382,16 +389,90 @@ Save e PlayerPrefs do jogador restaurados de novo depois dos testes (hash idênt
 
 ---
 
-## 8. Próximo prompt liberado
+## 8. Próximo prompt
 
-**Prompt 4 — dedução ativa e pistas conflitantes (C).** Pontos de partida:
+**Recomendado: Prompt 5 — linha editorial (D).** É barato (uma escolha a mais na prensa e três modificadores por receita) e dá ao jogador controle consciente das barras, que decidem o final. Pontos de partida:
+- **Cálculo:** `CalculadoraDePanfleto.Calcular` já tem o lugar reservado para os modificadores editoriais (versão → apoio → tom).
+- **Revelações:** o agravamento do sensacionalista entra em `GameManager.revelacoesPendentes`, aplicadas por `EncerrarFase` no fim da fase.
+- **Histórico:** `GameManager.PanfletoPublicado` já guarda snapshot dos valores; o tom entra ali (save sobe para a versão 6).
+
+Depois: o que resta dos Prompts 6 e 7 (o que já foi feito está em §9) e o Prompt 8.
+
+**Prompt 4 — dedução ativa (C), opcional.** Se o grupo decidir incluir, os pontos de partida continuam valendo:
 - **Histórico:** `GameManager.evidenciasObtidas` já guarda as pistas obtidas, inclusive as gastas.
 - **Verificação atual:** a verificação automática está em `InventoryManager.PistaVerificada`/`RegistrarVerificacoes` e na `FichaDaPista`; hoje nenhuma pista tem `verificadaPor`.
 - **Fora dos conjuntos de dedução:** alegações e documentos de apoio.
-- **Pistas:** os nomes já são neutros. A **fonte** continua sendo a dica de confiabilidade prevista no desenho original (anônimo/boato versus documento/testemunha); avaliar no Prompt 4 se ela deve ficar menos determinística.
+- **Pistas:** os nomes já são neutros. A **fonte** continua sendo a dica de confiabilidade prevista no desenho original.
 
-Questões em aberto (não bloqueiam o Prompt 4):
-- **Revelações:** onde colocar `RevelacaoDeBoatos` e a ordem em relação à trava de rota (Prompt 6).
+Questões em aberto:
+- ~~Revelações: onde colocar `RevelacaoDeBoatos` e a ordem em relação à trava de rota~~ Resolvido em 26/09 (§9).
+- ~~Tribunal: provas restritas ao caso, incluindo documentos comprados~~ Resolvido em 26/09 (§9).
 - **Inventário ao restaurar:** perda silenciosa de itens quando a grade está cheia (Prompt 6).
-- **Tribunal:** provas restritas ao caso, incluindo documentos comprados (Prompt 6).
+- **Mesa depende do panfleto do tutorial:** `TableInteractable.itemObrigatorio` exige `Panfleto_MemoireJustificatif` na grade. Em jogo normal ele nunca sai, mas um save sem ele trava a mesa (Prompt 6).
+- **Marie ausente após save/load:** depende do panfleto do tutorial no inventário ou de um caso diferente do tutorial (Prompt 7).
 - **Referências quebradas:** as listadas em 3.2, item 5.
+
+---
+
+## 9. Verificação completa e correções (26/09/2026)
+
+Verificação feita contra os dois PDFs ("Tarefas de Programação TCC" e "Mecânica de dificuldade"), seguida das correções aprovadas pelo grupo. Nada foi commitado pela sessão; o commit fica com o grupo.
+
+### 9.1 O que foi verificado e como
+
+Compilação sem erros, EditMode 41/41 antes das correções, validador "Campanha válida" e Play Mode no Editor via MCP. As ações foram disparadas pelas mesmas funções dos botões (`Interact()`, `onClick`), não por teclado ou toque físicos.
+
+| Percurso | Resultado |
+|---|---|
+| Tutorial completo (15 etapas), cutscene de abertura, Marie/Dupaty, alçapão, prensa, cutscene da Fase 1, mesa | sem travar; Marie some e Dupaty silencia ao voltar |
+| Fase 2 (Caso das Joias) | os 4 NPCs respondem; NPC errado gasta 1h sem pista; Gazeteiro entrega boato |
+| Fase 3 (Champ de Mars e Varennes) | biblioteca (30 → 10 de ouro), relógio (repetir grátis, 0h recusa), prensa +40/−5/+50 com a Ata, pista complementar do Cocheiro |
+| Fim da Fase 3 | despesa de 50, avanço para a Fase 4, rota C |
+| Fase 4 (Viúva Girondina) | mesa com 1 cartão; Dupaty recusa antes do panfleto e libera depois |
+| Tribunal rotas A, B e C | barra explode em A, fica ≤ 32 em B; tela de fim e volta ao menu |
+| Controles no celular (Ferramentas > Controles > Simular celular no Editor) | as 15 etapas do tutorial com o mesmo texto e só os controles trocados; botões na tela; ícone "Interagir" |
+
+### 9.2 Defeitos encontrados e correções
+
+| # | Defeito | Correção | Evidência |
+|---|---|---|---|
+| 1 | A punição por boato nunca era aplicada (`RevelacaoDeBoatos` não estava em cena): a calúnia sempre rendia mais | `GameManager.EncerrarFase` (revelações → despesas → avanço/rota) usado pelo `FimDeFase`; revelação na cutscene; `RevelacaoDeBoatos` removido | testes `EncerrarFase_*`; Play Mode: Povo 70→60, Estado 45→35 antes da rota |
+| 2 | Tribunal usava o inventário inteiro como prova (pistas gastas sumiam, panfletos de outros casos entravam) | `TribunalManager.ProvasDoCaso` pelo histórico | teste + Play Mode |
+| 3 | Tutorial do status só depois de imprimir e sem citar fato/boato | etapa `explicar_efeito_barras` logo após abrir a prensa, novo texto, `DestaqueDeEtapaTutorial` pisca o HUD, `TutorialManager.AcaoJaFeita` pula etapas já cumpridas | Play Mode: 4 ordens diferentes de ação, nenhuma trava |
+| 4 | Botão Biblioteca por cima da mesa de casos | `CaseSelectionUI.Aberta` esconde o botão | Play Mode |
+| 5 | Pop-up de item cobria o relógio | pop-up desce abaixo do relógio (`HudDoRelogio.BordaInferior`) | Play Mode |
+| 6 | Sem ícone de interação nas Fases 2–4 | `PromptDeInteracao` no Player das três cenas | Play Mode |
+| 7 | Alçapão sem som | `event:/bauabrir` | cena Jogo |
+| 8 | Fade de troca de cena na ordem 9, abaixo de pop-ups (10), biblioteca (30) e cutscenes (50) | ordem 1000 no prefab + garantia no `SceneTransitionManager.Awake` | Play Mode |
+| 9 | Cenário piscava antes da cutscene de início de cena (fade da cutscene cruzando com o da troca) | `CutsceneLegendas` nasce preta com a tela coberta ou no início da cena | medido: 0% do cenário visível em 3.872 frames |
+| 10 | `Ferramentas > Tutorial > 2` não copiava "Salvar Ao Concluir" (apagava o save do fim do tutorial) | campo copiado | compilação |
+
+### 9.3 Finais (decisão do grupo)
+
+A rota decide o destino do jogador; o panfleto do caso da Fase 4 decide o do réu (Fatos = absolvido; boato, calúnia ou só alegações = condenado). Isso muda a fala do veredito e a 1ª linha da cutscene. Final C = "O Esquecido": a barra dos juízes termina no meio (50). Textos em `TribunalManager.DesfechosPadrao()` e na cena Tribunal, todos provisórios.
+
+| Final | Réu absolvido | Réu condenado |
+|---|---|---|
+| A: Guilhotina | o réu sai livre, o jogador é preso | réu e jogador condenados |
+| B: Tirano | o réu é absolvido e o Comitê tolera | o réu é condenado para agradar o Estado |
+| C: O Esquecido | o réu é solto; ninguém lembra quem o defendeu | o réu é condenado; o panfleto é esquecido |
+
+### 9.4 Arquivos
+
+- Scripts: `GameManager`, `FimDeFase`, `TribunalManager`, `TutorialManager`, `CutsceneLegendas`, `SceneTransitionManager`, `CaseSelectionUI`, `BibliotecaUI`, `HudDoRelogio`, `ItemPickupNotificationUI`, `ReceitaDeCaso` e `RotaFinal` (comentários), `DestaqueDeEtapaTutorial` (novo), `RevelacaoDeBoatos` (removido).
+- Editor: `TutorialRoteiroTool`, `Testes/FinaisEBoatosTests` (novo, 5 testes).
+- Assets: `Prefab/UI.prefab`, `Prefab/SceneTransitonManager.prefab`, cenas `Jogo`, `Fase2`, `Fase3`, `Fase4` e `Tribunal` (diffs só com o necessário, sem ruído de layout).
+
+### 9.5 Testes após as correções
+
+EditMode **46/46**; validador "Campanha válida"; console sem erros; Play Mode dos itens de §9.2.
+
+### 9.6 Ainda não coberto
+
+Teclado e toque físicos, aparelho Android real, Continuar com save real depois das mudanças (nos testes a gravação do fim de fase foi interceptada), balanceamento das rotas com decisões reais de jogo (Prompt 8) e revisão dos textos provisórios.
+
+### 9.7 Efeitos no ambiente de quem testou
+
+- Um `save.json` de teste foi criado pelo fim da Fase 1 e apagado com autorização.
+- As PlayerPrefs `dica_fato_boato_vista` e `dica_tempo_vista` ficaram marcadas no Editor; Novo Jogo ou Ferramentas > Tutorial > 3 zeram.
+- A EditorPref `DaPena_SimularCelularNoEditor` ficou em falso (o padrão).

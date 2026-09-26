@@ -1,20 +1,21 @@
 # Prompts para Claude Code — Da Pena à Guilhotina
 
-Preparado em 25/09/2026 a partir dos dois PDFs e de inspeção estática do repositório. Nenhuma implementação de gameplay foi feita nesta análise; o jogo não foi executado no Editor. A existência de um script não comprova que suas referências e cenas funcionam em runtime.
+Preparado em 25/09/2026 a partir dos dois PDFs e de inspeção estática do repositório. **Atualizado em 26/09/2026:** Prompts 0 a 3 concluídos; a verificação completa de 26/09 adiantou partes dos Prompts 6 e 7 (marcadas como "Já feito" em cada prompt). O estado atual do projeto está sempre em `docs/STATUS_IMPLEMENTACAO_TCC.md`, que prevalece sobre o diagnóstico inicial abaixo.
 
 ## Como usar
 
 1. Abra o Claude Code na raiz `Da_pena_a_guilhotina`. O projeto Unity está na subpasta `Unity-DaPenaAGuilhotina`.
-2. Envie o **Prompt base** e, em seguida, o **Prompt 0**.
-3. Execute os prompts 1 a 8, um por vez, na ordem. Confira o resultado de cada etapa antes da próxima.
-4. Em uma conversa nova, reenvie o prompt base, peça a leitura dos relatórios já gerados e envie somente a próxima etapa.
-5. Não é necessário reenviar todos os PDFs a cada etapa: os requisitos operacionais estão abaixo. Mantenha os originais como referência para resolver dúvidas.
+2. Envie o **Prompt base** e peça a leitura de `docs/STATUS_IMPLEMENTACAO_TCC.md`.
+3. Os Prompts 0 a 3 já foram executados. Ordem recomendada daqui em diante: **5 → 6 → 7 → 8**. O **Prompt 4 é opcional**: as propostas C e D são "proposta, não implementada" no documento de dificuldade, e o 4 exige reescrever as pistas de 7 casos em pares contraditórios. Decidam em grupo se ele entra no TCC.
+4. Um prompt por vez. Confira o resultado de cada etapa antes da próxima.
+5. Em uma conversa nova, reenvie o prompt base, peça a leitura dos relatórios já gerados e envie somente a próxima etapa.
+6. Não é necessário reenviar os PDFs a cada etapa: os requisitos operacionais estão abaixo. Mantenha os originais como referência para resolver dúvidas.
 
 As etapas dividem a implementação por dependência e incluem critérios de aceite. Não use um único comando genérico como “implemente os PDFs inteiros”.
 
-## O que foi encontrado
+## Diagnóstico inicial (25/09/2026, histórico)
 
-Todos os caminhos desta seção são relativos a `Unity-DaPenaAGuilhotina`.
+Esta seção descreve o projeto antes dos Prompts 1–3 e está desatualizada: biblioteca, save v5, 11 casos, estado persistente de NPCs/loot e revelações de boato já existem. Use o `STATUS_IMPLEMENTACAO_TCC.md` para o estado atual. Todos os caminhos desta seção são relativos a `Unity-DaPenaAGuilhotina`.
 
 | Área | Evidência no projeto | Trabalho indicado |
 |---|---|---|
@@ -32,7 +33,7 @@ Todos os caminhos desta seção são relativos a `Unity-DaPenaAGuilhotina`.
 | Conteúdo | Quatro assets `CaseData`: tutorial, Joalheiro, Réveillon e Operário | Cadastrar quatro casos da Fase 3 e três alternativas de rota da Fase 4 |
 | Cenas | Menu, Jogo, Porao, Fase2, Fase3, Fase4 e Tribunal nas Build Settings | Confirmar configuração e jogabilidade |
 
-### Pontos concretos de atenção
+### Pontos concretos de atenção (todos tratados nos Prompts 1–3 e na verificação de 26/09)
 
 - `NPCMovement.HandleDialogueEnded` desativa o NPC após entregar recompensas, mesmo se `disableAfterDialogue` estiver falso. Isso conflita com retornar ao NPC para obter mais pistas.
 - Recompensas de NPC são filtradas por posse atual no inventário. Consumir uma pista e revisitar a cena pode permitir nova entrega; investigar com teste.
@@ -51,15 +52,17 @@ Estas são interpretações/propostas deste plano, não novas afirmações conti
 1. **Finais deterministas:** prevalece a seção detalhada da página 3 de Tarefas: A = Guilhotina, B = Tirano, C = Equilíbrio. A página 4 contradiz essa regra e troca os nomes dos finais. O código atual já segue a página 3.
 2. **Entrada no tribunal:** prevalece investigar → produzir panfleto → falar com Dupaty → tribunal, e não o salto direto após ler a mesa descrito em outra passagem.
 3. **Cutscene da Fase 3:** a referência a “final da Fase 2” dentro da Fase 3 será tratada como erro de numeração.
-4. **Final C:** preservar provisoriamente “O Exílio”, já escrito em `TribunalManager`. O PDF não define essa narrativa e o GDD citado não foi encontrado; marcar como conteúdo pendente de validação autoral.
+4. **Final C:** definido pelo grupo em 26/09 como **“O Esquecido”**: barras equilibradas, ninguém condena nem defende o jogador, que é apagado da história; a barra dos juízes termina no meio. Os textos em `TribunalManager` seguem provisórios.
 5. **Escopo C:** dedução ativa nas Fases 3 e 4, por caso. A variante de confrontar NPCs com provas fica fora da primeira implementação.
 6. **Escopo D:** linha editorial a partir da Fase 2; tutorial continua com receita simples. Tom não transforma boato em fato.
 7. **Receita expandida:** manter os dois slots de pistas e usar evidências complementares como qualificadores opcionais cadastrados por receita. Não criar quantidade variável de slots nesta primeira versão.
 8. **Campanha:** Fase 2 conclui um de três casos; Fase 3 conclui dois distintos entre quatro; Fase 4 recebe exatamente um caso correspondente à rota travada.
 9. **Sem bloqueio por falta de pistas:** tempo limitado precisa coexistir com uma saída de conclusão. Primeiro validar o desenho dos casos; quando necessário, fornecer duas alegações iniciais distintas, explicitamente não verificadas, com consequências inferiores. Essa saída é proposta de design, não requisito literal dos PDFs, e deve constar no relatório.
 10. **Valores novos:** preços, bônus, textos e casos ausentes são parâmetros/protótipos editáveis. Reutilizar narrativa existente; conteúdo novo deve ser rotulado como provisório. Não inventar que foi retirado do GDD.
+11. **Destino do jogador e do réu (grupo, 26/09):** pista melhor gera panfleto melhor; as barras decidem o final do jogador (rota); o panfleto do caso da Fase 4 decide o destino do réu (versão Fatos = absolvido; boato, calúnia ou só alegações = condenado). As provas apresentadas no tribunal não mudam nenhum dos dois.
+12. **Revelações (26/09):** as punições de boato são aplicadas no fim da fase por `GameManager.EncerrarFase` (revelações → despesas → avanço/rota) e contadas na cutscene do `FimDeFase`. O script `RevelacaoDeBoatos` foi removido; não o recrie.
 
-Fluxo esperado: tutorial → caso da Fase 2 com tempo limitado → despesas → dois casos da Fase 3 com biblioteca, dedução e escolha editorial → consequências e despesas → rota travada → investigação da Fase 4 → Dupaty → tribunal → final da rota.
+Fluxo esperado: tutorial → caso da Fase 2 com tempo limitado → despesas → dois casos da Fase 3 com biblioteca, escolha editorial e, se o Prompt 4 entrar, dedução → consequências e despesas → rota travada → investigação da Fase 4 → Dupaty → tribunal → final da rota e destino do réu.
 
 ## Prompt base — contexto e contrato de execução
 
@@ -99,6 +102,17 @@ Regras de implementação:
 - Teste regras de negócio e persistência com Unity Test Framework quando fizer
   sentido; faça verificação em Play Mode quando disponível. Não diga “testado”
   para algo apenas inspecionado. Não crie testes triviais que repetem código.
+- Antes de começar, leia docs/STATUS_IMPLEMENTACAO_TCC.md: ele prevalece sobre
+  o diagnóstico inicial deste arquivo. Não refaça o que estiver marcado "Já feito".
+- Não crie, altere nem apague o save.json nem as PlayerPrefs de progresso de
+  quem está testando (tutorial, cutscenes, dicas). O FimDeFase (fim de toda fase,
+  inclusive a 1), o CheckpointDoTribunal e a etapa final do tutorial gravam o
+  save sozinhos: intercepte a gravação no teste, ou peça permissão, faça backup
+  e restaure. Informe no relatório qualquer efeito que tenha ficado.
+- Ao salvar cenas, confira o git diff: não grave cena marcada como suja só por
+  mudança no prefab UI (vira ruído de layout). Prefira editar o prefab.
+- Depois de mudar conteúdo, rode Ferramentas > Campanha > 2 - Validar campanha
+  e todos os testes EditMode.
 
 Ao concluir, atualize docs/STATUS_IMPLEMENTACAO_TCC.md com: requisito atendido,
 arquivos alterados, configuração realizada, testes executados/resultados,
@@ -106,7 +120,7 @@ limitações, conteúdo provisório e próximo prompt liberado. Se o ambiente n�
 permitir validar, forneça os passos exatos e mantenha o status “não validado”.
 ```
 
-## Prompt 0 — auditoria e plano confirmado
+## Prompt 0 — auditoria e plano confirmado (concluído em 25/09)
 
 ```text
 Aplicando o prompt base, faça uma auditoria de preparação; não altere gameplay.
@@ -136,7 +150,7 @@ Não implemente sistemas novos nesta etapa. Entregue um diagnóstico curto e
 uma lista concreta de correções para o Prompt 1, sem replanejar toda a campanha.
 ```
 
-## Prompt 1 — estabilidade da investigação, publicação e save
+## Prompt 1 — estabilidade da investigação, publicação e save (concluído)
 
 ```text
 Aplicando o prompt base e o diagnóstico, corrija as regras existentes antes de
@@ -170,7 +184,7 @@ revisita após consumo de pista; dois casos no mesmo NPC; duplo clique na prensa
 save antigo e novo; sair e voltar com zero horas. Tutorial deve continuar funcionando.
 ```
 
-## Prompt 2 — completar conteúdo e progressão das fases
+## Prompt 2 — completar conteúdo e progressão das fases (concluído)
 
 ```text
 Aplicando o prompt base, configure campanha e investigação sobre os sistemas
@@ -209,7 +223,7 @@ na Fase 3; exatamente um caso por rota na Fase 4; nenhuma configuração sem sa�
 com o orçamento mínimo; referências e catálogo válidos após salvar/reabrir.
 ```
 
-## Prompt 3 — biblioteca, qualidade e pistas complementares
+## Prompt 3 — biblioteca, qualidade e pistas complementares (concluído)
 
 ```text
 Aplicando o prompt base, implemente biblioteca a partir da Fase 3, integrada ao
@@ -244,7 +258,7 @@ comprar/reabrir/recarregar; documento de outro caso; bônus aplicado uma vez;
 exemplo numérico; coexistência com despesas e perda de horas por dívida.
 ```
 
-## Prompt 4 — dedução ativa e pistas conflitantes (C)
+## Prompt 4 — dedução ativa e pistas conflitantes (C) — opcional, decisão do grupo
 
 ```text
 Aplicando o prompt base, implemente dedução ativa por caso nas Fases 3 e 4.
@@ -268,8 +282,9 @@ Modelo e comportamento:
 - Nos casos aderentes, remover revelação automática ao adquirir verificadaPor:
   revisar InventoryManager.PistaVerificada, RegistrarVerificacoes, textos de slots
   e FichaDaPista. Preservar comportamento legado nos casos não aderentes.
-- RevelacaoDeBoatos trata consequências APÓS publicação: não removê-la junto com
-  o aviso automático de investigação.
+- As consequências APÓS a publicação (GameManager.revelacoesPendentes, aplicadas
+  por EncerrarFase no fim da fase) continuam: não removê-las junto com o aviso
+  automático de investigação.
 - Biblioteca pode fornecer contexto que permita deduzir a contradição, sem botão
   que entregue a resposta. Ajuste o conteúdo criado no Prompt 2 para ser coerente.
 - Guarde histórico de pistas descobertas mesmo se consumidas na prensa, marcações
@@ -309,7 +324,8 @@ Três opções explícitas:
 - Registre no histórico da publicação os IDs das pistas/suportes, nível, tom,
   impactos aplicados e penalidades calculadas. Guarde snapshot dos valores:
   mudar configuração depois não altera publicações já feitas.
-- Propague penalidades ao fluxo existente de revelações, aplicadas uma única vez.
+- Propague penalidades ao fluxo existente de revelações (GameManager.revelacoesPendentes,
+  aplicadas uma única vez por EncerrarFase no fim da fase, antes da rota).
   Não altere o asset Versao compartilhado para criar uma variante sensacionalista.
 - Preserve guardas de transação do Prompt 1; cancelar não consome nada. Reset de
   UI não permite duplicar recompensa ou levar seleção de suporte de outro caso.
@@ -322,15 +338,18 @@ agravamento configurado; cancelar/duplo clique/save; tutorial sem etapa extra.
 
 ## Prompt 6 — consequências, rota e tribunal integrados
 
+Já feito em 26/09 (não refazer; ver STATUS §9): ordem revelações → despesas → rota em `GameManager.EncerrarFase`; revelação na cutscene do `FimDeFase`; provas do tribunal pelo histórico do caso da Fase 4 (`TribunalManager.ProvasDoCaso`); destino do réu pelo panfleto; Final C "O Esquecido" com a barra terminando no meio; uma prova não pode ser apresentada duas vezes. O que resta: Dupaty exigir panfleto recuperável/evidências, perda silenciosa ao restaurar inventário cheio, a mesa depender do panfleto do tutorial, testes de limite da rota e a exploração de encerrar a defesa cedo.
+
 ```text
 Aplicando o prompt base, integre os sistemas novos ao fim das fases e ao tribunal.
-Reutilize FimDeFase, RevelacaoDeBoatos, GameManager, CheckpointDoTribunal e
-TribunalManager. Não substitua o julgamento por um sistema novo.
+Reutilize FimDeFase, GameManager (EncerrarFase), CheckpointDoTribunal e
+TribunalManager. Não substitua o julgamento por um sistema novo. Leia o STATUS
+§9: a ordem das consequências, as provas do caso e o destino do réu já existem.
 
-- Torne explícita e determinística a ordem das consequências. Ao consolidar o
-  fim da Fase 3, aplique as revelações devidas das publicações até essa fase,
-  cobre despesas uma vez, consolide Povo/Estado e então trave a rota. Não dependa
-  da ordem entre Start de componentes. Revelações já cobradas não repetem.
+- Mantenha explícita e determinística a ordem das consequências (hoje em
+  GameManager.EncerrarFase: revelações → despesas → avanço/rota). Ao consolidar o
+  fim da Fase 3, as revelações devidas vêm antes da rota. Não dependa da ordem
+  entre Start de componentes. Revelações já cobradas não repetem.
 - Despesas: 25 ao fim da Fase 2, 50 ao fim da Fase 3; capital pode ficar negativo.
   Nova investigação perde 1h enquanto endividado, mínimo de 1h; quitar dívida
   não recarrega retroativamente as horas de um caso já iniciado.
@@ -343,13 +362,15 @@ TribunalManager. Não substitua o julgamento por um sistema novo.
   além das evidências exigidas configuradas. Use histórico de publicação/coleta
   para comprovar pistas consumidas. Se panfleto estiver na saída, preserve-o ou
   peça que seja retirado; nunca permita perda silenciosa ao trocar de cena.
-- Tribunal oferece panfleto publicado e evidências relevantes do caso, incluindo
-  documentos comprados e evidências usadas na impressão pelo histórico. Não
-  transforme todo item de inventário de outro caso em argumento válido.
-- Barra reage aos argumentos, mas final é fixo: A explode no veredito; B nunca
-  chega ao limite crítico; C usa a conclusão já existente, provisoriamente Exílio.
-  Provas e ordem não mudam o final. Evite exploração de encerrar defesa cedo
-  que pule a reação final obrigatória. Uma prova não pode ser apresentada duas vezes.
+- Tribunal oferece panfleto publicado e evidências relevantes do caso (já feito
+  em ProvasDoCaso). Não transforme item de inventário de outro caso em argumento.
+- Barra reage aos argumentos, mas o final do jogador é fixo pela rota: A explode no
+  veredito; B nunca chega ao limite crítico; C ("O Esquecido") termina no meio. O
+  destino do réu vem do panfleto do caso da Fase 4 (Fatos = absolvido). Provas e
+  ordem não mudam nenhum dos dois. Evite exploração de encerrar defesa cedo que
+  pule a reação final obrigatória. Uma prova não pode ser apresentada duas vezes.
+- A Mesa de Casos exige o panfleto do tutorial na grade (TableInteractable.itemObrigatorio).
+  Troque por uma regra de progresso (tutorial concluído/fase) que não dependa do item.
 - Preserve fade/áudio e cutscenes em tela preta. Migre e salve novos marcadores
   de consequências sem permitir reaplicação ao reabrir a cena.
 
@@ -359,6 +380,8 @@ de provas; Fase 4 alterando barras sem recalcular o final; saída da prensa ocup
 ```
 
 ## Prompt 7 — tutorial, transições e UI integrada
+
+Já feito em 26/09 (não refazer; ver STATUS §9): tutorial de status ao abrir a prensa, com o HUD piscando e etapas que pulam ações já feitas; fade de cena acima de toda a UI (ordem 1000) e cutscenes de início de cena que já nascem pretas (o cenário não pisca); textos do tutorial verificados em PC e celular; pop-up abaixo do relógio; botão Biblioteca escondido com a mesa aberta; ícone de interação nas Fases 2–4; som da porta (`event:/portaabrir`) e do alçapão (`event:/bauabrir`). O que resta: Marie ausente depois de save/load, dicas de primeira vez para despesas/biblioteca/tom, sequência de modais abertos e revisão de resoluções e área segura.
 
 ```text
 Aplicando o prompt base, feche lacunas de apresentação e integração. Reutilize
@@ -424,6 +447,6 @@ pendentes; não trate inspeção textual como campanha validada. Não faça push
 
 ## Referências usadas
 
-- `C:\Users\Delivery_\Documents\Tarefas de Programação TCC.pdf`, páginas 1–4: fluxo, fases, biblioteca, tribunal e tarefas globais.
-- `C:\Users\Delivery_\Documents\Mecanica de dificuldade.pdf`, páginas 1–4: A/B existentes, C/D propostas, parâmetros e pendência de conteúdo.
+- "Tarefas de Programação TCC.pdf", páginas 1–4: fluxo, fases, biblioteca, tribunal e tarefas globais. Fica fora do repositório (cada pessoa do grupo tem sua cópia).
+- "Mecanica de dificuldade.pdf", páginas 1–4: A/B existentes, C/D propostas, parâmetros e pendência de conteúdo. Também fora do repositório.
 - Código, assets e Build Settings do repositório disponíveis na data da análise. O GDD mencionado pelos PDFs não foi localizado.
