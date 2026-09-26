@@ -1202,6 +1202,18 @@ MonoBehaviour:
     nomeDoEvento: prensa_aberta
     nomeDaCena: 
     salvarAoConcluir: 0
+  - etapaId: explicar_efeito_barras
+    mensagem: "Antes de imprimir, veja o status no alto: a barra de cima \xE9 a Opini\xE3o
+      do Povo, a de baixo a do Estado, e embaixo fica o seu ouro. Um panfleto s\xF3
+      com fatos move as barras como o caso promete; com boato ou cal\xFAnia rende
+      mais agora, mas perde apoio quando a mentira \xE9 descoberta, no fim do per\xEDodo.
+      Quando terminar de ler, {continuar}."
+    icone: {fileID: 0}
+    controle: 0
+    tipoDeAvanco: 0
+    nomeDoEvento: 
+    nomeDaCena: 
+    salvarAoConcluir: 0
   - etapaId: colocar_itens_prensa
     mensagem: "{Toque} numa pista do invent\xE1rio e depois numa Entrada da prensa.
       Fa\xE7a o mesmo com a outra pista."
@@ -1219,20 +1231,11 @@ MonoBehaviour:
     nomeDoEvento: panfleto_gerado
     nomeDaCena: 
     salvarAoConcluir: 0
-  - etapaId: explicar_efeito_barras
-    mensagem: "Veja as barras no alto: a de cima \xE9 a Opini\xE3o do Povo, a de
-      baixo a Opini\xE3o do Estado, e embaixo est\xE1 o seu ouro, que paga o aluguel,
-      o papel e a tinta no fim de cada per\xEDodo. Cada panfleto agrada uns e irrita
-      outros. Quando terminar de olhar, {continuar}."
-    icone: {fileID: 0}
-    controle: 0
-    tipoDeAvanco: 0
-    nomeDoEvento: 
-    nomeDaCena: 
-    salvarAoConcluir: 0
   - etapaId: coletar_resultado_prensa
-    mensagem: "{Toque} no panfleto em Resultado e depois em Espa\xE7o livre no invent\xE1rio
-      para guard\xE1-lo."
+    mensagem: "Panfleto impresso! Repare como as barras e o ouro mudaram: cada panfleto
+      agrada uns e irrita outros, e o ouro paga aluguel, papel e tinta no fim do
+      per\xEDodo. {Toque} no panfleto em Resultado e depois em Espa\xE7o livre no
+      invent\xE1rio para guard\xE1-lo."
     icone: {fileID: 0}
     controle: 0
     tipoDeAvanco: 1
@@ -1394,11 +1397,11 @@ MonoBehaviour:
   pensamentoFaltamPistas: {fileID: 11400000, guid: 3337009e8a97aee43bb7cb7c6c456df3, type: 2}
   somAlcapao:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 131892611
+      Data2: 1128788351
+      Data3: 1567741370
+      Data4: 2081290612
+    Path: event:/bauabrir
 --- !u!4 &1159654255
 Transform:
   m_ObjectHideFlags: 0

@@ -4,15 +4,19 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 /// <summary>
-/// Documento (Fase 4, "Sistema de Julgamento"): o jogador apresenta as provas do inventário (pistas, documentos
-/// e o panfleto) diante da bancada, e a barra de irritação dos juízes reage a cada uma. A reação muda conforme a
-/// prova (fatos acalmam, boatos irritam), mas o desfecho é travado pela rota (ilusão de agência):
+/// Documento (Fase 4, "Sistema de Julgamento"): o jogador apresenta as provas do caso da Fase 4 (pistas obtidas,
+/// documentos comprados e o panfleto publicado) diante da bancada, e a barra de irritação dos juízes reage a cada
+/// uma. A reação muda conforme a prova (fatos acalmam, boatos irritam), mas o destino do JOGADOR é travado pela
+/// rota, isto é, pelas barras ao fim da Fase 3 (ilusão de agência):
 ///   A (Guilhotina): a última prova faz a barra explodir e o jogador é condenado;
 ///   B (Tirano):     a barra nunca chega perto do limite e o jogador sobrevive;
-///   C (Equilíbrio): a barra chega à beira do limite e para ali.
+///   C (Equilíbrio): a bancada perde o interesse, a barra termina no meio e o jogador é esquecido pela história.
+/// O destino do RÉU vem do panfleto do caso da Fase 4: só com fatos, ele é absolvido; com boato, calúnia ou só
+/// alegações, condenado ("pista melhor, panfleto melhor"). Isso muda a fala do veredito e a 1ª linha da cutscene.
 /// Depois do veredito toca a cutscene do final da rota e a tela de fim, que volta ao menu.
 ///
 /// A HUD é montada por código (placeholder até as artes): basta este componente num objeto da cena Tribunal.
@@ -34,8 +38,19 @@ public class TribunalManager : MonoBehaviour
         public RotaFinal rota;
         public string titulo;
         [TextArea(2, 4)]
-        [Tooltip("Fala da bancada depois da última prova. {juiz} = primeiro juiz da lista.")]
-        public string veredito;
+        [Tooltip("Fala da bancada depois da última prova quando o panfleto do caso só tinha fatos. {juiz} = primeiro juiz da lista.")]
+        public string vereditoReuAbsolvido;
+        [TextArea(2, 4)]
+        [FormerlySerializedAs("veredito")]
+        [Tooltip("Fala da bancada quando o panfleto do caso tinha boato, calúnia ou só alegações. {juiz} = primeiro juiz da lista.")]
+        public string vereditoReuCondenado;
+        [TextArea(2, 4)]
+        [Tooltip("1ª linha da cutscene do final quando o réu é absolvido.")]
+        public string legendaReuAbsolvido;
+        [TextArea(2, 4)]
+        [Tooltip("1ª linha da cutscene do final quando o réu é condenado.")]
+        public string legendaReuCondenado;
+        [Tooltip("Linhas seguintes da cutscene, iguais para os dois destinos do réu.")]
         public List<CutsceneLegendas.Linha> legendas = new List<CutsceneLegendas.Linha>();
     }
 
@@ -50,6 +65,8 @@ public class TribunalManager : MonoBehaviour
     [Header("Teste (cena aberta direto no Editor)")]
     [Tooltip("Usada quando o GameManager ainda não travou a rota (a Fase 4 não começou).")]
     public RotaFinal rotaDeTeste = RotaFinal.A_Guilhotina;
+    [Tooltip("Usado quando não há panfleto publicado do caso (cena aberta direto): marcado = réu absolvido.")]
+    public bool reuAbsolvidoDeTeste = true;
 
     [Header("Bancada")]
     public List<Juiz> juizes = new List<Juiz>
@@ -92,13 +109,20 @@ public class TribunalManager : MonoBehaviour
         new CutsceneLegendas.Linha { texto = "Cada prova que você apresentar será pesada. E cada palavra, lembrada.", duracao = 4f },
     };
 
-    public List<DesfechoDaRota> desfechos = new List<DesfechoDaRota>
+    public List<DesfechoDaRota> desfechos = DesfechosPadrao();
+
+    /// <summary>Textos padrão dos três finais (provisórios, para revisão do grupo). Também usados pela ferramenta
+    /// de Editor que atualiza a cena Tribunal.</summary>
+    public static List<DesfechoDaRota> DesfechosPadrao() => new List<DesfechoDaRota>
     {
         new DesfechoDaRota
         {
             rota = RotaFinal.A_Guilhotina,
             titulo = "Final A: A Guilhotina",
-            veredito = "{juiz}: Basta! Quem defende os inimigos da Revolução é um deles. Prendam também o impressor!",
+            vereditoReuAbsolvido = "{juiz}: As provas inocentam o acusado, e ele está livre. Mas quem o defendeu com tanto fervor serve a outros senhores. Prendam o impressor!",
+            vereditoReuCondenado = "{juiz}: Basta! Quem defende os inimigos da Revolução é um deles. Prendam também o impressor!",
+            legendaReuAbsolvido = "O réu deixa o tribunal livre, graças ao seu panfleto. Você não sai.",
+            legendaReuCondenado = "O réu sobe à carroça antes de você. Suas palavras não bastaram para salvá-lo.",
             legendas = new List<CutsceneLegendas.Linha>
             {
                 new CutsceneLegendas.Linha { texto = "Na mesma noite, a tipografia é lacrada e seus panfletos queimam na praça.", duracao = 5f },
@@ -110,10 +134,12 @@ public class TribunalManager : MonoBehaviour
         {
             rota = RotaFinal.B_Tirano,
             titulo = "Final B: O Tirano",
-            veredito = "{juiz}: O Comitê reconhece seus serviços, cidadão. O tribunal decidirá conforme o interesse da República.",
+            vereditoReuAbsolvido = "{juiz}: As provas são claras, e o Comitê reconhece seus serviços, cidadão. O acusado está livre. Por ora.",
+            vereditoReuCondenado = "{juiz}: O Comitê reconhece seus serviços, cidadão. Quanto ao acusado, o tribunal decidirá conforme o interesse da República.",
+            legendaReuAbsolvido = "O réu é absolvido. O Comitê tolera a sua defesa, porque você ainda lhe é útil.",
+            legendaReuCondenado = "O réu é condenado para agradar o Estado. Ninguém pergunta o que você achava justo.",
             legendas = new List<CutsceneLegendas.Linha>
             {
-                new CutsceneLegendas.Linha { texto = "O réu recebe a sentença que convém ao Estado. Ninguém pergunta o que você achava justo.", duracao = 5f },
                 new CutsceneLegendas.Linha { texto = "Nas semanas seguintes, o Comitê encomenda à sua prensa editais, listas e denúncias.", duracao = 5f },
                 new CutsceneLegendas.Linha { texto = "Você sobrevive e enriquece. Cada cabeça que rola paga um pouco do seu conforto.", duracao = 5f },
             }
@@ -121,13 +147,16 @@ public class TribunalManager : MonoBehaviour
         new DesfechoDaRota
         {
             rota = RotaFinal.C_Equilibrio,
-            titulo = "Final C: O Exílio",
-            veredito = "{juiz}: A bancada está dividida. Nem absolvição, nem cadafalso. Por ora.",
+            titulo = "Final C: O Esquecido",
+            vereditoReuAbsolvido = "{juiz}: O acusado está livre. Quanto ao impressor: nem o povo o defende, nem o Comitê o teme. Próximo caso.",
+            vereditoReuCondenado = "{juiz}: O acusado está condenado. Quanto ao impressor: nem o povo o defende, nem o Comitê o teme. Próximo caso.",
+            legendaReuAbsolvido = "O réu é solto. Ninguém lembra quem escreveu a defesa.",
+            legendaReuCondenado = "O réu é condenado, e o seu panfleto é esquecido como você.",
             legendas = new List<CutsceneLegendas.Linha>
             {
-                new CutsceneLegendas.Linha { texto = "O julgamento é adiado. Nem o povo nem o Comitê confiam inteiramente em você.", duracao = 5f },
-                new CutsceneLegendas.Linha { texto = "Aconselhado a deixar Paris, você parte de madrugada com o que cabe numa mala.", duracao = 5f },
-                new CutsceneLegendas.Linha { texto = "A prensa fica para trás. A Revolução segue sem a sua voz.", duracao = 5f },
+                new CutsceneLegendas.Linha { texto = "Ninguém o condena. Ninguém o defende. O processo é arquivado sem assinatura.", duracao = 5f },
+                new CutsceneLegendas.Linha { texto = "Os panfletos da tipografia deixam de circular, e os leitores passam a outros nomes.", duracao = 5f },
+                new CutsceneLegendas.Linha { texto = "Você imprimiu milhares de páginas. Nenhuma delas guardou o seu nome.", duracao = 5f },
             }
         },
     };
@@ -148,6 +177,7 @@ public class TribunalManager : MonoBehaviour
 
     private RotaFinal rota;
     private CaseData caso;
+    private bool reuAbsolvido;
     private readonly List<Prova> provas = new List<Prova>();
     private int totalDeArgumentos;
     private int apresentados;
@@ -168,7 +198,10 @@ public class TribunalManager : MonoBehaviour
         GameManager gm = GameManager.Instance;
         rota = gm != null && gm.rotaFinal != RotaFinal.Nenhuma ? gm.rotaFinal : rotaDeTeste;
         caso = gm != null ? gm.casoEscolhido : null;
-        Debug.Log($"[TRIBUNAL] Rota {rota}, caso '{(caso != null ? caso.name : "-")}'.");
+        bool? pelaPublicacao = ReuAbsolvido(gm, caso);
+        reuAbsolvido = pelaPublicacao ?? reuAbsolvidoDeTeste;
+        Debug.Log($"[TRIBUNAL] Rota {rota}, caso '{(caso != null ? caso.name : "-")}', réu {(reuAbsolvido ? "absolvido" : "condenado")}" +
+                  (pelaPublicacao.HasValue ? " (pelo panfleto publicado)." : " (valor de teste: nenhum panfleto do caso publicado)."));
 
         ColetarProvas(gm);
         totalDeArgumentos = Mathf.Clamp(provas.Count, 1, maxArgumentos);
@@ -187,22 +220,60 @@ public class TribunalManager : MonoBehaviour
 
     private void ColetarProvas(GameManager gm)
     {
-        var vistos = new HashSet<string>();
-        if (gm != null && gm.inventarioSalvo != null)
-        {
+        List<Item> itens = ProvasDoCaso(gm, caso, CatalogoDeSave.Instancia);
+        // Sem nada registrado para o caso (ex.: cena aberta direto no Editor): usa o que está no inventário.
+        if (itens.Count == 0 && gm != null && gm.inventarioSalvo != null)
             foreach (Item item in gm.inventarioSalvo)
-            {
-                if (item == null || item.itemAmt <= 0) continue;
-                string id = string.IsNullOrEmpty(item.itemID) ? item.name : item.itemID;
-                if (!vistos.Add(id)) continue;
-                provas.Add(new Prova { nome = item.NomeExibicao, icone = item.itemImg, confiabilidade = item.confiabilidade });
-            }
+                if (item != null && item.itemAmt > 0) itens.Add(item);
+
+        var vistos = new HashSet<string>();
+        foreach (Item item in itens)
+        {
+            string id = string.IsNullOrEmpty(item.itemID) ? item.name : item.itemID;
+            if (!vistos.Add(id)) continue;
+            provas.Add(new Prova { nome = item.NomeExibicao, icone = item.itemImg, confiabilidade = item.confiabilidade });
         }
 
         if (provas.Count == 0)
             foreach (string argumento in argumentosReserva)
                 if (!string.IsNullOrWhiteSpace(argumento))
                     provas.Add(new Prova { nome = argumento, confiabilidade = Confiabilidade.NaoEPista });
+    }
+
+    /// <summary>
+    /// Documento (Fase 4, "Fase de Argumentação"): as provas coletadas, os documentos comprados e o panfleto gerado
+    /// DO CASO julgado. Vem do histórico (GameManager.evidenciasObtidas), porque a prensa consome as duas pistas
+    /// impressas; panfletos de casos anteriores não entram. Vazio se não houver caso ou catálogo.
+    /// </summary>
+    public static List<Item> ProvasDoCaso(GameManager gm, CaseData caso, CatalogoDeSave catalogo)
+    {
+        var itens = new List<Item>();
+        if (gm == null || caso == null || catalogo == null) return itens;
+
+        foreach (string id in gm.evidenciasObtidas)
+        {
+            Item item = catalogo.BuscarItem(id);
+            if (item != null && item.caso == caso && !itens.Contains(item)) itens.Add(item);
+        }
+
+        GameManager.PanfletoPublicado publicado = gm.panfletosPublicados.Find(p => p != null && p.caso == caso);
+        ReceitaDeCaso receita = caso.receitaDoPanfleto;
+        if (publicado != null && receita != null)
+        {
+            Item panfleto = receita.PanfletoDe(receita.VersaoDe(publicado.nivel));
+            if (panfleto != null && !itens.Contains(panfleto)) itens.Add(panfleto);
+        }
+        return itens;
+    }
+
+    /// <summary>Destino do réu: absolvido se o panfleto do caso foi publicado só com fatos; condenado com boato,
+    /// calúnia ou só alegações. Nulo se o caso não tem panfleto publicado.</summary>
+    public static bool? ReuAbsolvido(GameManager gm, CaseData caso)
+    {
+        if (gm == null || caso == null) return null;
+        GameManager.PanfletoPublicado publicado = gm.panfletosPublicados.Find(p => p != null && p.caso == caso);
+        if (publicado == null) return null;
+        return publicado.nivel == NivelDoPanfleto.Fatos;
     }
 
     private void Apresentar(Prova prova)
@@ -249,7 +320,7 @@ public class TribunalManager : MonoBehaviour
         {
             case RotaFinal.A_Guilhotina: return 30f;
             case RotaFinal.B_Tirano: return 10f;
-            default: return 20f;
+            default: return 30f;
         }
     }
 
@@ -260,7 +331,7 @@ public class TribunalManager : MonoBehaviour
         {
             case RotaFinal.A_Guilhotina: return Mathf.Lerp(30f, 80f, progresso);
             case RotaFinal.B_Tirano: return Mathf.Lerp(15f, 25f, progresso);
-            default: return Mathf.Lerp(20f, 75f, progresso);
+            default: return Mathf.Lerp(30f, 55f, progresso); // C: a bancada nunca se inflama nem se acalma
         }
     }
 
@@ -286,7 +357,7 @@ public class TribunalManager : MonoBehaviour
         {
             case RotaFinal.A_Guilhotina: return Limite;
             case RotaFinal.B_Tirano: return Mathf.Min(irritacao, 25f);
-            default: return 92f;
+            default: return 50f; // C: indiferença, os juízes perdem o interesse no impressor
         }
     }
 
@@ -303,14 +374,20 @@ public class TribunalManager : MonoBehaviour
         if (rota == RotaFinal.A_Guilhotina) yield return Explodir();
 
         DesfechoDaRota desfecho = DesfechoDe(rota);
-        textoReacao.text = desfecho != null ? Formatar(desfecho.veredito, NomeDoJuiz(0), string.Empty) : string.Empty;
+        string veredito = desfecho == null ? null : (reuAbsolvido ? desfecho.vereditoReuAbsolvido : desfecho.vereditoReuCondenado);
+        textoReacao.text = Formatar(veredito, NomeDoJuiz(0), string.Empty);
         yield return new WaitForSecondsRealtime(4f);
 
-        Debug.Log($"[TRIBUNAL] Veredito da rota {rota}.");
-        if (desfecho != null && desfecho.legendas != null && desfecho.legendas.Count > 0)
-            cutscene.Tocar(desfecho.legendas, () => MostrarFim(desfecho));
-        else
-            MostrarFim(desfecho);
+        Debug.Log($"[TRIBUNAL] Veredito da rota {rota}, réu {(reuAbsolvido ? "absolvido" : "condenado")}.");
+        var legendas = new List<CutsceneLegendas.Linha>();
+        if (desfecho != null)
+        {
+            string doReu = reuAbsolvido ? desfecho.legendaReuAbsolvido : desfecho.legendaReuCondenado;
+            if (!string.IsNullOrWhiteSpace(doReu)) legendas.Add(new CutsceneLegendas.Linha { texto = doReu, duracao = 5f });
+            if (desfecho.legendas != null) legendas.AddRange(desfecho.legendas);
+        }
+        if (legendas.Count > 0) cutscene.Tocar(legendas, () => MostrarFim(desfecho));
+        else MostrarFim(desfecho);
     }
 
     private IEnumerator AnimarBarra(float alvo)
@@ -364,6 +441,7 @@ public class TribunalManager : MonoBehaviour
         RectTransform tela = Painel("TelaFinal", raiz, Vector2.zero, Vector2.one, Color.black);
         Texto("Fim", tela, new Vector2(0.1f, 0.6f), new Vector2(0.9f, 0.75f), 72f, "FIM");
         Texto("Titulo", tela, new Vector2(0.1f, 0.45f), new Vector2(0.9f, 0.6f), 48f, desfecho != null ? desfecho.titulo : string.Empty);
+        Texto("Reu", tela, new Vector2(0.1f, 0.36f), new Vector2(0.9f, 0.44f), 30f, reuAbsolvido ? "O réu foi absolvido." : "O réu foi condenado.");
         Button voltar = Botao("Voltar", tela, new Vector2(0.35f, 0.2f), new Vector2(0.65f, 0.3f), "Voltar ao menu", null);
         voltar.onClick.AddListener(VoltarAoMenu);
     }

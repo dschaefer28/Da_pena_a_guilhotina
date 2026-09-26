@@ -15,11 +15,21 @@ public class CaseSelectionUI : MonoBehaviour
     [Tooltip("Casos de todas as fases. A mesa mostra só os da fase atual (CaseData.fase).")]
     public List<CaseData> availableCases;
 
+    /// <summary>Painel da mesa aberto (outros botões de tela, como o da Biblioteca, se escondem).</summary>
+    public static bool Aberta { get; private set; }
+
+    // Play Mode sem recarregar domínio: o estado estático não pode vazar de uma sessão para a outra.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ZerarEstado() => Aberta = false;
+
     // Roda automaticamente quando o painel for ativado pelo TableInteractable
     void OnEnable()
     {
+        Aberta = true;
         GerarCartoesNaTela();
     }
+
+    void OnDisable() => Aberta = false;
 
     private void GerarCartoesNaTela()
     {

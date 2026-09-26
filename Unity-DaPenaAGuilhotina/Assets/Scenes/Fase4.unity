@@ -2940,19 +2940,42 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6920069771313339523, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
       insertIndex: -1
       addedObject: {fileID: 59805540}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2425006227071979621, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2146902917}
   m_SourcePrefab: {fileID: 100100000, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
 --- !u!114 &2146902915 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1769631618493765877, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
   m_PrefabInstance: {fileID: 2146902914}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2146902916}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1e63fa2b72ac5946b3d9f074b03f507, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
+--- !u!1 &2146902916 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2425006227071979621, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
+  m_PrefabInstance: {fileID: 2146902914}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2146902917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146902916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c68d40a4112cd1940b92a6ccfcf0e822, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PromptDeInteracao
+  fonte: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  alturaAcimaDoAlvo: 0.35
+  escala: 0.012
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

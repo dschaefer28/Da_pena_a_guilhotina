@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
     [Header("Fato x Boato")]
     [Tooltip("Histórico de panfletos de caso impressos e a versão de cada um (útil para o Tribunal na Fase 4).")]
     public List<PanfletoPublicado> panfletosPublicados = new List<PanfletoPublicado>();
-    [Tooltip("Boatos publicados que ainda vão ser expostos. Consumidos pelo RevelacaoDeBoatos na cena seguinte.")]
+    [Tooltip("Boatos publicados que ainda vão ser expostos. Aplicados no fim da fase (EncerrarFase), antes da rota.")]
     public List<RevelacaoPendente> revelacoesPendentes = new List<RevelacaoPendente>();
     [Tooltip("itemIDs de pistas cuja verdade o jogador já descobriu. Guardado aqui para a ficha não voltar a " +
              "'não verificada' quando o item que confirmou a pista for gasto na prensa.")]
@@ -427,6 +427,32 @@ public class GameManager : MonoBehaviour
         var lista = new List<RevelacaoPendente>(revelacoesPendentes);
         revelacoesPendentes.Clear();
         return lista;
+    }
+
+    /// <summary>O que aconteceu ao fechar uma fase (a cutscene de fim de fase conta isso ao jogador).</summary>
+    public class EncerramentoDeFase
+    {
+        public int fase;
+        public int despesa;
+        public List<RevelacaoPendente> revelacoes = new List<RevelacaoPendente>();
+    }
+
+    /// <summary>
+    /// Fecha a fase atual, nesta ordem: os boatos publicados nela são expostos (penalidades aplicadas), as despesas
+    /// são cobradas e a fase avança. As penalidades vêm ANTES do avanço porque entrar na Fase 4 trava a rota pelas
+    /// barras: a mentira descoberta pesa na Definição de Rota (documento, Fase 4).
+    /// </summary>
+    public EncerramentoDeFase EncerrarFase()
+    {
+        var resultado = new EncerramentoDeFase { fase = faseAtual };
+        foreach (RevelacaoPendente revelacao in ConsumirRevelacoes())
+        {
+            AplicarImpactoPanfleto(revelacao.povo, revelacao.estado, 0);
+            resultado.revelacoes.Add(revelacao);
+        }
+        resultado.despesa = PagarDespesasDaFase(resultado.fase);
+        AvancarFase();
+        return resultado;
     }
 
     /// <summary>Usado pela Mesa de Casos (CaseSelectionUI) para bloquear cartões já escolhidos antes.</summary>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -36,6 +37,21 @@ public class CutsceneLegendas : MonoBehaviour
 
     private Coroutine emAndamento;
     private bool pularLinha;
+
+    // Frame em que a última cena terminou de carregar: cutscene tocada no Start da cena nova nasce preta.
+    private static int frameDaUltimaCena = -100;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void RegistrarCarregamentoDeCena()
+    {
+        frameDaUltimaCena = -100;
+        SceneManager.sceneLoaded -= AoCarregarCena;
+        SceneManager.sceneLoaded += AoCarregarCena;
+    }
+
+    private static void AoCarregarCena(Scene cena, LoadSceneMode modo) => frameDaUltimaCena = Time.frameCount;
+
+    private static bool InicioDeCena => Time.frameCount - frameDaUltimaCena <= 2;
 
     private void Awake()
     {
@@ -85,7 +101,9 @@ public class CutsceneLegendas : MonoBehaviour
         fundo.gameObject.SetActive(true);
         fundo.blocksRaycasts = true;
         legenda.text = string.Empty;
-        if (fadeDeEntradaInstantaneo) fundo.alpha = 1f;
+        // Começando junto com a cena (Start) ou com a tela ainda coberta pela troca de cena, a cutscene já nasce
+        // preta: com fade de entrada, o preto da troca sumia enquanto o da cutscene surgia e o cenário piscava.
+        if (fadeDeEntradaInstantaneo || InicioDeCena || SceneTransitionManager.TelaCoberta) fundo.alpha = 1f;
         else yield return Fade(0f, 1f);
 
         foreach (var linha in linhas)
@@ -137,7 +155,7 @@ public class CutsceneLegendas : MonoBehaviour
         var canvas = go.GetComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.overrideSorting = true;
-        canvas.sortingOrder = 50; // acima dos popups (10) e dos controles mobile (2); abaixo do fade de cena
+        canvas.sortingOrder = 50; // acima dos popups (10) e dos controles mobile (2); abaixo do fade de cena (1000)
         fundo = go.GetComponent<CanvasGroup>();
 
         // O próprio "Cutscenes" também precisa cobrir a tela (é um RectTransform vazio dentro do canvas).

@@ -15,7 +15,7 @@ public enum NivelDoPanfleto
 /// Mecânica "Fato x Boato" (documento, Fase 2: "risco de coletar informações erradas e prejudicar a receita
 /// do panfleto"). Diferente de Recipe (par exato de itens), aqui QUALQUER par de pistas do caso vira panfleto:
 /// a prensa nunca recusa, mas a versão muda. Boatos rendem mais na hora e cobram depois — quando a mentira é
-/// exposta na fase seguinte (RevelacaoDeBoatos). Ligada ao caso pelo campo CaseData.receitaDoPanfleto.
+/// exposta no fim da fase (FimDeFase / GameManager.EncerrarFase). Ligada ao caso pelo campo CaseData.receitaDoPanfleto.
 /// </summary>
 [CreateAssetMenu(fileName = "ReceitaDeCaso", menuName = "ScriptableObjects/Receita de Caso (Fato x Boato)")]
 public class ReceitaDeCaso : ScriptableObject

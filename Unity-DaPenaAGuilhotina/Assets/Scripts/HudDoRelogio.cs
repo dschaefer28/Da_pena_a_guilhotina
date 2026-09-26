@@ -14,9 +14,31 @@ public class HudDoRelogio : MonoBehaviour
 
     private GameObject painel;
     private TextMeshProUGUI texto;
+    private static HudDoRelogio atual;
 
-    private void OnEnable() => RelogioDeInvestigacao.OnHorasMudaram += Atualizar;
-    private void OnDisable() => RelogioDeInvestigacao.OnHorasMudaram -= Atualizar;
+    /// <summary>Distância (unidades do canvas) do topo da tela até a base do relógio, ou 0 se ele não está na tela.
+    /// O popup de item recebido (mesmo lugar, topo central) desce para não cobrir as horas.</summary>
+    public static float BordaInferior
+    {
+        get
+        {
+            if (atual == null || atual.painel == null || !atual.painel.activeInHierarchy) return 0f;
+            var rt = (RectTransform)atual.painel.transform;
+            return -rt.anchoredPosition.y + rt.sizeDelta.y;
+        }
+    }
+
+    private void OnEnable()
+    {
+        atual = this;
+        RelogioDeInvestigacao.OnHorasMudaram += Atualizar;
+    }
+
+    private void OnDisable()
+    {
+        if (atual == this) atual = null;
+        RelogioDeInvestigacao.OnHorasMudaram -= Atualizar;
+    }
 
     private void Start() => Atualizar();
 

@@ -4560,6 +4560,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5968679415757805455}
   - component: {fileID: 4479847161635797109}
+  - component: {fileID: 22083814889924187}
   m_Layer: 5
   m_Name: HUD_Status
   m_TagString: Untagged
@@ -4609,6 +4610,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 958e0d1c6934e5240a23f6e54b395df5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HudAreaSegura
+--- !u!114 &22083814889924187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5850431399749745161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b56afd945f260c6458aa3b285beefcb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DestaqueDeEtapaTutorial
+  etapaId: explicar_efeito_barras
+  amplitude: 0.06
+  frequencia: 1.2
 --- !u!1 &5885485470354139747
 GameObject:
   m_ObjectHideFlags: 0
@@ -4881,6 +4897,9 @@ MonoBehaviour:
     tipografia."
   textoDivida: "Sem dinheiro para tudo, voc\xEA agora deve aos credores, e eles v\xE3o
     cobrar em tempo."
+  introducaoRevelacoes: "Alguns dias depois, a verdade chega \xE0s ruas de Paris."
+  textoPadraoRevelacao: "O panfleto sobre o {0} foi desmentido. A tipografia perdeu
+    a confian\xE7a de quem o leu."
   cutscenes:
   - fase: 2
     legendas:
@@ -5787,6 +5806,7 @@ MonoBehaviour:
   duracaoExibicao: 2.5
   larguraMaximaTexto: 520
   duracaoFade: 0.2
+  margemAbaixoDoRelogio: 12
 --- !u!1 &7361146709407986077
 GameObject:
   m_ObjectHideFlags: 0

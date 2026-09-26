@@ -7,5 +7,5 @@ public enum RotaFinal
     Nenhuma,      // ainda não chegou à Fase 4 (em CaseData: caso serve a qualquer rota)
     A_Guilhotina, // Povo alto, Estado baixo: a bancada explode e o jogador é condenado
     B_Tirano,     // Estado alto, Povo baixo: a bancada é receptiva e o jogador sobrevive
-    C_Equilibrio  // barras equilibradas: terceiro desfecho
+    C_Equilibrio  // barras equilibradas: ninguém condena nem defende, o jogador é esquecido pela história
 }

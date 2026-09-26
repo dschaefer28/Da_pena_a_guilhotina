@@ -346,6 +346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TribunalManager
   rotaDeTeste: 1
+  reuAbsolvidoDeTeste: 1
   juizes:
   - nome: Robespierre
     retrato: {fileID: 0}
@@ -378,8 +379,14 @@ MonoBehaviour:
   desfechos:
   - rota: 1
     titulo: 'Final A: A Guilhotina'
-    veredito: "{juiz}: Basta! Quem defende os inimigos da Revolu\xE7\xE3o \xE9 um
-      deles. Prendam tamb\xE9m o impressor!"
+    vereditoReuAbsolvido: "{juiz}: As provas inocentam o acusado, e ele est\xE1 livre.
+      Mas quem o defendeu com tanto fervor serve a outros senhores. Prendam o impressor!"
+    vereditoReuCondenado: "{juiz}: Basta! Quem defende os inimigos da Revolu\xE7\xE3o
+      \xE9 um deles. Prendam tamb\xE9m o impressor!"
+    legendaReuAbsolvido: "O r\xE9u deixa o tribunal livre, gra\xE7as ao seu panfleto.
+      Voc\xEA n\xE3o sai."
+    legendaReuCondenado: "O r\xE9u sobe \xE0 carro\xE7a antes de voc\xEA. Suas palavras
+      n\xE3o bastaram para salv\xE1-lo."
     legendas:
     - texto: "Na mesma noite, a tipografia \xE9 lacrada e seus panfletos queimam
         na pra\xE7a."
@@ -390,12 +397,15 @@ MonoBehaviour:
       duracao: 5
   - rota: 2
     titulo: 'Final B: O Tirano'
-    veredito: "{juiz}: O Comit\xEA reconhece seus servi\xE7os, cidad\xE3o. O tribunal
-      decidir\xE1 conforme o interesse da Rep\xFAblica."
+    vereditoReuAbsolvido: "{juiz}: As provas s\xE3o claras, e o Comit\xEA reconhece
+      seus servi\xE7os, cidad\xE3o. O acusado est\xE1 livre. Por ora."
+    vereditoReuCondenado: "{juiz}: O Comit\xEA reconhece seus servi\xE7os, cidad\xE3o.
+      Quanto ao acusado, o tribunal decidir\xE1 conforme o interesse da Rep\xFAblica."
+    legendaReuAbsolvido: "O r\xE9u \xE9 absolvido. O Comit\xEA tolera a sua defesa,
+      porque voc\xEA ainda lhe \xE9 \xFAtil."
+    legendaReuCondenado: "O r\xE9u \xE9 condenado para agradar o Estado. Ningu\xE9m
+      pergunta o que voc\xEA achava justo."
     legendas:
-    - texto: "O r\xE9u recebe a senten\xE7a que conv\xE9m ao Estado. Ningu\xE9m pergunta
-        o que voc\xEA achava justo."
-      duracao: 5
     - texto: "Nas semanas seguintes, o Comit\xEA encomenda \xE0 sua prensa editais,
         listas e den\xFAncias."
       duracao: 5
@@ -403,17 +413,24 @@ MonoBehaviour:
         do seu conforto."
       duracao: 5
   - rota: 3
-    titulo: "Final C: O Ex\xEDlio"
-    veredito: "{juiz}: A bancada est\xE1 dividida. Nem absolvi\xE7\xE3o, nem cadafalso.
-      Por ora."
+    titulo: 'Final C: O Esquecido'
+    vereditoReuAbsolvido: "{juiz}: O acusado est\xE1 livre. Quanto ao impressor:
+      nem o povo o defende, nem o Comit\xEA o teme. Pr\xF3ximo caso."
+    vereditoReuCondenado: "{juiz}: O acusado est\xE1 condenado. Quanto ao impressor:
+      nem o povo o defende, nem o Comit\xEA o teme. Pr\xF3ximo caso."
+    legendaReuAbsolvido: "O r\xE9u \xE9 solto. Ningu\xE9m lembra quem escreveu a
+      defesa."
+    legendaReuCondenado: "O r\xE9u \xE9 condenado, e o seu panfleto \xE9 esquecido
+      como voc\xEA."
     legendas:
-    - texto: "O julgamento \xE9 adiado. Nem o povo nem o Comit\xEA confiam inteiramente
-        em voc\xEA."
+    - texto: "Ningu\xE9m o condena. Ningu\xE9m o defende. O processo \xE9 arquivado
+        sem assinatura."
       duracao: 5
-    - texto: "Aconselhado a deixar Paris, voc\xEA parte de madrugada com o que cabe
-        numa mala."
+    - texto: Os panfletos da tipografia deixam de circular, e os leitores passam
+        a outros nomes.
       duracao: 5
-    - texto: "A prensa fica para tr\xE1s. A Revolu\xE7\xE3o segue sem a sua voz."
+    - texto: "Voc\xEA imprimiu milhares de p\xE1ginas. Nenhuma delas guardou o seu
+        nome."
       duracao: 5
   cenaDoMenu: menu principal
   fonte: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}

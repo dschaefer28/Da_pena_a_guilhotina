@@ -67,7 +67,7 @@ public class BibliotecaUI : MonoBehaviour
     {
         GameManager gm = GameManager.Instance;
         // Some com qualquer outro modal aberto: não fica por cima do pause nem oferece um clique que seria recusado.
-        bool outroModal = CutsceneLegendas.EmExibicao ||
+        bool outroModal = CutsceneLegendas.EmExibicao || CaseSelectionUI.Aberta ||
                           (PauseMenu.Instance != null && PauseMenu.Instance.IsOpen) ||
                           (gm != null && gm.dialogueSystem != null && gm.dialogueSystem.IsDialogueActive) ||
                           (gm != null && gm.inventoryManager != null && gm.inventoryManager.inventoryUI != null && gm.inventoryManager.inventoryUI.activeSelf);
@@ -86,7 +86,7 @@ public class BibliotecaUI : MonoBehaviour
         GameManager gm = GameManager.Instance;
         if (Aberta || gm == null || gm.faseAtual < faseMinima) return;
         if (PauseMenu.Instance != null && PauseMenu.Instance.IsOpen) return;
-        if (CutsceneLegendas.EmExibicao) return;
+        if (CutsceneLegendas.EmExibicao || CaseSelectionUI.Aberta) return;
         if (gm.dialogueSystem != null && gm.dialogueSystem.IsDialogueActive) return;
         if (gm.inventoryManager != null && gm.inventoryManager.inventoryUI != null && gm.inventoryManager.inventoryUI.activeSelf)
         {

@@ -36,7 +36,11 @@ public class ItemPickupNotificationUI : MonoBehaviour
     [Tooltip("Duração do fade de entrada/saída (0 = aparece e some seco).")]
     [Min(0f)] public float duracaoFade = 0.2f;
 
+    [Tooltip("Espaço entre o relógio de investigação (HudDoRelogio) e o popup, quando os dois estão no topo.")]
+    [Min(0f)] public float margemAbaixoDoRelogio = 12f;
+
     private InventoryManager inventoryManagerAtual;
+    private float? alturaBasePopup;
     // Itens recebidos e avisos de texto (AvisoNaTela) dividem a mesma fila, para nunca se sobreporem.
     private readonly Queue<(string texto, Sprite icone)> filaDeItens = new Queue<(string, Sprite)>();
     private Coroutine exibicaoEmAndamento;
@@ -156,7 +160,15 @@ public class ItemPickupNotificationUI : MonoBehaviour
             painelPopup.SetActive(true);
             // Recalcula já, para o primeiro frame não aparecer com o tamanho da mensagem anterior.
             var rect = painelPopup.transform as RectTransform;
-            if (rect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+            if (rect != null)
+            {
+                // Relógio de investigação no topo (mesmo lugar): o popup desce para baixo dele.
+                if (!alturaBasePopup.HasValue) alturaBasePopup = rect.anchoredPosition.y;
+                float borda = HudDoRelogio.BordaInferior;
+                float y = borda > 0f ? Mathf.Min(alturaBasePopup.Value, -(borda + margemAbaixoDoRelogio)) : alturaBasePopup.Value;
+                rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, y);
+                LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+            }
         }
     }
 }

@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Fecha a fase quando o jogador volta ao escritório com os casos exigidos concluídos (GameManager.casosPorFase):
-/// toca a cutscene final da fase (tela preta com legendas), passa o GameManager para a fase seguinte e salva.
+/// expõe os boatos publicados na fase (penalidades), cobra as despesas, passa o GameManager para a fase seguinte
+/// (GameManager.EncerrarFase), toca a cutscene final da fase (tela preta com legendas) e salva.
 /// A partir daí a Mesa de Casos mostra os casos da nova fase e a porta leva à cena do caso aceito.
 ///
 /// Fica no prefab UI, ao lado do Fase1Desfecho, e só age na cena do escritório. A Fase 1 não tem legendas aqui
@@ -29,6 +30,13 @@ public class FimDeFase : MonoBehaviour
     public string textoDespesas = "Fim do período. Aluguel, papel e tinta custaram {0} moedas à tipografia.";
     [Tooltip("Acrescentado quando o dinheiro não bastou.")]
     public string textoDivida = "Sem dinheiro para tudo, você agora deve aos credores, e eles vão cobrar em tempo.";
+
+    [Header("Fato x Boato: boatos publicados na fase são expostos")]
+    [TextArea(2, 4)]
+    public string introducaoRevelacoes = "Alguns dias depois, a verdade chega às ruas de Paris.";
+    [TextArea(2, 4)]
+    [Tooltip("Usado quando a versão do panfleto não tem texto de revelação próprio. {0} = título do caso.")]
+    public string textoPadraoRevelacao = "O panfleto sobre o {0} foi desmentido. A tipografia perdeu a confiança de quem o leu.";
 
     public List<CutsceneDaFase> cutscenes = new List<CutsceneDaFase>
     {
@@ -59,27 +67,43 @@ public class FimDeFase : MonoBehaviour
         GameManager gm = GameManager.Instance;
         if (gm == null || gm.faseAtual >= GameManager.UltimaFase || !gm.FaseConcluida) return;
 
-        int faseEncerrada = gm.faseAtual;
-        // Cobra e avança já, antes da cutscene: se a cena trocar no meio dela, nada fica pendente.
-        int despesa = gm.PagarDespesasDaFase(faseEncerrada);
-        gm.AvancarFase();
+        // Aplica tudo já, antes da cutscene: se a cena trocar no meio dela, nada fica pendente.
+        GameManager.EncerramentoDeFase fim = gm.EncerrarFase();
 
         var legendas = new List<CutsceneLegendas.Linha>();
-        List<CutsceneLegendas.Linha> daFase = LegendasDa(faseEncerrada);
+        List<CutsceneLegendas.Linha> daFase = LegendasDa(fim.fase);
         if (daFase != null) legendas.AddRange(daFase);
 
-        if (despesa > 0)
+        if (fim.revelacoes.Count > 0)
         {
-            string texto = string.Format(textoDespesas, despesa);
-            if (gm.Endividado) texto += " " + textoDivida;
-            if (legendas.Count > 0) legendas.Add(new CutsceneLegendas.Linha { texto = texto, duracao = 5f });
-            else AvisoNaTela.Mostrar(texto);
+            if (!string.IsNullOrWhiteSpace(introducaoRevelacoes))
+                legendas.Add(new CutsceneLegendas.Linha { texto = introducaoRevelacoes, duracao = 4f });
+            foreach (GameManager.RevelacaoPendente revelacao in fim.revelacoes)
+                legendas.Add(new CutsceneLegendas.Linha { texto = TextoDa(revelacao), duracao = 5f });
         }
 
-        if (legendas.Count > 0 && CutsceneLegendas.Instance != null)
-            CutsceneLegendas.Instance.Tocar(legendas);
+        if (fim.despesa > 0)
+        {
+            string texto = string.Format(textoDespesas, fim.despesa);
+            if (gm.Endividado) texto += " " + textoDivida;
+            legendas.Add(new CutsceneLegendas.Linha { texto = texto, duracao = 5f });
+        }
+
+        if (legendas.Count > 0)
+        {
+            if (CutsceneLegendas.Instance != null) CutsceneLegendas.Instance.Tocar(legendas);
+            else foreach (CutsceneLegendas.Linha linha in legendas) AvisoNaTela.Mostrar(linha.texto);
+        }
 
         StartCoroutine(SalvarNoProximoFrame());
+    }
+
+    private string TextoDa(GameManager.RevelacaoPendente revelacao)
+    {
+        if (!string.IsNullOrWhiteSpace(revelacao.texto)) return revelacao.texto;
+        string titulo = revelacao.caso == null ? "caso"
+            : (string.IsNullOrWhiteSpace(revelacao.caso.caseTitle) ? revelacao.caso.name : revelacao.caso.caseTitle).Trim();
+        return string.Format(textoPadraoRevelacao, titulo);
     }
 
     private List<CutsceneLegendas.Linha> LegendasDa(int fase)

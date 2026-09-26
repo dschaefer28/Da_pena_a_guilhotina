@@ -189,6 +189,16 @@ public class TutorialManager : MonoBehaviour
         },
         new TutorialStep
         {
+            // Documento (Fase 1, "A Prensa"): ao abrir a prensa, o tutorial de status. O HUD de status pisca
+            // enquanto esta etapa está na tela (DestaqueDeEtapaTutorial no prefab UI).
+            etapaId = "explicar_efeito_barras",
+            mensagem = "Antes de imprimir, veja o status no alto: a barra de cima é a Opinião do Povo, a de baixo a do Estado, e embaixo fica o seu ouro. " +
+                       "Um panfleto só com fatos move as barras como o caso promete; com boato ou calúnia rende mais agora, " +
+                       "mas perde apoio quando a mentira é descoberta, no fim do período. Quando terminar de ler, {continuar}.",
+            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
+        },
+        new TutorialStep
+        {
             etapaId = "colocar_itens_prensa",
             mensagem = "{Toque} numa pista do inventário e depois numa Entrada da prensa. Faça o mesmo com a outra pista.",
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
@@ -203,16 +213,9 @@ public class TutorialManager : MonoBehaviour
         },
         new TutorialStep
         {
-            etapaId = "explicar_efeito_barras",
-            mensagem = "Veja as barras no alto: a de cima é a Opinião do Povo, a de baixo a Opinião do Estado, e embaixo está o seu ouro, " +
-                       "que paga o aluguel, o papel e a tinta no fim de cada período. " +
-                       "Cada panfleto agrada uns e irrita outros. Quando terminar de olhar, {continuar}.",
-            tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
-        },
-        new TutorialStep
-        {
             etapaId = "coletar_resultado_prensa",
-            mensagem = "{Toque} no panfleto em Resultado e depois em Espaço livre no inventário para guardá-lo.",
+            mensagem = "Panfleto impresso! Repare como as barras e o ouro mudaram: cada panfleto agrada uns e irrita outros, e o ouro paga " +
+                       "aluguel, papel e tinta no fim do período. {Toque} no panfleto em Resultado e depois em Espaço livre no inventário para guardá-lo.",
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
             nomeDoEvento = EVENTO_PANFLETO_GUARDADO
         },
@@ -506,6 +509,13 @@ public class TutorialManager : MonoBehaviour
 
         if (etapas[indiceAtual].salvarAoConcluir) StartCoroutine(SalvarComACenaPronta());
         indiceAtual++;
+        // A ação pedida pela próxima etapa pode já ter sido feita (ex.: o jogador encheu a prensa enquanto lia o
+        // texto do status): ela conta como concluída, senão o tutorial esperaria um evento que não vai se repetir.
+        while (indiceAtual < etapas.Count && AcaoJaFeita(etapas[indiceAtual]))
+        {
+            if (etapas[indiceAtual].salvarAoConcluir) StartCoroutine(SalvarComACenaPronta());
+            indiceAtual++;
+        }
         if (indiceAtual >= etapas.Count)
         {
             PlayerPrefs.SetInt(CHAVE_TUTORIAL_CONCLUIDO, 1);
@@ -513,6 +523,25 @@ public class TutorialManager : MonoBehaviour
             OnTutorialConcluido?.Invoke();
         }
         BroadcastEtapaAtual();
+    }
+
+    private bool AcaoJaFeita(TutorialStep etapa)
+    {
+        if (etapa == null || etapa.tipoDeAvanco != TipoDeAvanco.EventoDeJogo || craftingPressAtual == null) return false;
+        Item panfleto = craftingPressAtual.UltimoPanfleto;
+        switch (etapa.nomeDoEvento)
+        {
+            case EVENTO_ENTRADAS_PRENSA_CHEIAS:
+                return panfleto != null ||
+                       (craftingPressAtual.slotInput1 != null && craftingPressAtual.slotInput1.item != null &&
+                        craftingPressAtual.slotInput2 != null && craftingPressAtual.slotInput2.item != null);
+            case EVENTO_PANFLETO_GERADO:
+                return panfleto != null;
+            case EVENTO_PANFLETO_GUARDADO:
+                return panfleto != null && inventoryManagerAtual != null && inventoryManagerAtual.HasItem(panfleto.itemID);
+            default:
+                return false;
+        }
     }
 
     // Etapas de troca de cena concluem no sceneLoaded, antes do Start da cena nova: o inventário ainda está vazio
