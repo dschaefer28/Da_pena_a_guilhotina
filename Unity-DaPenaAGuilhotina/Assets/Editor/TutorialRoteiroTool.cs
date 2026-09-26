@@ -255,7 +255,8 @@ public static class TutorialRoteiroTool
                     controle = e.controle,
                     tipoDeAvanco = e.tipoDeAvanco,
                     nomeDoEvento = e.nomeDoEvento,
-                    nomeDaCena = e.nomeDaCena
+                    nomeDaCena = e.nomeDaCena,
+                    salvarAoConcluir = e.salvarAoConcluir // sem isto o ponto de save do fim do tutorial sumia da cena
                 });
             }
             Undo.RecordObject(alvo, "Aplicar roteiro padrão do tutorial");
