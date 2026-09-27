@@ -16,8 +16,11 @@ MonoBehaviour:
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
   itemName: "Carta do oper\xE1rio: atiraram primeiro"
-  descricao: Ele afirma que a Guarda abriu fogo antes de qualquer pedra ser atirada.
+  descricao: "Ele afirma que a Guarda abriu fogo antes de qualquer pedra ser atirada,
+    e que o pr\xF3prio R\xE9veillon anda contando outra vers\xE3o."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

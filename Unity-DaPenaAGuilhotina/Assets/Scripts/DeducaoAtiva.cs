@@ -28,8 +28,8 @@ public class ParContraditorio
         x != null && y != null && !string.IsNullOrEmpty(x.itemID) && x.itemID == y.itemID;
 }
 
-/// <summary>Dedução ativa de um caso (proposta C do documento de dificuldade, Fases 3 e 4). O conjunto de pistas de
-/// dedução é a união dos pares; alegações do cliente e documentos de apoio ficam de fora.</summary>
+/// <summary>Dedução ativa de um caso (proposta C do documento de dificuldade; Fases 2, 3 e 4 desde o Prompt 7). O conjunto
+/// de pistas de dedução é a união dos pares; alegações do cliente e documentos de apoio ficam de fora.</summary>
 [Serializable]
 public class ConfiguracaoDeDeducao
 {

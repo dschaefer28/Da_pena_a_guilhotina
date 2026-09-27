@@ -16,8 +16,8 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
   itemName: A Rainha e o Cardeal
-  descricao: "Folha afixada no muro: a Rainha e o Cardeal s\xE3o amantes e dividiram
-    o colar entre si."
+  descricao: "Folha afixada no muro: a Rainha assinou a encomenda de pr\xF3prio punho,
+    como assina tudo, para dar o colar ao Cardeal, seu amante."
   fonte: Cartaz sem assinatura
   caso: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
   confiabilidade: 3

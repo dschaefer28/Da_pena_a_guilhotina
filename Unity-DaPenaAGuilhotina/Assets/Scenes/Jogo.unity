@@ -1124,11 +1124,27 @@ MonoBehaviour:
   forcarReiniciar: 0
   distanciaParaAndou: 1.5
   dicaFatoBoato: "Nem toda pista \xE9 verdade. No invent\xE1rio, {apontar} uma pista
-    para ler quem contou. Pistas \"n\xE3o verificadas\" podem ser boatos: procure
-    outra fonte que confirme antes de imprimir."
+    para ler o que ela afirma e quem contou. Uma pista \"n\xE3o verificada\" pode
+    ser boato: compare-a com a afirma\xE7\xE3o contr\xE1ria no Quadro de pistas antes
+    de imprimir."
   dicaTempo: "O dia \xE9 curto. Cada pessoa com quem voc\xEA conversa e cada lugar
     que vasculha gasta horas (veja no alto da tela). Falar de novo com quem j\xE1
     ouviu n\xE3o custa nada. Escolha bem: n\xE3o d\xE1 tempo de investigar tudo."
+  dicaDeducao: "Esta pista entrou no Quadro de pistas (bot\xE3o no alto, \xE0 direita).
+    Cada afirma\xE7\xE3o do caso tem uma contr\xE1ria, e s\xF3 uma das duas \xE9
+    verdadeira. Marque o que parece confi\xE1vel ou duvidoso e confira: o quadro
+    s\xF3 diz se est\xE1 tudo certo. D\xE1 para imprimir sem conferir."
+  dicaDespesas: "Todo fim de per\xEDodo a tipografia paga aluguel, papel e tinta
+    com o seu ouro. Se n\xE3o bastar, voc\xEA fica devendo: enquanto houver d\xEDvida,
+    cada caso novo come\xE7a com menos horas de investiga\xE7\xE3o."
+  dicaBiblioteca: "A Biblioteca abriu (bot\xE3o no alto, \xE0 direita). Com ouro,
+    voc\xEA compra documentos de apoio para o caso aceito: eles v\xE3o no campo Suporte
+    da prensa e refor\xE7am o panfleto. N\xE3o substituem as duas pistas, n\xE3o
+    dizem qual \xE9 verdadeira e n\xE3o s\xE3o vendidos fiado."
+  dicaLinhaEditorial: "Agora a prensa pede uma linha editorial: ao apertar Misturar,
+    voc\xEA escolhe o tom do panfleto. O tom muda o quanto ele move o Povo, o Estado
+    e o ouro, nunca a verdade das pistas. O sensacionalista vende mais, mas, se algo
+    for falso, o desmentido pesa mais."
   etapas:
   - etapaId: boas_vindas
     mensagem: "Bem-vindo ao seu primeiro dia na tipografia! Estes s\xE3o os controles
@@ -1402,8 +1418,8 @@ MonoBehaviour:
   - caso: {fileID: 11400000, guid: d0bd65d553c918045aaf794e01462c68, type: 2}
     pista1: {fileID: 11400000, guid: 6c1c1ed830eb85f47a44f2dc6488276f, type: 2}
     pista2: {fileID: 11400000, guid: a41fb3cd7d8b20f479759eb72c5d511b, type: 2}
-  pensamentoSemCaso: {fileID: 11400000, guid: b4c2cea48397acf48a53804e9fda36e7, type: 2}
-  pensamentoFaltamPistas: {fileID: 11400000, guid: 3337009e8a97aee43bb7cb7c6c456df3, type: 2}
+  pensamentoSemCaso: {fileID: 11400000, guid: 21cef46036a141a40afa71e28cf8b512, type: 2}
+  pensamentoFaltamPistas: {fileID: 11400000, guid: a0216cc89836a1449b9c7fa85a199c54, type: 2}
   somAlcapao:
     Guid:
       Data1: 131892611

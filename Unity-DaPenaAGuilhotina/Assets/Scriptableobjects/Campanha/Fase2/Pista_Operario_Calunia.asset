@@ -16,8 +16,8 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
   itemName: "O fogo na f\xE1brica"
-  descricao: "Bilhete deixado na taverna: foi o oper\xE1rio quem ateou fogo \xE0
-    f\xE1brica com as pr\xF3prias m\xE3os."
+  descricao: "Bilhete deixado na taverna: a Guarda s\xF3 recebeu ordem de agir depois
+    que o oper\xE1rio ateou fogo \xE0 f\xE1brica com as pr\xF3prias m\xE3os."
   fonte: Bilhete sem assinatura
   caso: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
   confiabilidade: 3

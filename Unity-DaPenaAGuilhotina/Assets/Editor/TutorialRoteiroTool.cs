@@ -262,6 +262,12 @@ public static class TutorialRoteiroTool
             Undo.RecordObject(alvo, "Aplicar roteiro padrão do tutorial");
             alvo.etapas = copia;
             alvo.dicaFatoBoato = padrao.dicaFatoBoato;
+            // Dicas de primeira vez (Prompt 7): também voltam ao texto padrão do código.
+            alvo.dicaTempo = padrao.dicaTempo;
+            alvo.dicaDeducao = padrao.dicaDeducao;
+            alvo.dicaDespesas = padrao.dicaDespesas;
+            alvo.dicaBiblioteca = padrao.dicaBiblioteca;
+            alvo.dicaLinhaEditorial = padrao.dicaLinhaEditorial;
             // Ligado, o tutorial recomeçava em todo início de jogo (inclusive no build). Para testar do
             // zero, use o menu "3 - Resetar progresso".
             alvo.forcarReiniciar = false;

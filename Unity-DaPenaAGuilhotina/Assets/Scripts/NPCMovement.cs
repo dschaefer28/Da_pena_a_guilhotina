@@ -298,6 +298,9 @@ public class NPCMovement : MonoBehaviour, IInteractable
         {
             OnDialogueComplete?.Invoke();
         }
+
+        // Tutorial: "fale com ... até o fim" só conta conversa com NPC (depois dos eventos acima, que liberam o próximo).
+        if (TutorialManager.Instance != null) TutorialManager.Instance.NotificarConversaComNpcTerminada();
     }
 
     public void EnableInteraction() { canInteract = true; UpdateVisualFeedback(); }

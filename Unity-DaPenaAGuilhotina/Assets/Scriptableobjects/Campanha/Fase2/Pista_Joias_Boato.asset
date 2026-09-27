@@ -16,8 +16,8 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
   itemName: O segredo da Rainha
-  descricao: Segundo o gazeteiro, a Rainha encomendou o colar escondida do Rei e
-    depois negou tudo.
+  descricao: "Segundo o gazeteiro, a pr\xF3pria Rainha compareceu \xE0 loja, disfar\xE7ada,
+    para escolher o colar escondida do Rei, e depois negou tudo."
   fonte: Gazeteiro da esquina
   caso: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
   confiabilidade: 2

@@ -81,6 +81,9 @@ public class ComponentesTests
         gm.faseAtual = 3;
         gm.casoEscolhido = null;
         gm.casosPorFase = new[] { 1, 1, 3, 1 };
+        // Estes testes medem a cobrança (1h por interação nova), não o orçamento: fixam 4h para as contas ficarem legíveis.
+        // O orçamento real (6h nas Fases 2 a 4) é conferido em TutorialEUiTests e no validador.
+        gm.horasPorCaso = 4;
 
         GameObject grade = Go("Grade");
         inv = Go("Inventario").AddComponent<InventoryManager>();

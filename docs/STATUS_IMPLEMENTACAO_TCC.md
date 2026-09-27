@@ -1,10 +1,10 @@
 ﻿# Status de implementação — Da Pena à Guilhotina
 
-Atualizado em 27/09/2026 (Prompt 4, restante do Prompt 6 e Fase 3 com três casos, §13 a §16). Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminhos relativos a `Unity-DaPenaAGuilhotina/`.
+Atualizado em 27/09/2026 (Prompt 4, restante do Prompt 6 e Fase 3 com três casos, §13 a §16; **Prompt 7, 6h nas Fases 2–4 e dedução desde a Fase 2, §17**). Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminhos relativos a `Unity-DaPenaAGuilhotina/`.
 
 Estados usados: **validado** (testado em runtime ou em teste automatizado), **existente não validado** (código/asset presente, sem teste de runtime), **parcial**, **ausente**.
 
-Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achados corrigidos (§7); verificação completa contra os dois PDFs em 26/09, com correções que adiantaram partes dos Prompts 6 e 7 (§9); Prompt 5 (linha editorial) concluído em 26/09 (§10); **Prompt 4 (dedução ativa) incluído por decisão do grupo e concluído em 27/09 (§13)**; **restante do Prompt 6 concluído em 27/09 (§14)**; **Fase 3 reduzida a três casos, com um concluído (§15)**. Próximo: **Prompt 7, depois o 8 — só depois da validação do grupo** (§16).
+Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achados corrigidos (§7); verificação completa contra os dois PDFs em 26/09, com correções que adiantaram partes dos Prompts 6 e 7 (§9); Prompt 5 (linha editorial) concluído em 26/09 (§10); **Prompt 4 (dedução ativa) incluído por decisão do grupo e concluído em 27/09 (§13)**; **restante do Prompt 6 concluído em 27/09 (§14)**; **Fase 3 reduzida a três casos, com um concluído (§15)**; **Prompt 7 concluído em 27/09 (§17), junto com dois ajustes pedidos pelo grupo: 6h de investigação nas Fases 2, 3 e 4 e dedução ativa desde a Fase 2**. Próximo: **Prompt 8 (não iniciado)**, depois dos testes manuais listados em §17.9.
 
 Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4–6:
 - **Alegações:** qualquer impressão com alegação usa a versão Só Alegações.
@@ -20,7 +20,12 @@ Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4�
 - **Linha editorial (Prompt 5):** a partir da Fase 2, o Misturar pede Defesa do povo / Agradar a Coroa (o Comitê na Fase 4) / Sensacionalista antes de consumir as pistas. Cálculo: versão → apoio → linha. O exemplo do Prompt 3 (40/−5/50) é o valor antes da linha.
 - **Fala depois da entrega (27/09):** `CasoReacao.dialogoDepoisDaEntrega`. Quando a reação já entregou tudo, o NPC diz essa fala curta em vez de repetir a conversa inteira (Dupaty, Marie, Joalheiro). Vazio = comportamento anterior.
 - **Caso das Joias (27/09):** o joalheiro entrega os dois fatos; a Mesa da Taverna ficou vazia nesse caso; caminho mínimo de 1h (§12.3).
-- **Dedução ativa (27/09, §13):** nos seis casos das Fases 3 e 4, dois pares de afirmações contraditórias (fato do cliente × boato; fato do objeto × calúnia). O "Quadro de pistas" (botão na HUD) guarda as hipóteses do jogador; "Conferir dedução" só confirma o quadro inteiro, com uma resposta única para qualquer falha. Não bloqueia a publicação. Nesses casos a verdade não aparece mais sozinha (Verificada Por é ignorada).
+- **Dedução ativa (27/09, §13; desde a Fase 2 pelo §17):** nos **nove** casos das Fases 2, 3 e 4, dois pares de afirmações contraditórias (fato do cliente × boato; fato do objeto × calúnia). O "Quadro de pistas" (botão na HUD, já na Fase 2) guarda as hipóteses do jogador; "Conferir dedução" só confirma o quadro inteiro, com uma resposta única para qualquer falha. Não bloqueia a publicação. Nesses casos a verdade não aparece mais sozinha (Verificada Por é ignorada).
+- **Tempo (27/09, §17):** 6h por caso nas Fases 2, 3 e 4 (`GameManager.horasPorCaso`); a conversão continua 1h por NPC/objeto novo. Endividado: 5h. O quadro inteiro custa até 4h, então a dedução é alcançável mesmo com dívida.
+- **Dicas de primeira vez (27/09, §17):** relógio, fato/boato (agora aponta o Quadro de pistas), dedução, despesas, Biblioteca e linha editorial. Ficam numa fila (não se perdem nem se sobrepõem), vão no save e zeram no Novo Jogo.
+- **Marie e Dupaty depois do tutorial (27/09, §17):** pela regra de progresso (tutorial concluído), não mais pelo panfleto no inventário; vale também depois de carregar um save.
+- **Mesa de Casos (27/09, §17):** é janela modal (trava movimento, interação, inventário e pause; Esc fecha), cabe na tela em qualquer proporção e fica acima dos controles de toque.
+- **UI em telas estreitas (27/09, §17):** o canvas da UI passou a "Expand" (16:9 e celulares iguais; 16:10 e 4:3 sem cortar a prensa).
 - **Fase 3 (27/09, §15):** três casos (saiu "O Padeiro de Notre-Dame"); o jogador escolhe e conclui um, os outros ficam bloqueados; concluído o caso, a volta ao escritório abre a Fase 4. `casosPorFase` = {1, 1, 1, 1}.
 - **Mesa e porta do escritório (27/09, §14):** abrem pela conclusão do tutorial, não mais pelo panfleto do tutorial no inventário.
 - **Fase 4 (27/09, §14):** a mesa mostra e aceita só o caso da rota travada; um caso sem rota nunca aparece nessa fase.
@@ -39,7 +44,7 @@ Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não e
 |---|---|
 | Unity | 6000.3.9f1 aberto no Editor durante o trabalho (projeto `Unity-DaPenaAGuilhotina`) |
 | Unity MCP | Operacional (`com.coplaydev.unity-mcp`): leitura de cenas, compilação, Play Mode, execução de código de Editor e Test Runner |
-| Testes | `com.unity.test-framework` 1.6.0. Não havia testes. Os testes novos ficam em `Assets/Editor/Testes/` (assembly `Assembly-CSharp-Editor`, sem asmdef, porque os scripts do jogo não têm asmdef). Em 26/09: 46 testes EditMode; 57 depois do Prompt 5; 58 em 27/09 (§12.2); 78 depois dos Prompts 4 e 6 (§16) |
+| Testes | `com.unity.test-framework` 1.6.0. Não havia testes. Os testes novos ficam em `Assets/Editor/Testes/` (assembly `Assembly-CSharp-Editor`, sem asmdef, porque os scripts do jogo não têm asmdef). Em 26/09: 46 testes EditMode; 57 depois do Prompt 5; 58 em 27/09 (§12.2); 78 depois dos Prompts 4 e 6 (§16); 88 depois do Prompt 7 (§17) |
 | Compilação | Sem erros. Avisos antigos: `FindObjectOfType` obsoleto em `GameManager`; `Caso_Tutorial` sem `caseTitle`/`npcDialogueRoute` (OnValidate) |
 | Save real do jogador | Até 25/09: não foi lido nem alterado. Em 26/09: ver §9.7 (um save de teste criado e apagado com autorização; duas PlayerPrefs de dica ficaram marcadas) |
 
@@ -49,13 +54,14 @@ Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não e
 2. Tribunal: investigar → panfleto → Dupaty → tribunal.
 3. "Final da Fase 2" citado na Fase 3 = erro de numeração.
 4. ~~Final C "O Exílio"~~ Substituída em 26/09: Final C "O Esquecido", definido pelo grupo (ver §9.3). Textos ainda provisórios.
-5. Dedução ativa (C) nas Fases 3 e 4, por caso; sem confronto com NPC na 1ª versão.
+5. Dedução ativa (C) nas Fases 3 e 4, por caso; sem confronto com NPC na 1ª versão. **Desde 27/09 (decisão do grupo, §17), também na Fase 2.**
 6. Linha editorial (D) a partir da Fase 2; tutorial com receita simples; tom não muda a verdade.
 7. Receita expandida mantém 2 slots; evidências complementares como qualificadores opcionais.
 8. Campanha: Fase 2 = 1 de 3 casos; ~~Fase 3 = 2 distintos de 4~~ Fase 3 = 1 de 3 (decisão do grupo, 27/09, §15); Fase 4 = 1 caso da rota.
 9. Sem bloqueio por falta de pistas (duas alegações não verificadas como saída de design, se necessário).
 10. Valores e textos novos são protótipos editáveis, rotulados como provisórios.
 11. (26/09, decisão do grupo) Pista melhor gera panfleto melhor; as barras decidem o final do jogador; o panfleto do caso da Fase 4 decide o destino do réu.
+12. (27/09, decisão do grupo) Cada caso das Fases 2, 3 e 4 tem 6h no relógio do jogo (1h por NPC/objeto novo, como antes).
 
 Dependências entre etapas: 1 (estabilidade/save) → 2 (conteúdo) → 3 (biblioteca) → 4 (dedução) → 5 (tom) → 6 (consequências/tribunal) → 7 (UI/tutorial) → 8 (validação). Ordem recomendada a partir de 26/09: 5 → restante de 6 e 7 → 8; o 4 só se o grupo decidir incluí-lo (as propostas C e D são "proposta, não implementada" no documento de dificuldade, e o 4 exige reescrever as pistas de 7 casos em pares contraditórios).
 
@@ -402,21 +408,20 @@ Save e PlayerPrefs do jogador restaurados de novo depois dos testes (hash idênt
 
 ## 8. Próximo prompt
 
-~~Prompt 5 — linha editorial (D)~~ Concluído em 26/09 (§10). ~~Prompt 4 — dedução ativa~~ Concluído em 27/09 (§13). ~~Restante do Prompt 6~~ Concluído em 27/09 (§14).
+~~Prompt 5 — linha editorial (D)~~ Concluído em 26/09 (§10). ~~Prompt 4 — dedução ativa~~ Concluído em 27/09 (§13). ~~Restante do Prompt 6~~ Concluído em 27/09 (§14). ~~Prompt 7 — tutorial, transições e UI integrada~~ Concluído em 27/09 (§17).
 
-**Próximo: Prompt 7, depois o Prompt 8 — só depois da validação do grupo (pedido de 27/09).** Pontos de atenção:
-- **Prompt 7 (dicas):** faltam as dicas de primeira vez de despesas, biblioteca, linha editorial e dedução. A dica de fato/boato (`TutorialManager.dicaFatoBoato`, texto na cena Jogo) ainda diz "procure outra fonte que confirme antes de imprimir": com a dedução, o certo é comparar as afirmações contrárias no Quadro de pistas.
-- **Prompt 7 (modais):** o quadro entrou na lista "biblioteca, quadro, inventário, prensa, pause e cutscene abertos em sequência".
+**Próximo: Prompt 8 (validação final), não iniciado.** Antes dele, os testes manuais de §17.9 (teclado/toque físicos, aparelho Android, leitura dos textos novos). Pontos de atenção:
 - **Prompt 8 (balanceamento):** com um caso só na Fase 3, a rota é decidida por três publicações (tutorial, Fase 2, Fase 3); a linha editorial desloca o desnível em até 15 pontos por publicação. Exemplos de percurso em `MATRIZ_DE_CASOS_TCC.md`.
+- **Prompt 8 (tempo):** com 6h e caminho mínimo de 1–2h, sobra folga em todos os casos; vale medir, jogando, se a pressão do relógio ainda existe (antes: 4h).
 
 Questões em aberto:
 - ~~Revelações: onde colocar `RevelacaoDeBoatos` e a ordem em relação à trava de rota~~ Resolvido em 26/09 (§9).
 - ~~Tribunal: provas restritas ao caso, incluindo documentos comprados~~ Resolvido em 26/09 (§9).
 - ~~Inventário ao restaurar: perda silenciosa de itens quando a grade está cheia~~ Resolvido em 27/09 (§14.2).
 - ~~Mesa depende do panfleto do tutorial~~ Resolvido em 27/09 (§14.3); a porta do escritório tinha a mesma trava e também passou para a regra de progresso.
-- **Marie ausente após save/load:** depende do panfleto do tutorial no inventário ou de um caso diferente do tutorial (Prompt 7).
-- **Referências quebradas:** as listadas em 3.2, item 5 (os "pensamentos" do alçapão continuam usando `Operario_Dialogo`/`resposta_operario`).
-- **Horas da dedução (decisão do grupo, §13.6):** descobrir o quadro inteiro custa 4h; endividado (3h), a conferência fica impossível naquele caso.
+- ~~Marie ausente após save/load~~ Resolvido em 27/09 (§17.2).
+- ~~Referências quebradas: "pensamentos" do alçapão com falas do Operário~~ Resolvido em 27/09 (§17.2). As outras de 3.2, item 5 (`UI_Inventory.prefab` `recipes[0]`, `CameraConfiner` na Porao, `TypeTextAnimation.dialogueSystem`) continuam sem efeito visível e não foram mexidas.
+- ~~Horas da dedução (§13.6)~~ Resolvido em 27/09 com 6h por caso (§17): o quadro inteiro (até 4h) cabe mesmo endividado (5h).
 
 ---
 
@@ -780,7 +785,129 @@ Pedido do grupo: a Fase 3 oferece três casos, o jogador escolhe e conclui um; o
 
 1. **Jogar um caso da Fase 3 inteiro com teclado/mouse:** mesa com três cartas; depois de aceitar, as outras bloqueadas; pistas levando de uma fonte a outra; Quadro de pistas (marcar, conferir errado, conferir certo); publicar com e sem conferir; voltar ao escritório → Fase 4.
 2. **Textos novos** (provisórios) das pistas, falas e documentos das Fases 3 e 4 (matriz) e do quadro. Se algum for editado no Inspector, a ferramenta 5 não o sobrescreve.
-3. **Decisão de horas** da dedução (§13.6).
+3. ~~**Decisão de horas** da dedução (§13.6).~~ Decidido em 27/09: 6h nas Fases 2 a 4 (§17).
 4. **Tribunal:** o mínimo de 2 provas para encerrar está bom?
 5. **Porta e mesa** no tutorial (Novo Jogo): continuam trancadas até imprimir o panfleto e abrem depois.
 6. **Celular/toque:** botão "Quadro de pistas" e janela no aparelho.
+
+---
+
+## 17. Prompt 7 — tutorial, transições e UI integrada (27/09/2026)
+
+Pedido do grupo: conferir no projeto o que já existia, classificar cada requisito, completar o Prompt 7 e, junto com ele, **(A)** dar **6h** no relógio do jogo aos casos das Fases 2, 3 e 4, mantendo a conversão do projeto (1h por NPC ou objeto novo), e **(B)** deixar a **dedução de pistas** disponível e integrada **desde a Fase 2**. O Prompt 8 não foi iniciado.
+
+### 17.1 Diagnóstico (conferido no projeto antes de mexer)
+
+Conferidos scripts, cenas, prefabs e ScriptableObjects pelo Unity (MCP), não só pelos documentos.
+
+| # | Requisito | O que havia no projeto | Estado antes |
+|---|---|---|---|
+| 1 | Tutorial: intro → controles → Dupaty e Marie → alçapão → status na prensa → panfleto → cutscene → volta com Marie ausente | `TutorialManager` (15 etapas na cena Jogo), `IntroCutscene`, `Fase1Desfecho`, `GerenciadorCena1`; percurso validado em 26/09 (§9.1) | **concluído**, com dois defeitos achados agora: o fim de *qualquer* diálogo concluía "fale com Dupaty" (o pensamento do alçapão pulava a etapa, e Marie ainda não respondia); os pensamentos do alçapão eram falas do Operário da Fase 2 (`Operario_Dialogo`, `resposta_operario`) |
+| 2 | Marie ausente depois de salvar/carregar, sem depender do panfleto | `GerenciadorCena1` escondia Marie só com o panfleto em `inventarioSalvo` ou com um caso diferente do tutorial | **parcial** |
+| 3 | Mesa com selecionados/concluídos bloqueados e recompensa como estimativa | `CaseSelectionUI` (estados, "Recompensa estimada", tendências) | **concluído** no conteúdo; na tela, **parcial**: o painel foi desenhado para 2376 de largura, então em 16:9 o **Fechar ficava fora da tela** (x −1077) e em 4:3 os cartões eram cortados |
+| 4 | Porta com fade e evento FMOD existente, sem gerenciador duplicado | `event:/portaabrir` na porta e `event:/bauabrir` no alçapão (caminho e GUID na cena); fade corrigido em §11 | **concluído** |
+| 5 | Pop-ups quando o item entra de fato e quando o caso é aceito; nada ao restaurar | `InventoryManager.AddItem`/`OnItemAdicionado` (silencioso na restauração), `GameManager.ConfirmarCaso` ("Caso aceito") | **concluído** |
+| 6 | Dicas de primeira vez (relógio, despesas, biblioteca, dedução, tom), salvas e zeradas no Novo Jogo; texto da dica de fato/boato | Só relógio e fato/boato; a de fato/boato mandava "procurar outra fonte que confirme"; um só lugar para dica pendente (a segunda apagava a primeira) | **parcial** |
+| 7 | Biblioteca, quadro, inventário, prensa, pause e cutscene em sequência, com input e `timeScale` restaurados | `JanelasModais` (Biblioteca e Quadro) | **parcial**: o pause abria por baixo de uma cutscene (ao terminar, ela devolvia `timeScale` 1 com o pause aberto); o E avançava a conversa escondida pelo pause; a Mesa não travava movimento, inventário nem pause; o popup do tutorial aceitava Enter por baixo do pause |
+| 8 | Resoluções desktop e celular, área segura, legibilidade, rolagem, toque, foco | Área segura na HUD, Biblioteca e Quadro; capturas de 26–27/09 | **parcial**: prensa fora da tela em 4:3 (§6.4); Mesa (item 3); controles de toque desenhados por cima da Mesa |
+| A | 6h nas Fases 2, 3 e 4 | `GameManager.horasPorCaso` = 4 (padrão do código; nem o prefab nem as cenas gravam o campo); nenhum caso define horas próprias | **não implementado** |
+| B | Dedução desde a Fase 2 | Quadro com `faseMinima` 3; os casos da Fase 2 sem pares; boato e calúnia da Fase 2 sem contradizer o fato do mesmo assunto; validador e testes exigiam só Fases 3 e 4 | **não implementado** |
+
+### 17.2 O que foi feito
+
+| Requisito | Implementação | Estado |
+|---|---|---|
+| 1. Tutorial | A etapa "fale com … até o fim" passou a contar só conversa com NPC: o `NPCMovement` avisa o `TutorialManager` (`NotificarConversaComNpcTerminada`) no fim da conversa, depois dos eventos que liberam o próximo NPC; o `TutorialManager` não escuta mais o fim de todo diálogo. Pensamentos novos do protagonista no alçapão (`Dialogos/Julien Valois/Pensamento_Alcapao_SemCaso` e `…_FaltamPistas`), ligados na cena Jogo | validado (teste + Play Mode) |
+| 2. Marie | `GerenciadorCena1.TutorialEncerrado`: tutorial concluído (`GameManager.TutorialConcluido`, caso do tutorial concluído ou caso da mesa aceito) esconde Marie e silencia Dupaty; o panfleto no inventário ficou só como reserva de saves antigos. O save é aplicado no `Awake` do `GameManager`, antes de qualquer `Start`, e a regra lê só o `GameManager` | validado (teste + Play Mode com Continuar simulado) |
+| 3/8. Mesa na tela | `CaseSelectionUI` ajusta o painel à tela visível: cobre a tela, a área dos cartões encolhe até caber (nunca passa de 1885 de largura) e usa a altura livre, o **Fechar** vai para o canto superior direito dentro da área segura. Canvas próprio (ordem 5) acima dos controles de toque (2): o toque vai para os cartões | validado (capturas 16:9, 4:3 e 18,5:9, raycast do toque) |
+| 6. Dicas | Fila no `TutorialManager` (`DicaPendente`, `ConcluirDica`): nenhuma dica some nem sobrepõe outra, e uma dica não fechada volta na cena seguinte. Quatro dicas novas: **despesas** (depois da cutscene da primeira cobrança, `FimDeFase`), **Biblioteca** (quando o botão aparece pela primeira vez), **dedução** (primeira pista de um par do quadro), **linha editorial** (quando a prensa abre com um caso que pede o tom, antes da janela, para o Enter da dica não cair no "Cancelar" dela). Dica de fato/boato reescrita (aponta o Quadro de pistas; código e cena Jogo). Chaves novas em `ProgressoDoJogo.ChavesDaPartida`: vão no save e zeram no Novo Jogo; volume e velocidade do texto continuam. Nenhuma dica diz qual pista é verdadeira | validado (testes + Play Mode) |
+| 6. Popup | `TutorialStepUI`: some com conversa, cutscene, pause, Biblioteca, Quadro ou Mesa abertos e volta sozinho; Enter/Espaço não agem no frame em que ele aparece nem quando outro controle da UI tem o foco do teclado; corrigida a disputa de `Start` que deixava a dica do relógio presa (ela era pedida antes de o popup se montar) | validado (Play Mode) |
+| 7. Modais | `PauseMenu` não abre durante cutscene; `PlayerInteraction` ignora o Interagir com o pause aberto; `JanelasModais` inclui a Mesa (sem movimento, interação, inventário nem pause por cima); Esc fecha a Mesa sem abrir o pause no mesmo frame; foco do teclado começa no Fechar; controles de toque desligados enquanto a Mesa está aberta | validado (testes + Play Mode, Esc real pelo Input System) |
+| 8. Telas estreitas | `CanvasScaler` do `UI.prefab` em **Expand** (continua 1920×1080 de referência): 16:9 e celulares ficam iguais; em 16:10 e 4:3 a UI inteira cabe na largura (antes a prensa saía da tela) | validado (capturas 4:3 com prensa + Suporte) |
+| A. 6h | `GameManager.horasPorCaso` = **6** (os nove casos das Fases 2–4 usam o padrão). A conversão continua: 1h por NPC/objeto novo, repetir é grátis, HUD "Tempo de investigação: Xh / 6h"; endividado, 5h. O validador exige 6h em todo caso das Fases 2 a 4 | validado (teste + validador + Play Mode 6h/6h) |
+| B. Dedução na Fase 2 | Pares nos três casos (fato do cliente × boato; fato do objeto × calúnia), quadro desde a Fase 2 (`faseMinima` 2; botão no lugar da Biblioteca enquanto ela não existe), boato e calúnia reescritos para contradizer o fato do mesmo assunto, falas de quem espalha o boato apontando os objetos, uma carta de cliente por caso apontando quem espalha o boato, revelação do boato de Réveillon ajustada. Validador exige dedução em todo caso das Fases 2 a 4 e o quadro inteiro dentro do orçamento | validado (validador + testes + Play Mode completo no Caso de Réveillon) |
+
+### 17.3 Decisões desta etapa
+
+- **Onde ficam as 6h:** no padrão `GameManager.horasPorCaso`, que já era o único valor usado pelos casos (todos com `horasDeInvestigacao` 0); um caso ainda pode definir horas próprias no Inspector. O prefab e as cenas não gravam o campo, então não houve mudança de asset. O tutorial continua sem relógio.
+- **Conteúdo da Fase 2:** os fatos das Joias e as falas dos clientes (roteiros do grupo) não mudaram. Mudaram o boato e a calúnia de cada caso (conteúdo provisório do Prompt 2). Como as falas dos clientes são do grupo, a pista "quem espalha o boato" foi para a carta do cliente (alegação), que o jogador lê ao aceitar o caso. O boato de Réveillon trocou de assunto: de "a ordem de atirar" para **"Os quinze soldos"** (o boato histórico sobre o discurso), para contradizer "O discurso na assembleia"; a fala do grupo "Eu não mandei atirar em ninguém!" continua fazendo sentido.
+- **Quando cada dica aparece:** no primeiro contato com o recurso, e nunca por cima de uma janela; a da Biblioteca quando o botão aparece; a da dedução quando o quadro ganha a primeira pista; a do tom ao abrir a prensa; a das despesas depois da cutscene que as cobra.
+- **Mesa de Casos como janela modal**, com o Fechar à direita como o inventário, a Biblioteca e o Quadro (à esquerda ficava sobre a HUD).
+- **"Expand" em vez de redesenhar painéis:** uma propriedade do `CanvasScaler` resolve a prensa e o Suporte em 16:10/4:3 sem mexer no layout de 16:9.
+
+### 17.4 Arquivos
+
+- Scripts: `GameManager`, `GerenciadorCena1`, `TutorialManager`, `TutorialStepUI`, `ProgressoDoJogo`, `FimDeFase`, `BibliotecaUI`, `QuadroDeDeducaoUI`, `LinhaEditorialDaPrensaUI`, `PauseMenu`, `PlayerInteraction`, `JanelasModais`, `CaseSelectionUI`, `NPCMovement`; comentários em `DeducaoAtiva`, `@CaseData`, `Item`.
+- Editor: `DeducaoSetupTool` (Fase 2), `CampanhaSetupTool` (textos de referência da Fase 2), `ValidadorDaCampanha` (dedução desde a Fase 2, 6h, quadro dentro do orçamento), `TutorialRoteiroTool` (copia todas as dicas), `Prompt7SetupTool` (novo: **Ferramentas > Campanha > 7 - Aplicar ajustes do Prompt 7**).
+- Testes: `Testes/TutorialEUiTests.cs` (novo, 9), `DeducaoTests` (+1; o teste dos casos reais passou a exigir as Fases 2 a 4), `ComponentesTests` (fixa 4h nos testes de cobrança, que medem 1h por interação, não o orçamento).
+- Assets: `Casos/Caso_Joalheiro|Reveillon|Operario` (pares), 6 pistas e 3 alegações em `Scriptableobjects/Campanha/Fase2`, 4 diálogos em `Dialogos/Campanha/Fase2`, `ReceitaDeCaso_Jean` (revelação Com Boato), 2 diálogos novos em `Dialogos/Julien Valois`, `Prefab/UI.prefab` (CanvasScaler, `faseMinima` do quadro, 2 campos novos da Mesa), `Scenes/Jogo.unity` (só as dicas do `TutorialManager` e os pensamentos do alçapão; o ruído de layout do `UI.prefab` que o Unity gravou junto foi revertido).
+- Não mudaram: `GameManager.prefab`, as outras cenas, ProjectSettings, Packages, GUIDs e `.meta` existentes.
+
+### 17.5 Configuração realizada
+
+- Ferramenta 5: 3 casos com dedução ligada, 6 pistas, 4 falas, 3 cartas de cliente, 1 revelação e 1 alteração no `UI.prefab` (`faseMinima` 2). Segunda execução: 0.
+- Ferramenta 7: `CanvasScaler` em Expand, 2 pensamentos criados, 3 alterações na cena Jogo (dica de fato/boato e os dois pensamentos). Segunda execução: 0.
+- Ferramentas 1, 3, 4 e 6 reexecutadas: 0 alterações (a 1 regravou 8 receitas com conteúdo idêntico, restauradas pelo git).
+- Validador: **"Campanha válida", 0 avisos**. Orçamento 6h (5h endividado); dedução em 9 casos; quadro inteiro: Joias 3h, os outros oito 4h; caminho mínimo até 2 fatos: Joias 1h, os outros 2h.
+
+### 17.6 Testes
+
+**EditMode: 88/88** (78 anteriores + 10 novos): fila de dicas (duas pedidas juntas aparecem uma depois da outra, dica vista não volta, marcada no pedido); dica da dedução só na primeira pista de um par (alegação não conta) e texto de fato/boato apontando o quadro; Novo Jogo zera as quatro chaves novas e preserva o volume; etapa "fale com Dupaty" não avança com o pensamento do alçapão e avança com conversa de NPC; Marie some pelo progresso sem o panfleto, também depois de salvar/carregar; 6h no prefab e no código, nos 9 casos, 5h endividado; pause não abre com cutscene; Mesa aberta trava pause e inventário; quadro disponível na Fase 2 com caso real; pares da Fase 2 do mesmo assunto e sem nome que denuncie a verdade.
+
+**Play Mode** (Editor via MCP; botões pelo `onClick`/`Interact`, Esc por evento do Input System; capturas por `ScreenCapture`):
+
+| Sessão | Resultado |
+|---|---|
+| Tutorial desde a intro (16:9) | pause recusado durante a cutscene de abertura; popup some com o pause e volta ao fechar; o pensamento do alçapão é do protagonista (e, depois da correção, não conclui "fale com Dupaty"; a conversa com Dupaty conclui e libera Marie); Marie (6 escolhas), inventário, decreto, porão, prensa, panfleto, volta: Fase 2, Marie fora, Dupaty silenciado, cutscene da Fase 1 |
+| Mesa (16:9) | cabe na tela, Fechar visível no canto superior direito, foco no Fechar, popup do tutorial escondido enquanto ela está aberta; aceitar Réveillon → cartas do cliente → dica de fato/boato depois que a mesa fecha; botão do quadro no lugar da Biblioteca |
+| Fase 2 com dedução (Réveillon) | relógio 6h/6h; dica do tempo; Operário → dica da dedução (5h); Réveillon, Gazeteiro e Banca → 4 pistas em 4h, "2 de 2"; com o quadro aberto, pause e inventário não abrem; tudo "Confiável" e uma errada → mesma resposta genérica; certo → "A dedução se sustenta", inventário com "confirmada/desmentida" |
+| Prensa | dica da linha editorial ao abrir; janela com foco em Cancelar; Fatos + Defesa do povo: Povo 65→55, Estado 40→85, ouro 20→70 |
+| Fim da Fase 2 | Fase 3, despesa de 25 (70→45), cutscene → dica das despesas → dica da Biblioteca (em fila) |
+| Continuar simulado (dados do save em memória, sem ler nem gravar o arquivo) | Fase 3 sem o panfleto: Marie fora, Dupaty silenciado; save logo após o tutorial (caso ainda do tutorial, inventário vazio): Marie fora — o código antigo a mostraria |
+| Esc na Mesa | fecha sem abrir o pause |
+| Troca de cena com dica aberta | a dica não fechada reaparece na Fase 2, seguida da do tempo |
+| 4:3 (1440×1080) | HUD, relógio, quadro e dica cabem; a prensa cabe inteira (antes saía da tela); prensa + Suporte (Fase 3) cabem; Mesa ocupa a tela toda |
+| Celular simulado (4:3 e 2960×1440) | Mesa acima dos controles de toque; o toque nos "Aceitar Caso" cai nos botões da Mesa; no escritório, Pause, Biblioteca e Quadro empilhados sem se cobrir; os controles voltam a responder quando a Mesa fecha |
+
+### 17.7 Limitações e pendências
+
+- **Não testado com dispositivos reais:** teclado e toque físicos, aparelho Android, áudio (as referências FMOD foram conferidas, o som não).
+- **4:3 e telas menores:** com "Expand" a UI inteira fica menor (escala 0,75 em 1440×1080; 0,53 em 1024×768, com texto pequeno).
+- **Menu principal:** os botões Novo Jogo e Continuar não foram usados (apagam/regravam as chaves de quem testa); o Continuar foi simulado em memória e o Novo Jogo coberto por teste.
+- **Enter no popup:** ignorado quando outro controle da UI está com o foco do teclado (ex.: depois de clicar em Misturar); aí é preciso clicar em Continuar.
+- **Dicas:** marcadas quando pedidas (como antes); fechar o jogo antes de ler uma dica a perde.
+- **Pista do boato na Fase 2:** vem na carta do cliente, não na fala dele (roteiro do grupo). Se quiserem, uma linha na fala do cliente substitui a carta.
+- **Tempo:** com 6h e caminho mínimo de 1–2h, o relógio pesa menos; o balanceamento fica para o Prompt 8.
+- **Cosmético, anterior a esta etapa:** o "E" da porta aparece sobre o relógio no ponto de chegada das cenas de investigação; o quadro também aparece no escritório com um caso em andamento (como antes).
+- **"Pensamento sem caso" do alçapão** quase nunca aparece: o jogo começa com o caso do tutorial escolhido.
+
+### 17.8 Conteúdo provisório
+
+Textos das quatro dicas novas e a dica de fato/boato reescrita (`TutorialManager`, editáveis na cena Jogo); os dois pensamentos do alçapão; boato e calúnia dos três casos da Fase 2, as quatro falas de quem os espalha, três cartas de cliente e a revelação Com Boato de Réveillon (lista na matriz). Edições no Inspector são mantidas pelas ferramentas 5 e 7 (só trocam texto que ainda é o anterior).
+
+### 17.9 O que ainda exige teste manual na Unity
+
+1. **Tutorial inteiro com teclado e mouse** (Novo Jogo): em "fale com Dupaty", tentar o alçapão antes (deve aparecer o pensamento do Julien e a etapa não avançar); ao voltar do porão, Marie some.
+2. **Salvar e continuar de verdade:** jogar até o fim da Fase 1 (ou de uma fase), sair para o menu, **Continuar**: Marie continua fora, as dicas já vistas não repetem, a partida segue da mesma fase.
+3. **Novo Jogo depois de Continuar:** dicas e cutscenes voltam; volume e velocidade do texto ficam.
+4. **Caso da Fase 2 com dedução:** conferir, lendo, se cada par (Joias, Réveillon, Operário) se contradiz de forma justa e se a carta do cliente e as falas levam de uma fonte à outra.
+5. **Relógio de 6h:** sentir se a pressão do tempo ainda existe; endividado deve começar com 5h.
+6. **Dicas em sequência:** na virada da Fase 3, despesas e depois Biblioteca; nenhuma por cima de janela aberta.
+7. **Mesa de Casos:** Esc, Fechar e mouse/teclado (Tab/setas) em 16:9; no celular, tocar em "Aceitar Caso" e no Fechar.
+8. **Celular Android real:** Mesa acima dos controles, prensa com Suporte, Quadro de pistas, popup de dica sem cobrir os botões de toque.
+9. **Tela 16:10 ou 4:3 (tablet ou monitor antigo):** legibilidade com a UI reduzida.
+
+### 17.10 Efeitos no ambiente de quem testou
+
+- **`save.json`** (Fase 4, rota A, gravado às 15:54): copiado para o scratchpad da sessão e deixado **somente leitura** durante o Play Mode. As duas gravações automáticas das sessões (fim do tutorial e fim de fase) falharam contra ele, como planejado, e deixaram um `save.json.tmp`, que foi apagado. Atributo restaurado; **md5 idêntico ao de antes** (`5AE7EA19…`).
+- **PlayerPrefs:** as cinco chaves de progresso voltaram a 1; as quatro chaves novas de dica foram apagadas (não existiam), então as dicas novas aparecem na próxima partida de vocês.
+- **Editor:** simulação de celular de volta a desligada; o tamanho 4:3 temporário da Game View foi removido e a Game View voltou para "Free Aspect"; `Application.runInBackground` desligado; cena Jogo aberta e limpa.
+- `TestResults.xml` (em `persistentDataPath`, já existia) foi regravado pelo Test Runner.
+- Capturas em `Unity-DaPenaAGuilhotina/Temp/CapturasP7` (pasta Temp, fora do git).
+- Nada foi commitado.
+
+### 17.11 Como revalidar
+
+1. **Ferramentas > Campanha > 5** e **> 7** duas vezes → a segunda com 0 alterações; **Ferramentas > Campanha > 2** → "Campanha válida" com "Orçamento: 6h por caso (5h endividado)" e "Dedução ativa: 9 caso(s)".
+2. Test Runner > EditMode > Run All → **88/88**.
+3. Roteiro manual de §17.9.

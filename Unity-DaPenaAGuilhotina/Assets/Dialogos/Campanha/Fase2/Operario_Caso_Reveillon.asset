@@ -14,8 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: "Oper\xE1rio"
-    text: Aquele homem? Todo mundo sabe que foi ele quem chamou a Guarda para atirar
-      na gente!
+    text: "Aquele homem? Disse na assembleia que um oper\xE1rio vive muito bem com
+      quinze soldos por dia!"
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: "Oper\xE1rio"
+    text: "S\xF3 queria cortar o nosso sal\xE1rio. Do p\xE3o, nem uma palavra."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: "Oper\xE1rio"
+    text: Na banca de panfletos vendem uma gazeta com as contas da manufatura, e
+      o gazeteiro da esquina tem uma folha ainda pior sobre ele.
     dialogueAudio:
       Guid:
         Data1: 0

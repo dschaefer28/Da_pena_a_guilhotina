@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>Mecânica "Fato x Boato" (Fase 2 em diante): o quanto uma pista é verdadeira. O jogador não vê
-/// isso direto — só descobre quando junta um item de "Verificada Por" (ver InventoryManager.PistaVerificada).</summary>
+/// <summary>Mecânica "Fato x Boato" (Fase 2 em diante): o quanto uma pista é verdadeira. O jogador não vê isso direto:
+/// nos casos com dedução ativa (todos da campanha, Fases 2 a 4) só descobre conferindo o Quadro de pistas; nos outros, ao
+/// juntar um item de "Verificada Por" (ver InventoryManager.PistaVerificada).</summary>
 public enum Confiabilidade
 {
     NaoEPista, // itens do tutorial, panfletos, etc.: a prensa usa só as receitas exatas (Recipe)

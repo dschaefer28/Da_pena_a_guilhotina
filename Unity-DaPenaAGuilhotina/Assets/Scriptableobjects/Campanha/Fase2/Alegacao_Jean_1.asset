@@ -16,8 +16,11 @@ MonoBehaviour:
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
   itemName: "Carta de R\xE9veillon: fui mal entendido"
-  descricao: "R\xE9veillon garante que suas palavras foram distorcidas pelos inimigos."
+  descricao: "R\xE9veillon garante que suas palavras na assembleia foram distorcidas,
+    e que os oper\xE1rios repetem a vers\xE3o errada."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 5c0733705941aa94db8fdec6796223e7, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

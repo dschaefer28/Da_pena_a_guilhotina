@@ -98,6 +98,11 @@ public class FimDeFase : MonoBehaviour
             else foreach (CutsceneLegendas.Linha linha in legendas) AvisoNaTela.Mostrar(linha.texto);
         }
 
+        // Primeira cobrança: a dica aparece depois da cutscene (o popup espera a tela ficar livre). Pedida antes do save
+        // do próximo frame, então o Continuar não a repete.
+        if (fim.despesa > 0 && TutorialManager.Instance != null)
+            TutorialManager.Instance.SolicitarDicaUmaVez(TutorialManager.CHAVE_DICA_DESPESAS, TutorialManager.Instance.dicaDespesas);
+
         StartCoroutine(SalvarNoProximoFrame());
     }
 

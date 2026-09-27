@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -53,9 +54,8 @@ public class TutorialStepUI : MonoBehaviour
     private string etapaExibidaAtualmente;
     private bool popupDispensado;   // jogador clicou Continuar numa etapa de evento: não reabrir sozinho
     private DialogueSystem dialogoObservado;
-    private string dicaPendente;    // dica contextual (fora do roteiro) esperando para aparecer
-    private string dicaExibida;
-    private bool mostrandoDica;
+    private bool mostrandoDica;     // o popup mostra a dica da vez (TutorialManager.DicaPendente), não a etapa
+    private int frameEmQueApareceu = -1;
 
     void OnEnable()
     {
@@ -81,6 +81,7 @@ public class TutorialStepUI : MonoBehaviour
         if (textoMensagem == null) Debug.LogWarning("[TutorialStepUI] 'Texto Mensagem' não foi atribuído no Inspector.", this);
 
         if (painelPopup != null) painelPopup.SetActive(false);
+        mostrandoDica = false; // uma dica pedida antes deste Start continua na fila e volta pelo Update
         if (botaoContinuar != null) botaoContinuar.onClick.AddListener(OnContinuarClicado);
         if (botaoPular != null) botaoPular.onClick.AddListener(OnPularClicado);
 
@@ -113,8 +114,29 @@ public class TutorialStepUI : MonoBehaviour
 
     void Update()
     {
-        // No PC, Enter/Espaço equivalem ao clique em Continuar (o texto da etapa diz isso).
-        if (painelPopup == null || !painelPopup.activeSelf || DispositivoDeControle.EhToque) return;
+        if (painelPopup == null) return;
+
+        // O popup sai da frente enquanto a tela estiver ocupada (conversa, cutscene, pause, Biblioteca, Quadro de pistas ou
+        // Mesa de Casos) e volta sozinho depois: por baixo do pause ele ainda aceitaria o Enter, e por cima da mesa cobria
+        // os cartões. Dicas pedidas nesse meio-tempo esperam na fila do TutorialManager.
+        if (TelaOcupada())
+        {
+            if (painelPopup.activeSelf) EsconderPorOcupacao();
+            return;
+        }
+        if (!painelPopup.activeSelf)
+        {
+            // Painel escondido não mostra dica nenhuma. Ex.: o relógio pediu a dica do tempo no Start dele, antes do Start
+            // deste popup, que esconde o painel ao montar a cena: sem isto a dica ficava presa como "na tela".
+            mostrandoDica = false;
+            ReexibirSePrecisar();
+            return;
+        }
+
+        // No PC, Enter/Espaço equivalem ao clique em Continuar (o texto da etapa diz isso). No frame em que o popup
+        // apareceu, não: o Enter que fechou a conversa (e fez o popup voltar) pularia a dica sem ela ser lida. Nem quando
+        // outro controle da UI está com o foco do teclado (ex.: "Cancelar" da linha editorial): o mesmo Enter agiria nos dois.
+        if (DispositivoDeControle.EhToque || Time.frameCount == frameEmQueApareceu || OutroControleComFoco()) return;
         var teclado = Keyboard.current;
         if (teclado != null && (teclado.enterKey.wasPressedThisFrame || teclado.numpadEnterKey.wasPressedThisFrame || teclado.spaceKey.wasPressedThisFrame))
             OnContinuarClicado();
@@ -131,31 +153,51 @@ public class TutorialStepUI : MonoBehaviour
 
     // ===== Dicas contextuais (fora do roteiro, ex: Fato x Boato) =====
 
+    // A fila fica no TutorialManager: aqui só se mostra a dica da vez quando a tela estiver livre.
     private void HandleDicaSolicitada(string texto)
     {
-        dicaPendente = texto;
-        MostrarDicaSePossivel();
+        if (!mostrandoDica) MostrarDicaSePossivel();
     }
 
+    /// <summary>Algo na tela pede o foco do jogador: o popup (etapa ou dica) espera.</summary>
     private bool TelaOcupada() =>
-        (dialogoObservado != null && dialogoObservado.IsDialogueActive) || CutsceneLegendas.EmExibicao;
+        (dialogoObservado != null && dialogoObservado.IsDialogueActive) || CutsceneLegendas.EmExibicao ||
+        JanelasModais.AlgumaAberta || (PauseMenu.Instance != null && PauseMenu.Instance.IsOpen);
 
     // A dica recebida no fim de uma conversa espera o diálogo/cutscene sair da tela, como as etapas.
     private bool MostrarDicaSePossivel()
     {
-        if (string.IsNullOrEmpty(dicaPendente) || painelPopup == null || TelaOcupada()) return false;
+        string dica = TutorialManager.Instance != null ? TutorialManager.Instance.DicaPendente : null;
+        if (string.IsNullOrEmpty(dica) || painelPopup == null || TelaOcupada()) return false;
 
         mostrandoDica = true;
-        dicaExibida = dicaPendente;
         if (imagemIcone != null) imagemIcone.gameObject.SetActive(false);
-        if (textoMensagem != null) textoMensagem.text = DispositivoDeControle.Substituir(dicaPendente);
+        if (textoMensagem != null) textoMensagem.text = DispositivoDeControle.Substituir(dica);
         DefinirTitulo("Dica");
-        dicaPendente = null;
         MontarGlifos(ControleTutorial.Nenhum);
         if (botaoPular != null) botaoPular.gameObject.SetActive(false);
+        AtivarPopup();
+        return true;
+    }
+
+    private void AtivarPopup()
+    {
+        if (!painelPopup.activeSelf) frameEmQueApareceu = Time.frameCount;
         painelPopup.SetActive(true);
         PosicionarPopup();
-        return true;
+    }
+
+    private bool OutroControleComFoco()
+    {
+        GameObject foco = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
+        return foco != null && foco.activeInHierarchy && !foco.transform.IsChildOf(painelPopup.transform);
+    }
+
+    // A dica que estava na tela continua a primeira da fila: volta quando a tela ficar livre de novo.
+    private void EsconderPorOcupacao()
+    {
+        mostrandoDica = false;
+        painelPopup.SetActive(false);
     }
 
     // O título ("Titulo", criado pelo TutorialPopupBuilder) diferencia etapa do roteiro de dica avulsa.
@@ -318,9 +360,8 @@ public class TutorialStepUI : MonoBehaviour
     // se a etapa ainda for a mesma e o jogador não a tiver dispensado.
     private void HandleDialogoComecou()
     {
-        // Dica interrompida por uma conversa volta a ficar pendente (reaparece quando a conversa acabar).
-        if (mostrandoDica) { dicaPendente = dicaExibida; mostrandoDica = false; }
-        if (painelPopup != null) painelPopup.SetActive(false);
+        // Dica interrompida por uma conversa continua na fila (reaparece quando a conversa acabar).
+        if (painelPopup != null) EsconderPorOcupacao();
     }
     private void HandleDialogoTerminou() => ReexibirSePrecisar();
     private void HandleCutsceneTerminou() => ReexibirSePrecisar();
@@ -328,7 +369,8 @@ public class TutorialStepUI : MonoBehaviour
     private void ReexibirSePrecisar()
     {
         if (mostrandoDica || MostrarDicaSePossivel()) return;
-        if (popupDispensado || TutorialManager.Instance == null || CutsceneLegendas.EmExibicao) return;
+        if (popupDispensado || TutorialManager.Instance == null || TelaOcupada()) return;
+        if (painelPopup != null && painelPopup.activeSelf) return;
         TutorialStep etapa = TutorialManager.Instance.ObterEtapa(etapaExibidaAtualmente);
         if (etapa != null && etapa.etapaId == TutorialManager.Instance.EtapaAtualId) MostrarPopup(etapa);
     }
@@ -356,7 +398,8 @@ public class TutorialStepUI : MonoBehaviour
         AplicarRevelacoes();
 
         // Uma dica na tela tem prioridade: a etapa nova aparece quando o jogador fechar a dica.
-        if (mostrandoDica) return;
+        if (mostrandoDica && painelPopup != null && painelPopup.activeSelf) return;
+        mostrandoDica = false;
 
         TutorialStep etapa = TutorialManager.Instance != null ? TutorialManager.Instance.ObterEtapa(etapaId) : null;
         if (etapa == null)
@@ -365,9 +408,9 @@ public class TutorialStepUI : MonoBehaviour
             return;
         }
 
-        // Numa conversa ou cutscene, espera terminar (ReexibirSePrecisar) em vez de aparecer por cima.
-        bool dialogoAberto = dialogoObservado != null && dialogoObservado.IsDialogueActive;
-        if (dialogoAberto || CutsceneLegendas.EmExibicao) { if (painelPopup != null) painelPopup.SetActive(false); return; }
+        // Numa conversa, cutscene, pause ou janela aberta, espera terminar (Update/ReexibirSePrecisar) em vez de
+        // aparecer por cima.
+        if (TelaOcupada()) { if (painelPopup != null) painelPopup.SetActive(false); return; }
 
         MostrarPopup(etapa);
     }
@@ -412,8 +455,7 @@ public class TutorialStepUI : MonoBehaviour
         DefinirTextoPular(TextoPularPadrao);
         DefinirTitulo("Tutorial");
 
-        painelPopup.SetActive(true);
-        PosicionarPopup();
+        AtivarPopup();
     }
 
     private void MontarGlifos(ControleTutorial controle)
@@ -451,8 +493,9 @@ public class TutorialStepUI : MonoBehaviour
         if (mostrandoDica)
         {
             mostrandoDica = false;
+            if (TutorialManager.Instance != null) TutorialManager.Instance.ConcluirDica();
             if (painelPopup != null) painelPopup.SetActive(false);
-            ReexibirSePrecisar(); // se havia uma etapa esperando atrás da dica
+            ReexibirSePrecisar(); // a próxima dica da fila, ou a etapa que esperava atrás da dica
             return;
         }
 

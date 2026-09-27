@@ -62,8 +62,13 @@ public class PauseMenu : MonoBehaviour
 
     private void Pausar()
     {
-        // Biblioteca ou quadro de dedução aberto (ou fechado pelo mesmo Esc neste frame): o Esc era da janela, não do pause.
+        // Biblioteca, quadro de dedução ou Mesa de Casos aberta (ou fechada pelo mesmo Esc neste frame): o Esc era da
+        // janela, não do pause.
         if (JanelasModais.BloqueiaPausa) return;
+
+        // Cutscene na tela: ela já congela o jogo e, ao terminar, devolve o timeScale. Um pause aberto por baixo dela
+        // ficaria na tela com o jogo andando depois da cutscene.
+        if (CutsceneLegendas.EmExibicao) return;
 
         // Não deixa pausar com o inventário aberto (evita os dois modais brigando pela tela/raycast).
         var inventoryManager = GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;

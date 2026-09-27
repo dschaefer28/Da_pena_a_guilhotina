@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro; // Necessário para acessar os textos
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI; // Necessário para acessar os botões
 using System.Collections.Generic;
 
@@ -7,29 +9,155 @@ public class CaseSelectionUI : MonoBehaviour
 {
     [Header("Referências Visuais")]
     [Tooltip("Arraste o Prefab do Cartão que está na sua pasta Prefabs")]
-    public GameObject cardPrefab; 
+    public GameObject cardPrefab;
     [Tooltip("Arraste a AreaDosCartoes da sua cena")]
-    public Transform cardsContainer; 
+    public Transform cardsContainer;
 
     [Header("Dados")]
     [Tooltip("Casos de todas as fases. A mesa mostra só os da fase atual (CaseData.fase).")]
     public List<CaseData> availableCases;
 
+    [Header("Layout na tela (Prompt 7)")]
+    [Tooltip("O painel foi desenhado para 2376 de largura: numa tela 16:9 o botão Fechar ficava fora dela e, em telas mais " +
+             "estreitas, os cartões eram cortados. Ligado, o painel cobre a tela visível, a área dos cartões encolhe até " +
+             "caber (nunca passa da largura original) e o Fechar fica no canto superior direito, dentro da área segura.")]
+    public bool ajustarATela = true;
+    [Min(0f)] public float margemDaTela = 24f;
+
     /// <summary>Painel da mesa aberto (outros botões de tela, como o da Biblioteca, se escondem).</summary>
     public static bool Aberta { get; private set; }
+    private static int frameEmQueFechou = -1;
+    /// <summary>O Esc que fechou a mesa não pode abrir o pause no mesmo frame (JanelasModais).</summary>
+    public static bool BloqueiaPausa => Aberta || frameEmQueFechou == Time.frameCount;
 
     // Play Mode sem recarregar domínio: o estado estático não pode vazar de uma sessão para a outra.
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ZerarEstado() => Aberta = false;
+    private static void ZerarEstado()
+    {
+        Aberta = false;
+        frameEmQueFechou = -1;
+    }
+
+    private RectTransform areaDosCartoes;
+    private RectTransform botaoFechar;
+    private Vector2 larguraAlturaOriginalDaArea;
+    private bool layoutGuardado;
+    private Vector2 ultimoTamanhoDoCanvas;
+    private Rect ultimaAreaSegura;
+
+    // Acima dos controles de toque (canvas de ordem 2) e abaixo dos popups (10), da Biblioteca/Quadro (30–35) e das
+    // cutscenes (50). Sem isto o joystick e os botões do celular eram desenhados por cima dos cartões.
+    private const int OrdemDaMesa = 5;
 
     // Roda automaticamente quando o painel for ativado pelo TableInteractable
     void OnEnable()
     {
         Aberta = true;
+        GarantirCanvasProprio();
+        // Como os outros modais: o toque vai para os cartões, não para o joystick/TouchZone por cima do canvas da UI.
+        if (MobileControlsManager.Instance != null) MobileControlsManager.Instance.SetControlsInteractable(false);
+        AjustarLayout();
         GerarCartoesNaTela();
+        // Teclado: o foco começa no Fechar (Enter não aceita um caso sem querer); Tab/setas levam aos cartões.
+        if (botaoFechar != null && EventSystem.current != null) EventSystem.current.SetSelectedGameObject(botaoFechar.gameObject);
     }
 
-    void OnDisable() => Aberta = false;
+    void OnDisable()
+    {
+        if (Aberta) frameEmQueFechou = Time.frameCount;
+        Aberta = false;
+        if (MobileControlsManager.Instance != null) MobileControlsManager.Instance.SetControlsInteractable(true);
+        if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null &&
+            EventSystem.current.currentSelectedGameObject.transform.IsChildOf(transform))
+            EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    void Update()
+    {
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            FecharPainel();
+            return;
+        }
+        // O tamanho do canvas (não o da tela): o CanvasScaler só o atualiza depois de uma troca de resolução, às vezes
+        // um frame depois deste Update.
+        if (TamanhoDoCanvas() != ultimoTamanhoDoCanvas || ultimaAreaSegura != Screen.safeArea) AjustarLayout();
+    }
+
+    private Vector2 TamanhoDoCanvas()
+    {
+        Canvas canvas = GetComponentInParent<Canvas>();
+        return canvas != null ? ((RectTransform)canvas.rootCanvas.transform).rect.size : Vector2.zero;
+    }
+
+    private void GarantirCanvasProprio()
+    {
+        if (!ajustarATela || GetComponent<Canvas>() != null || GetComponentInParent<Canvas>() == null) return;
+        var canvas = gameObject.AddComponent<Canvas>();
+        canvas.overrideSorting = true;
+        canvas.sortingOrder = OrdemDaMesa;
+        gameObject.AddComponent<GraphicRaycaster>();
+    }
+
+    // O painel era 2376 x 1080 centrado. Aqui ele passa a cobrir exatamente a tela visível (o fundo é uma moldura
+    // translúcida fatiada: nada muda na aparência), a área dos cartões fica centrada com no máximo a largura original e o
+    // botão Fechar vai para o canto superior direito visível.
+    private void AjustarLayout()
+    {
+        ultimoTamanhoDoCanvas = TamanhoDoCanvas();
+        ultimaAreaSegura = Screen.safeArea;
+        if (!ajustarATela) return;
+
+        var painel = (RectTransform)transform;
+        Canvas canvas = GetComponentInParent<Canvas>();
+        if (canvas == null) return;
+        var raiz = (RectTransform)canvas.rootCanvas.transform;
+        float escala = canvas.rootCanvas.scaleFactor;
+        if (escala <= 0f || raiz.rect.width <= 0f) return;
+
+        if (!layoutGuardado)
+        {
+            areaDosCartoes = transform.Find("AreaDosCartoes") as RectTransform;
+            botaoFechar = transform.Find("BotaoFechar") as RectTransform;
+            if (areaDosCartoes != null) larguraAlturaOriginalDaArea = areaDosCartoes.sizeDelta;
+            layoutGuardado = true;
+        }
+
+        // Recuos da área segura (notch, barras) em unidades do canvas.
+        Rect seguro = Screen.safeArea;
+        float esquerda = seguro.xMin / escala, direita = (Screen.width - seguro.xMax) / escala;
+        float topo = (Screen.height - seguro.yMax) / escala, baixo = seguro.yMin / escala;
+
+        float largura = raiz.rect.width, altura = raiz.rect.height;
+        painel.anchorMin = painel.anchorMax = painel.pivot = new Vector2(0.5f, 0.5f);
+        painel.anchoredPosition = Vector2.zero;
+        painel.sizeDelta = new Vector2(largura, altura);
+
+        float topoDosCartoes = altura * 0.5f - topo - margemDaTela;
+        if (botaoFechar != null)
+        {
+            // Canto superior direito, como o Fechar do inventário, da Biblioteca e do quadro. No celular não encosta no
+            // botão de pausa (canvas dos controles, logo abaixo e mais para dentro); no canto esquerdo ficava sobre a HUD.
+            botaoFechar.anchorMin = botaoFechar.anchorMax = botaoFechar.pivot = new Vector2(0.5f, 0.5f);
+            Vector2 tamanho = botaoFechar.sizeDelta;
+            botaoFechar.anchoredPosition = new Vector2(largura * 0.5f - direita - margemDaTela - tamanho.x * 0.5f,
+                                                       altura * 0.5f - topo - margemDaTela - tamanho.y * 0.5f);
+            topoDosCartoes -= tamanho.y + 12f; // a área dos cartões começa abaixo do Fechar
+        }
+
+        if (areaDosCartoes != null)
+        {
+            float disponivel = largura - esquerda - direita - 2f * margemDaTela;
+            float larguraDaArea = Mathf.Min(larguraAlturaOriginalDaArea.x, disponivel);
+            float baseDosCartoes = -altura * 0.5f + baixo + margemDaTela;
+            // Na altura, toda a faixa livre (a lista rola): numa tela mais alta, como 4:3, cabem mais cartões.
+            float alturaDaArea = Mathf.Max(200f, topoDosCartoes - baseDosCartoes);
+            areaDosCartoes.anchorMin = areaDosCartoes.anchorMax = areaDosCartoes.pivot = new Vector2(0.5f, 0.5f);
+            areaDosCartoes.sizeDelta = new Vector2(larguraDaArea, alturaDaArea);
+            // Centrada na faixa livre (entre o Fechar e a base), sem invadir a área segura dos lados.
+            areaDosCartoes.anchoredPosition = new Vector2((esquerda - direita) * 0.5f, topoDosCartoes - alturaDaArea * 0.5f);
+        }
+    }
 
     private void GerarCartoesNaTela()
     {
@@ -157,9 +285,10 @@ public class CaseSelectionUI : MonoBehaviour
         else GerarCartoesNaTela();
     }
 
-    // Função para o botão "X" fechar a tela sem escolher nada
+    // Função para o botão "X" (e o Esc) fechar a tela sem escolher nada
     public void FecharPainel()
     {
+        if (gameObject.activeSelf) frameEmQueFechou = Time.frameCount;
         gameObject.SetActive(false);
     }
 

@@ -5,14 +5,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Prompt 4: dedução ativa nas Fases 3 e 4.
-/// - liga o quadro de dedução nos seis casos das Fases 3 e 4, com dois pares contraditórios cada:
+/// Prompt 4: dedução ativa nas Fases 3 e 4; desde o Prompt 7 (decisão do grupo, 27/09), também na Fase 2.
+/// - liga o quadro de dedução nos nove casos das Fases 2, 3 e 4, com dois pares contraditórios cada:
 ///   fato do cliente × boato e fato do objeto × calúnia (em cada par, exatamente uma afirmação é verdadeira);
 /// - reescreve as pistas, as falas das reações e os documentos da biblioteca desses casos para que cada par se
-///   contradiga de fato, e para que o cliente aponte quem espalha o boato, e este aponte os dois objetos;
-/// - põe o QuadroDeDeducaoUI no prefab UI (objeto "QuadroDeDeducao").
+///   contradiga de fato, e para que o cliente aponte quem espalha o boato, e este aponte os objetos. Na Fase 2 os fatos
+///   (e as falas dos clientes, do roteiro do grupo) não mudam: mudam o boato, a calúnia, as falas de quem os espalha, a
+///   revelação do boato de Réveillon e uma carta de cliente por caso, que passa a indicar quem espalha o boato;
+/// - põe o QuadroDeDeducaoUI no prefab UI (objeto "QuadroDeDeducao"), a partir da Fase 2.
 /// Os textos novos ficam nas ferramentas de conteúdo (CampanhaSetupTool e BibliotecaSetupTool); aqui só ficam os
-/// textos anteriores (25/09). Um asset só é trocado se ainda tiver exatamente o texto anterior: o que o grupo editou
+/// textos anteriores. Um asset só é trocado se ainda tiver exatamente o texto anterior: o que o grupo editou
 /// no Inspector é mantido e listado no relatório. CONTEÚDO PROVISÓRIO. Idempotente.
 /// Menu: Ferramentas > Campanha > 5 - Aplicar dedução ativa
 /// </summary>
@@ -21,17 +23,25 @@ public static class DeducaoSetupTool
     private const string PastaCasos = "Assets/Casos";
     private const string PastaItens = "Assets/Scriptableobjects/Campanha";
     private const string PastaDialogos = "Assets/Dialogos/Campanha";
+    private const string PastaFase2Antiga = "Assets/Scriptableobjects"; // pistas F1/F2 e receitas da Fase 2 (anteriores ao Prompt 2)
     private const string PrefabUI = "Assets/Prefab/UI.prefab";
+
+    /// <summary>Fase a partir da qual o quadro de dedução aparece (decisão do grupo, 27/09).</summary>
+    public const int FaseMinimaDoQuadro = 2;
 
     private class CasoDeDeducao
     {
-        public string caso, fase, f1, boato, f2, calunia; // arquivos (sem extensão)
+        // Arquivos (sem extensão) em Scriptableobjects/Campanha/<fase>, ou caminho completo começando com "Assets/".
+        public string caso, fase, f1, boato, f2, calunia;
         public CasoDeDeducao(string caso, string fase, string f1, string boato, string f2, string calunia)
         { this.caso = caso; this.fase = fase; this.f1 = f1; this.boato = boato; this.f2 = f2; this.calunia = calunia; }
     }
 
     private static readonly CasoDeDeducao[] Casos =
     {
+        new CasoDeDeducao("Caso_Joalheiro", "Fase2", PastaFase2Antiga + "/Item_joalheiro1.asset", "Pista_Joias_Boato", PastaFase2Antiga + "/Item_joalheiro2.asset", "Pista_Joias_Calunia"),
+        new CasoDeDeducao("Caso_Reveillon", "Fase2", PastaFase2Antiga + "/Item_Jean1.asset", "Pista_Jean_Boato", PastaFase2Antiga + "/Item_Jean2.asset", "Pista_Jean_Calunia"),
+        new CasoDeDeducao("Caso_Operario", "Fase2", PastaFase2Antiga + "/Item_operario1.asset", "Pista_Operario_Boato", PastaFase2Antiga + "/Item_operario2.asset", "Pista_Operario_Calunia"),
         new CasoDeDeducao("Caso_Varennes", "Fase3", "Pista_Varennes_Contrato", "Pista_Varennes_Boato", "Pista_Varennes_Depoimento", "Pista_Varennes_Calunia"),
         new CasoDeDeducao("Caso_ChampDeMars", "Fase3", "Pista_Champ_Peticao", "Pista_Champ_Boato", "Pista_Champ_LeiMarcial", "Pista_Champ_Calunia"),
         new CasoDeDeducao("Caso_Assignats", "Fase3", "Pista_Assignats_Queixa", "Pista_Assignats_Boato", "Pista_Assignats_Tipos", "Pista_Assignats_Calunia"),
@@ -43,6 +53,14 @@ public static class DeducaoSetupTool
     // Textos em vigor de 25/09 a 27/09 (itemID -> { nome, fonte, descrição }). As pistas que não mudaram não estão aqui.
     private static readonly Dictionary<string, string[]> TextosAnteriores = new Dictionary<string, string[]>
     {
+        // Fase 2 (até o Prompt 7): boato e calúnia não contradiziam o fato do mesmo assunto.
+        { "pista_joias_boato", new[] { "O segredo da Rainha", "Gazeteiro da esquina", "Segundo o gazeteiro, a Rainha encomendou o colar escondida do Rei e depois negou tudo." } },
+        { "pista_joias_calunia", new[] { "A Rainha e o Cardeal", "Cartaz sem assinatura", "Folha afixada no muro: a Rainha e o Cardeal são amantes e dividiram o colar entre si." } },
+        { "pista_jean_boato", new[] { "A ordem de atirar", "Conversa de operários", "Segundo os operários, foi o próprio Réveillon quem pediu à Guarda que atirasse na multidão." } },
+        { "pista_jean_calunia", new[] { "O dinheiro inglês", "Folha anônima vendida na rua", "Folha vendida pelo gazeteiro: Réveillon recebe dinheiro da Inglaterra para matar Paris de fome." } },
+        { "pista_operario_boato", new[] { "Os agitadores do duque", "Jean-Baptiste Réveillon", "Segundo Réveillon, agitadores pagos pelo duque de Orléans distribuíram dinheiro à multidão na véspera." } },
+        { "pista_operario_calunia", new[] { "O fogo na fábrica", "Bilhete sem assinatura", "Bilhete deixado na taverna: foi o operário quem ateou fogo à fábrica com as próprias mãos." } },
+        // Fases 3 e 4 (até o Prompt 4)
         { "pista_varennes_1", new[] { "A viagem da baronesa", "Cocheiro Joubert", "O cocheiro mostra o contrato em nome de uma 'baronesa de Korff': uma viagem de aluguel comum, sem menção a quem seria levado." } },
         { "pista_varennes_2", new[] { "A parada em Sainte-Menehould", "Ata afixada pelo clube dos Cordeliers", "Ata no mural: o mestre de posta reconheceu o Rei em Sainte-Menehould; o cocheiro não falou com ninguém na estrada." } },
         { "pista_varennes_boato", new[] { "O ouro austríaco", "Conversa no Champ de Mars", "Segundo a peticionária, o cocheiro era espião da Rainha, pago em ouro austríaco." } },
@@ -74,6 +92,10 @@ public static class DeducaoSetupTool
     // Falas anteriores das reações (Assets/Dialogos/Campanha/<fase>/<npc>_<caso>.asset). As novas vêm do CampanhaSetupTool.
     private static readonly Reacao[] Reacoes =
     {
+        new Reacao("Fase2", "Gazeteiro", "Caso_Joalheiro", "O colar? Nas tavernas só se fala disso!", "Dizem que a própria Rainha o encomendou escondida do Rei, e depois fingiu não saber de nada."),
+        new Reacao("Fase2", "Gazeteiro", "Caso_Reveillon", "Réveillon? Tenho aqui uma folha que vende como pão quente.", "Diz que ele é pago pelos ingleses para matar Paris de fome. Leve, é sua."),
+        new Reacao("Fase2", "Operario", "Caso_Reveillon", "Aquele homem? Todo mundo sabe que foi ele quem chamou a Guarda para atirar na gente!"),
+        new Reacao("Fase2", "Jean-Baptiste Réveillon", "Caso_Operario", "Aqueles homens não estavam com fome, estavam pagos!", "Agitadores do duque de Orléans distribuíram dinheiro na véspera. Anote isso."),
         new Reacao("Fase3", "CocheiroJoubert", "Caso_Varennes", "Me contrataram em nome de uma tal baronesa de Korff. Eu só conduzia os cavalos, juro.", "Tenho o contrato aqui. Leia o senhor mesmo."),
         new Reacao("Fase3", "PeticionariaLacombe", "Caso_Varennes", "O cocheiro do Rei? Todo mundo sabe que era espião da Rainha, pago em ouro austríaco."),
         new Reacao("Fase3", "PeticionariaLacombe", "Caso_ChampDeMars", "Assinávamos uma petição. Só isso! E eles atiraram.", "Guardei a folha. O sangue ainda está nela."),
@@ -105,6 +127,22 @@ public static class DeducaoSetupTool
         { "Caso_Jornalista", "Todos os números do Velho Sans-culotte, encadernados pela Biblioteca Nacional." },
         { "Caso_Negociante", "Livros oficiais de entradas e saídas de grãos da seção, mês a mês." },
         { "Caso_Girondina", "Cartas do deputado Delorme arquivadas na Convenção, com o carimbo do arquivo." },
+    };
+
+    // Fase 2 (Prompt 7): descrição anterior das cartas de cliente que passam a indicar quem espalha o boato.
+    private static readonly Dictionary<string, string> AlegacoesAnteriores = new Dictionary<string, string>
+    {
+        { "alegacao_joias_1", "O joalheiro jura que acreditou estar negociando com a Rainha." },
+        { "alegacao_jean_1", "Réveillon garante que suas palavras foram distorcidas pelos inimigos." },
+        { "alegacao_operario_2", "Ele afirma que a Guarda abriu fogo antes de qualquer pedra ser atirada." },
+    };
+
+    // Fase 2 (Prompt 7): a revelação da versão Com Boato de Réveillon falava da "ordem de atirar", o boato antigo.
+    private const string ReceitaDeReveillon = PastaFase2Antiga + "/ReceitaDeCaso_Jean.asset";
+    private static readonly string[] RevelacoesAnterioresDeReveillon =
+    {
+        "Descobriu-se que Réveillon nunca chamou a Guarda. O boato impresso desmoronou.",
+        "Não se provou que Réveillon mandou a Guarda atirar: ele pediu proteção, não o fogo. O boato impresso desmoronou.",
     };
 
     [MenuItem("Ferramentas/Campanha/5 - Aplicar dedução ativa")]
@@ -165,17 +203,49 @@ public static class DeducaoSetupTool
         }
         if (MigrarFalas(DialogoDaEtapaVarennes, FalasAnterioresDaEtapaVarennes, BibliotecaSetupTool.FalasDaEtapa("recibo_da_estalagem"), mantidos)) falas++;
 
+        // Fase 2: cartas de cliente com a pista de quem espalha o boato, e a revelação do boato de Réveillon.
+        int cartas = 0, revelacoes = 0;
+        foreach (var par in AlegacoesAnteriores)
+        {
+            Item alegacao = AlegacaoDaFase2(par.Key);
+            string nova = CampanhaSetupTool.AlegacaoComPista(par.Key);
+            if (alegacao != null && nova != null && TrocarDescricao(alegacao, par.Value, nova, mantidos)) cartas++;
+        }
+        ReceitaDeCaso receitaReveillon = AssetDatabase.LoadAssetAtPath<ReceitaDeCaso>(ReceitaDeReveillon);
+        if (receitaReveillon != null && receitaReveillon.comBoato != null &&
+            receitaReveillon.comBoato.textoRevelacao != CampanhaSetupTool.RevelacaoDoBoatoDeReveillon)
+        {
+            if (System.Array.IndexOf(RevelacoesAnterioresDeReveillon, receitaReveillon.comBoato.textoRevelacao) >= 0)
+            {
+                receitaReveillon.comBoato.textoRevelacao = CampanhaSetupTool.RevelacaoDoBoatoDeReveillon;
+                EditorUtility.SetDirty(receitaReveillon);
+                revelacoes++;
+            }
+            else mantidos.Add(receitaReveillon.name + " (revelação Com Boato)");
+        }
+
         AssetDatabase.SaveAssets();
         int prefab = RegistrarNoPrefabUI();
 
         r.AppendLine($"  Casos com dedução ligada agora: {casos}; pistas reescritas: {textos}; falas reescritas: {falas}; " +
-                     $"documentos da biblioteca: {documentos}; alterações no UI.prefab: {prefab}.");
+                     $"cartas de cliente: {cartas}; revelações: {revelacoes}; documentos da biblioteca: {documentos}; " +
+                     $"alterações no UI.prefab: {prefab}.");
         if (mantidos.Count > 0) r.AppendLine("  Mantidos (editados no Inspector, sem o texto anterior): " + string.Join(", ", mantidos) + ".");
         return r.ToString();
     }
 
     private static Item Pista(CasoDeDeducao def, string arquivo) =>
-        AssetDatabase.LoadAssetAtPath<Item>($"{PastaItens}/{def.fase}/{arquivo}.asset");
+        AssetDatabase.LoadAssetAtPath<Item>(arquivo.StartsWith("Assets/") ? arquivo : $"{PastaItens}/{def.fase}/{arquivo}.asset");
+
+    private static Item AlegacaoDaFase2(string itemID)
+    {
+        foreach (string guid in AssetDatabase.FindAssets("t:Item", new[] { $"{PastaItens}/Fase2" }))
+        {
+            Item item = AssetDatabase.LoadAssetAtPath<Item>(AssetDatabase.GUIDToAssetPath(guid));
+            if (item != null && item.itemID == itemID) return item;
+        }
+        return null;
+    }
 
     // Troca nome, fonte e descrição pelos de referência só se o asset ainda tem exatamente os três textos anteriores.
     private static bool MigrarTexto(Item pista, List<string> mantidos)
@@ -242,6 +312,12 @@ public static class DeducaoSetupTool
                 TMPro.TMP_FontAsset fonte = biblioteca != null && biblioteca.fonte != null ? biblioteca.fonte
                     : raiz.GetComponentInChildren<TMPro.TextMeshProUGUI>(true)?.font;
                 if (fonte != null) { quadro.fonte = fonte; alterados++; }
+            }
+            // Prompt 7: o quadro vale desde a Fase 2. Só troca o valor antigo (3); outro valor escolhido no Inspector fica.
+            if (quadro.faseMinima == 3)
+            {
+                quadro.faseMinima = FaseMinimaDoQuadro;
+                alterados++;
             }
             if (alterados > 0) PrefabUtility.SaveAsPrefabAsset(raiz, PrefabUI);
         }

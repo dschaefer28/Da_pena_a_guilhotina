@@ -42,6 +42,7 @@ public class BibliotecaUI : MonoBehaviour
     private Vector2 posicaoBaseBotao;
     private Rect ultimaArea;
     private float timeScaleAoAbrir = 1f;
+    private bool dicaPedida;
 
     // Play Mode sem recarregar domínio: o estado estático não pode vazar de uma sessão para a outra.
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -75,6 +76,13 @@ public class BibliotecaUI : MonoBehaviour
         if (botaoAbrir != null && botaoAbrir.gameObject.activeSelf != (visivel && !Aberta))
             botaoAbrir.gameObject.SetActive(visivel && !Aberta);
         if (botaoAbrir != null && Screen.safeArea != ultimaArea) AplicarAreaSegura();
+
+        // Primeira vez que o botão aparece (Prompt 7): a dica explica a Biblioteca antes de o jogador abri-la.
+        if (visivel && !dicaPedida && TutorialManager.Instance != null)
+        {
+            dicaPedida = true;
+            TutorialManager.Instance.SolicitarDicaUmaVez(TutorialManager.CHAVE_DICA_BIBLIOTECA, TutorialManager.Instance.dicaBiblioteca);
+        }
 
         if (Aberta && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) Fechar();
     }

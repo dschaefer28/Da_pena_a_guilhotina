@@ -50,56 +50,40 @@ public class GerenciadorCena1 : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Regra de progresso (Prompt 7): com o tutorial concluído (caso da Fase 1 impresso, ou o jogo já numa fase
+    /// posterior), Marie sai do escritório e Dupaty deixa de conversar (na Fase 4 ele atende pelo CheckpointDoTribunal).
+    /// Não depende de o panfleto do tutorial ainda estar no inventário, que continua valendo só como reserva de saves
+    /// antigos. Sem disputa de ordem com o save: o Continuar aplica os dados no Awake do GameManager, antes de qualquer
+    /// Start, e esta checagem lê só o GameManager (inventarioSalvo, não a grade da cena, que se monta no Start dela).
+    /// </summary>
+    public static bool TutorialEncerrado(GameManager gm, CaseData casoTutorial, Item panfleto)
+    {
+        if (gm == null) return false;
+        if (gm.TutorialConcluido) return true;
+        if (casoTutorial != null && gm.casosConcluidos.Contains(casoTutorial)) return true;
+        // Um caso da mesa já foi aceito: só acontece depois do tutorial.
+        if (casoTutorial != null && gm.casoEscolhido != null && gm.casoEscolhido != casoTutorial) return true;
+        // Reserva para saves antigos: o panfleto do tutorial no inventário salvo.
+        if (panfleto != null && gm.inventarioSalvo != null)
+            foreach (Item item in gm.inventarioSalvo)
+                if (item != null && item.itemID == panfleto.itemID) return true;
+        return false;
+    }
+
     private void VerificarEstadoDaCena()
     {
-        if (GameManager.Instance == null) return;
+        GameManager gm = GameManager.Instance;
+        if (!TutorialEncerrado(gm, casoTutorial, panfletoCraftado)) return;
 
-        // 1. CHECAGEM DE FASE 2 (Sumir com a Mary)
-        // Se o caso atual NÃO é o Tutorial, significa que o jogador usou a mesa e avançou no jogo.
-        if (casoTutorial != null && GameManager.Instance.casoEscolhido != null)
-        {
-            if (GameManager.Instance.casoEscolhido != casoTutorial)
-            {
-                Debug.Log("[CENA 1] Fase 2 detectada! Escondendo NPCs antigos...");
-                foreach (GameObject npc in npcsParaSumir)
-                {
-                    if (npc != null) npc.SetActive(false); // Desativa o boneco por completo
-                }
-            }
-        }
-
-        // 2. CHECAGEM DO PORÃO (Silenciar o Dupatch)
-        if (panfletoCraftado != null)
-        {
-            bool temPanfleto = false;
-            
-            if (GameManager.Instance.inventarioSalvo != null)
-            {
-                foreach (Item item in GameManager.Instance.inventarioSalvo)
-                {
-                    if (item != null && item.itemID == panfletoCraftado.itemID)
-                    {
-                        temPanfleto = true;
-                        break;
-                    }
-                }
-            }
-
-            if (temPanfleto)
-            {
-                foreach (NPCMovement npc in npcsParaSilenciar)
-                {
-                    if (npc != null) npc.DisableInteraction();
-                }
-
-                // Documento (Interlúdio, "Correção de Despawn"): ao subir do porão com o panfleto, a
-                // Marie já deve ter saído da cena — não só a partir da escolha de um caso novo.
-                Debug.Log("[CENA 1] Panfleto impresso: escondendo os NPCs do caso tutorial.");
-                foreach (GameObject npc in npcsParaSumir)
-                {
-                    if (npc != null) npc.SetActive(false);
-                }
-            }
-        }
+        // Documento (Interlúdio, "Correção de Despawn"): ao subir do porão com o panfleto, a Marie já deve ter saído da
+        // cena — e continua fora depois de salvar e carregar.
+        Debug.Log("[CENA 1] Tutorial concluído: escondendo os NPCs do caso tutorial e silenciando o mentor.");
+        if (npcsParaSilenciar != null)
+            foreach (NPCMovement npc in npcsParaSilenciar)
+                if (npc != null) npc.DisableInteraction();
+        if (npcsParaSumir != null)
+            foreach (GameObject npc in npcsParaSumir)
+                if (npc != null) npc.SetActive(false); // desativa o boneco por completo
     }
 }

@@ -47,7 +47,24 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
 
     private void Awake() => prensa = GetComponent<CraftingPress>();
 
-    private void OnEnable() => prensa.OnLinhaEditorialPedida += Abrir;
+    private void OnEnable()
+    {
+        prensa.OnLinhaEditorialPedida += Abrir;
+        PedirDicaSeOCasoUsaLinha();
+    }
+
+    // Prompt 7: na primeira vez que a prensa abre com um caso que pede linha editorial, a dica explica a escolha que vem
+    // ao apertar Misturar. Pedida aqui, e não quando a janela abre: com a janela aberta o "Cancelar" tem o foco do
+    // teclado, e o Enter que fecha a dica também cancelaria a escolha.
+    private static void PedirDicaSeOCasoUsaLinha()
+    {
+        GameManager gm = GameManager.Instance;
+        TutorialManager tm = TutorialManager.Instance;
+        if (gm == null || tm == null || !gm.CasoAtualEmAndamento) return;
+        ReceitaDeCaso receita = gm.casoEscolhido.receitaDoPanfleto;
+        if (receita != null && receita.ExigeLinhaEditorial)
+            tm.SolicitarDicaUmaVez(TutorialManager.CHAVE_DICA_LINHA_EDITORIAL, tm.dicaLinhaEditorial);
+    }
 
     private void OnDisable()
     {

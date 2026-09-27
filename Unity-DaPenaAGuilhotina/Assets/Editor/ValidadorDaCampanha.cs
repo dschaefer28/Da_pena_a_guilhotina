@@ -8,9 +8,9 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Confere se a campanha é jogável do jeito que está nos assets e cenas (sem alterar nada):
 /// quantidade de casos por fase, exatamente um caso por rota na Fase 4, receitas/panfletos/alegações completos,
-/// registro na Mesa de Casos e no CatalogoDeSave, a dedução ativa das Fases 3 e 4 (pares coerentes) e — por caso, na
-/// cena dele — as oportunidades de investigação, o caminho mínimo até duas pistas Fato dentro do orçamento de horas com
-/// dívida e quantas horas custa descobrir o quadro de dedução inteiro.
+/// registro na Mesa de Casos e no CatalogoDeSave, a dedução ativa das Fases 2, 3 e 4 (pares coerentes), o orçamento de
+/// horas (6h nas Fases 2 a 4) e — por caso, na cena dele — as oportunidades de investigação, o caminho mínimo até duas
+/// pistas Fato dentro do orçamento com dívida e quantas horas custa descobrir o quadro de dedução inteiro.
 /// Menu: Ferramentas > Campanha > 2 - Validar campanha. Também roda no teste EditMode CampanhaTests.
 /// </summary>
 public static class ValidadorDaCampanha
@@ -19,6 +19,8 @@ public static class ValidadorDaCampanha
     public const int CasosEsperadosFase3 = 3; // decisão do grupo (27/09): um caso entre três, como na Fase 2
     public const int OportunidadesMinimas = 6;
     public const int OportunidadesMaximas = 7;
+    public const int HorasEsperadasPorCaso = 6; // decisão do grupo (27/09): 6h no relógio nas Fases 2, 3 e 4
+    public const int PrimeiraFaseComDeducao = 2; // decisão do grupo (27/09): o quadro de dedução vale desde a Fase 2
 
     public class Resultado
     {
@@ -57,8 +59,6 @@ public static class ValidadorDaCampanha
 
         GameManager gm = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefab/GameManager.prefab")?.GetComponent<GameManager>();
         if (gm == null) { r.problemas.Add("GameManager.prefab não encontrado."); return r; }
-        int orcamento = gm.horasPorCaso;
-        int orcamentoComDivida = Mathf.Max(1, orcamento - gm.horasPerdidasPorDivida);
 
         GameObject ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefab/UI.prefab");
         CaseSelectionUI mesa = ui != null ? ui.GetComponentInChildren<CaseSelectionUI>(true) : null;
@@ -75,6 +75,7 @@ public static class ValidadorDaCampanha
         }
 
         ValidarQuantidades(casos, gm, r);
+        ValidarOrcamento(casos, gm, r);
         ValidarItensDoProjeto(r);
 
         var cenasDoBuild = new HashSet<string>();
@@ -109,7 +110,11 @@ public static class ValidadorDaCampanha
                 List<KeyValuePair<Component, string>> interacoes = IdDeInteracao.InteracoesDaCena(cena);
                 foreach (string p in IdDeInteracao.Problemas(interacoes)) r.problemas.Add($"{par.Key}: {p}");
                 ValidarEtapasComplementares(par.Key, interacoes, r);
-                foreach (CaseData caso in par.Value) ValidarInvestigacao(caso, interacoes, orcamento, orcamentoComDivida, r);
+                foreach (CaseData caso in par.Value)
+                {
+                    int orcamento = HorasDoCaso(caso, gm);
+                    ValidarInvestigacao(caso, interacoes, orcamento, Mathf.Max(1, orcamento - gm.horasPerdidasPorDivida), r);
+                }
             }
             finally
             {
@@ -117,6 +122,23 @@ public static class ValidadorDaCampanha
             }
         }
         return r;
+    }
+
+    /// <summary>Horas do relógio para o caso: o valor do caso, ou o padrão do GameManager (mesma regra de GameManager.IniciarRelogio).</summary>
+    public static int HorasDoCaso(CaseData caso, GameManager gm) =>
+        caso != null && caso.horasDeInvestigacao > 0 ? caso.horasDeInvestigacao : (gm != null ? gm.horasPorCaso : 0);
+
+    // Prompt 7: 6h no relógio para todo caso das Fases 2, 3 e 4 (a conversão continua 1h por interação nova).
+    private static void ValidarOrcamento(List<CaseData> casos, GameManager gm, Resultado r)
+    {
+        foreach (CaseData caso in casos)
+        {
+            if (caso.fase < 2) continue;
+            int horas = HorasDoCaso(caso, gm);
+            if (horas != HorasEsperadasPorCaso)
+                r.problemas.Add($"'{caso.name}' (Fase {caso.fase}) tem {horas}h de investigação; o combinado é {HorasEsperadasPorCaso}h nas Fases 2 a 4.");
+        }
+        r.resumo.Add($"Orçamento: {gm.horasPorCaso}h por caso ({Mathf.Max(1, gm.horasPorCaso - gm.horasPerdidasPorDivida)}h endividado); 1h por interação nova.");
     }
 
     private static void ValidarQuantidades(List<CaseData> casos, GameManager gm, Resultado r)
@@ -229,12 +251,16 @@ public static class ValidadorDaCampanha
         r.resumo.Add($"Linha editorial: {ativas} receita(s) com as três opções.");
     }
 
-    // Prompt 4: dedução ativa em todo caso das Fases 3 e 4, com pares coerentes (exatamente um Fato por par, pistas do
-    // próprio caso, sem alegações nem documentos de apoio, sem repetir pista). As Fases 1 e 2 seguem a regra antiga.
+    // Prompt 4 (Prompt 7: desde a Fase 2): dedução ativa em todo caso das Fases 2, 3 e 4, com pares coerentes (exatamente
+    // um Fato por par, pistas do próprio caso, sem alegações nem documentos de apoio, sem repetir pista), e o botão do
+    // quadro aparecendo já na Fase 2. O tutorial (Fase 1) segue a regra antiga.
     private static void ValidarDeducao(GameObject ui, List<CaseData> casos, Resultado r)
     {
-        if (ui.GetComponentInChildren<QuadroDeDeducaoUI>(true) == null)
+        QuadroDeDeducaoUI quadro = ui.GetComponentInChildren<QuadroDeDeducaoUI>(true);
+        if (quadro == null)
             r.problemas.Add("QuadroDeDeducaoUI não está no UI.prefab (rode Ferramentas > Campanha > 5).");
+        else if (quadro.faseMinima > PrimeiraFaseComDeducao)
+            r.problemas.Add($"QuadroDeDeducaoUI (UI.prefab) só aparece a partir da Fase {quadro.faseMinima}: a dedução vale desde a Fase {PrimeiraFaseComDeducao} (rode Ferramentas > Campanha > 5).");
 
         int aderentes = 0;
         foreach (CaseData caso in casos)
@@ -243,10 +269,10 @@ public static class ValidadorDaCampanha
             if (Deducao.Aderente(caso))
             {
                 aderentes++;
-                if (caso.fase < 3) r.avisos.Add($"'{caso.name}' (Fase {caso.fase}) tem dedução ativa: o planejado é só nas Fases 3 e 4.");
+                if (caso.fase < PrimeiraFaseComDeducao) r.avisos.Add($"'{caso.name}' (Fase {caso.fase}) tem dedução ativa: o planejado é a partir da Fase {PrimeiraFaseComDeducao}.");
             }
-            else if (caso.fase >= 3)
-                r.problemas.Add($"'{caso.name}' (Fase {caso.fase}) sem dedução ativa: o quadro vale para todo caso das Fases 3 e 4.");
+            else if (caso.fase >= PrimeiraFaseComDeducao)
+                r.problemas.Add($"'{caso.name}' (Fase {caso.fase}) sem dedução ativa: o quadro vale para todo caso das Fases 2, 3 e 4.");
         }
         r.resumo.Add($"Dedução ativa: {aderentes} caso(s).");
     }
@@ -388,7 +414,8 @@ public static class ValidadorDaCampanha
             int horas = CustoDoQuadroInteiro(fontes, caso, r);
             deducao = "; quadro de dedução inteiro: " + (horas == int.MaxValue ? "impossível" : horas + "h");
             if (horas == int.MaxValue) r.problemas.Add($"'{caso.name}': alguma pista do quadro de dedução não é entregue por ninguém na cena.");
-            else if (horas > orcamento) r.avisos.Add($"'{caso.name}': descobrir o quadro de dedução inteiro custa {horas}h, acima do orçamento de {orcamento}h.");
+            else if (horas > orcamento) r.problemas.Add($"'{caso.name}': descobrir o quadro de dedução inteiro custa {horas}h, acima do orçamento de {orcamento}h (a conferência seria impossível).");
+            else if (horas > orcamentoComDivida) r.avisos.Add($"'{caso.name}': descobrir o quadro de dedução inteiro custa {horas}h, acima do orçamento com dívida ({orcamentoComDivida}h).");
         }
         r.resumo.Add($"{caso.name} ({caso.nextSceneName}): {oportunidades} oportunidades, {fontes.Count} com pista ({fatos} fato(s), " +
                      $"{duvidosas} boato/calúnia), {vazias} sem nada; caminho mínimo até 2 fatos: " +

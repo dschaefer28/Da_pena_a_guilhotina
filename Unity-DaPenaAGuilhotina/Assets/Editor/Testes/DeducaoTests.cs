@@ -155,7 +155,8 @@ public class DeducaoTests
         StringAssert.Contains("não verificada", inv.RotuloDaPista(boato));
         StringAssert.DoesNotContain("boato", inv.RotuloDaPista(boato).Replace("não verificada", string.Empty));
 
-        // Caso sem dedução (Fase 2): a regra antiga continua.
+        // Caso sem dedução configurada (desde o Prompt 7 nenhum caso da campanha, mas a regra continua para conteúdo
+        // antigo ou novo ainda sem pares): vale a regra antiga.
         CaseData antigo = Criar<CaseData>("CasoAntigo");
         antigo.fase = 2;
         Item fatoAntigo = Pista("fato_antigo", antigo, Confiabilidade.Fato);
@@ -318,21 +319,51 @@ public class DeducaoTests
     // ===== Conteúdo real =====
 
     [Test]
-    public void CasosReais_FasesTresEQuatro_TemDoisParesCoerentes_FaseDoisSegueOLegado()
+    public void CasosReais_FasesDoisATres_TemDoisParesCoerentes_EQuadroDesdeAFaseDois()
     {
         var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefab/UI.prefab");
+        Assert.AreEqual(2, ui.GetComponentInChildren<QuadroDeDeducaoUI>(true).faseMinima, "o botão do quadro aparece já na Fase 2");
+        int daFase2 = 0;
         foreach (CaseData real in ui.GetComponentInChildren<CaseSelectionUI>(true).availableCases)
         {
-            if (real.fase < 3)
-            {
-                Assert.IsFalse(Deducao.Aderente(real), real.name);
-                continue;
-            }
+            if (real.fase < 2) continue; // o tutorial fica com a receita simples
+            if (real.fase == 2) daFase2++;
             Assert.IsTrue(Deducao.Aderente(real), real.name);
             CollectionAssert.IsEmpty(Deducao.Problemas(real), real.name);
             Assert.AreEqual(2, real.deducao.pares.Count, real.name);
             foreach (Item pista in real.deducao.Conjunto())
                 Assert.IsFalse(real.EhAlegacao(pista), $"{real.name}: {pista.name}");
+        }
+        Assert.AreEqual(3, daFase2, "os três casos da Fase 2 entram na dedução");
+    }
+
+    [Test]
+    public void CasosReais_FaseDois_CadaParFalaDoMesmoAssunto_EAVerdadeNaoApareceNoNome()
+    {
+        // Os pares da Fase 2 (Prompt 7): o boato contradiz o fato do cliente e a calúnia contradiz o fato do objeto.
+        // Uma palavra-chave comum confirma que as duas afirmações tratam do mesmo assunto.
+        var esperado = new Dictionary<string, string[]>
+        {
+            { "Caso_Joalheiro", new[] { "compareceu", "encomenda" } },
+            { "Caso_Reveillon", new[] { "assembleia", "inverno" } },
+            { "Caso_Operario", new[] { "pedia pão", "ordem" } },
+        };
+        foreach (var par in esperado)
+        {
+            CaseData real = AssetDatabase.LoadAssetAtPath<CaseData>($"Assets/Casos/{par.Key}.asset");
+            Assert.IsTrue(Deducao.Aderente(real), par.Key);
+            for (int i = 0; i < 2; i++)
+            {
+                ParContraditorio p = real.deducao.pares[i];
+                Item fato = p.a.confiabilidade == Confiabilidade.Fato ? p.a : p.b;
+                Item contraria = p.OutraDe(fato);
+                Assert.AreNotEqual(Confiabilidade.Fato, contraria.confiabilidade, $"{par.Key} par {i + 1}");
+                string chave = par.Value[i];
+                bool comum = fato.descricao.ToLowerInvariant().Contains(chave) && contraria.descricao.ToLowerInvariant().Contains(chave);
+                Assert.IsTrue(comum, $"{par.Key} par {i + 1}: '{fato.NomeExibicao}' × '{contraria.NomeExibicao}' deveriam falar do mesmo assunto ('{chave}')");
+                foreach (string revela in new[] { "Boato", "Calúnia", "Rumor" })
+                    StringAssert.DoesNotStartWith(revela, contraria.NomeExibicao);
+            }
         }
     }
 }

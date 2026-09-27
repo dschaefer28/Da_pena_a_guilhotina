@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: "Jean R\xE9veillon"
-    text: "Aqueles homens n\xE3o estavam com fome, estavam pagos!"
+    text: "Aqueles homens n\xE3o pediam p\xE3o: vieram armados, pagos na v\xE9spera
+      por agitadores do duque de Orl\xE9ans!"
     dialogueAudio:
       Guid:
         Data1: 0
@@ -24,8 +25,18 @@ MonoBehaviour:
       Path: 
     choices: []
   - name: "Jean R\xE9veillon"
-    text: "Agitadores do duque de Orl\xE9ans distribu\xEDram dinheiro na v\xE9spera.
-      Anote isso."
+    text: "A Guarda s\xF3 atirou para se defender. Anote isso."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: "Jean R\xE9veillon"
+    text: "Colaram a ordem da Guarda no muro de cartazes, e na mesa da taverna deixaram
+      um bilhete sobre o inc\xEAndio da minha f\xE1brica. Cada um conta de um jeito."
     dialogueAudio:
       Guid:
         Data1: 0

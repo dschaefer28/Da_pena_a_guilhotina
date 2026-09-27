@@ -1,12 +1,31 @@
 # Prompts para Claude Code — Da Pena à Guilhotina
 
-Preparado em 25/09/2026 a partir dos dois PDFs e de inspeção estática do repositório. **Atualizado em 27/09/2026:** Prompts 0 a 6 concluídos (o 4 entrou por decisão do grupo; o restante do 6 foi feito em 27/09); a Fase 3 passou a ter três casos, com um concluído (decisão do grupo). Do Prompt 7, partes já foram adiantadas na verificação de 26/09 ("Já feito"). O estado atual do projeto está sempre em `docs/STATUS_IMPLEMENTACAO_TCC.md`, que prevalece sobre o diagnóstico inicial abaixo.
+Preparado em 25/09/2026 a partir dos dois PDFs e de inspeção estática do repositório. **Atualizado em 27/09/2026:** Prompts 0 a 7 concluídos (o 4 entrou por decisão do grupo; o restante do 6 e o 7 foram feitos em 27/09); a Fase 3 passou a ter três casos, com um concluído, e, por decisão do grupo, os casos das Fases 2 a 4 têm 6h e a dedução vale desde a Fase 2. O estado atual do projeto está sempre em `docs/STATUS_IMPLEMENTACAO_TCC.md`, que prevalece sobre o diagnóstico inicial abaixo.
+
+## Situação dos prompts (27/09/2026)
+
+"Conferido no projeto" quer dizer que o código e os assets pedidos existem de fato na Unity, e não só que o prompt foi marcado como feito. A conferência mais recente (Prompt 7) usou os 88 testes EditMode (todos aprovados), o validador ("Campanha válida", 0 avisos) e Play Mode no Editor.
+
+| Prompt | Tema | Situação | Conferido no projeto | Resultado no STATUS |
+|---|---|---|---|---|
+| Base | Contrato de execução | Usado em todas as etapas | — | — |
+| 0 | Auditoria e plano | **Concluído** (25/09) | Sim: é um documento, sem código | §3 |
+| 1 | Estabilidade da investigação, publicação e save | **Concluído** (25/09) | Sim: testes e Play Mode | §4 e §7 |
+| 2 | Conteúdo e progressão das fases | **Concluído** (25/09). Em 27/09 a Fase 3 passou a ter três casos, com um concluído | Sim: validador, testes e Play Mode | §5 e §15 |
+| 3 | Biblioteca, qualidade e pistas complementares | **Concluído** (25/09) | Sim: testes e Play Mode | §6 |
+| 4 | Dedução ativa e pistas conflitantes | **Concluído** (27/09), incluído por decisão do grupo. Horas decididas no Prompt 7 (6h); desde então vale também na Fase 2 | Sim: testes e Play Mode (Varennes; Réveillon na Fase 2) | §13 e §17 |
+| 5 | Linha editorial | **Concluído** (26/09) | Sim: testes e Play Mode | §10 |
+| 6 | Consequências, rota e tribunal | **Concluído** (26/09 e 27/09) | Sim: testes e Play Mode (escritório e tribunal) | §9 e §14 |
+| 7 | Tutorial, transições e UI integrada | **Concluído** (partes em 26/09; o restante em 27/09), junto com 6h nas Fases 2–4 e dedução desde a Fase 2 | Sim: 88 testes, validador e Play Mode (16:9, 4:3 e celular simulado) | §9 e §17 |
+| 8 | Validação final e entrega revisável | **Não iniciado** | — | será `docs/VALIDACAO_TCC.md` |
+
+Próximo: **Prompt 8**, depois dos testes manuais do STATUS §17.9.
 
 ## Como usar
 
 1. Abra o Claude Code na raiz `Da_pena_a_guilhotina`. O projeto Unity está na subpasta `Unity-DaPenaAGuilhotina`.
 2. Envie o **Prompt base** e peça a leitura de `docs/STATUS_IMPLEMENTACAO_TCC.md`.
-3. Os Prompts 0 a 6 já foram executados. Ordem daqui em diante: **7 → 8**, depois da validação do grupo (STATUS §16.3).
+3. Os Prompts 0 a 7 já foram executados. Falta o **8**, depois dos testes manuais do STATUS §17.9.
 4. Um prompt por vez. Confira o resultado de cada etapa antes da próxima.
 5. Em uma conversa nova, reenvie o prompt base, peça a leitura dos relatórios já gerados e envie somente a próxima etapa.
 6. Não é necessário reenviar os PDFs a cada etapa: os requisitos operacionais estão abaixo. Mantenha os originais como referência para resolver dúvidas.
@@ -15,7 +34,7 @@ As etapas dividem a implementação por dependência e incluem critérios de ace
 
 ## Diagnóstico inicial (25/09/2026, histórico)
 
-Esta seção descreve o projeto antes dos Prompts 1–3 e está desatualizada: biblioteca, save v5, 11 casos, estado persistente de NPCs/loot e revelações de boato já existem. Use o `STATUS_IMPLEMENTACAO_TCC.md` para o estado atual. Todos os caminhos desta seção são relativos a `Unity-DaPenaAGuilhotina`.
+Esta seção descreve o projeto antes dos Prompts 1–3 e está desatualizada: biblioteca, dedução ativa, linha editorial, save v7, 10 casos (tutorial + 9 da campanha), estado persistente de NPCs/loot e revelações de boato já existem. Use o `STATUS_IMPLEMENTACAO_TCC.md` para o estado atual. Todos os caminhos desta seção são relativos a `Unity-DaPenaAGuilhotina`.
 
 | Área | Evidência no projeto | Trabalho indicado |
 |---|---|---|
@@ -53,7 +72,7 @@ Estas são interpretações/propostas deste plano, não novas afirmações conti
 2. **Entrada no tribunal:** prevalece investigar → produzir panfleto → falar com Dupaty → tribunal, e não o salto direto após ler a mesa descrito em outra passagem.
 3. **Cutscene da Fase 3:** a referência a “final da Fase 2” dentro da Fase 3 será tratada como erro de numeração.
 4. **Final C:** definido pelo grupo em 26/09 como **“O Esquecido”**: barras equilibradas, ninguém condena nem defende o jogador, que é apagado da história; a barra dos juízes termina no meio. Os textos em `TribunalManager` seguem provisórios.
-5. **Escopo C:** dedução ativa nas Fases 3 e 4, por caso. A variante de confrontar NPCs com provas fica fora da primeira implementação.
+5. **Escopo C:** dedução ativa nas Fases 3 e 4, por caso; **desde 27/09 (decisão do grupo), também na Fase 2**. A variante de confrontar NPCs com provas fica fora da primeira implementação.
 6. **Escopo D:** linha editorial a partir da Fase 2; tutorial continua com receita simples. Tom não transforma boato em fato.
 7. **Receita expandida:** manter os dois slots de pistas e usar evidências complementares como qualificadores opcionais cadastrados por receita. Não criar quantidade variável de slots nesta primeira versão.
 8. **Campanha:** Fase 2 conclui um de três casos; ~~Fase 3 conclui dois distintos entre quatro~~ Fase 3 conclui um de três (decisão do grupo, 27/09; saiu o caso do Padeiro); Fase 4 recebe exatamente um caso correspondente à rota travada.
@@ -61,8 +80,9 @@ Estas são interpretações/propostas deste plano, não novas afirmações conti
 10. **Valores novos:** preços, bônus, textos e casos ausentes são parâmetros/protótipos editáveis. Reutilizar narrativa existente; conteúdo novo deve ser rotulado como provisório. Não inventar que foi retirado do GDD.
 11. **Destino do jogador e do réu (grupo, 26/09):** pista melhor gera panfleto melhor; as barras decidem o final do jogador (rota); o panfleto do caso da Fase 4 decide o destino do réu (versão Fatos = absolvido; boato, calúnia ou só alegações = condenado). As provas apresentadas no tribunal não mudam nenhum dos dois.
 12. **Revelações (26/09):** as punições de boato são aplicadas no fim da fase por `GameManager.EncerrarFase` (revelações → despesas → avanço/rota) e contadas na cutscene do `FimDeFase`. O script `RevelacaoDeBoatos` foi removido; não o recrie.
+13. **Tempo (27/09, decisão do grupo):** cada caso das Fases 2, 3 e 4 tem **6h** no relógio do jogo (`GameManager.horasPorCaso`), com a mesma conversão de antes: 1h por NPC ou objeto novo, repetir é grátis, 1h a menos com dívida (5h).
 
-Fluxo esperado: tutorial → caso da Fase 2 com tempo limitado → despesas → dois casos da Fase 3 com biblioteca, escolha editorial e, se o Prompt 4 entrar, dedução → consequências e despesas → rota travada → investigação da Fase 4 → Dupaty → tribunal → final da rota e destino do réu.
+Fluxo esperado: tutorial → caso da Fase 2 com 6h e dedução → despesas → um caso da Fase 3 (escolhido entre três) com biblioteca, escolha editorial e dedução → consequências e despesas → rota travada → investigação da Fase 4 (também com dedução) → Dupaty → tribunal → final da rota e destino do réu.
 
 ## Prompt base — contexto e contrato de execução
 
@@ -150,7 +170,7 @@ Não implemente sistemas novos nesta etapa. Entregue um diagnóstico curto e
 uma lista concreta de correções para o Prompt 1, sem replanejar toda a campanha.
 ```
 
-## Prompt 1 — estabilidade da investigação, publicação e save (concluído)
+## Prompt 1 — estabilidade da investigação, publicação e save (concluído em 25/09)
 
 ```text
 Aplicando o prompt base e o diagnóstico, corrija as regras existentes antes de
@@ -184,7 +204,7 @@ revisita após consumo de pista; dois casos no mesmo NPC; duplo clique na prensa
 save antigo e novo; sair e voltar com zero horas. Tutorial deve continuar funcionando.
 ```
 
-## Prompt 2 — completar conteúdo e progressão das fases (concluído)
+## Prompt 2 — completar conteúdo e progressão das fases (concluído em 25/09; Fase 3 revista em 27/09)
 
 Em 27/09 a Fase 3 passou para três casos, com um concluído (decisão do grupo, STATUS §15); o texto abaixo é o pedido original.
 
@@ -225,7 +245,7 @@ na Fase 3; exatamente um caso por rota na Fase 4; nenhuma configuração sem sa�
 com o orçamento mínimo; referências e catálogo válidos após salvar/reabrir.
 ```
 
-## Prompt 3 — biblioteca, qualidade e pistas complementares (concluído)
+## Prompt 3 — biblioteca, qualidade e pistas complementares (concluído em 25/09)
 
 ```text
 Aplicando o prompt base, implemente biblioteca a partir da Fase 3, integrada ao
@@ -262,7 +282,7 @@ exemplo numérico; coexistência com despesas e perda de horas por dívida.
 
 ## Prompt 4 — dedução ativa e pistas conflitantes (C) (concluído em 27/09)
 
-Incluído por decisão do grupo. Resultado, arquivos e testes em `STATUS_IMPLEMENTACAO_TCC.md` §13. Menu de configuração: Ferramentas > Campanha > 5 - Aplicar dedução ativa. Decisão pendente do grupo: horas da dedução (STATUS §13.6).
+Incluído por decisão do grupo. Resultado, arquivos e testes em `STATUS_IMPLEMENTACAO_TCC.md` §13. Menu de configuração: Ferramentas > Campanha > 5 - Aplicar dedução ativa. Horas decididas em 27/09 (6h nas Fases 2 a 4) e dedução estendida à Fase 2 junto com o Prompt 7 (STATUS §17); o texto abaixo é o pedido original, só para as Fases 3 e 4.
 
 ```text
 Aplicando o prompt base, implemente dedução ativa por caso nas Fases 3 e 4.
@@ -385,9 +405,9 @@ antes da rota; repetição de cena/save; três rotas completas com ordens distin
 de provas; Fase 4 alterando barras sem recalcular o final; saída da prensa ocupada.
 ```
 
-## Prompt 7 — tutorial, transições e UI integrada
+## Prompt 7 — tutorial, transições e UI integrada (concluído em 27/09)
 
-Já feito em 26/09 (não refazer; ver STATUS §9): tutorial de status ao abrir a prensa, com o HUD piscando e etapas que pulam ações já feitas; fade de cena acima de toda a UI (ordem 1000) e cutscenes de início de cena que já nascem pretas (o cenário não pisca); textos do tutorial verificados em PC e celular; pop-up abaixo do relógio; botão Biblioteca escondido com a mesa aberta; ícone de interação nas Fases 2–4; som da porta (`event:/portaabrir`) e do alçapão (`event:/bauabrir`). O que resta: Marie ausente depois de save/load, dicas de primeira vez para despesas/biblioteca/tom/dedução, texto da dica de fato/boato (ainda fala em "procurar outra fonte que confirme"; STATUS §13.6), sequência de modais abertos (o Quadro de pistas já existe e usa `JanelasModais`) e revisão de resoluções e área segura.
+Feito em 26/09 (STATUS §9): tutorial de status ao abrir a prensa, com o HUD piscando e etapas que pulam ações já feitas; fade de cena acima de toda a UI (ordem 1000) e cutscenes de início de cena que já nascem pretas (o cenário não pisca); textos do tutorial verificados em PC e celular; pop-up abaixo do relógio; botão Biblioteca escondido com a mesa aberta; ícone de interação nas Fases 2–4; som da porta (`event:/portaabrir`) e do alçapão (`event:/bauabrir`). Feito em 27/09 (STATUS §17): Marie ausente pela regra de progresso (também depois de carregar), dicas de primeira vez em fila (despesas, Biblioteca, dedução, linha editorial; fato/boato reescrita), pause que não abre sob cutscene, Mesa de Casos modal e ajustada à tela, UI em "Expand" para telas estreitas, etapa "fale com Dupaty" só com conversa de NPC e pensamentos corretos no alçapão. Junto: 6h nas Fases 2–4 e dedução desde a Fase 2 (Ferramentas > Campanha > 5 e 7). O que ainda exige teste manual está em STATUS §17.9.
 
 ```text
 Aplicando o prompt base, feche lacunas de apresentação e integração. Reutilize
@@ -419,14 +439,14 @@ touch sem hover obrigatório; múltiplas notificações; continuar sem repetir d
 novo jogo zerando progresso; áudio/fade sem carregamento duplicado.
 ```
 
-## Prompt 8 — validação final e entrega revisável
+## Prompt 8 — validação final e entrega revisável (não iniciado)
 
 ```text
 Aplicando o prompt base, valide a campanha integrada, corrigindo defeitos dentro
 do escopo. Não adicione novas mecânicas nem reescreva sistemas que já passaram.
 
 1. Rode compilação Unity e testes pertinentes disponíveis. Execute Play Mode para
-   tutorial, um caso da Fase 2, dois casos da Fase 3, investigação final e tribunal.
+   tutorial, um caso da Fase 2, o caso da Fase 3, investigação final e tribunal.
    Exercite as três rotas com estados controlados sem depender de jogar três
    campanhas inteiras para cada correção.
 2. Verifique que rotas A/B/C são alcançáveis com combinações reais de decisões,

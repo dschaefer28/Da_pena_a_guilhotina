@@ -109,22 +109,26 @@ public static class CampanhaSetupTool
     // estes; um asset editado no Inspector não é tocado. itemID -> { nome, fonte, descrição }.
     private static readonly Dictionary<string, string[]> TextosRevisados = new Dictionary<string, string[]>
     {
+        // Fase 2 — dedução ativa desde o Prompt 7 (27/09): como nas Fases 3 e 4, fato do cliente × boato e fato do
+        // objeto × calúnia, e em cada par só uma afirmação é verdadeira. Os fatos ficaram como estavam (os das Joias são do
+        // roteiro do grupo); o boato e a calúnia de cada caso foram reescritos para contradizer o fato do mesmo assunto.
+        // Os textos anteriores estão em DeducaoSetupTool, que migra os assets que ainda os tinham.
         // Fase 2 — Joias
         // Roteiro "O colar da rainha" (27/09): as duas pistas vêm do joalheiro; a 2ª deixou de ser achada na taverna.
         { "pista_joias_1", new[] { "Registro de compra", "Livro de vendas do joalheiro.", "Cópia da venda do colar em nome da rainha, negociada por um cardeal e uma intermediária. O joalheiro afirma que a rainha não compareceu." } },
         { "pista_joias_2", new[] { "Assinatura da encomenda", "Cópia da encomenda fornecida pelo joalheiro.", "A encomenda traz ‘Marie Antoinette de France’, enquanto os documentos oficiais citados na investigação usam ‘Marie Antoinette’. A diferença põe a autorização em dúvida." } },
-        { "pista_joias_boato", new[] { "O segredo da Rainha", "Gazeteiro da esquina", "Segundo o gazeteiro, a Rainha encomendou o colar escondida do Rei e depois negou tudo." } },
-        { "pista_joias_calunia", new[] { "A Rainha e o Cardeal", "Cartaz sem assinatura", "Folha afixada no muro: a Rainha e o Cardeal são amantes e dividiram o colar entre si." } },
+        { "pista_joias_boato", new[] { "O segredo da Rainha", "Gazeteiro da esquina", "Segundo o gazeteiro, a própria Rainha compareceu à loja, disfarçada, para escolher o colar escondida do Rei, e depois negou tudo." } },
+        { "pista_joias_calunia", new[] { "A Rainha e o Cardeal", "Cartaz sem assinatura", "Folha afixada no muro: a Rainha assinou a encomenda de próprio punho, como assina tudo, para dar o colar ao Cardeal, seu amante." } },
         // Fase 2 — Réveillon
         { "pista_jean_1", new[] { "O discurso na assembleia", "Ata da assembleia eleitoral", "Ata da assembleia do distrito: Réveillon propôs baixar os salários e o preço do pão ao mesmo tempo; não disse que o povo devia passar fome." } },
         { "pista_jean_2", new[] { "Os salários da manufatura", "Gazeta vendida na banca", "Cópia do livro de salários publicada por uma gazeta: Réveillon pagava acima da média do bairro e manteve os salários no inverno." } },
-        { "pista_jean_boato", new[] { "A ordem de atirar", "Conversa de operários", "Segundo os operários, foi o próprio Réveillon quem pediu à Guarda que atirasse na multidão." } },
-        { "pista_jean_calunia", new[] { "O dinheiro inglês", "Folha anônima vendida na rua", "Folha vendida pelo gazeteiro: Réveillon recebe dinheiro da Inglaterra para matar Paris de fome." } },
+        { "pista_jean_boato", new[] { "Os quinze soldos", "Conversa de operários", "Segundo os operários, Réveillon disse na assembleia que um operário vive muito bem com quinze soldos por dia e pediu só o corte dos salários, sem uma palavra sobre o pão." } },
+        { "pista_jean_calunia", new[] { "O dinheiro inglês", "Folha anônima vendida na rua", "Folha vendida pelo gazeteiro: no inverno, Réveillon cortou pela metade o salário da manufatura e mandou a diferença para a Inglaterra, que lhe paga para matar Paris de fome." } },
         // Fase 2 — Operário
         { "pista_operario_1", new[] { "O relato do sobrevivente", "O próprio operário", "Segundo o operário, a Guarda Francesa atirou contra a multidão desarmada que pedia pão e salário." } },
         { "pista_operario_2", new[] { "A ordem do comandante", "Cartaz arrancado de um muro", "Cartaz com a ordem do comandante: 'dispersar a multidão por todos os meios', afixado antes de qualquer violência." } },
-        { "pista_operario_boato", new[] { "Os agitadores do duque", "Jean-Baptiste Réveillon", "Segundo Réveillon, agitadores pagos pelo duque de Orléans distribuíram dinheiro à multidão na véspera." } },
-        { "pista_operario_calunia", new[] { "O fogo na fábrica", "Bilhete sem assinatura", "Bilhete deixado na taverna: foi o operário quem ateou fogo à fábrica com as próprias mãos." } },
+        { "pista_operario_boato", new[] { "Os agitadores do duque", "Jean-Baptiste Réveillon", "Segundo Réveillon, ninguém ali pedia pão: a multidão veio armada, paga na véspera por agitadores do duque de Orléans, e a Guarda só atirou para se defender." } },
+        { "pista_operario_calunia", new[] { "O fogo na fábrica", "Bilhete sem assinatura", "Bilhete deixado na taverna: a Guarda só recebeu ordem de agir depois que o operário ateou fogo à fábrica com as próprias mãos." } },
         // Fases 3 e 4 — dedução ativa (Prompt 4, 27/09): cada caso tem dois pares de afirmações contraditórias, e
         // em cada par só uma é verdadeira. Fato do cliente × boato; fato do objeto × calúnia. Os textos de antes
         // (25/09) estão em DeducaoSetupTool, que migra os assets que ainda os tinham.
@@ -178,9 +182,27 @@ public static class CampanhaSetupTool
     {
         { "O incêndio começou com a Guarda, não com o operário. A calúnia manchou o nome da tipografia.",
           "Ninguém provou que o operário ateou fogo à fábrica: a acusação era anônima e falsa, e manchou o nome da tipografia." },
-        { "Descobriu-se que Réveillon nunca chamou a Guarda. O boato impresso desmoronou.",
-          "Não se provou que Réveillon mandou a Guarda atirar: ele pediu proteção, não o fogo. O boato impresso desmoronou." },
+        // Prompt 7: o boato de Réveillon passou a ser o dos "quinze soldos" (par com o discurso na assembleia).
+        { "Descobriu-se que Réveillon nunca chamou a Guarda. O boato impresso desmoronou.", RevelacaoDoBoatoDeReveillon },
+        { "Não se provou que Réveillon mandou a Guarda atirar: ele pediu proteção, não o fogo. O boato impresso desmoronou.", RevelacaoDoBoatoDeReveillon },
     };
+
+    /// <summary>Revelação da versão Com Boato do Caso de Réveillon desde o Prompt 7 (a ferramenta de dedução migra o asset).</summary>
+    internal const string RevelacaoDoBoatoDeReveillon =
+        "A ata da assembleia desmentiu o boato: Réveillon nunca disse que um operário vive com quinze soldos, e pediu o pão mais " +
+        "barato junto com o corte. O panfleto que o repetiu desmoronou.";
+
+    // Prompt 7 (Fase 2 com dedução): nas Fases 3 e 4 o cliente cita, na fala, quem espalha o boato. Na Fase 2 as falas dos
+    // clientes são do roteiro do grupo, então a pista vai na carta do cliente (alegação), que o jogador lê ao aceitar o caso.
+    private static readonly Dictionary<string, string> AlegacoesComPista = new Dictionary<string, string>
+    {
+        { "alegacao_joias_1", "O joalheiro jura que acreditou estar negociando com a Rainha, e reclama que o gazeteiro da esquina conta outra história." },
+        { "alegacao_jean_1", "Réveillon garante que suas palavras na assembleia foram distorcidas, e que os operários repetem a versão errada." },
+        { "alegacao_operario_2", "Ele afirma que a Guarda abriu fogo antes de qualquer pedra ser atirada, e que o próprio Réveillon anda contando outra versão." },
+    };
+
+    internal static string AlegacaoComPista(string itemID) =>
+        AlegacoesComPista.TryGetValue(itemID, out string texto) ? texto : null;
 
     // Estimativas da mesa (Fase 2, anteriores ao Prompt 2) alinhadas à versão Fatos da receita:
     // caso -> { ouro, povo, estado antigos } -> { novos }.
@@ -211,8 +233,9 @@ public static class CampanhaSetupTool
                 "Folha anônima: 'A Austríaca e o Cardeal eram amantes e dividiram o colar'."),
             alegacoes = new[]
             {
+                // Prompt 7: a carta do cliente aponta quem espalha o boato (as falas do joalheiro são do roteiro do grupo).
                 new P(Item(F, "Alegacao_Joias_1"), "alegacao_joias_1", "Carta do joalheiro: fui enganado", Confiabilidade.Boato, "Carta do cliente",
-                    "O joalheiro jura que acreditou estar negociando com a Rainha."),
+                    AlegacaoComPista("alegacao_joias_1")),
                 new P(Item(F, "Alegacao_Joias_2"), "alegacao_joias_2", "Carta do joalheiro: a Coroa me deve", Confiabilidade.Boato, "Carta do cliente",
                     "Ele afirma que a Coroa deveria pagar o colar, já que a fraude usou o nome da Rainha."),
             },
@@ -235,7 +258,7 @@ public static class CampanhaSetupTool
             alegacoes = new[]
             {
                 new P(Item(F, "Alegacao_Jean_1"), "alegacao_jean_1", "Carta de Réveillon: fui mal entendido", Confiabilidade.Boato, "Carta do cliente",
-                    "Réveillon garante que suas palavras foram distorcidas pelos inimigos."),
+                    AlegacaoComPista("alegacao_jean_1")),
                 new P(Item(F, "Alegacao_Jean_2"), "alegacao_jean_2", "Carta de Réveillon: nunca quis o mal deles", Confiabilidade.Boato, "Carta do cliente",
                     "Ele afirma que sempre tratou bem os seus operários."),
             },
@@ -260,7 +283,7 @@ public static class CampanhaSetupTool
                 new P(Item(F, "Alegacao_Operario_1"), "alegacao_operario_1", "Carta do operário: só queríamos pão", Confiabilidade.Boato, "Carta do cliente",
                     "O operário jura que a multidão só pedia comida e salário."),
                 new P(Item(F, "Alegacao_Operario_2"), "alegacao_operario_2", "Carta do operário: atiraram primeiro", Confiabilidade.Boato, "Carta do cliente",
-                    "Ele afirma que a Guarda abriu fogo antes de qualquer pedra ser atirada."),
+                    AlegacaoComPista("alegacao_operario_2")),
             },
             comBoato = new V(0, 0, 0, revelacao: "Nenhum agitador pago foi encontrado. O boato publicado pela tipografia não se sustentou."),
             comCalunia = new V(0, 0, 0, revelacao: "O incêndio começou com a Guarda, não com o operário. A calúnia manchou o nome da tipografia."),
@@ -276,14 +299,22 @@ public static class CampanhaSetupTool
         Npcs.Add(new N { cena = F, id = "Gazeteiro", nome = "Gazeteiro", falante = "Gazeteiro", x = 0f, cor = new Color(0.85f, 0.75f, 0.45f),
             padrao = new[] { "Gazetas! Notícias de Versalhes! Sobre isso não ouvi nada que valha um soldo." } });
 
+        // Dedução ativa (Prompt 7): quem espalha o boato aponta os objetos da cena (o do fato, quando há, e o da calúnia).
         Reacoes.Add(new R { npc = "Gazeteiro", caso = Caso("Caso_Joalheiro"), item = Item(F, "Pista_Joias_Boato"),
-            falas = new[] { "O colar? Nas tavernas só se fala disso!", "Dizem que a própria Rainha o encomendou escondida do Rei, e depois fingiu não saber de nada." } });
+            falas = new[] { "O colar? Nas tavernas só se fala disso!",
+                            "Dizem que a própria Rainha foi à loja, disfarçada, escolher o colar escondida do Rei. Depois negou tudo.",
+                            "E no muro de cartazes colaram uma folha contando coisa pior, sobre ela e o Cardeal." } });
         Reacoes.Add(new R { npc = "Gazeteiro", caso = Caso("Caso_Reveillon"), item = Item(F, "Pista_Jean_Calunia"),
-            falas = new[] { "Réveillon? Tenho aqui uma folha que vende como pão quente.", "Diz que ele é pago pelos ingleses para matar Paris de fome. Leve, é sua." } });
+            falas = new[] { "Réveillon? Tenho aqui uma folha que vende como pão quente.",
+                            "Diz que no inverno ele cortou pela metade o salário da manufatura e mandou a diferença para os ingleses. Leve, é sua." } });
         Reacoes.Add(new R { npc = "Operario", caso = Caso("Caso_Reveillon"), item = Item(F, "Pista_Jean_Boato"),
-            falas = new[] { "Aquele homem? Todo mundo sabe que foi ele quem chamou a Guarda para atirar na gente!" } });
+            falas = new[] { "Aquele homem? Disse na assembleia que um operário vive muito bem com quinze soldos por dia!",
+                            "Só queria cortar o nosso salário. Do pão, nem uma palavra.",
+                            "Na banca de panfletos vendem uma gazeta com as contas da manufatura, e o gazeteiro da esquina tem uma folha ainda pior sobre ele." } });
         Reacoes.Add(new R { npc = "Jean-Baptiste Réveillon", caso = Caso("Caso_Operario"), item = Item(F, "Pista_Operario_Boato"),
-            falas = new[] { "Aqueles homens não estavam com fome, estavam pagos!", "Agitadores do duque de Orléans distribuíram dinheiro na véspera. Anote isso." } });
+            falas = new[] { "Aqueles homens não pediam pão: vieram armados, pagos na véspera por agitadores do duque de Orléans!",
+                            "A Guarda só atirou para se defender. Anote isso.",
+                            "Colaram a ordem da Guarda no muro de cartazes, e na mesa da taverna deixaram um bilhete sobre o incêndio da minha fábrica. Cada um conta de um jeito." } });
 
         Loots.Add(new L { cena = F, id = "BancaDePanfletos", nome = "Banca de Panfletos", sprite = SpriteDocumento, x = -12f, y = 0f, escala = 0.2f,
             porCaso = { { Caso("Caso_Reveillon"), SO + "Item_Jean2.asset" } } });

@@ -1462,6 +1462,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 917d88bbcfe670d4ea21a881e3662a0b, type: 2}
   - {fileID: 11400000, guid: 08a12328210a2ab45b8948af72c05f4e, type: 2}
   - {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
+  ajustarATela: 1
+  margemDaTela: 24
 --- !u!1 &3086300781726054884
 GameObject:
   m_ObjectHideFlags: 0
@@ -1660,7 +1662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 759c9a2dc64856848b60661cde89bb1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuadroDeDeducaoUI
-  faseMinima: 3
+  faseMinima: 2
   fonte: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
   rotuloDoBotao: Quadro de pistas
   regras: "Cada pista deste quadro tem uma afirma\xE7\xE3o contr\xE1ria no mesmo
@@ -2748,7 +2750,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96

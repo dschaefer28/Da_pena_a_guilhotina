@@ -27,8 +27,9 @@ MonoBehaviour:
     povo: -25
     estado: 60
     ouro: 70
-    textoRevelacao: "N\xE3o se provou que R\xE9veillon mandou a Guarda atirar: ele
-      pediu prote\xE7\xE3o, n\xE3o o fogo. O boato impresso desmoronou."
+    textoRevelacao: "A ata da assembleia desmentiu o boato: R\xE9veillon nunca disse
+      que um oper\xE1rio vive com quinze soldos, e pediu o p\xE3o mais barato junto
+      com o corte. O panfleto que o repetiu desmoronou."
     penalidadePovo: -10
     penalidadeEstado: -25
   calunia:

@@ -70,7 +70,7 @@ public class TutorialManager : MonoBehaviour
     public static TutorialManager Instance { get; private set; }
 
     // Nomes de eventos prontos para usar no campo "Nome Do Evento" das etapas.
-    public const string EVENTO_DIALOGO_FINALIZADO = "dialogo_finalizado";
+    public const string EVENTO_DIALOGO_FINALIZADO = "dialogo_finalizado"; // fim de conversa com NPC (NPCMovement), não de pensamentos
     public const string EVENTO_ITEM_RECEBIDO = "item_recebido";
     public const string EVENTO_PANFLETO_GERADO = "panfleto_gerado";
     public const string EVENTO_INVENTARIO_ALTERNADO = "inventario_alternado";
@@ -84,6 +84,11 @@ public class TutorialManager : MonoBehaviour
     public const string CHAVE_TUTORIAL_CONCLUIDO = "tutorial_concluido";
     public const string CHAVE_DICA_FATO_BOATO = "dica_fato_boato_vista";
     public const string CHAVE_DICA_TEMPO = "dica_tempo_vista";
+    // Dicas de primeira vez do Prompt 7 (mesmo tratamento: uma vez por partida, zeradas no Novo Jogo, levadas no save).
+    public const string CHAVE_DICA_DESPESAS = "dica_despesas_vista";
+    public const string CHAVE_DICA_BIBLIOTECA = "dica_biblioteca_vista";
+    public const string CHAVE_DICA_DEDUCAO = "dica_deducao_vista";
+    public const string CHAVE_DICA_LINHA_EDITORIAL = "dica_linha_editorial_vista";
 
     [Header("Configuração")]
     [Tooltip("Marque para o tutorial rodar de novo mesmo que já tenha sido concluído antes " +
@@ -94,18 +99,49 @@ public class TutorialManager : MonoBehaviour
     [Tooltip("Distância (em unidades do mundo) que o jogador precisa andar para a etapa de movimento avançar.")]
     [Min(0.1f)] public float distanciaParaAndou = 1.5f;
 
+    /// <summary>Texto padrão da dica de Fato x Boato desde o Prompt 7 (com a dedução desde a Fase 2, o jeito de checar uma
+    /// pista é compará-la com a afirmação contrária no quadro, não "procurar outra fonte que confirme").</summary>
+    public const string DicaFatoBoatoPadrao =
+        "Nem toda pista é verdade. No inventário, {apontar} uma pista para ler o que ela afirma e quem contou. " +
+        "Uma pista \"não verificada\" pode ser boato: compare-a com a afirmação contrária no Quadro de pistas antes de imprimir.";
+
     [Header("Dicas contextuais (aparecem uma vez, fora do roteiro)")]
     [TextArea(3, 5)]
-    [Tooltip("Mostrada na primeira vez que o jogador recebe uma pista de caso (mecânica Fato x Boato, Fase 2).")]
-    public string dicaFatoBoato =
-        "Nem toda pista é verdade. No inventário, {apontar} uma pista para ler quem contou. " +
-        "Pistas \"não verificadas\" podem ser boatos: procure outra fonte que confirme antes de imprimir.";
+    [Tooltip("Mostrada na primeira vez que o jogador recebe uma pista de caso (mecânica Fato x Boato, Fase 2). " +
+             "Não revela a verdade de nenhuma pista: só diz como descobrir.")]
+    public string dicaFatoBoato = DicaFatoBoatoPadrao;
 
     [TextArea(3, 5)]
     [Tooltip("Mostrada na primeira investigação com o relógio ativo (RelogioDeInvestigacao).")]
     public string dicaTempo =
         "O dia é curto. Cada pessoa com quem você conversa e cada lugar que vasculha gasta horas (veja no alto da tela). " +
         "Falar de novo com quem já ouviu não custa nada. Escolha bem: não dá tempo de investigar tudo.";
+
+    [TextArea(3, 5)]
+    [Tooltip("Mostrada na primeira pista que entra num quadro de dedução (Fases 2 a 4).")]
+    public string dicaDeducao =
+        "Esta pista entrou no Quadro de pistas (botão no alto, à direita). Cada afirmação do caso tem uma contrária, e só " +
+        "uma das duas é verdadeira. Marque o que parece confiável ou duvidoso e confira: o quadro só diz se está tudo certo. " +
+        "Dá para imprimir sem conferir.";
+
+    [TextArea(3, 5)]
+    [Tooltip("Mostrada depois da primeira cobrança de despesas no fim de uma fase (FimDeFase).")]
+    public string dicaDespesas =
+        "Todo fim de período a tipografia paga aluguel, papel e tinta com o seu ouro. Se não bastar, você fica devendo: " +
+        "enquanto houver dívida, cada caso novo começa com menos horas de investigação.";
+
+    [TextArea(3, 5)]
+    [Tooltip("Mostrada quando o botão da Biblioteca aparece pela primeira vez (Fase 3).")]
+    public string dicaBiblioteca =
+        "A Biblioteca abriu (botão no alto, à direita). Com ouro, você compra documentos de apoio para o caso aceito: eles vão " +
+        "no campo Suporte da prensa e reforçam o panfleto. Não substituem as duas pistas, não dizem qual é verdadeira e não são vendidos fiado.";
+
+    [TextArea(3, 5)]
+    [Tooltip("Mostrada na primeira vez que a prensa abre com um caso que pede linha editorial (Fase 2 em diante).")]
+    public string dicaLinhaEditorial =
+        "Agora a prensa pede uma linha editorial: ao apertar Misturar, você escolhe o tom do panfleto. O tom muda o quanto " +
+        "ele move o Povo, o Estado e o ouro, nunca a verdade das pistas. O sensacionalista vende mais, mas, se algo for falso, " +
+        "o desmentido pesa mais.";
 
     [Header("Etapas do Tutorial (em ordem)")]
     [Tooltip("Este roteiro é o padrão para um TutorialManager novo. A cena 'Jogo' já tem sua própria lista " +
@@ -251,8 +287,21 @@ public class TutorialManager : MonoBehaviour
     /// <summary>Pedido de dica contextual (texto já com marcadores). O TutorialStepUI da cena mostra no popup.</summary>
     public event Action<string> OnDicaSolicitada;
 
+    // Dicas pedidas e ainda não fechadas pelo jogador, na ordem do pedido. Ficam aqui (objeto persistente) e não no
+    // popup da cena: duas dicas pedidas juntas (ex.: despesas e Biblioteca na virada da Fase 3) aparecem uma depois da
+    // outra, e uma dica que não chegou a ser fechada volta na cena seguinte em vez de se perder.
+    private readonly List<string> dicasNaFila = new List<string>();
+
+    /// <summary>Dica que o popup deve mostrar agora (a mais antiga ainda não fechada), ou null.</summary>
+    public string DicaPendente => dicasNaFila.Count > 0 ? dicasNaFila[0] : null;
+
+    /// <summary>O jogador fechou a dica que estava na tela: a próxima da fila (se houver) pode aparecer.</summary>
+    public void ConcluirDica()
+    {
+        if (dicasNaFila.Count > 0) dicasNaFila.RemoveAt(0);
+    }
+
     private int indiceAtual = -1;
-    private DialogueSystem dialogueSystemAtual;
     private InventoryManager inventoryManagerAtual;
     private CraftingPress craftingPressAtual;
     private Transform jogador;
@@ -357,7 +406,6 @@ public class TutorialManager : MonoBehaviour
 
     private void VincularDependenciasLocais()
     {
-        if (dialogueSystemAtual != null) dialogueSystemAtual.OnDialogueEnded -= HandleDialogoFinalizado;
         if (inventoryManagerAtual != null)
         {
             inventoryManagerAtual.OnItemAdicionado -= HandleItemAdicionado;
@@ -366,13 +414,11 @@ public class TutorialManager : MonoBehaviour
         }
         if (craftingPressAtual != null) craftingPressAtual.OnPanfletoGerado -= HandlePanfletoGerado;
 
-        dialogueSystemAtual = GameManager.Instance != null ? GameManager.Instance.dialogueSystem : FindAnyObjectByType<DialogueSystem>(FindObjectsInactive.Include);
         inventoryManagerAtual = GameManager.Instance != null ? GameManager.Instance.inventoryManager : FindAnyObjectByType<InventoryManager>(FindObjectsInactive.Include);
         // O painel da prensa começa desativado na cena: sem "Include" a busca voltava null, o tutorial
         // nunca ouvia OnPanfletoGerado e travava na etapa "misturar_itens".
         craftingPressAtual = FindAnyObjectByType<CraftingPress>(FindObjectsInactive.Include);
 
-        if (dialogueSystemAtual != null) dialogueSystemAtual.OnDialogueEnded += HandleDialogoFinalizado;
         if (inventoryManagerAtual != null)
         {
             inventoryManagerAtual.OnItemAdicionado += HandleItemAdicionado;
@@ -404,13 +450,18 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    private void HandleDialogoFinalizado() => NotificarEvento(EVENTO_DIALOGO_FINALIZADO);
+    /// <summary>Fim de uma conversa com NPC (chamado pelo NPCMovement). Só conversas contam para "fale com ... até o fim":
+    /// antes o evento vinha do fim de QUALQUER diálogo, e o pensamento do protagonista no alçapão (ou na porta, na mesa)
+    /// concluía a etapa de falar com Dupaty sem conversa nenhuma.</summary>
+    public void NotificarConversaComNpcTerminada() => NotificarEvento(EVENTO_DIALOGO_FINALIZADO);
     private void HandlePanfletoGerado() => NotificarEvento(EVENTO_PANFLETO_GERADO);
 
     private void HandleItemAdicionado(Item item)
     {
         NotificarEvento(EVENTO_ITEM_RECEBIDO);
         if (item != null && item.EhPista) SolicitarDicaUmaVez(CHAVE_DICA_FATO_BOATO, dicaFatoBoato);
+        // Primeira pista de um quadro de dedução: é quando o Quadro de pistas passa a ter o que mostrar.
+        if (Deducao.NoConjunto(item)) SolicitarDicaUmaVez(CHAVE_DICA_DEDUCAO, dicaDeducao);
     }
 
     // Entradas da prensa cheias / panfleto guardado no inventário: os dois só existem como mudança de slot.
@@ -431,12 +482,15 @@ public class TutorialManager : MonoBehaviour
             NotificarEvento(EVENTO_PANFLETO_GUARDADO);
     }
 
-    /// <summary>Dica contextual fora do roteiro (ex: Fato x Boato na Fase 2): mostrada uma única vez por save.</summary>
+    /// <summary>Dica contextual fora do roteiro (ex: Fato x Boato na Fase 2): mostrada uma única vez por partida.
+    /// A chave é marcada já no pedido (vai no próximo save, e o Continuar não a repete); o texto entra na fila e o
+    /// popup da cena o mostra assim que a tela estiver livre (sem conversa, cutscene, pause ou janela aberta).</summary>
     public void SolicitarDicaUmaVez(string chave, string texto)
     {
-        if (string.IsNullOrWhiteSpace(texto) || PlayerPrefs.GetInt(chave, 0) == 1) return;
+        if (string.IsNullOrWhiteSpace(texto) || string.IsNullOrEmpty(chave) || PlayerPrefs.GetInt(chave, 0) == 1) return;
         PlayerPrefs.SetInt(chave, 1);
         PlayerPrefs.Save();
+        dicasNaFila.Add(texto);
         OnDicaSolicitada?.Invoke(texto);
     }
     // Dispara tanto ao abrir quanto ao fechar o inventário — o mesmo comportamento que o botão de

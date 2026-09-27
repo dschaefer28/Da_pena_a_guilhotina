@@ -16,8 +16,9 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
   itemName: "O dinheiro ingl\xEAs"
-  descricao: "Folha vendida pelo gazeteiro: R\xE9veillon recebe dinheiro da Inglaterra
-    para matar Paris de fome."
+  descricao: "Folha vendida pelo gazeteiro: no inverno, R\xE9veillon cortou pela
+    metade o sal\xE1rio da manufatura e mandou a diferen\xE7a para a Inglaterra,
+    que lhe paga para matar Paris de fome."
   fonte: "Folha an\xF4nima vendida na rua"
   caso: {fileID: 11400000, guid: 5c0733705941aa94db8fdec6796223e7, type: 2}
   confiabilidade: 3

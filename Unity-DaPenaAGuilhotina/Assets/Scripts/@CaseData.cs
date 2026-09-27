@@ -47,7 +47,7 @@ public class CaseData : ScriptableObject
              "Use itens do próprio caso com confiabilidade Boato e fonte 'Carta do cliente'. Arquivadas ao concluir o caso.")]
     public List<Item> alegacoesIniciais = new List<Item>();
 
-    [Header("Dedução ativa (Prompt 4, Fases 3 e 4)")]
+    [Header("Dedução ativa (Prompt 4; Fases 2, 3 e 4)")]
     [Tooltip("Pares de pistas contraditórias do caso e o quadro de dedução. Configurado por Ferramentas > Campanha > " +
              "5 - Aplicar dedução ativa. Desligada = comportamento antigo (a verdade aparece com Verificada Por).")]
     public ConfiguracaoDeDeducao deducao = new ConfiguracaoDeDeducao();

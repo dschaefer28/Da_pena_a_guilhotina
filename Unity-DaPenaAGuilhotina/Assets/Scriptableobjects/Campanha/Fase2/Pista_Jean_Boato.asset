@@ -15,9 +15,10 @@ MonoBehaviour:
   itemID: pista_jean_boato
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: A ordem de atirar
-  descricao: "Segundo os oper\xE1rios, foi o pr\xF3prio R\xE9veillon quem pediu \xE0
-    Guarda que atirasse na multid\xE3o."
+  itemName: Os quinze soldos
+  descricao: "Segundo os oper\xE1rios, R\xE9veillon disse na assembleia que um oper\xE1rio
+    vive muito bem com quinze soldos por dia e pediu s\xF3 o corte dos sal\xE1rios,
+    sem uma palavra sobre o p\xE3o."
   fonte: "Conversa de oper\xE1rios"
   caso: {fileID: 11400000, guid: 5c0733705941aa94db8fdec6796223e7, type: 2}
   confiabilidade: 2

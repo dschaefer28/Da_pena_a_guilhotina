@@ -9,12 +9,16 @@ using UnityEngine;
 /// </summary>
 public static class ProgressoDoJogo
 {
-    /// <summary>Chaves do PlayerPrefs que pertencem a uma partida (não inclui opções como volume).</summary>
+    /// <summary>Chaves do PlayerPrefs que pertencem a uma partida (não inclui opções como volume e velocidade do texto).</summary>
     public static readonly string[] ChavesDaPartida =
     {
         TutorialManager.CHAVE_TUTORIAL_CONCLUIDO,
         TutorialManager.CHAVE_DICA_FATO_BOATO,
         TutorialManager.CHAVE_DICA_TEMPO,
+        TutorialManager.CHAVE_DICA_DESPESAS,
+        TutorialManager.CHAVE_DICA_BIBLIOTECA,
+        TutorialManager.CHAVE_DICA_DEDUCAO,
+        TutorialManager.CHAVE_DICA_LINHA_EDITORIAL,
         IntroCutscene.Chave,
         Fase1Desfecho.Chave
     };

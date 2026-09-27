@@ -89,6 +89,10 @@ public class PlayerInteraction : MonoBehaviour
 
     public void InteractMobile()
     {
+        // Pause aberto: nem o mundo nem a conversa por trás dele respondem ao Interagir (antes o E avançava o diálogo
+        // escondido pelo menu).
+        if (PauseMenu.Instance != null && PauseMenu.Instance.IsOpen) return;
+
         // Diálogo em andamento: o mesmo botão/tecla avança a conversa.
         var dialogo = GameManager.Instance != null ? GameManager.Instance.dialogueSystem : null;
         if (dialogo != null && dialogo.IsDialogueActive)

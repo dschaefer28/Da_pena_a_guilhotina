@@ -6,7 +6,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// Quadro de dedução (Prompt 4, proposta C, Fases 3 e 4): botão na HUD enquanto o caso em andamento tiver dedução ativa.
+/// Quadro de dedução (Prompt 4, proposta C; desde o Prompt 7, Fases 2, 3 e 4): botão na HUD enquanto o caso em andamento
+/// tiver dedução ativa.
 /// A janela lista só as pistas do conjunto do caso que o jogador já descobriu (mesmo as gastas na prensa), com fonte,
 /// descrição, a afirmação contrária (quando as duas do par já foram achadas) e a hipótese do jogador: Confiável,
 /// Duvidosa ou sem marca. "Conferir dedução" confirma só se TODO o conjunto estiver descoberto e bem marcado; qualquer
@@ -18,8 +19,9 @@ using UnityEngine.UI;
 /// </summary>
 public class QuadroDeDeducaoUI : MonoBehaviour
 {
-    [Tooltip("O botão do quadro aparece a partir desta fase (e só com um caso de dedução ativa em andamento).")]
-    [Range(1, GameManager.UltimaFase)] public int faseMinima = 3;
+    [Tooltip("O botão do quadro aparece a partir desta fase (e só com um caso de dedução ativa em andamento). " +
+             "Decisão do grupo (27/09): a dedução vale desde a Fase 2.")]
+    [Range(1, GameManager.UltimaFase)] public int faseMinima = 2;
     public TMP_FontAsset fonte;
 
     [Header("Textos (provisórios, editáveis)")]
@@ -45,6 +47,8 @@ public class QuadroDeDeducaoUI : MonoBehaviour
     private static readonly Color CorMarcado = new Color(0.62f, 0.46f, 0.22f, 1f);
 
     private RectTransform botaoAbrir;
+    private BibliotecaUI biblioteca;
+    private bool noLugarDaBiblioteca;
     private GameObject janela;
     private RectTransform lista;
     private TextMeshProUGUI textoCaso;
@@ -94,7 +98,14 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         bool visivel = Disponivel && !outroModal;
         if (botaoAbrir != null && botaoAbrir.gameObject.activeSelf != (visivel && !Aberto))
             botaoAbrir.gameObject.SetActive(visivel && !Aberto);
-        if (botaoAbrir != null && Screen.safeArea != ultimaArea) AplicarAreaSegura();
+        // Na fase sem Biblioteca (Fase 2) o botão sobe para o lugar dela: nada de buraco no canto da tela. A troca segue a
+        // fase, não a visibilidade do botão da Biblioteca, para ele não pular de lugar quando um painel abre.
+        bool semBiblioteca = gm != null && (biblioteca == null || gm.faseAtual < biblioteca.faseMinima);
+        if (botaoAbrir != null && (Screen.safeArea != ultimaArea || semBiblioteca != noLugarDaBiblioteca))
+        {
+            noLugarDaBiblioteca = semBiblioteca;
+            AplicarAreaSegura();
+        }
 
         if (Aberto && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) Fechar();
     }
@@ -251,7 +262,9 @@ public class QuadroDeDeducaoUI : MonoBehaviour
             if (modelo != null) fonte = modelo.font;
         }
 
-        // Botão fixo no canto superior direito, logo abaixo do botão da Biblioteca, dentro da área segura.
+        // Botão fixo no canto superior direito, logo abaixo do botão da Biblioteca (ou no lugar dela, na fase em que ela
+        // ainda não existe), dentro da área segura.
+        biblioteca = raiz.GetComponentInChildren<BibliotecaUI>(true);
         Button abrir = Botao("BotaoQuadroDeDeducao", raiz, rotuloDoBotao);
         var canvasBotao = abrir.gameObject.AddComponent<Canvas>(); // acima do canvas dos controles de toque
         canvasBotao.overrideSorting = true;
@@ -260,8 +273,9 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         botaoAbrir = (RectTransform)abrir.transform;
         botaoAbrir.anchorMin = botaoAbrir.anchorMax = botaoAbrir.pivot = new Vector2(1f, 1f);
         botaoAbrir.sizeDelta = new Vector2(260f, 64f);
-        posicaoBaseBotao = new Vector2(-24f, -230f);
         abrir.onClick.AddListener(Abrir);
+        GameManager gm = GameManager.Instance;
+        noLugarDaBiblioteca = gm != null && (biblioteca == null || gm.faseAtual < biblioteca.faseMinima);
         AplicarAreaSegura();
         botaoAbrir.gameObject.SetActive(false);
 
@@ -339,9 +353,14 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         janela.SetActive(false);
     }
 
+    // Posições no canto superior direito: a da Biblioteca (y -150) e a de baixo dela (y -230).
+    private static readonly Vector2 PosicaoDaBiblioteca = new Vector2(-24f, -150f);
+    private static readonly Vector2 PosicaoAbaixoDaBiblioteca = new Vector2(-24f, -230f);
+
     // Recuo do notch/barras (celular) somado à margem base, como a Biblioteca.
     private void AplicarAreaSegura()
     {
+        posicaoBaseBotao = noLugarDaBiblioteca ? PosicaoDaBiblioteca : PosicaoAbaixoDaBiblioteca;
         ultimaArea = Screen.safeArea;
         Canvas canvas = botaoAbrir.GetComponentInParent<Canvas>();
         float escala = canvas != null ? canvas.rootCanvas.scaleFactor : 1f;
