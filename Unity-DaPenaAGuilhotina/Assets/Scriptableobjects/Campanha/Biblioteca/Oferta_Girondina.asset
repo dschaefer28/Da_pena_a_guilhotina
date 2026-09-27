@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Oferta_Girondina
   m_EditorClassIdentifier: Assembly-CSharp::OfertaDaBiblioteca
   id: biblioteca_girondina
-  titulo: "Correspond\xEAncia arquivada na Conven\xE7\xE3o"
-  descricao: "C\xF3pias das cartas do deputado Delorme arquivadas na Conven\xE7\xE3o,
-    com o carimbo do arquivo: fam\xEDlia, d\xEDvidas e saudade, nenhuma palavra sobre
-    fuga."
+  titulo: "Decreto de 8 de brum\xE1rio do ano II"
+  descricao: "Decreto votado pela Conven\xE7\xE3o em 29 de outubro de 1793: depois
+    de tr\xEAs dias de debates, o presidente do tribunal pode perguntar aos jurados
+    se a consci\xEAncia deles j\xE1 est\xE1 suficientemente esclarecida e, se estiver,
+    encerrar o julgamento."
   preco: 25
   faseMinima: 3
   caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}

@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
   m_Name: Caso_Joalheiro
   m_EditorClassIdentifier: Assembly-CSharp::CaseData
-  caseTitle: Caso das Joias
-  caseDescription: "Um colar foi vendido em nome da rainha, mas ela n\xE3o compareceu
-    \xE0 negocia\xE7\xE3o. Julien investiga os registros do joalheiro e os intermedi\xE1rios
-    da compra, enquanto a crise da monarquia transforma a suspeita de fraude em disputa
-    pol\xEDtica."
-  objectiveText: 'terminar o caso '
+  caseTitle: O Colar da Rainha
+  caseDescription: "1789. O esc\xE2ndalo do colar de diamantes, julgado em 1786,
+    volta \xE0s ruas. O duque de Orl\xE9ans, primo do Rei e rival de Maria Antonieta,
+    encomenda um panfleto para manchar a reputa\xE7\xE3o dela e anexa um retrato
+    da Rainha. O colar foi vendido em nome dela: descubra quem negociou a compra
+    e o que a encomenda prova."
+  objectiveText: Descobrir quem negociou o colar em nome da Rainha e o que a encomenda
+    realmente prova.
   moneyReward: 20
   publicOpinionReward: 50
   stateOpinionReward: -10

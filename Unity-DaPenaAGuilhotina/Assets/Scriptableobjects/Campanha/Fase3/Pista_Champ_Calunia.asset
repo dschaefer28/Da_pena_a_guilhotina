@@ -15,11 +15,11 @@ MonoBehaviour:
   itemID: pista_champ_calunia
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: A hora da bandeira
-  descricao: "Cartaz no mural: a bandeira vermelha s\xF3 foi hasteada depois dos
-    tiros, para esconder que os peticion\xE1rios, pagos pela Inglaterra, atacaram
-    a Guarda."
-  fonte: Cartaz sem assinatura
+  itemName: "A lei das peti\xE7\xF5es"
+  descricao: "Bilhete deixado na mesa do caf\xE9: a nova lei pro\xEDbe reunir o povo
+    para pedir qualquer coisa contra o Rei; Danton sabia que era crime e mandou os
+    peticion\xE1rios ao altar para ter m\xE1rtires."
+  fonte: Bilhete sem assinatura
   caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
   confiabilidade: 3
   verificadaPor: []

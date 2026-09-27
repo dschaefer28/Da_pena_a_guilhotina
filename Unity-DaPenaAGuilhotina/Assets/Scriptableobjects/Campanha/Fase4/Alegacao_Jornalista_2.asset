@@ -15,9 +15,12 @@ MonoBehaviour:
   itemID: alegacao_jornalista_2
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
-  itemName: 'Carta de Marchand: temem a verdade'
-  descricao: "Ele afirma que o Comit\xEA teme o que ele publica."
+  itemName: 'Carta de Camille: prendem inocentes'
+  descricao: "Ele afirma que a Lei dos Suspeitos prende gente sem crime algum, s\xF3
+    por palavras ou parentesco."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 917d88bbcfe670d4ea21a881e3662a0b, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

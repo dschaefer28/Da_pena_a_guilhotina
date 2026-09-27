@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: apoio_girondina_recomendacao
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: "Carta de recomenda\xE7\xE3o da se\xE7\xE3o"
-  descricao: "A se\xE7\xE3o atesta que a cidad\xE3 Delorme doou roupas e p\xE3o aos
-    volunt\xE1rios de 1792."
-  fonte: "Cidad\xE3 Delorme"
+  itemName: As notas da defesa de Vergniaud
+  descricao: "Rascunho da defesa que Vergniaud preparava para o tribunal: responde
+    a cada acusa\xE7\xE3o com datas, cartas e votos na Conven\xE7\xE3o, e lembra
+    que os acusados votaram pela Rep\xFAblica una e indivis\xEDvel."
+  fonte: Pierre Vergniaud
   caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
   confiabilidade: 0
   verificadaPor: []

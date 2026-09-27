@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: pista_champ_2
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: A bandeira vermelha
-  descricao: "Proclama\xE7\xE3o da prefeitura: a bandeira vermelha da lei marcial
-    foi hasteada por ordem do prefeito antes de a Guarda marchar ao Champ de Mars."
-  fonte: "Proclama\xE7\xE3o pregada no balc\xE3o da padaria"
+  itemName: "A Constitui\xE7\xE3o de 1791: direito de reuni\xE3o"
+  descricao: "Artigos da Constitui\xE7\xE3o votada em setembro de 1791, afixados
+    no mural: ela garante aos cidad\xE3os a liberdade de se reunir pacificamente
+    e sem armas e de dirigir \xE0s autoridades peti\xE7\xF5es assinadas individualmente."
+  fonte: Artigos afixados no mural dos Cordeliers
   caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
   confiabilidade: 1
   verificadaPor: []

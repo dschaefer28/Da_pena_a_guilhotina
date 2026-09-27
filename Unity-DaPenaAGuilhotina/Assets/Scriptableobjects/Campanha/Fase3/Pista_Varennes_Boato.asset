@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: pista_varennes_boato
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: "O ouro austr\xEDaco"
-  descricao: "Segundo a peticion\xE1ria, o cocheiro recebeu ouro austr\xEDaco para
-    levar o Rei e sabia desde Paris quem ia na berlinda."
-  fonte: Conversa no Champ de Mars
+  itemName: "A letra do di\xE1rio"
+  descricao: "Segundo Danton, todo o caf\xE9 comenta que o di\xE1rio foi escrito
+    pelo pr\xF3prio Kornmann, imitando a letra da esposa, para ganhar o div\xF3rcio
+    e ficar com o dote."
+  fonte: Georges Danton
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   confiabilidade: 2
   verificadaPor: []

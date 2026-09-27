@@ -15,9 +15,12 @@ MonoBehaviour:
   itemID: alegacao_jornalista_1
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
-  itemName: "Carta de Marchand: escrevi pela Rep\xFAblica"
-  descricao: "Marchand jura que cada linha foi escrita em defesa da Rep\xFAblica."
+  itemName: "Carta de Camille: quero salvar a Rep\xFAblica"
+  descricao: "Camille jura que n\xE3o quer derrubar a Rep\xFAblica, e sim salv\xE1-la
+    de si mesma: clem\xEAncia n\xE3o \xE9 trai\xE7\xE3o."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 917d88bbcfe670d4ea21a881e3662a0b, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

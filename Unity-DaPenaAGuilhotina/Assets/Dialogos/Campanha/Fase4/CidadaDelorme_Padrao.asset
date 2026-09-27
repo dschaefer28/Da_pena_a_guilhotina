@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: CidadaDelorme_Padrao
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: "Cidad\xE3 Delorme"
-    text: "N\xE3o sei de nada. Por favor, me deixe em paz."
+  - name: Pierre Vergniaud
+    text: "Guardo a voz para o tribunal, cidad\xE3o. N\xE3o posso gast\xE1-la com
+      o que n\xE3o conhe\xE7o."
     dialogueAudio:
       Guid:
         Data1: 0

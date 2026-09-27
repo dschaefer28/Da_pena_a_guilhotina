@@ -27,8 +27,9 @@ MonoBehaviour:
     povo: 30
     estado: -15
     ouro: 40
-    textoRevelacao: "Nenhum peticion\xE1rio armado foi encontrado: o boato publicado
-      ruiu."
+    textoRevelacao: "As folhas originais da peti\xE7\xE3o, com milhares de assinaturas,
+      desmentiram o boato: no altar da p\xE1tria se assinava uma peti\xE7\xE3o quando
+      a Guarda chegou. O panfleto que falava em insurrei\xE7\xE3o ruiu."
     penalidadePovo: -10
     penalidadeEstado: -5
   calunia:
@@ -36,8 +37,9 @@ MonoBehaviour:
     povo: 40
     estado: -20
     ouro: 55
-    textoRevelacao: "N\xE3o havia dinheiro ingl\xEAs algum. A tipografia \xE9 acusada
-      de caluniar os mortos."
+    textoRevelacao: "A Constitui\xE7\xE3o garantia a reuni\xE3o pac\xEDfica e a peti\xE7\xE3o
+      assinada: o bilhete que chamava Danton de criminoso era cal\xFAnia, e a tipografia
+      foi acusada de caluniar os mortos."
     penalidadePovo: -20
     penalidadeEstado: -10
   soAlegacoes:
@@ -45,8 +47,8 @@ MonoBehaviour:
     povo: 8
     estado: -4
     ouro: 10
-    textoRevelacao: "O panfleto s\xF3 repetia o relato da peticion\xE1ria. Comoveu
-      poucos e n\xE3o provou nada."
+    textoRevelacao: "O panfleto s\xF3 repetia a palavra de Danton. Sem provas, pareceu
+      discurso de clube, e ningu\xE9m mudou de ideia."
     penalidadePovo: -5
     penalidadeEstado: 0
   qualificadores:

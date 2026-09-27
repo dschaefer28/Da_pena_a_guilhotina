@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
   m_Name: Caso_Assignats
   m_EditorClassIdentifier: Assembly-CSharp::CaseData
-  caseTitle: Os Assignats Falsos
-  caseDescription: "1792. Notas falsas de assignat inundam Paris. O gravador Morel,
-    colega de of\xEDcio da tipografia, foi preso acusado de fabric\xE1-las. Ele jura
-    que as chapas foram roubadas da sua oficina."
-  objectiveText: Descobrir quem imprimiu os assignats falsos.
+  caseTitle: "Morte no Po\xE7o e Intoler\xE2ncia"
+  caseDescription: "\xC9lisabeth Sirven, jovem de fam\xEDlia protestante que passou
+    meses internada num convento, foi encontrada morta num po\xE7o, em Castres. Ju\xEDzes
+    conservadores acusam o pai, Pierre-Paul Sirven, de mat\xE1-la para impedir sua
+    convers\xE3o ao catolicismo, e querem confiscar os bens da fam\xEDlia, que fugiu
+    para o ex\xEDlio. Leitores de Voltaire pagam a defesa."
+  objectiveText: "Descobrir como \xC9lisabeth vivia antes de morrer e o que sustenta
+    a acusa\xE7\xE3o contra o pai."
   moneyReward: 35
   publicOpinionReward: 10
   stateOpinionReward: 10

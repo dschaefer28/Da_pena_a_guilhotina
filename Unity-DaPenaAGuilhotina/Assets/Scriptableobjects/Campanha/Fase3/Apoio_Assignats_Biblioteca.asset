@@ -15,10 +15,10 @@ MonoBehaviour:
   itemID: apoio_biblioteca_assignats
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: Laudo da Casa da Moeda
-  descricao: "Laudo dos gravadores da Casa da Moeda comparando as notas falsas com
-    as verdadeiras: as falsas foram impressas com tipos gastos, numa prensa diferente
-    das usadas pelos gravadores da se\xE7\xE3o."
+  itemName: Registro do convento de Castres
+  descricao: "C\xF3pia do registro do convento: \xC9lisabeth Sirven foi internada
+    por ordem do bispo, para ser instru\xEDda na f\xE9 cat\xF3lica, e devolvida \xE0
+    fam\xEDlia meses depois porque j\xE1 n\xE3o estava em seu ju\xEDzo perfeito."
   fonte: Biblioteca (compra)
   caso: {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}
   confiabilidade: 0

@@ -1,10 +1,10 @@
 ﻿# Status de implementação — Da Pena à Guilhotina
 
-Atualizado em 27/09/2026 (Prompt 4, restante do Prompt 6 e Fase 3 com três casos, §13 a §16; **Prompt 7, 6h nas Fases 2–4 e dedução desde a Fase 2, §17**). Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminhos relativos a `Unity-DaPenaAGuilhotina/`.
+Atualizado em 27/09/2026 (Prompt 4, restante do Prompt 6 e Fase 3 com três casos, §13 a §16; Prompt 7, 6h nas Fases 2–4 e dedução desde a Fase 2, §17; **conteúdo narrativo do GDD nas Fases 2 a 4, §18**). Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminhos relativos a `Unity-DaPenaAGuilhotina/`.
 
 Estados usados: **validado** (testado em runtime ou em teste automatizado), **existente não validado** (código/asset presente, sem teste de runtime), **parcial**, **ausente**.
 
-Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achados corrigidos (§7); verificação completa contra os dois PDFs em 26/09, com correções que adiantaram partes dos Prompts 6 e 7 (§9); Prompt 5 (linha editorial) concluído em 26/09 (§10); **Prompt 4 (dedução ativa) incluído por decisão do grupo e concluído em 27/09 (§13)**; **restante do Prompt 6 concluído em 27/09 (§14)**; **Fase 3 reduzida a três casos, com um concluído (§15)**; **Prompt 7 concluído em 27/09 (§17), junto com dois ajustes pedidos pelo grupo: 6h de investigação nas Fases 2, 3 e 4 e dedução ativa desde a Fase 2**. Próximo: **Prompt 8 (não iniciado)**, depois dos testes manuais listados em §17.9.
+Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achados corrigidos (§7); verificação completa contra os dois PDFs em 26/09, com correções que adiantaram partes dos Prompts 6 e 7 (§9); Prompt 5 (linha editorial) concluído em 26/09 (§10); **Prompt 4 (dedução ativa) incluído por decisão do grupo e concluído em 27/09 (§13)**; **restante do Prompt 6 concluído em 27/09 (§14)**; **Fase 3 reduzida a três casos, com um concluído (§15)**; **Prompt 7 concluído em 27/09 (§17), junto com dois ajustes pedidos pelo grupo: 6h de investigação nas Fases 2, 3 e 4 e dedução ativa desde a Fase 2**; **conteúdo narrativo das Fases 2 a 4 alinhado ao GDD em 27/09 (§18)**. Próximo: **Prompt 8 (não iniciado)**, depois dos testes manuais listados em §17.9 e §18.9.
 
 Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4–6:
 - **Alegações:** qualquer impressão com alegação usa a versão Só Alegações.
@@ -33,6 +33,7 @@ Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4�
 - **Inventário cheio ao restaurar (27/09, §14):** o que não cabe fica guardado (`GameManager.itensForaDaGrade`), vai junto em cada troca de cena e no save, e volta para a grade quando houver espaço.
 - **Tribunal (27/09, §14):** "Encerrar a defesa" exige duas provas apresentadas (configurável, limitado ao total); o veredito é sempre o completo.
 - **Rota (27/09, §14):** margem mínima 1; com a margem inválida o empate continua na rota C.
+- **Conteúdo do GDD (27/09, §18):** os nove casos das Fases 2 a 4 seguem o GDD (títulos, clientes, testemunhas, falas-base, pistas e panfletos). Os arquivos, os itemID e os IDs de interação continuam os antigos por causa do save (ex.: `Caso_Varennes` é o caso de Kornmann; `CocheiroJoubert` é o NPC Kornmann); a correspondência está na matriz. A Fase 3 tem 5 NPCs (Danton é novo) e 8 oportunidades por caso. Textos em vigor: `Editor/NarrativaGddSetupTool.cs` (**Ferramentas > Campanha > 8**). Mecânicas, valores, preços, rotas e regras de bloqueio não mudaram.
 
 Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não exibir ao jogador).
 
@@ -410,7 +411,7 @@ Save e PlayerPrefs do jogador restaurados de novo depois dos testes (hash idênt
 
 ~~Prompt 5 — linha editorial (D)~~ Concluído em 26/09 (§10). ~~Prompt 4 — dedução ativa~~ Concluído em 27/09 (§13). ~~Restante do Prompt 6~~ Concluído em 27/09 (§14). ~~Prompt 7 — tutorial, transições e UI integrada~~ Concluído em 27/09 (§17).
 
-**Próximo: Prompt 8 (validação final), não iniciado.** Antes dele, os testes manuais de §17.9 (teclado/toque físicos, aparelho Android, leitura dos textos novos). Pontos de atenção:
+**Próximo: Prompt 8 (validação final), não iniciado.** Antes dele, os testes manuais de §17.9 (teclado/toque físicos, aparelho Android, leitura dos textos novos) e de §18.9 (conteúdo do GDD nas Fases 2 a 4). Pontos de atenção:
 - **Prompt 8 (balanceamento):** com um caso só na Fase 3, a rota é decidida por três publicações (tutorial, Fase 2, Fase 3); a linha editorial desloca o desnível em até 15 pontos por publicação. Exemplos de percurso em `MATRIZ_DE_CASOS_TCC.md`.
 - **Prompt 8 (tempo):** com 6h e caminho mínimo de 1–2h, sobra folga em todos os casos; vale medir, jogando, se a pressão do relógio ainda existe (antes: 4h).
 
@@ -911,3 +912,111 @@ Textos das quatro dicas novas e a dica de fato/boato reescrita (`TutorialManager
 1. **Ferramentas > Campanha > 5** e **> 7** duas vezes → a segunda com 0 alterações; **Ferramentas > Campanha > 2** → "Campanha válida" com "Orçamento: 6h por caso (5h endividado)" e "Dedução ativa: 9 caso(s)".
 2. Test Runner > EditMode > Run All → **88/88**.
 3. Roteiro manual de §17.9.
+
+---
+
+## 18. Conteúdo narrativo do GDD nas Fases 2 a 4 (27/09/2026)
+
+Pedido do grupo: atualizar e implementar o conteúdo narrativo dos casos das Fases 2, 3 e 4 (mesa, NPCs, diálogos, pistas, biblioteca e dedução) alinhado ao GDD, com a planilha "30 Casos Reais" como referência histórica, sem mexer nas mecânicas e sem alterar a Fase 1. Na Fase 2, preservar as duas perspectivas do motim de Réveillon.
+
+### 18.1 Fontes e casos
+
+- **GDD** ("Da Pena à Guilhotina", IFPR, 2026, `.docx` do grupo): casos, clientes, testemunhas, falas-base com escolhas, as duas pistas de cada caso e os títulos dos panfletos. Divergências com o projeto foram resolvidas pelo GDD no conteúdo, preservando as mecânicas.
+- **"30 Casos Reais"** (`.xlsx` do grupo): usada só nas linhas dos casos escolhidos pelo GDD (colar da rainha, Sirven, Kornmann, girondinos). Réveillon, Danton, Desmoulins e o mercador não estão na planilha: a base histórica veio de conhecimento geral e está resumida na matriz, junto com o que é adaptação.
+
+| Fase | Arquivo | Caso do GDD | Cliente → testemunha(s) |
+|---|---|---|---|
+| 2 | `Caso_Joalheiro` | O Colar da Rainha | duque de Orléans (carta) → joalheiro |
+| 2 | `Caso_Reveillon` | Os Trabalhadores de Réveillon | Jean-Baptiste Réveillon |
+| 2 | `Caso_Operario` | O Operário Acusado | o operário sobrevivente |
+| 3 | `Caso_ChampDeMars` | O Julgamento de Georges Danton | Danton → Sobrevivente |
+| 3 | `Caso_Varennes` | Adultério e Poder Ministerial | Guillaume Kornmann |
+| 3 | `Caso_Assignats` | Morte no Poço e Intolerância | Pierre-Paul Sirven → Médico |
+| 4 (A) | `Caso_Jornalista` | O Manifesto da Clemência | Camille Desmoulins |
+| 4 (B) | `Caso_Negociante` | O Caso do Pequeno Mercador de Grãos | o mercador |
+| 4 (C) | `Caso_Girondina` | O Extermínio da Oposição | Pierre Vergniaud → Jacques-Pierre Brissot |
+
+### 18.2 O que foi feito
+
+| Item | Implementação | Estado |
+|---|---|---|
+| Descrições da mesa | Título, descrição (conflito, envolvidos, pedido do cliente) e objetivo dos 9 casos, sem antecipar a verdade de nenhum par. O objetivo "terminar o caso" (placeholder da Fase 2) foi substituído. A descrição anterior do colar ("ela não compareceu") revelava o par 1 e foi reescrita | validado (asset, validador e captura da mesa em 1920×1080) |
+| NPCs | Fase 2: os mesmos (o joalheiro mantém o roteiro do grupo). Fase 3: Médico, Kornmann, Sobrevivente e Sirven reaproveitados (IDs antigos) e **Georges Danton criado** do `NPCBasic.prefab` (x 46, ID `GeorgesDanton`), que responde aos três casos e fica acessível. Fase 4: Desmoulins, Mercador, Vergniaud e Brissot reaproveitados. GameObjects renomeados; fala padrão de cada um reescrita | validado (cena e Play Mode) |
+| Diálogos | 111 nós (78 novos e 33 reescritos; os do joalheiro não mudaram). Clientes e testemunhas com as falas do GDD e 2 ou 3 escolhas que levam a respostas diferentes; quem espalha o boato tem 2 ramos (um deles mostra que é boato ouvido); cada NPC tem uma fala própria para os casos em que não entrega nada; fala curta depois da entrega em todo NPC que entrega pista | validado (teste de grafo + Play Mode dos 9 casos) |
+| Pistas, cartas e panfletos | 59 itens com texto novo (de 67 definidos). Os dois fatos de cada caso são as pistas do GDD; boato e calúnia contradizem o fato do mesmo assunto; cartas do cliente com duas alegações (a do colar é do duque, com o retrato "en chemise" citado no GDD); panfletos das Fases 3 e 4 com os títulos do GDD | validado (validador, testes, Play Mode) |
+| Biblioteca | 6 ofertas com documentos históricos reais (petição do Champ de Mars, mémoire de Bergasse, registro do convento de Castres, Lei dos Suspeitos, decreto contra o açambarcamento, decreto de 8 de brumário). Cada um dá contexto a um par. Preços e reforços iguais | validado (asset e validador; a compra não foi reexercitada) |
+| Etapas complementares | Kornmann (`recibo_da_estalagem`) entrega "A ordem de reclusão de 1781" depois de "A colaboração de Beaumarchais"; Vergniaud (`carta_da_secao`) entrega "As notas da defesa de Vergniaud" depois de "O testemunho de Robespierre". IDs mantidos | validado (Play Mode) |
+| Dedução | Pares com os mesmos assets (fato 1 × boato; fato 2 × calúnia), textos reescritos. Cadeia de pistas: cliente → testemunha e quem espalha o boato → objetos | validado (quadro 2 de 2 nos 9 casos; conferência errada e certa no caso Danton) |
+| Estrutura das cenas | Fase 3: fatos, boatos e calúnias redistribuídos entre NPCs e objetos conforme o GDD (ex.: o fato 1 de Sirven vem do Médico); o balcão da padaria virou a **Mesa do Café** (Café Popular do GDD). Fase 4: o boato do mercador passou a vir de Desmoulins, o fato 1 dos girondinos de Brissot, e a nota de Robespierre fica no **Arquivo do Comitê** (antes: arquivo da seção) | validado (validador + Play Mode) |
+
+### 18.3 Decisões desta etapa
+
+- **Arquivos e IDs antigos:** o save guarda casos pelo nome do asset, pistas pelo itemID e interações pelo ID de interação; nada disso foi renomeado. Só textos, nomes de GameObject e referências mudaram.
+- **Onde fica o conteúdo:** em `Editor/NarrativaGddSetupTool.cs` (ferramenta 8), com as árvores de diálogo. A ferramenta 1 mantém a estrutura (quem entrega o quê) e lê as falas da 8; as ferramentas 1, 3 e 5 passam a usar os textos da 8 como referência, por isso rodá-las de novo não troca nem acusa nada.
+- **Validador:** o máximo de oportunidades por caso subiu de 7 para 8 (`OportunidadesMaximas`), porque a Fase 3 tem os 5 NPCs do GDD. É um limite de aviso, não uma mecânica.
+- **Precisão histórica:** onde o GDD e a história divergem, o texto do jogo evita afirmar como fato o que é adaptação (ex.: Beaumarchais "colaborou" na soltura da esposa de Kornmann, e não com Kornmann; os casos Sirven e Kornmann não recebem ano falso; a mesa de Danton fala em mandado, não em julgamento). A revelação do boato de Réveillon deixou de afirmar que ele "nunca disse" os quinze soldos (as fontes divergem). Lista completa na matriz, seção "Adaptações e divergências".
+- **Fase 4 condensada** no outono de 1793: o julgamento dos girondinos, o Máximo e a clemência de Desmoulins convivem na mesma cena.
+
+### 18.4 Arquivos
+
+- Editor: `NarrativaGddSetupTool.cs` (novo, **Ferramentas > Campanha > 8 - Aplicar conteúdo narrativo do GDD (Fases 2 a 4)**); `CampanhaSetupTool.cs` (estrutura das Fases 2 a 4, Danton, `CriarNpcNaCena`, referências de texto, revelação de Réveillon); `BibliotecaSetupTool.cs` (referências de texto); `ValidadorDaCampanha.cs` (`OportunidadesMaximas` = 8).
+- Testes: `Editor/Testes/NarrativaGddTests.cs` (novo, 2 testes).
+- Assets: 9 casos, 9 receitas (textos de revelação), 6 ofertas, 59 itens, 33 diálogos reescritos e 78 novos (`Dialogos/Campanha/Fase2|Fase3|Fase4`, `Dialogos/Jean-Baptiste Réveillon`, `Dialogos/Operário`).
+- Cenas: `Fase2` (reações), `Fase3` (Danton, nomes, reações, objetos), `Fase4` (nomes, reações, objetos). Os diffs têm só reações, nomes, o NPC novo e entradas de objetos (sem ruído de layout).
+- Não mudaram: scripts do jogo (`Assets/Scripts`), `UI.prefab`, `GameManager.prefab`, cenas Jogo, Porão, Tribunal e menu, catálogo de save, ProjectSettings, Packages, GUIDs e `.meta` existentes.
+
+### 18.5 Configuração realizada
+
+Ferramenta 8 executada via MCP: 9 casos reescritos (guarda pelo título anterior), 78 diálogos criados, 33 alterados, 59 itens, 9 receitas, 6 ofertas, 1 NPC criado e 10 GameObjects renomeados (8 NPCs e 2 objetos). Segunda execução: "Já com o conteúdo do GDD" nos 9 casos, 0 alterações. Ferramentas 1, 3, 4, 5, 6 e 7 reexecutadas: 0 alterações e nenhum texto "mantido". Nenhum arquivo além dos listados em §18.4 mudou.
+
+### 18.6 Testes
+
+- **Validador:** "Campanha válida", 0 avisos. Fase 2: 7 oportunidades por caso; Fase 3: 8; Fase 4: 7. Caminho mínimo até 2 fatos: 2h (colar: 1h). Quadro inteiro: 4h (colar: 3h). Dedução em 9 casos.
+- **EditMode: 90/90** (88 anteriores + 2 novos). `NarrativaGddTests`: (1) toda conversa dos NPCs das Fases 2 a 4 (padrão, entrada, fala depois da entrega, etapas) é um grafo completo, sem referência nula, sem ciclo e com opções só na última fala, e todo NPC reage aos três casos da sua fase; (2) nenhum texto visível ao jogador nas Fases 2 a 4 (casos, pistas, cartas, panfletos, revelações, biblioteca, conversas alcançáveis) cita os casos substituídos (Marchand, Garnier, Delorme, Vautrin, Joubert, Lacombe, Morel, Varennes, assignat, Carcereiro etc.).
+- **Play Mode** (Editor via MCP; cena da fase aberta direto; caso aceito por `ConfirmarCaso`; conversas pelo `DialogueSystem` real, com as escolhas feitas por `MakeChoice`; objetos por `Interact`):
+
+| Cena | Casos | Resultado |
+|---|---|---|
+| Fase3 | Danton, Kornmann, Sirven | falas e ramos iguais aos definidos; 1h por fonte nova, repetição grátis; as 4 afirmações do quadro em cada caso (2 de 2 contradições); fala curta depois da entrega; a etapa de Kornmann só aparece depois do fato 2 e tem prioridade sobre a fala curta; conferência "tudo confiável" não se sustenta, marcação certa confirma |
+| Fase4 | Girondinos (rota C), Desmoulins (A), Mercador (B) | idem; Vergniaud só conversa e libera as notas depois da nota de Robespierre; objetos vazios cobram 1h e dizem "Nada de útil" |
+| Fase2 | Réveillon, Operário, Colar | árvores de 3 níveis de Réveillon e do Operário nas pastas do grupo; cartas do duque de Orléans; roteiro do joalheiro intacto; 2 de 2 nos três casos |
+| Capturas 1920×1080 | mesa da Fase 3, fala longa, opções longas | cartões legíveis e sem corte; fala de 3 linhas e opção de 2 linhas dentro da caixa |
+
+Console sem erros nem avisos em todas as sessões.
+
+### 18.7 Limitações e pendências para o grupo
+
+- **Rotas e valores da Fase 4:** o GDD pede impacto máximo na Opinião Popular para o mercador e na do Estado para os girondinos. Foram mantidos a rota e os valores de cada arquivo (mercador na B, pró-Estado; girondinos na C, equilibrado), e os textos foram escritos coerentes com esses valores. Mudar exige decisão do grupo (trocar rotas ou valores das receitas).
+- **Ouro na Fase 3:** para o GDD, Sirven é o caso que "gera mais dinheiro"; nas receitas atuais Kornmann rende mais ouro (45 contra 35).
+- **Anacronismos de cena:** a Fase 4 é uma cena só, então Vergniaud e Brissot aparecem também nas rotas A e B (na história foram executados em 31/10/1793, antes da campanha de Desmoulins). Esconder NPCs por caso exigiria mudar o código (hoje todo NPC responde a todo caso, regra do Prompt 2).
+- **Arte:** Danton e os demais NPCs das Fases 3 e 4 continuam cápsulas coloridas; a Mesa do Café e o Arquivo do Comitê usam as mesmas artes de antes.
+- **Tribunal:** as falas do veredito continuam genéricas ("o réu"); no caso dos girondinos são vários réus.
+- **Nomes de arquivo:** os assets guardam os nomes antigos (tabela de correspondência na matriz).
+- **Textos provisórios:** tudo o que não veio do GDD (§18.8).
+
+### 18.8 Conteúdo provisório
+
+Boatos, calúnias, cartas do cliente, falas de quem espalha boatos, falas sem pista, ramos novos das conversas, falas depois da entrega, documentos da biblioteca, etapas complementares, textos de revelação e descrições da mesa. São editáveis nos assets. A ferramenta 8 só reescreve um caso que ainda tenha o título anterior ao GDD, então edições feitas no Inspector ficam.
+
+### 18.9 O que ainda exige teste manual na Unity
+
+1. **Ler em jogo** as conversas dos 9 casos, com teclado e mouse (e toque), percorrendo as escolhas: ritmo, tom, se cada ramo acrescenta algo e se a cadeia cliente → boato → objetos fica clara para um aluno de 16 anos.
+2. **Resolver cada quadro de dedução** só com o que o jogo mostra, sem a matriz: cada par deve ser decidível pelas fontes, pelas falas e pela biblioteca.
+3. **Georges Danton na cena Fase3:** posição (x 46), colisão, ícone de interação e se não cobre outro NPC ou objeto.
+4. **Mesa de Casos** em 16:9, 4:3 e celular com as descrições novas (conferida só em 1920×1080 no Editor).
+5. **Prensa e tribunal** com os panfletos de títulos longos (ex.: "Memórias de Kornmann: Onde a Lei Termina e a Libertinagem Começa"): nome no inventário, na notificação, na ficha e na lista de provas.
+6. **Biblioteca:** comprar os documentos novos (texto na janela e no campo Suporte).
+7. **Revisão histórica e de português** pelo grupo e pelo orientador, usando a seção "Adaptações e divergências" da matriz.
+
+### 18.10 Efeitos no ambiente de quem testou
+
+- **`save.json`:** copiado para o scratchpad, marcado somente leitura durante o Play Mode e devolvido ao normal; md5 idêntico (`7a5bf8eb…`); nenhum `save.json.tmp`.
+- **PlayerPrefs:** as nove chaves de progresso estavam em 1 e continuaram em 1 (nenhuma dica foi pedida).
+- **Editor:** Game View trocada para 1920×1080 só nas capturas e devolvida a "Free Aspect"; `Application.runInBackground` desligado; cena "menu principal" aberta e limpa. Capturas em `Unity-DaPenaAGuilhotina/Temp/CapturasGdd` (fora do git). `TestResults.xml` (em `persistentDataPath`) foi regravado pelo Test Runner.
+- Nada foi commitado.
+
+### 18.11 Como revalidar
+
+1. **Ferramentas > Campanha > 8** duas vezes: a segunda mostra "Já com o conteúdo do GDD" nos 9 casos e 0 alterações. **Ferramentas > Campanha > 1, 3, 4, 5, 6 e 7**: 0 alterações. **Ferramentas > Campanha > 2**: "Campanha válida", 0 avisos.
+2. Test Runner > EditMode > Run All → **90/90**.
+3. Roteiro manual de §18.9.

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: "Oper\xE1rio"
-    text: "N\xF3s nos reunimos, precis\xE1vamos de comida. E pouco tempo depois de
-      come\xE7armos, os guardas chegaram, e Deus, como havia sangue."
+    text: "N\xF3s nos reunimos. Precis\xE1vamos de comida. Pouco tempo depois, os
+      guardas chegaram... e, Deus, como havia sangue."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -23,4 +23,6 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices: []
+    choices:
+    - choiceText: Como assim?
+      nextDialogue: {fileID: 11400000, guid: 6780da8212a0d934cbf41eac65e90391, type: 2}

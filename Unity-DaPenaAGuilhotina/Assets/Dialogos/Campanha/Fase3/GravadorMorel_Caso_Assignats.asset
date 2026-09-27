@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: GravadorMorel_Caso_Assignats
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Gravador Morel
-    text: "Roubaram as minhas chapas, colega! Dei queixa na se\xE7\xE3o dias antes
-      de me prenderem."
+  - name: Pierre-Paul Sirven
+    text: "Eles n\xE3o querem justi\xE7a pela minha filha. Eles querem meu ouro e
+      meu sil\xEAncio."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -24,8 +24,9 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: Gravador Morel
-    text: "Aqui est\xE1 a c\xF3pia da queixa, com o carimbo da se\xE7\xE3o."
+  - name: Pierre-Paul Sirven
+    text: "O m\xE9dico que atendeu \xC9lisabeth depois do convento sabe o que ela
+      sofria, mas tem medo de falar. Ele est\xE1 aqui mesmo, nesta rua."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -34,9 +35,9 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: Gravador Morel
-    text: Os cocheiros espalham que eu inventei o roubo. Pergunte ao Joubert o que
-      andam dizendo.
+  - name: Pierre-Paul Sirven
+    text: "E at\xE9 um banqueiro, esse Kornmann, repete nos caf\xE9s o que os ju\xEDzes
+      dizem de mim."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -45,3 +46,22 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
+  - name: Pierre-Paul Sirven
+    text: "Valois, voc\xEA acredita que a 'Toler\xE2ncia' de Voltaire pode vencer
+      o peso desta toga conservadora?"
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices:
+    - choiceText: "Vou usar o Tratado sobre a Toler\xE2ncia para provar que este
+        tribunal \xE9 uma rel\xEDquia do passado."
+      nextDialogue: {fileID: 11400000, guid: 99bffeaa80e8f5947b842db7d5955050, type: 2}
+    - choiceText: "O povo prefere hist\xF3rias de crimes religiosos a laudos m\xE9dicos.
+        Ser\xE1 uma luta dif\xEDcil para a Opini\xE3o P\xFAblica."
+      nextDialogue: {fileID: 11400000, guid: ad730ee5701170d479b112cc53978a46, type: 2}
+    - choiceText: "Como era \xC9lisabeth antes do convento?"
+      nextDialogue: {fileID: 11400000, guid: d34cf01eb5a6a1e4ba051bbf17ec3b28, type: 2}

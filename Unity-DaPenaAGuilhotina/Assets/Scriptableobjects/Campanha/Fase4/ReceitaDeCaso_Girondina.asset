@@ -27,8 +27,9 @@ MonoBehaviour:
     povo: 15
     estado: 15
     ouro: 45
-    textoRevelacao: "Nenhum foragido foi achado na casa da vi\xFAva. O boato impresso
-      foi desmentido."
+    textoRevelacao: "As cartas foram lidas em p\xFAblico: pediam a defesa da Conven\xE7\xE3o,
+      e n\xE3o a separa\xE7\xE3o das prov\xEDncias nem a entrega dos portos. O boato
+      ruiu, e o panfleto que o repetiu tamb\xE9m."
     penalidadePovo: -10
     penalidadeEstado: -10
   calunia:
@@ -36,8 +37,9 @@ MonoBehaviour:
     povo: 20
     estado: 20
     ouro: 60
-    textoRevelacao: "O 'patriota envenenado' morreu de febre. A cal\xFAnia voltou-se
-      contra a tipografia."
+    textoRevelacao: "A pressa vinha da acusa\xE7\xE3o, e n\xE3o dos r\xE9us: a nota
+      de Robespierre pedia que os debates fossem abreviados. O cartaz era cal\xFAnia,
+      e a tipografia foi acusada de mentir."
     penalidadePovo: -15
     penalidadeEstado: -15
   soAlegacoes:
@@ -45,8 +47,8 @@ MonoBehaviour:
     povo: 4
     estado: 4
     ouro: 12
-    textoRevelacao: "O panfleto s\xF3 repetia a palavra da vi\xFAva. N\xE3o convenceu
-      ningu\xE9m."
+    textoRevelacao: "O panfleto s\xF3 repetia a palavra de Vergniaud. Belo como um
+      discurso, fraco como prova."
     penalidadePovo: -5
     penalidadeEstado: -5
   qualificadores:

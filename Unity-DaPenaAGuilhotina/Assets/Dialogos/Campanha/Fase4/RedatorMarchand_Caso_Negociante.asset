@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
+  m_Name: RedatorMarchand_Caso_Negociante
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  talkScript:
+  - name: Camille Desmoulins
+    text: "O mercador do por\xE3o? A se\xE7\xE3o inteira jura que os sacos s\xE3o
+      dele: compra toda a farinha do bairro para revend\xEA-la pelo triplo, \xE0s
+      escondidas."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Camille Desmoulins
+    text: "Eu mesmo escrevi isso, que Deus me perdoe. Com fome, ningu\xE9m quer ouvir
+      outra vers\xE3o."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Camille Desmoulins
+    text: "A tabela do M\xE1ximo est\xE1 na parede de editais, e a caixa de den\xFAncias
+      recebe um bilhete sobre ele por dia."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices:
+    - choiceText: O senhor viu os sacos?
+      nextDialogue: {fileID: 11400000, guid: f0cab02e54e5be54e9a39a2bb104d576, type: 2}
+    - choiceText: "Por que culpar um homem t\xE3o pequeno?"
+      nextDialogue: {fileID: 11400000, guid: d052ff312cfb81b40af0af855a8dd9d3, type: 2}

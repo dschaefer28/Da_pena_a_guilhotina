@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: apoio_biblioteca_girondina
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: "Correspond\xEAncia arquivada na Conven\xE7\xE3o"
-  descricao: "C\xF3pias das cartas do deputado Delorme arquivadas na Conven\xE7\xE3o,
-    com o carimbo do arquivo: fam\xEDlia, d\xEDvidas e saudade, nenhuma palavra sobre
-    fuga."
+  itemName: "Decreto de 8 de brum\xE1rio do ano II"
+  descricao: "Decreto votado pela Conven\xE7\xE3o em 29 de outubro de 1793: depois
+    de tr\xEAs dias de debates, o presidente do tribunal pode perguntar aos jurados
+    se a consci\xEAncia deles j\xE1 est\xE1 suficientemente esclarecida e, se estiver,
+    encerrar o julgamento."
   fonte: Biblioteca (compra)
   caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
   confiabilidade: 0

@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
   m_Name: Caso_Varennes
   m_EditorClassIdentifier: Assembly-CSharp::CaseData
-  caseTitle: A Carruagem de Varennes
-  caseDescription: "Junho de 1791. A fam\xEDlia real foi presa em Varennes tentando
-    fugir. O cocheiro Joubert, que conduziu a berlinda, \xE9 acusado de ter ajudado
-    a fuga. Ele pede que a tipografia prove que s\xF3 cumpria um contrato."
-  objectiveText: Descobrir o papel do cocheiro na fuga do Rei.
+  caseTitle: "Adult\xE9rio e Poder Ministerial"
+  caseDescription: "1792. A nova lei permite o div\xF3rcio, e o banqueiro Guillaume
+    Kornmann, que acusa a esposa de adult\xE9rio desde 1787, quer us\xE1-la. Ele
+    afirma que ela escapou da justi\xE7a porque tinha protetores no minist\xE9rio
+    do Rei. Kornmann paga bem para transformar o processo num panfleto contra a corrup\xE7\xE3o
+    dos antigos ministros."
+  objectiveText: Descobrir quem protegeu a esposa de Kornmann e o que as provas mostram.
   moneyReward: 45
   publicOpinionReward: -20
   stateOpinionReward: 30

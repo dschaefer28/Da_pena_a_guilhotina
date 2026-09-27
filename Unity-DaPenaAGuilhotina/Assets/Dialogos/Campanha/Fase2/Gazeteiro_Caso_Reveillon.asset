@@ -33,4 +33,8 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices: []
+    choices:
+    - choiceText: Quem escreveu isso?
+      nextDialogue: {fileID: 11400000, guid: 283c4a3e844bd1c478608b147eebbfa1, type: 2}
+    - choiceText: "E por que os ingleses pagariam R\xE9veillon?"
+      nextDialogue: {fileID: 11400000, guid: cb79d6d5096b6af48889ccf2ecee8289, type: 2}

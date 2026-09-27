@@ -44,4 +44,8 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices: []
+    choices:
+    - choiceText: O senhor viu os agitadores?
+      nextDialogue: {fileID: 11400000, guid: 7a2c1a065f1a30747a4299e4185b59c9, type: 2}
+    - choiceText: "Por que o duque de Orl\xE9ans pagaria uma revolta?"
+      nextDialogue: {fileID: 11400000, guid: 4c87915754932a649bff4939f997e78a, type: 2}

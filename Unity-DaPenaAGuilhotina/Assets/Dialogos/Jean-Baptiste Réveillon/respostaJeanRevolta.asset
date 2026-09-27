@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
+  m_Name: respostaJeanRevolta
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  talkScript:
+  - name: "Jean R\xE9veillon"
+    text: Revoltar? Eu dou trabalho a trezentas pessoas!
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: "Jean R\xE9veillon"
+    text: "Falei em baixar os sal\xE1rios para baratear tudo, principalmente o p\xE3o.
+      E esses animais n\xE3o conseguiram entender: vieram, quebraram a f\xE1brica,
+      invadiram minha casa. Tudo por causa da mente limitada."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices:
+    - choiceText: "Ent\xE3o o senhor acha que, se diminuir os sal\xE1rios, os pre\xE7os
+        caem? Os sal\xE1rios estar\xE3o menores na mesma propor\xE7\xE3o. Ser\xE1
+        o mesmo."
+      nextDialogue: {fileID: 11400000, guid: fc40b79b6fb3a664bbc603a76e3d932b, type: 2}

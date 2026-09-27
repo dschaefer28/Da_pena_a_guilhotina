@@ -27,8 +27,9 @@ MonoBehaviour:
     povo: -30
     estado: 40
     ouro: 60
-    textoRevelacao: "O 'ouro austr\xEDaco' do cocheiro nunca apareceu. O boato publicado
-      foi desmascarado."
+    textoRevelacao: "Peritos compararam o di\xE1rio com as cartas da senhora Kornmann:
+      a letra era dela. O boato de que o banqueiro o forjou caiu por terra, e o panfleto
+      que o repetiu tamb\xE9m."
     penalidadePovo: -10
     penalidadeEstado: -10
   calunia:
@@ -36,8 +37,9 @@ MonoBehaviour:
     povo: -40
     estado: 50
     ouro: 75
-    textoRevelacao: "Os cavalos da Guarda estavam s\xE3os. A tipografia \xE9 acusada
-      de inventar hist\xF3rias."
+    textoRevelacao: "O pr\xF3prio Beaumarchais tinha admitido, por escrito, que ajudou
+      a tirar a senhora Kornmann da reclus\xE3o. O libelo que negava tudo era cal\xFAnia,
+      e a tipografia foi acusada de inventar hist\xF3rias."
     penalidadePovo: -20
     penalidadeEstado: -15
   soAlegacoes:
@@ -45,8 +47,8 @@ MonoBehaviour:
     povo: -8
     estado: 12
     ouro: 18
-    textoRevelacao: "O panfleto s\xF3 trazia a palavra do cocheiro. A Corte ignorou;
-      o povo desconfiou."
+    textoRevelacao: "O panfleto s\xF3 repetia as queixas de Kornmann. Pareceu vingan\xE7a
+      de marido rico, e ningu\xE9m o levou a s\xE9rio."
     penalidadePovo: 0
     penalidadeEstado: -5
   qualificadores:

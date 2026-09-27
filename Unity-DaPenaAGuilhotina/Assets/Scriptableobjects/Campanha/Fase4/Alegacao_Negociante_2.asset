@@ -15,9 +15,12 @@ MonoBehaviour:
   itemID: alegacao_negociante_2
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
-  itemName: "Of\xEDcio do Comit\xEA: culpa not\xF3ria"
-  descricao: "O of\xEDcio diz que a culpa dele '\xE9 not\xF3ria'."
+  itemName: "Carta do mercador: s\xE3o sementes"
+  descricao: "Ele afirma que parte dos sacos \xE9 semente para o pr\xF3ximo plantio,
+    e que vend\xEA-la agora deixaria o campo sem colheita."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 08a12328210a2ab45b8948af72c05f4e, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

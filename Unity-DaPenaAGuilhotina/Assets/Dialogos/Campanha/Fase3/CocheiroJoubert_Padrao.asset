@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: CocheiroJoubert_Padrao
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Cocheiro Joubert
-    text: "Eu s\xF3 conhe\xE7o estradas e cavalos, patr\xE3o. Disso a\xED n\xE3o
-      sei nada."
+  - name: Guillaume Kornmann
+    text: "Tenho neg\xF3cios a tratar, meu caro. Se n\xE3o \xE9 sobre o meu processo,
+      n\xE3o tenho tempo."
     dialogueAudio:
       Guid:
         Data1: 0

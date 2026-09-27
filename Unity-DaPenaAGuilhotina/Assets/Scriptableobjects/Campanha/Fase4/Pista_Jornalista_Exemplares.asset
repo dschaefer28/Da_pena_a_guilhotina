@@ -15,10 +15,13 @@ MonoBehaviour:
   itemID: pista_jornalista_1
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: "Os n\xFAmeros do jornal"
-  descricao: "Marchand mostra os n\xFAmeros do jornal: pedem clem\xEAncia e justi\xE7a,
-    mas nenhum convoca \xE0 revolta nem \xE0 volta do Rei."
-  fonte: Redator Marchand
+  itemName: A lista de 'suspeitos' inocentes
+  descricao: "Lista que Camille copiou dos registros de pris\xE3o da sua se\xE7\xE3o:
+    um alfaiate, uma vi\xFAva, dois padeiros, um velho escriv\xE3o. Ao lado de cada
+    nome, o motivo anotado pelo comit\xEA de vigil\xE2ncia: 'indiferente', 'falou
+    mal do pre\xE7o do p\xE3o', 'parente de emigrado'. Nenhum \xE9 acusado de crime
+    algum."
+  fonte: Camille Desmoulins
   caso: {fileID: 11400000, guid: 917d88bbcfe670d4ea21a881e3662a0b, type: 2}
   confiabilidade: 1
   verificadaPor: []

@@ -25,3 +25,5 @@ MonoBehaviour:
     choices:
     - choiceText: Senhor, apenas vim em busca de resposta e da verdade.
       nextDialogue: {fileID: 11400000, guid: 81a95ad37b662444f834f2a30711af99, type: 2}
+    - choiceText: "Por que est\xE1 t\xE3o nervoso, se afirma n\xE3o ter feito nada?"
+      nextDialogue: {fileID: 11400000, guid: 0af73699fc2b2834685ef2d49f82ca4d, type: 2}

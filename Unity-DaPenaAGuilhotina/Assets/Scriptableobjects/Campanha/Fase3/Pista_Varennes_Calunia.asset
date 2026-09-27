@@ -15,9 +15,10 @@ MonoBehaviour:
   itemID: pista_varennes_calunia
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: Os cavalos da posta
-  descricao: "Prova de impress\xE3o na caixa de tipos: o cocheiro envenenou todos
-    os cavalos da posta de Sainte-Menehould para que ningu\xE9m alcan\xE7asse a berlinda."
+  itemName: O nome de Beaumarchais
+  descricao: "Prova de um libelo na caixa de tipos: Beaumarchais nunca ouviu falar
+    da senhora Kornmann; o banqueiro inventou o nome do dramaturgo para vender esc\xE2ndalo
+    e viver do dote da mulher."
   fonte: "Prova de impress\xE3o abandonada"
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   confiabilidade: 3

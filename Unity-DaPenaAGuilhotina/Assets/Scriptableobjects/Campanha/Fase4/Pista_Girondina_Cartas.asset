@@ -15,10 +15,12 @@ MonoBehaviour:
   itemID: pista_girondina_1
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: As cartas do deputado
-  descricao: "A vi\xFAva mostra as cartas do marido: falam de fam\xEDlia e de d\xEDvidas;
-    nenhuma cita fuga, plano ou nome de deputado."
-  fonte: "Cidad\xE3 Delorme"
+  itemName: Provas de federalismo
+  descricao: "C\xF3pias das cartas de Brissot aos departamentos, que a acusa\xE7\xE3o
+    chama de provas de federalismo: pedem que as prov\xEDncias defendam a liberdade
+    da Conven\xE7\xE3o contra a press\xE3o armada da Comuna de Paris. Nenhuma fala
+    em separar as prov\xEDncias da Rep\xFAblica."
+  fonte: Jacques-Pierre Brissot
   caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
   confiabilidade: 1
   verificadaPor: []

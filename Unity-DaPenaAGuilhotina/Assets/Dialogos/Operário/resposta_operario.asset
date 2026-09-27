@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: "Oper\xE1rio"
-    text: "O senhor da f\xE1brica queria diminuir mais ainda os sal\xE1rios, eles
+    text: "O senhor da f\xE1brica queria diminuir mais ainda os sal\xE1rios. Eles
       n\xE3o cansam de ter dinheiro!"
     dialogueAudio:
       Guid:
@@ -23,6 +23,16 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
+    choices: []
+  - name: "Oper\xE1rio"
+    text: "Na segunda-feira, queimamos um boneco dele na pra\xE7a. Na ter\xE7a, voltamos."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
     choices:
-    - choiceText: Como assim?
+    - choiceText: "E o que aconteceu na ter\xE7a?"
       nextDialogue: {fileID: 11400000, guid: e855ad22fad41c547b600efe057053c5, type: 2}

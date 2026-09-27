@@ -27,8 +27,9 @@ MonoBehaviour:
     povo: 20
     estado: 15
     ouro: 50
-    textoRevelacao: "Ningu\xE9m viu o gravador vender nota alguma. O boato impresso
-      foi desmentido."
+    textoRevelacao: "O laudo do m\xE9dico e o registro do convento mostraram que
+      \xC9lisabeth voltou doente, e n\xE3o decidida a se converter. O boato dos ju\xEDzes
+      ruiu, e o panfleto que o repetiu tamb\xE9m."
     penalidadePovo: -10
     penalidadeEstado: -10
   calunia:
@@ -36,8 +37,8 @@ MonoBehaviour:
     povo: 25
     estado: 20
     ouro: 65
-    textoRevelacao: "Morel nunca teve contato com emigrados. A cal\xFAnia custou
-      caro \xE0 tipografia."
+    textoRevelacao: "Calas nunca confessou: morreu jurando inoc\xEAncia e foi reabilitado
+      em 1765. O cartaz era cal\xFAnia, e a tipografia pagou caro por espalh\xE1-lo."
     penalidadePovo: -15
     penalidadeEstado: -15
   soAlegacoes:
@@ -45,8 +46,8 @@ MonoBehaviour:
     povo: 5
     estado: 4
     ouro: 14
-    textoRevelacao: "O panfleto s\xF3 repetia a defesa do gravador. Os leitores esperavam
-      provas."
+    textoRevelacao: "O panfleto s\xF3 repetia a palavra de Sirven. Os leitores de
+      Voltaire esperavam provas, e o caso esfriou."
     penalidadePovo: -5
     penalidadeEstado: 0
   qualificadores:

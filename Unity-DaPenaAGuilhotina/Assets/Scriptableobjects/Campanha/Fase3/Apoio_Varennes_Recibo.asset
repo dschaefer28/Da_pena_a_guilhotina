@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: apoio_varennes_recibo
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: Recibo da estalagem de Sainte-Menehould
-  descricao: "Recibo da troca de cavalos pago pelo pr\xF3prio cocheiro, como em qualquer
-    viagem de aluguel."
-  fonte: Cocheiro Joubert
+  itemName: "A ordem de reclus\xE3o de 1781"
+  descricao: "C\xF3pia da ordem do Rei, obtida pelo pr\xF3prio Kornmann, que mandou
+    recolher a esposa numa casa de corre\xE7\xE3o em 1781, sem juiz nem processo.
+    Ela saiu de l\xE1 pouco depois, por interven\xE7\xE3o de amigos poderosos."
+  fonte: Guillaume Kornmann
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   confiabilidade: 0
   verificadaPor: []

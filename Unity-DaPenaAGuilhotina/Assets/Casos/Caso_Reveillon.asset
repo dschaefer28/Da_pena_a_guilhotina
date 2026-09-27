@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
   m_Name: Caso_Reveillon
   m_EditorClassIdentifier: Assembly-CSharp::CaseData
-  caseTitle: "Caso de Jean-Baptiste R\xE9veillon"
-  caseDescription: "Gira em torno do dono de uma pr\xF3spera f\xE1brica de pap\xE9is
-    de parede. Em meio \xE0 crise, ele sugeriu reduzir os sal\xE1rios dos seus oper\xE1rios
-    com a justificativa de que isso tamb\xE9m diminuiria o pre\xE7o do p\xE3o e dos
-    produtos. O povo faminto de Paris entendeu a fala como uma amea\xE7a de morte
-    pela fome. Como resultado, a multid\xE3o invadiu e saqueou sua f\xE1brica e resid\xEAncia,
-    o que culminou em um violento massacre do povo perpetrado pela Guarda Francesa."
-  objectiveText: 'terminar o caso '
+  caseTitle: "Os Trabalhadores de R\xE9veillon"
+  caseDescription: "Abril de 1789. Jean-Baptiste R\xE9veillon, dono de uma pr\xF3spera
+    manufatura de pap\xE9is de parede no faubourg Saint-Antoine, falou de sal\xE1rios
+    e do pre\xE7o do p\xE3o numa assembleia eleitoral. Dias depois, uma multid\xE3o
+    faminta saqueou sua casa e sua f\xE1brica, e a Guarda Francesa atirou contra
+    ela. R\xE9veillon quer que a tipografia limpe seu nome."
+  objectiveText: "Descobrir o que R\xE9veillon realmente prop\xF4s na assembleia
+    e como ele tratava seus oper\xE1rios."
   moneyReward: 50
   publicOpinionReward: -20
   stateOpinionReward: 50

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: PeticionariaLacombe_Padrao
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: "Peticion\xE1ria Lacombe"
-    text: "N\xE3o tenho nada a dizer sobre isso. A minha luta \xE9 outra."
+  - name: Sobrevivente
+    text: "Desde o Champ de Mars eu n\xE3o falo com estranhos. Me desculpe."
     dialogueAudio:
       Guid:
         Data1: 0

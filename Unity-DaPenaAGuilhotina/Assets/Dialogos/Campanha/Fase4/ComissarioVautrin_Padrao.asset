@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: ComissarioVautrin_Padrao
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: "Comiss\xE1rio Vautrin"
-    text: "O Comit\xEA n\xE3o tem nada a lhe dizer sobre isso, cidad\xE3o. Circule."
+  - name: Mercador
+    text: "N\xE3o tenho nada para vender, cidad\xE3o. Nem farinha, nem conversa."
     dialogueAudio:
       Guid:
         Data1: 0

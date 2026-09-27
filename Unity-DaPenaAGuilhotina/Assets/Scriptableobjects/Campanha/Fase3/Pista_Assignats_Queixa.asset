@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: pista_assignats_1
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: As chapas roubadas
-  descricao: "O gravador mostra a c\xF3pia da queixa registrada na se\xE7\xE3o dias
-    antes da pris\xE3o: ele denunciou o roubo de chapas de grava\xE7\xE3o."
-  fonte: Gravador Morel
+  itemName: "O testemunho do m\xE9dico local"
+  descricao: "Laudo assinado pelo m\xE9dico que atendeu \xC9lisabeth depois do convento:
+    ela falava com sombras, passava noites sem dormir e fugia de casa de madrugada.
+    O m\xE9dico conclui que ela sofria de del\xEDrio, e n\xE3o de maus-tratos."
+  fonte: "M\xE9dico"
   caso: {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}
   confiabilidade: 1
   verificadaPor: []

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Carcereiro_Caso_Jornalista
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Carcereiro
-    text: "O redator? Aqui dentro os presos contam que o jornal dele pediu a volta
-      do Rei, num n\xFAmero de outubro."
+  - name: Jacques-Pierre Brissot
+    text: "Camille pedindo clem\xEAncia? Que ironia. Foi a pena dele que ajudou a
+      nos trazer at\xE9 aqui."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -24,9 +24,9 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: Carcereiro
-    text: "Se quer saber do civismo dele, o arquivo da se\xE7\xE3o guarda os pap\xE9is.
-      E a caixa de den\xFAncias vive cheia de bilhetes sobre ele."
+  - name: Jacques-Pierre Brissot
+    text: "Aqui dentro se diz que a lista dele s\xF3 tem aristocratas e banqueiros
+      amigos da mulher, e que metade dos nomes foi inventada."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -35,3 +35,19 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
+  - name: Jacques-Pierre Brissot
+    text: "Se quer saber o que Robespierre pensa do amigo, o arquivo do Comit\xEA
+      guarda o rascunho anotado. E a caixa de den\xFAncias vive cheia de pap\xE9is
+      sobre Camille."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices:
+    - choiceText: O senhor viu a lista?
+      nextDialogue: {fileID: 11400000, guid: 57bb4a52cbd74934a99a494bb9ea5726, type: 2}
+    - choiceText: O senhor guarda rancor de Camille?
+      nextDialogue: {fileID: 11400000, guid: c6cfd232d0a4e8649a3226067e862ec1, type: 2}

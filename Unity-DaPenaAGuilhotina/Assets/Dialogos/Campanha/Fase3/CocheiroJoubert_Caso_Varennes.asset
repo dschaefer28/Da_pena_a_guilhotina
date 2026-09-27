@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: CocheiroJoubert_Caso_Varennes
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Cocheiro Joubert
-    text: Me contrataram em nome de uma tal baronesa de Korff. Sessenta libras, em
-      moeda francesa, como qualquer frete.
+  - name: Guillaume Kornmann
+    text: "Minha esposa me desonrou, mas o verdadeiro crime \xE9 o Estado proteg\xEA-la
+      porque ela serve ao prazer dos ministros do Rei."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -24,9 +24,9 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: Cocheiro Joubert
-    text: "Eu s\xF3 conduzia os cavalos, juro. Tenho o contrato aqui: leia o senhor
-      mesmo."
+  - name: Guillaume Kornmann
+    text: "Tenho o di\xE1rio dela, escrito com a letra dela. Est\xE1 tudo ali: o
+      amante, as promessas, os protetores."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -35,9 +35,9 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: Cocheiro Joubert
-    text: "E a peticion\xE1ria da pra\xE7a ainda anda contando que me pagaram em
-      ouro da \xC1ustria!"
+  - name: Guillaume Kornmann
+    text: "E aquele advogado dos Cordeliers, o Danton, ri de mim no caf\xE9 dizendo
+      que eu mesmo escrevi o di\xE1rio!"
     dialogueAudio:
       Guid:
         Data1: 0
@@ -46,3 +46,22 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
+  - name: Guillaume Kornmann
+    text: "Eu tenho o ouro, voc\xEA tem a pena. Vamos destruir a reputa\xE7\xE3o
+      desses aristocratas?"
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices:
+    - choiceText: "Podemos associar o seu caso ao dramaturgo Beaumarchais para garantir
+        que toda Paris fale sobre essa corrup\xE7\xE3o."
+      nextDialogue: {fileID: 11400000, guid: a4424cf6c80aac34e95c1403b1c3dca2, type: 2}
+    - choiceText: "Se atacarmos os antigos ministros, os amigos deles ainda t\xEAm
+        poder. O senhor est\xE1 pronto para as consequ\xEAncias?"
+      nextDialogue: {fileID: 11400000, guid: c24af45a7fed57d4ba63dc190723138e, type: 2}
+    - choiceText: "Por que o senhor quer o div\xF3rcio agora?"
+      nextDialogue: {fileID: 11400000, guid: de9bb1be92fa78d4ba89fd9c4b32b6d3, type: 2}

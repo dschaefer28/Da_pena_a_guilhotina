@@ -15,9 +15,12 @@ MonoBehaviour:
   itemID: alegacao_champ_1
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
-  itemName: "Carta da peticion\xE1ria: \xE9ramos pac\xEDficos"
-  descricao: "Ela jura que ningu\xE9m ali estava armado."
+  itemName: "Carta de Danton: s\xF3 usei a palavra"
+  descricao: "Danton jura que nunca pegou em armas nem mandou ningu\xE9m pegar: s\xF3
+    defendeu uma peti\xE7\xE3o \xE0 Assembleia."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

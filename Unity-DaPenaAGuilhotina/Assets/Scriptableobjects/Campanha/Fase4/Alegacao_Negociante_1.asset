@@ -15,9 +15,12 @@ MonoBehaviour:
   itemID: alegacao_negociante_1
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
-  itemName: "Of\xEDcio do Comit\xEA: inimigo do povo"
-  descricao: "O Comit\xEA afirma que Garnier \xE9 inimigo do povo."
+  itemName: "Carta do mercador: a farinha n\xE3o \xE9 minha"
+  descricao: "O mercador jura que os sacos pertencem a um homem rico que usa o por\xE3o
+    dele como dep\xF3sito."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 08a12328210a2ab45b8948af72c05f4e, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

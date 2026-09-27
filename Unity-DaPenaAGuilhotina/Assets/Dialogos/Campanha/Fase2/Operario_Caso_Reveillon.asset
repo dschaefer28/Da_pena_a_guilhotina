@@ -44,4 +44,8 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices: []
+    choices:
+    - choiceText: "Voc\xEA ouviu isso na assembleia?"
+      nextDialogue: {fileID: 11400000, guid: 2efb6109c69c7ff4bb22950a49ce4e84, type: 2}
+    - choiceText: Por que isso revoltou tanto o bairro?
+      nextDialogue: {fileID: 11400000, guid: 8264a95fd907fd342b234365558a68fb, type: 2}

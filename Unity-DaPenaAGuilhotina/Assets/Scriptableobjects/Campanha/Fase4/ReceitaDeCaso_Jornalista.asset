@@ -27,8 +27,9 @@ MonoBehaviour:
     povo: 30
     estado: -30
     ouro: 25
-    textoRevelacao: As 'cartas inglesas' nunca existiram. O boato impresso enfraqueceu
-      a defesa.
+    textoRevelacao: "Os registros de pris\xE3o confirmaram os nomes da lista: artes\xE3os,
+      vi\xFAvas e lojistas, n\xE3o aristocratas. O boato de que Camille inventou
+      tudo ruiu, e enfraqueceu o panfleto que o repetiu."
     penalidadePovo: -10
     penalidadeEstado: -5
   calunia:
@@ -36,8 +37,9 @@ MonoBehaviour:
     povo: 40
     estado: -40
     ouro: 35
-    textoRevelacao: "N\xE3o havia arma alguma na reda\xE7\xE3o. A cal\xFAnia foi
-      usada contra a pr\xF3pria tipografia."
+    textoRevelacao: "As anota\xE7\xF5es eram mesmo de Robespierre: a letra conferia
+      com a dos pap\xE9is do Comit\xEA. A den\xFAncia de falsifica\xE7\xE3o era cal\xFAnia,
+      usada depois contra a pr\xF3pria tipografia."
     penalidadePovo: -20
     penalidadeEstado: -10
   soAlegacoes:
@@ -45,8 +47,8 @@ MonoBehaviour:
     povo: 8
     estado: -8
     ouro: 6
-    textoRevelacao: "O panfleto s\xF3 repetia as palavras de Marchand. Soou como
-      desespero."
+    textoRevelacao: "O panfleto s\xF3 repetia as palavras de Camille. Soou como o
+      apelo de um homem assustado."
     penalidadePovo: -5
     penalidadeEstado: 0
   qualificadores:

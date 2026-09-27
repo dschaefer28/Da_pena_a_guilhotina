@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
+  m_Name: PeticionariaLacombe_Caso_ChampDeMars_R3
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  talkScript:
+  - name: Sobrevivente
+    text: "Assin\xE1vamos desde a manh\xE3, um de cada vez. Havia mulheres, crian\xE7as,
+      gente que s\xF3 sabia fazer uma cruz."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Sobrevivente
+    text: "Quando a Guarda chegou, uns rapazes jogaram pedras do barranco. N\xF3s,
+      no altar, s\xF3 t\xEDnhamos a pena e o papel. Tome, leve a peti\xE7\xE3o."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []

@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: pista_champ_boato
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: O primeiro tiro
-  descricao: "Segundo as vizinhas do mercado, os peticion\xE1rios vieram armados
-    e atiraram primeiro; a Guarda s\xF3 se defendeu."
-  fonte: Vizinhas do mercado
+  itemName: As armas do altar
+  descricao: "Segundo os guardas que o m\xE9dico tratou, no altar da p\xE1tria n\xE3o
+    se assinava peti\xE7\xE3o nenhuma: Danton mandou armar o povo, e a folha de assinaturas
+    foi escrita depois, para disfar\xE7ar a insurrei\xE7\xE3o."
+  fonte: "Guardas tratados pelo m\xE9dico"
   caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
   confiabilidade: 2
   verificadaPor: []

@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
   m_Name: Caso_Operario
   m_EditorClassIdentifier: Assembly-CSharp::CaseData
-  caseTitle: "Caso do Oper\xE1rio "
-  caseDescription: "O oper\xE1rio \xE9 um dos sobreviventes do massacre da f\xE1brica
-    de R\xE9veillon. Ele procura ajuda jur\xEDdica para fugir da condena\xE7\xE3o,
-    relatando que a guarda n\xE3o queria apenas conter o levante, mas atirar para
-    matar os trabalhadores que se reuniram em busca de comida e sal\xE1rios dignos."
-  objectiveText: terminar o caso
+  caseTitle: "O Oper\xE1rio Acusado"
+  caseDescription: "Abril de 1789. Um oper\xE1rio do faubourg Saint-Antoine sobreviveu
+    ao massacre na manufatura de R\xE9veillon e agora \xE9 procurado por participar
+    do levante. Ele diz que a multid\xE3o s\xF3 pedia p\xE3o e sal\xE1rio, e que
+    a Guarda Francesa atirou para matar. Ele pede ajuda para escapar da condena\xE7\xE3o."
+  objectiveText: "Descobrir como a Guarda agiu contra a multid\xE3o e o que sustenta
+    a acusa\xE7\xE3o contra o oper\xE1rio."
   moneyReward: 10
   publicOpinionReward: 60
   stateOpinionReward: -20

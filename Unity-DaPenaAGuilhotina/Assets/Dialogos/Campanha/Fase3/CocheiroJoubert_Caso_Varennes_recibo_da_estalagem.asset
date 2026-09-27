@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: CocheiroJoubert_Caso_Varennes_recibo_da_estalagem
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Cocheiro Joubert
-    text: "O depoimento do mestre de posta! Ent\xE3o o senhor j\xE1 sabe que o Drouet
-      reconheceu o Rei sozinho."
+  - name: Guillaume Kornmann
+    text: "Ent\xE3o achou o m\xE9moire daquele saltimbanco! Ele mesmo confessa que
+      tirou minha mulher da reclus\xE3o."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -24,9 +24,29 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: Cocheiro Joubert
-    text: 'Guardei o recibo da estalagem: paguei os cavalos do meu bolso, como qualquer
-      cocheiro. Leve.'
+  - name: Guillaume Kornmann
+    text: "Leve tamb\xE9m isto: a ordem do Rei que a mandou recolher, em 1781. Ela
+      estava presa por ordem r\xE9gia, e mesmo assim os amigos dela a soltaram."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Julien Valois
+    text: Uma ordem do Rei, sem juiz nem processo.
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Guillaume Kornmann
+    text: Era a lei do meu tempo, meu caro. Use-a como quiser.
     dialogueAudio:
       Guid:
         Data1: 0

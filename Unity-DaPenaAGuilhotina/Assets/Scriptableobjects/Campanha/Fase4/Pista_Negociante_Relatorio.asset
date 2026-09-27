@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: pista_negociante_1
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: "Os armaz\xE9ns de Garnier"
-  descricao: "O comiss\xE1rio mostra o relat\xF3rio da inspe\xE7\xE3o: os armaz\xE9ns
-    de Garnier guardavam trigo em bom estado, o dobro do que ele declarou."
-  fonte: "Comiss\xE1rio Vautrin"
+  itemName: As faturas do atravessador
+  descricao: "Faturas em nome de um fornecedor dos ex\xE9rcitos, homem rico do bairro:
+    foi ele quem comprou e pagou a farinha, e ele aluga o por\xE3o do mercador como
+    dep\xF3sito. O mercador recebe s\xF3 o aluguel."
+  fonte: Mercador
   caso: {fileID: 11400000, guid: 08a12328210a2ab45b8948af72c05f4e, type: 2}
   confiabilidade: 1
   verificadaPor: []

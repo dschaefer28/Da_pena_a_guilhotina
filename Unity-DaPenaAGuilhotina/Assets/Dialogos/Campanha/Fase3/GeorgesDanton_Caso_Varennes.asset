@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91bcb522deb37a4ab25bed5ecb00d5d, type: 3}
+  m_Name: GeorgesDanton_Caso_Varennes
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  talkScript:
+  - name: Georges Danton
+    text: "O banqueiro Kornmann? Todo o caf\xE9 comenta que ele mesmo escreveu o
+      di\xE1rio da mulher, imitando a letra dela, para ganhar o div\xF3rcio e ficar
+      com o dote."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Georges Danton
+    text: "Algu\xE9m esqueceu na mesa do caf\xE9 um m\xE9moire do Beaumarchais sobre
+      o caso, e na caixa de tipos est\xE3o compondo um libelo contra o banqueiro.
+      Leia os dois e ria comigo."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices:
+    - choiceText: "O senhor leu o di\xE1rio?"
+      nextDialogue: {fileID: 11400000, guid: 27ffcde5f0c60e64493c4ee4bc14cdc8, type: 2}
+    - choiceText: Por que Paris se importa com o casamento de um banqueiro?
+      nextDialogue: {fileID: 11400000, guid: 1551a46e9a35b524f85b3518b2eb164a, type: 2}

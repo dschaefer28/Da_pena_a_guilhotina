@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Carcereiro_Padrao
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Carcereiro
-    text: "Na Conciergerie a gente ouve de tudo, cidad\xE3o. Mas disso a\xED, nada."
+  - name: Jacques-Pierre Brissot
+    text: "N\xE3o sei nada disso, cidad\xE3o. Um homem acusado de tudo aprende a
+      n\xE3o falar do que n\xE3o sabe."
     dialogueAudio:
       Guid:
         Data1: 0

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: CidadaDelorme_Caso_Girondina_carta_da_secao
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: "Cidad\xE3 Delorme"
-    text: "Ele retirou a den\xFAncia? Gra\xE7as a Deus."
+  - name: Pierre Vergniaud
+    text: "Ent\xE3o voc\xEA viu a nota de Robespierre. Eles t\xEAm pressa porque
+      a nossa defesa assusta."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -23,9 +24,9 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: "Cidad\xE3 Delorme"
-    text: "Ent\xE3o tome tamb\xE9m isto: a se\xE7\xE3o me deu esta carta quando doei
-      roupas aos volunt\xE1rios."
+  - name: Pierre Vergniaud
+    text: "Leve tamb\xE9m as minhas notas. Se eu n\xE3o puder terminar de falar,
+      que o seu panfleto termine por mim."
     dialogueAudio:
       Guid:
         Data1: 0

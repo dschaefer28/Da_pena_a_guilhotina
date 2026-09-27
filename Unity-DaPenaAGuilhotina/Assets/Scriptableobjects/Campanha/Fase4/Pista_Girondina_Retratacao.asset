@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: pista_girondina_2
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: "A den\xFAncia retirada"
-  descricao: "O vizinho que a denunciou retirou a acusa\xE7\xE3o por escrito: queria
-    o apartamento dela."
-  fonte: "Caixa de den\xFAncias"
+  itemName: O testemunho de Robespierre
+  descricao: "Nota com a letra de Robespierre, arquivada entre os pap\xE9is do Comit\xEA:
+    pede que o tribunal abrevie os debates e condene os acusados depressa, 'para
+    salvar a p\xE1tria', antes que a defesa termine."
+  fonte: "Arquivo do Comit\xEA"
   caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
   confiabilidade: 1
   verificadaPor: []

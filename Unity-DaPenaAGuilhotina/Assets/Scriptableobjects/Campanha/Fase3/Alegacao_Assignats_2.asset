@@ -15,9 +15,12 @@ MonoBehaviour:
   itemID: alegacao_assignats_2
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
-  itemName: 'Carta do gravador: sou patriota'
-  descricao: "Ele lembra que gravou de gra\xE7a os emblemas da se\xE7\xE3o."
+  itemName: 'Carta de Sirven: querem os nossos bens'
+  descricao: "Ele afirma que os ju\xEDzes querem a acusa\xE7\xE3o para confiscar
+    os bens da fam\xEDlia, e n\xE3o para fazer justi\xE7a."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

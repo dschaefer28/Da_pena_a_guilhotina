@@ -15,10 +15,13 @@ MonoBehaviour:
   itemID: pista_assignats_2
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: O defeito dos tipos
-  descricao: "Os tipos das notas falsas t\xEAm um defeito que n\xE3o existe nos tipos
-    de Morel: foram impressas em outra prensa."
-  fonte: Caixa de tipos da oficina
+  itemName: "O Tratado sobre a Toler\xE2ncia"
+  descricao: "Provas de uma nova edi\xE7\xE3o do Tratado sobre a Toler\xE2ncia, que
+    Voltaire escreveu em 1763 pelo caso Calas: um pai protestante de Toulouse supliciado
+    sob a acusa\xE7\xE3o de matar o filho para impedir sua convers\xE3o. Calas foi
+    reabilitado em 1765. Voltaire defende que a raz\xE3o, e n\xE3o o dogma, guie
+    o juiz."
+  fonte: "Provas de impress\xE3o na caixa de tipos"
   caso: {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}
   confiabilidade: 1
   verificadaPor: []

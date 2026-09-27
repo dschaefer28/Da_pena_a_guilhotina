@@ -15,10 +15,12 @@ MonoBehaviour:
   itemID: pista_champ_1
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: "A peti\xE7\xE3o do altar da p\xE1tria"
-  descricao: "Segundo a peticion\xE1ria, quem assinava estava desarmado: a folha
-    tem dezenas de assinaturas, e nenhum tiro partiu do altar da p\xE1tria."
-  fonte: "Peticion\xE1ria Lacombe"
+  itemName: "A peti\xE7\xE3o manchada de sangue"
+  descricao: "Peda\xE7o da peti\xE7\xE3o do altar da p\xE1tria, manchado de sangue
+    na hora dos tiros: pede \xE0 Assembleia que consulte a na\xE7\xE3o antes de decidir
+    o destino do Rei. As assinaturas, uma a uma, muitas com uma cruz, param na borda
+    rasgada. Segundo o sobrevivente, quem assinava estava desarmado."
+  fonte: Sobrevivente do Champ de Mars
   caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
   confiabilidade: 1
   verificadaPor: []

@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: pista_jornalista_boato
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: "O n\xFAmero de outubro"
-  descricao: "Segundo o carcereiro, os presos contam que o jornal de Marchand pediu
-    a volta do Rei num n\xFAmero de outubro."
-  fonte: Carcereiro da Conciergerie
+  itemName: Os nomes da lista
+  descricao: "Segundo Brissot, a lista de Camille s\xF3 tem aristocratas e banqueiros
+    amigos da mulher dele, e metade dos nomes foi inventada para tirar da pris\xE3o
+    quem ele quer proteger."
+  fonte: Jacques-Pierre Brissot
   caso: {fileID: 11400000, guid: 917d88bbcfe670d4ea21a881e3662a0b, type: 2}
   confiabilidade: 2
   verificadaPor: []

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: PeticionariaLacombe_Caso_ChampDeMars
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: "Peticion\xE1ria Lacombe"
-    text: "Assin\xE1vamos uma peti\xE7\xE3o, sem uma arma sequer. E eles atiraram."
+  - name: Sobrevivente
+    text: "Eles atiraram sem aviso... O papel que carreg\xE1vamos n\xE3o era uma
+      arma, era um pedido de socorro \xE0 Na\xE7\xE3o!"
     dialogueAudio:
       Guid:
         Data1: 0
@@ -23,8 +24,8 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: "Peticion\xE1ria Lacombe"
-    text: "Guardei a folha. O sangue ainda est\xE1 nela."
+  - name: Sobrevivente
+    text: "Guardei isso comigo. Est\xE1 manchado, mas \xE9 a prova da nossa inten\xE7\xE3o."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -32,15 +33,12 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices: []
-  - name: "Peticion\xE1ria Lacombe"
-    text: "E no mercado a vi\xFAva do padeiro repete que fomos n\xF3s que atiramos
-      primeiro!"
-    dialogueAudio:
-      Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
-    choices: []
+    choices:
+    - choiceText: "Entregue-me a peti\xE7\xE3o. Vou transform\xE1-la em um grito
+        que a Assembleia n\xE3o poder\xE1 ignorar."
+      nextDialogue: {fileID: 11400000, guid: 7cc7f3917ad81e944af586d173862871, type: 2}
+    - choiceText: "Este papel \xE9 perigoso. Se eu for pego com ele, seremos ambos
+        considerados traidores."
+      nextDialogue: {fileID: 11400000, guid: 18d503be425caac46982581696019847, type: 2}
+    - choiceText: O que acontecia no altar antes dos tiros?
+      nextDialogue: {fileID: 11400000, guid: 242599a0d212dfc4d835716fea4713d6, type: 2}

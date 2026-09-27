@@ -15,9 +15,11 @@ MonoBehaviour:
   itemID: panfleto_girondina
   itemImg: {fileID: -6434777298250132992, guid: b2bb80b0c42cdd84889695ff162a2962, type: 3}
   itemAmt: 1
-  itemName: "Panfleto: A Vi\xFAva Girondina"
-  descricao: "Panfleto impresso sobre a vi\xFAva Delorme."
+  itemName: A Liberdade da Escrita
+  descricao: Panfleto da tipografia sobre o julgamento dos girondinos.
   fonte: Tipografia
   caso: {fileID: 0}
   confiabilidade: 0
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

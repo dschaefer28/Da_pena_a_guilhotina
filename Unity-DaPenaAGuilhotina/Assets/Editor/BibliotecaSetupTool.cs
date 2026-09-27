@@ -76,13 +76,14 @@ public static class BibliotecaSetupTool
             falas = new[] { "Ele retirou a denúncia? Graças a Deus.", "Então tome também isto: a seção me deu esta carta quando doei roupas aos voluntários." } },
     };
 
-    /// <summary>Descrição de referência do documento vendido para o caso (ex.: "Caso_Varennes"), ou null.</summary>
+    /// <summary>Descrição de referência do documento vendido para o caso (ex.: "Caso_Varennes"), ou null. Desde o conteúdo
+    /// do GDD, os textos em vigor são os de NarrativaGddSetupTool (ferramenta 8); os de baixo servem para criar os assets.</summary>
     internal static string DescricaoDaOferta(string casoArquivo) =>
-        System.Array.Find(Ofertas, o => o.caso == casoArquivo)?.descricao;
+        NarrativaGddSetupTool.DescricaoDaOferta(casoArquivo) ?? System.Array.Find(Ofertas, o => o.caso == casoArquivo)?.descricao;
 
     /// <summary>Falas de referência de uma etapa complementar (ex.: "recibo_da_estalagem"), ou null.</summary>
     internal static string[] FalasDaEtapa(string etapaId) =>
-        System.Array.Find(Etapas, e => e.id == etapaId)?.falas;
+        NarrativaGddSetupTool.FalasDaEtapa(etapaId) ?? System.Array.Find(Etapas, e => e.id == etapaId)?.falas;
 
     [MenuItem("Ferramentas/Campanha/3 - Aplicar biblioteca e documentos de apoio")]
     public static void AplicarPeloMenu() => Debug.Log(Aplicar());

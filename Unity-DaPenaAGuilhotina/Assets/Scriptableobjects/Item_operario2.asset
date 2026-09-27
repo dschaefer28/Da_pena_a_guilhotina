@@ -16,8 +16,8 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 0
   itemName: A ordem do comandante
-  descricao: "Cartaz com a ordem do comandante: 'dispersar a multid\xE3o por todos
-    os meios', afixado antes de qualquer viol\xEAncia."
+  descricao: "Cartaz com a ordem do comandante da Guarda, 'dispersar a multid\xE3o
+    por todos os meios', afixado antes de a multid\xE3o chegar \xE0 manufatura."
   fonte: Cartaz arrancado de um muro
   caso: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
   confiabilidade: 1

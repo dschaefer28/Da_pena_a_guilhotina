@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: pista_negociante_boato
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: O trigo apodrecido
-  descricao: "Segundo o carcereiro, os armaz\xE9ns de Garnier est\xE3o cheios de
-    trigo podre: ele deixa o gr\xE3o estragar para o povo passar fome."
-  fonte: Carcereiro da Conciergerie
+  itemName: "A farinha do por\xE3o"
+  descricao: "Segundo Desmoulins, a se\xE7\xE3o inteira jura que os sacos s\xE3o
+    do pr\xF3prio mercador: ele compra toda a farinha do bairro para revend\xEA-la
+    pelo triplo, \xE0s escondidas."
+  fonte: Camille Desmoulins
   caso: {fileID: 11400000, guid: 08a12328210a2ab45b8948af72c05f4e, type: 2}
   confiabilidade: 2
   verificadaPor: []

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: RedatorMarchand_Caso_Jornalista
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Redator Marchand
-    text: "Pedi clem\xEAncia, cidad\xE3o. S\xF3 isso. Agora querem a minha cabe\xE7a."
+  - name: Camille Desmoulins
+    text: Maximilien foi meu colega de escola... Ele hesitou antes de deixar que
+      me chamassem de suspeito.
     dialogueAudio:
       Guid:
         Data1: 0
@@ -23,8 +24,9 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: Redator Marchand
-    text: Leve os exemplares. Mostre ao tribunal o que eu realmente escrevi.
+  - name: Camille Desmoulins
+    text: "Eu n\xE3o quero derrubar a Rep\xFAblica, Valois, eu quero salv\xE1-la
+      de si mesma! Esta lista prova que estamos prendendo inocentes."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -33,9 +35,9 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: Redator Marchand
-    text: Na Conciergerie, o carcereiro conta aos presos que eu pedi a volta do Rei.
-      Nunca escrevi isso!
+  - name: Camille Desmoulins
+    text: "E Brissot, l\xE1 da pris\xE3o, espalha que eu inventei os nomes. Logo
+      ele, que a minha pena ajudou a derrubar."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -43,4 +45,12 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices: []
+    choices:
+    - choiceText: "Se Robespierre anotou o seu rascunho, isso prova que h\xE1 ranhuras
+        no Comit\xEA. Onde est\xE1 o manuscrito?"
+      nextDialogue: {fileID: 11400000, guid: 4977b56831d7eb44887f5c30c3bbdbc3, type: 2}
+    - choiceText: "Publicar esta lista de inocentes agora \xE9 declarar guerra aberta
+        ao Terror. Voc\xEA est\xE1 pronto para ser o pr\xF3ximo?"
+      nextDialogue: {fileID: 11400000, guid: 1776c8d36fe44844e9ccb9a2e0c36488, type: 2}
+    - choiceText: "Quem s\xE3o as pessoas da lista?"
+      nextDialogue: {fileID: 11400000, guid: 231cd7cc4bfbcfe4e8018319fe655e3e, type: 2}

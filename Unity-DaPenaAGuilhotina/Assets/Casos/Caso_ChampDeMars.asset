@@ -12,18 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
   m_Name: Caso_ChampDeMars
   m_EditorClassIdentifier: Assembly-CSharp::CaseData
-  caseTitle: O Fuzilamento do Champ de Mars
-  caseDescription: "Julho de 1791. A Guarda Nacional abriu fogo contra quem assinava
-    uma peti\xE7\xE3o pela Rep\xFAblica no Champ de Mars. A peticion\xE1ria Lacombe,
-    ferida, quer que a tipografia revele quem deu a ordem."
-  objectiveText: Descobrir quem ordenou o fogo.
+  caseTitle: O Julgamento de Georges Danton
+  caseDescription: "1791. Depois do massacre do Champ de Mars, a justi\xE7a expede
+    mandados de pris\xE3o contra l\xEDderes dos Cordeliers. Georges Danton \xE9 acusado
+    de incitar uma insurrei\xE7\xE3o armada. Ele diz que s\xF3 defendeu uma peti\xE7\xE3o
+    \xE0 Assembleia e quer que a tipografia mostre que a lei protege quem assina
+    e se re\xFAne em paz."
+  objectiveText: "Provar se Danton incitou uma insurrei\xE7\xE3o armada ou exerceu
+    o direito de peti\xE7\xE3o."
   moneyReward: 30
   publicOpinionReward: 20
   stateOpinionReward: -10
   fase: 3
   rota: 0
   horasDeInvestigacao: 0
-  npcDialogueRoute: {fileID: 11400000, guid: 6e41ac65d4254ff48b358c1e51d5e873, type: 2}
+  npcDialogueRoute: {fileID: 11400000, guid: 3a6ab27d4ff371744967322468d6f5e5, type: 2}
   nextSceneName: Fase3
   receitaDoPanfleto: {fileID: 11400000, guid: a4eb890d825fae444a5c33a292b57fc7, type: 2}
   alegacoesIniciais:

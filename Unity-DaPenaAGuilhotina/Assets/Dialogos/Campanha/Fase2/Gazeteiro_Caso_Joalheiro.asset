@@ -14,7 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: Gazeteiro
-    text: "O colar? Nas tavernas s\xF3 se fala disso!"
+    text: "Gazetas! O colar da Rainha outra vez! Desde que aquela condessa fugiu
+      da pris\xE3o e escreveu suas mem\xF3rias, Paris n\xE3o fala de outra coisa."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Julien Valois
+    text: E o que dizem nas tavernas?
     dialogueAudio:
       Guid:
         Data1: 0
@@ -24,8 +35,8 @@ MonoBehaviour:
       Path: 
     choices: []
   - name: Gazeteiro
-    text: "Dizem que a pr\xF3pria Rainha foi \xE0 loja, disfar\xE7ada, escolher o
-      colar escondida do Rei. Depois negou tudo."
+    text: "Que a pr\xF3pria Rainha foi \xE0 loja do joalheiro, disfar\xE7ada, escolher
+      o colar escondida do Rei. Depois negou tudo."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -44,4 +55,8 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices: []
+    choices:
+    - choiceText: Quem viu a Rainha na loja?
+      nextDialogue: {fileID: 11400000, guid: fb03d0b221262ce418fbbe1c5b7b2dc1, type: 2}
+    - choiceText: "Por que o povo acredita t\xE3o f\xE1cil?"
+      nextDialogue: {fileID: 11400000, guid: 893d7e352df0a5d48a29c72cfbea9e09, type: 2}

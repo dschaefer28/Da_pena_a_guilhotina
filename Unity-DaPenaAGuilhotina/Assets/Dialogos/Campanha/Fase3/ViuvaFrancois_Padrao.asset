@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: ViuvaFrancois_Padrao
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: "Vi\xFAva Fran\xE7ois"
-    text: "Desculpe, n\xE3o sei nada sobre isso. Desde que levaram o meu Denis, mal
-      saio de casa."
+  - name: "M\xE9dico"
+    text: "Sou m\xE9dico, n\xE3o advogado. Se \xE9 sobre doen\xE7as, estou \xE0s
+      ordens; se \xE9 sobre processos, n\xE3o posso ajudar."
     dialogueAudio:
       Guid:
         Data1: 0

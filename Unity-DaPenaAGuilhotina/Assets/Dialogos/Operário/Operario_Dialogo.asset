@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: "Oper\xE1rio"
-    text: Obrigado por me ajudar Senhor. Serei eternamente grato.
+    text: Obrigado por me ajudar, senhor. Serei eternamente grato.
     dialogueAudio:
       Guid:
         Data1: 0
@@ -25,3 +25,5 @@ MonoBehaviour:
     choices:
     - choiceText: Mas me diga, como tudo aconteceu?
       nextDialogue: {fileID: 11400000, guid: 3337009e8a97aee43bb7cb7c6c456df3, type: 2}
+    - choiceText: Do que exatamente o acusam?
+      nextDialogue: {fileID: 11400000, guid: a96a9ed285b0a2e4c8331dcd243b8da3, type: 2}

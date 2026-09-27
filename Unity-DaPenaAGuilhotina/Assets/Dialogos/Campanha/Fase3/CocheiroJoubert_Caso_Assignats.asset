@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: CocheiroJoubert_Caso_Assignats
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Cocheiro Joubert
-    text: "O gravador? Nas tavernas se diz que as chapas nunca sa\xEDram da oficina
-      dele. Inventou o roubo depois de preso."
+  - name: Guillaume Kornmann
+    text: "Conhe\xE7o os ju\xEDzes, meu caro, janto com metade deles. Contam que
+      a mo\xE7a saiu do convento s\xE3 e feliz, decidida a se converter, e que o
+      pai a trancava em casa para impedi-la."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -24,9 +25,9 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: Cocheiro Joubert
-    text: "Deixaram um papel sobre isso no balc\xE3o da padaria. E a caixa de tipos
-      da oficina dele ainda est\xE1 na rua, se o senhor quiser conferir."
+  - name: Guillaume Kornmann
+    text: "A tipografia da esquina reimprime o Tratado de Voltaire na caixa de tipos,
+      e colaram um cartaz sobre Calas no mural. Paris adora uma briga de religi\xE3o."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -34,4 +35,8 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices: []
+    choices:
+    - choiceText: "Os ju\xEDzes viram a mo\xE7a depois do convento?"
+      nextDialogue: {fileID: 11400000, guid: 83e27a2f71b2bb34cb45e2fd5cce3829, type: 2}
+    - choiceText: "Por que o senhor repete o que os ju\xEDzes dizem?"
+      nextDialogue: {fileID: 11400000, guid: 18d9a9a661786124fb3a4bcf235ca02c, type: 2}

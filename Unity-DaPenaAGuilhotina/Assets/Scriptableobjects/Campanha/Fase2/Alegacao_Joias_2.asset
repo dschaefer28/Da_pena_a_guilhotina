@@ -15,10 +15,13 @@ MonoBehaviour:
   itemID: alegacao_joias_2
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
-  itemName: 'Carta do joalheiro: a Coroa me deve'
-  descricao: "Ele afirma que a Coroa deveria pagar o colar, j\xE1 que a fraude usou
-    o nome da Rainha."
+  itemName: 'Carta do duque: o retrato da Rainha'
+  descricao: "O duque anexa uma gravura do retrato de Maria Antonieta em vestido
+    de musselina, pintado por Vig\xE9e Le Brun e retirado do Sal\xE3o de 1783 depois
+    das cr\xEDticas. Para ele, o retrato prova que a Rainha \xE9 leviana."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

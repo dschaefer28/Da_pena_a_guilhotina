@@ -15,9 +15,12 @@ MonoBehaviour:
   itemID: alegacao_assignats_1
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
-  itemName: 'Carta do gravador: roubaram minhas chapas'
-  descricao: Morel jura que as chapas sumiram da oficina.
+  itemName: 'Carta de Sirven: minha filha estava doente'
+  descricao: "Sirven jura que \xC9lisabeth nunca mais foi a mesma depois do convento
+    e que ningu\xE9m em casa lhe fez mal."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

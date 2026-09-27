@@ -15,9 +15,10 @@ MonoBehaviour:
   itemID: pista_operario_1
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 0
-  itemName: O relato do sobrevivente
-  descricao: "Segundo o oper\xE1rio, a Guarda Francesa atirou contra a multid\xE3o
-    desarmada que pedia p\xE3o e sal\xE1rio."
+  itemName: Desejo de morte
+  descricao: "Segundo o oper\xE1rio, a Guarda Francesa chegou atirando para matar,
+    e n\xE3o para dispersar: a multid\xE3o, sem armas de fogo, pedia p\xE3o e sal\xE1rio,
+    e ele viu os companheiros ca\xEDrem."
   fonte: "O pr\xF3prio oper\xE1rio"
   caso: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
   confiabilidade: 1

@@ -15,10 +15,12 @@ MonoBehaviour:
   itemID: pista_varennes_2
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: A parada em Sainte-Menehould
-  descricao: "Ata no mural: em Sainte-Menehould, o mestre de posta Drouet reconheceu
-    o Rei sozinho e galopou at\xE9 Varennes num cavalo descansado da pr\xF3pria posta."
-  fonte: Ata afixada pelo clube dos Cordeliers
+  itemName: "A colabora\xE7\xE3o de Beaumarchais"
+  descricao: "Exemplar de um m\xE9moire do pr\xF3prio Beaumarchais, o autor de 'As
+    Bodas de F\xEDgaro': ele conta que, em 1781, pediu \xE0s autoridades de pol\xEDcia
+    que tirassem a senhora Kornmann, ent\xE3o gr\xE1vida, da casa de corre\xE7\xE3o
+    onde o marido a mandara recolher."
+  fonte: "M\xE9moire esquecido na mesa do caf\xE9"
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   confiabilidade: 1
   verificadaPor: []

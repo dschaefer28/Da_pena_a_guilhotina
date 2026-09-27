@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: ComissarioVautrin_Caso_Negociante
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: "Comiss\xE1rio Vautrin"
-    text: "O Comit\xEA conta com a sua prensa, cidad\xE3o. Garnier rouba o p\xE3o
-      do povo."
+  - name: Mercador
+    text: "Cidad\xE3o Valois, eu n\xE3o sou um traidor! Se eu vender o que sobrou,
+      n\xE3o haver\xE1 sementes para o amanh\xE3."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -24,9 +24,9 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: "Comiss\xE1rio Vautrin"
-    text: "Eis o relat\xF3rio da inspe\xE7\xE3o: o trigo estava l\xE1, em bom estado,
-      o dobro do que ele declarou."
+  - name: Mercador
+    text: "O povo me chama de a\xE7ambarcador, mas os verdadeiros lucros est\xE3o
+      nos bolsos da elite que me usa como dep\xF3sito!"
     dialogueAudio:
       Guid:
         Data1: 0
@@ -35,9 +35,9 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: "Comiss\xE1rio Vautrin"
-    text: "O carcereiro da Conciergerie jura que o trigo \xE9 podre. N\xE3o \xE9:
-      eu mesmo o vi."
+  - name: Mercador
+    text: "E o jornalista Desmoulins j\xE1 escreveu que a farinha \xE9 minha. Na
+      se\xE7\xE3o, ningu\xE9m l\xEA outra coisa."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -45,4 +45,12 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices: []
+    choices:
+    - choiceText: "Entregue as faturas. Se provarmos que voc\xEA \xE9 apenas um empregado
+        da elite, o \xF3dio da massa ter\xE1 um novo alvo."
+      nextDialogue: {fileID: 11400000, guid: b52912b7690b1d14f95a77ca7d64633d, type: 2}
+    - choiceText: "Vou atacar as Leis de Abastecimento. O governo prefere prender
+        mercadores a admitir que o tabelamento de pre\xE7os falhou."
+      nextDialogue: {fileID: 11400000, guid: 806ebc48ff0c1b04b98ac05931f8a2c3, type: 2}
+    - choiceText: "Afinal, os sacos s\xE3o sementes ou farinha?"
+      nextDialogue: {fileID: 11400000, guid: 563eaaa8aee8d804ea7f4579c0522d4d, type: 2}

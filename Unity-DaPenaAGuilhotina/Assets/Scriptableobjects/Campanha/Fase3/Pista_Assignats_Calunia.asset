@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: pista_assignats_calunia
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: A prensa de Morel
-  descricao: "Papel deixado no balc\xE3o: as notas falsas sa\xEDram da prensa de
-    Morel, que as imprimia \xE0 noite para os emigrados de Coblen\xE7a."
-  fonte: "Den\xFAncia an\xF4nima na padaria"
+  itemName: "A confiss\xE3o de Calas"
+  descricao: "Cartaz no mural: Calas confessou no supl\xEDcio que matou o filho,
+    o Tratado de Voltaire \xE9 mentira paga pelos protestantes de Genebra, e Sirven
+    fez o mesmo que Calas."
+  fonte: Cartaz sem assinatura
   caso: {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}
   confiabilidade: 3
   verificadaPor: []

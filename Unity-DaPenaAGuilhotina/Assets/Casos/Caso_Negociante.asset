@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
   m_Name: Caso_Negociante
   m_EditorClassIdentifier: Assembly-CSharp::CaseData
-  caseTitle: "O Negociante de Gr\xE3os"
-  caseDescription: "1793. O Comit\xEA encomenda \xE0 tipografia um panfleto contra
-    o negociante Garnier, acusado de a\xE7ambarcar gr\xE3os e burlar a Lei do M\xE1ximo.
-    Um trabalho bem pago, com o Estado ao seu lado."
-  objectiveText: "Provar as acusa\xE7\xF5es contra Garnier."
+  caseTitle: "O Caso do Pequeno Mercador de Gr\xE3os"
+  caseDescription: "Outono de 1793. A fome aperta Paris, e a lei contra o a\xE7ambarcamento
+    pune com a morte quem esconde g\xEAneros de primeira necessidade. Um pequeno
+    mercador \xE9 acusado de guardar sacos de farinha no por\xE3o enquanto crian\xE7as
+    passam fome. Ele jura que a farinha \xE9 de um atravessador rico. Defend\xEA-lo
+    \xE9 enfrentar uma multid\xE3o que precisa de um culpado."
+  objectiveText: "Descobrir a quem pertence a farinha do por\xE3o e por que ela some
+    das lojas."
   moneyReward: 60
   publicOpinionReward: -15
   stateOpinionReward: 25

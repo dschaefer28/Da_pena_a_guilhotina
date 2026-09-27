@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: GravadorMorel_Padrao
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Gravador Morel
-    text: "N\xE3o posso ajudar com isso, colega. J\xE1 tenho problemas demais com
-      a justi\xE7a."
+  - name: Pierre-Paul Sirven
+    text: "Perd\xE3o, senhor. Um homem na minha situa\xE7\xE3o n\xE3o pode se meter
+      em mais nada."
     dialogueAudio:
       Guid:
         Data1: 0

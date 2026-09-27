@@ -15,9 +15,11 @@ MonoBehaviour:
   itemID: panfleto_assignats
   itemImg: {fileID: -6434777298250132992, guid: b2bb80b0c42cdd84889695ff162a2962, type: 3}
   itemAmt: 1
-  itemName: 'Panfleto: Os Assignats Falsos'
-  descricao: Panfleto impresso sobre as notas falsas.
+  itemName: "A Inoc\xEAncia no Po\xE7o: O Crime de Julgar Sem Provas"
+  descricao: "Panfleto da tipografia em defesa da fam\xEDlia Sirven."
   fonte: Tipografia
   caso: {fileID: 0}
   confiabilidade: 0
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

@@ -12,7 +12,8 @@ using UnityEngine.SceneManagement;
 /// Mesa de Casos (UI.prefab) e no CatalogoDeSave.
 ///
 /// CONTEÚDO PROVISÓRIO: textos e valores novos foram escritos para tornar a campanha jogável na ausência do GDD.
-/// Não são canônicos; edite-os à vontade nos assets gerados.
+/// Desde 27/09 o conteúdo narrativo segue o GDD e fica em NarrativaGddSetupTool (Ferramentas > Campanha > 8), que
+/// reescreve os casos criados aqui; esta ferramenta guarda a estrutura (NPCs, reações, objetos) e os valores.
 ///
 /// Idempotente e conservador: assets são achados pelo caminho e cenas pelo "Id Da Interacao". Rodar de novo não
 /// duplica nada e NÃO sobrescreve textos/valores já preenchidos (edições feitas no Inspector são preservadas):
@@ -86,6 +87,8 @@ public static class CampanhaSetupTool
     }
 
     private static string Item(string fase, string arquivo) => $"{PastaItens}/{fase}/{arquivo}.asset";
+    private static string[] Gdd(string npcId, string casoArquivo) => NarrativaGddSetupTool.FalasDaEntrada(npcId, casoArquivo);
+    private static string[] GddPadrao(string cena, string npcId) => NarrativaGddSetupTool.FalasDoNo($"{PastaDialogos}/{cena}/{npcId}_Padrao.asset");
     private static string Caso(string arquivo) => $"{PastaCasos}/{arquivo}.asset";
 
     private static readonly List<C> Casos = new List<C>();
@@ -165,13 +168,16 @@ public static class CampanhaSetupTool
     };
 
     /// <summary>Nome, fonte e descrição de referência de uma pista (os textos em vigor), ou null. Usado pela ferramenta
-    /// de dedução para migrar assets que ainda tinham os textos anteriores.</summary>
+    /// de dedução para migrar assets que ainda tinham os textos anteriores. Desde o conteúdo do GDD (ferramenta 8), os
+    /// textos em vigor são os de NarrativaGddSetupTool; a tabela TextosRevisados guarda os de 27/09.</summary>
     internal static string[] TextoDeReferencia(string itemID) =>
-        TextosRevisados.TryGetValue(itemID, out string[] texto) ? texto : null;
+        NarrativaGddSetupTool.TextoDeItem(itemID) ?? (TextosRevisados.TryGetValue(itemID, out string[] texto) ? texto : null);
 
-    /// <summary>Falas de referência da reação de um NPC a um caso (ex.: "CocheiroJoubert", "Caso_Varennes"), ou null.</summary>
+    /// <summary>Falas de referência da reação de um NPC a um caso (ex.: "CocheiroJoubert", "Caso_Varennes"), ou null.
+    /// Null também para as reações do GDD (ferramenta 8): são diálogos com escolhas, não uma lista linear de falas.</summary>
     internal static string[] FalasDeReferencia(string npcId, string casoArquivo)
     {
+        if (NarrativaGddSetupTool.GerenciaReacao(npcId, casoArquivo)) return null;
         Definir();
         R reacao = Reacoes.Find(x => x.npc == npcId && Path.GetFileNameWithoutExtension(x.caso) == casoArquivo);
         return reacao != null ? reacao.falas : null;
@@ -185,10 +191,18 @@ public static class CampanhaSetupTool
         // Prompt 7: o boato de Réveillon passou a ser o dos "quinze soldos" (par com o discurso na assembleia).
         { "Descobriu-se que Réveillon nunca chamou a Guarda. O boato impresso desmoronou.", RevelacaoDoBoatoDeReveillon },
         { "Não se provou que Réveillon mandou a Guarda atirar: ele pediu proteção, não o fogo. O boato impresso desmoronou.", RevelacaoDoBoatoDeReveillon },
+        { RevelacaoDoBoatoDeReveillonDoPrompt7, RevelacaoDoBoatoDeReveillon },
     };
 
-    /// <summary>Revelação da versão Com Boato do Caso de Réveillon desde o Prompt 7 (a ferramenta de dedução migra o asset).</summary>
+    /// <summary>Revelação da versão Com Boato do Caso de Réveillon (a ferramenta de dedução migra o asset). Revista com o
+    /// conteúdo do GDD: não afirma que Réveillon "nunca disse" os quinze soldos, o que as fontes não permitem garantir;
+    /// o que a ata desmente é que ele pediu só o corte dos salários.</summary>
     internal const string RevelacaoDoBoatoDeReveillon =
+        "A ata da assembleia desmentiu o boato: Réveillon falou em baratear o pão junto com os salários; não pediu só o corte. " +
+        "O panfleto que repetiu a versão dos operários desmoronou.";
+
+    // Texto do Prompt 7 (27/09) para a mesma revelação, trocado pelo acima.
+    private const string RevelacaoDoBoatoDeReveillonDoPrompt7 =
         "A ata da assembleia desmentiu o boato: Réveillon nunca disse que um operário vive com quinze soldos, e pediu o pão mais " +
         "barato junto com o corte. O panfleto que o repetiu desmoronou.";
 
@@ -202,7 +216,7 @@ public static class CampanhaSetupTool
     };
 
     internal static string AlegacaoComPista(string itemID) =>
-        AlegacoesComPista.TryGetValue(itemID, out string texto) ? texto : null;
+        !AlegacoesComPista.TryGetValue(itemID, out string texto) ? null : NarrativaGddSetupTool.TextoDeItem(itemID)?[2] ?? texto;
 
     // Estimativas da mesa (Fase 2, anteriores ao Prompt 2) alinhadas à versão Fatos da receita:
     // caso -> { ouro, povo, estado antigos } -> { novos }.
@@ -300,21 +314,18 @@ public static class CampanhaSetupTool
             padrao = new[] { "Gazetas! Notícias de Versalhes! Sobre isso não ouvi nada que valha um soldo." } });
 
         // Dedução ativa (Prompt 7): quem espalha o boato aponta os objetos da cena (o do fato, quando há, e o da calúnia).
-        Reacoes.Add(new R { npc = "Gazeteiro", caso = Caso("Caso_Joalheiro"), item = Item(F, "Pista_Joias_Boato"),
-            falas = new[] { "O colar? Nas tavernas só se fala disso!",
-                            "Dizem que a própria Rainha foi à loja, disfarçada, escolher o colar escondida do Rei. Depois negou tudo.",
-                            "E no muro de cartazes colaram uma folha contando coisa pior, sobre ela e o Cardeal." } });
-        Reacoes.Add(new R { npc = "Gazeteiro", caso = Caso("Caso_Reveillon"), item = Item(F, "Pista_Jean_Calunia"),
-            falas = new[] { "Réveillon? Tenho aqui uma folha que vende como pão quente.",
-                            "Diz que no inverno ele cortou pela metade o salário da manufatura e mandou a diferença para os ingleses. Leve, é sua." } });
-        Reacoes.Add(new R { npc = "Operario", caso = Caso("Caso_Reveillon"), item = Item(F, "Pista_Jean_Boato"),
-            falas = new[] { "Aquele homem? Disse na assembleia que um operário vive muito bem com quinze soldos por dia!",
-                            "Só queria cortar o nosso salário. Do pão, nem uma palavra.",
-                            "Na banca de panfletos vendem uma gazeta com as contas da manufatura, e o gazeteiro da esquina tem uma folha ainda pior sobre ele." } });
-        Reacoes.Add(new R { npc = "Jean-Baptiste Réveillon", caso = Caso("Caso_Operario"), item = Item(F, "Pista_Operario_Boato"),
-            falas = new[] { "Aqueles homens não pediam pão: vieram armados, pagos na véspera por agitadores do duque de Orléans!",
-                            "A Guarda só atirou para se defender. Anote isso.",
-                            "Colaram a ordem da Guarda no muro de cartazes, e na mesa da taverna deixaram um bilhete sobre o incêndio da minha fábrica. Cada um conta de um jeito." } });
+        // Conteúdo do GDD (ferramenta 8): as falas vêm de NarrativaGddSetupTool, que também cria as escolhas de cada
+        // conversa; aqui ficam só a estrutura (quem entrega o quê) e a primeira fala, para criar a conversa se faltar.
+        // As reações dos clientes (joalheiro, Réveillon e operário no próprio caso) são do roteiro do grupo e já estão na cena.
+        Reacoes.Add(new R { npc = "Gazeteiro", caso = Caso("Caso_Joalheiro"), item = Item(F, "Pista_Joias_Boato"), falas = Gdd("Gazeteiro", "Caso_Joalheiro") });
+        Reacoes.Add(new R { npc = "Gazeteiro", caso = Caso("Caso_Reveillon"), item = Item(F, "Pista_Jean_Calunia"), falas = Gdd("Gazeteiro", "Caso_Reveillon") });
+        Reacoes.Add(new R { npc = "Gazeteiro", caso = Caso("Caso_Operario"), falas = Gdd("Gazeteiro", "Caso_Operario") });
+        Reacoes.Add(new R { npc = "Operario", caso = Caso("Caso_Reveillon"), item = Item(F, "Pista_Jean_Boato"), falas = Gdd("Operario", "Caso_Reveillon") });
+        Reacoes.Add(new R { npc = "Operario", caso = Caso("Caso_Joalheiro"), falas = Gdd("Operario", "Caso_Joalheiro") });
+        Reacoes.Add(new R { npc = "Jean-Baptiste Réveillon", caso = Caso("Caso_Operario"), item = Item(F, "Pista_Operario_Boato"), falas = Gdd("Jean-Baptiste Réveillon", "Caso_Operario") });
+        Reacoes.Add(new R { npc = "Jean-Baptiste Réveillon", caso = Caso("Caso_Joalheiro"), falas = Gdd("Jean-Baptiste Réveillon", "Caso_Joalheiro") });
+        Reacoes.Add(new R { npc = "Joalheiro", caso = Caso("Caso_Reveillon"), falas = Gdd("Joalheiro", "Caso_Reveillon") });
+        Reacoes.Add(new R { npc = "Joalheiro", caso = Caso("Caso_Operario"), falas = Gdd("Joalheiro", "Caso_Operario") });
 
         Loots.Add(new L { cena = F, id = "BancaDePanfletos", nome = "Banca de Panfletos", sprite = SpriteDocumento, x = -12f, y = 0f, escala = 0.2f,
             porCaso = { { Caso("Caso_Reveillon"), SO + "Item_Jean2.asset" } } });
@@ -412,43 +423,47 @@ public static class CampanhaSetupTool
         assignats.comCalunia = new V(25, 20, 65, -15, -15, "Morel nunca teve contato com emigrados. A calúnia custou caro à tipografia.");
         assignats.soAlegacoes = new V(5, 4, 14, -5, 0, "O panfleto só repetia a defesa do gravador. Os leitores esperavam provas.");
 
-        Npcs.Add(new N { cena = F, id = "ViuvaFrancois", nome = "Viúva François", falante = "Viúva François", x = -8f, cor = new Color(0.55f, 0.45f, 0.6f),
-            padrao = new[] { "Desculpe, não sei nada sobre isso. Desde que levaram o meu Denis, mal saio de casa." } });
-        Npcs.Add(new N { cena = F, id = "CocheiroJoubert", nome = "Cocheiro Joubert", falante = "Cocheiro Joubert", x = 14f, cor = new Color(0.45f, 0.35f, 0.25f),
-            padrao = new[] { "Eu só conheço estradas e cavalos, patrão. Disso aí não sei nada." } });
-        Npcs.Add(new N { cena = F, id = "PeticionariaLacombe", nome = "Peticionária Lacombe", falante = "Peticionária Lacombe", x = 34f, cor = new Color(0.7f, 0.3f, 0.3f),
-            padrao = new[] { "Não tenho nada a dizer sobre isso. A minha luta é outra." } });
-        Npcs.Add(new N { cena = F, id = "GravadorMorel", nome = "Gravador Morel", falante = "Gravador Morel", x = 58f, cor = new Color(0.3f, 0.45f, 0.6f),
-            padrao = new[] { "Não posso ajudar com isso, colega. Já tenho problemas demais com a justiça." } });
+        // Conteúdo do GDD (ferramenta 8): os IDs continuam os dos NPCs antigos, porque o save aponta para eles.
+        // ViuvaFrancois = Médico, CocheiroJoubert = Kornmann, PeticionariaLacombe = Sobrevivente, GravadorMorel = Sirven;
+        // GeorgesDanton é novo. Os arquivos de caso também: Varennes = Kornmann, ChampDeMars = Danton, Assignats = Sirven.
+        Npcs.Add(new N { cena = F, id = "ViuvaFrancois", nome = "Médico", falante = "Médico", x = -8f, cor = new Color(0.55f, 0.45f, 0.6f),
+            padrao = GddPadrao(F, "ViuvaFrancois") });
+        Npcs.Add(new N { cena = F, id = "CocheiroJoubert", nome = "Guillaume Kornmann", falante = "Guillaume Kornmann", x = 14f, cor = new Color(0.45f, 0.35f, 0.25f),
+            padrao = GddPadrao(F, "CocheiroJoubert") });
+        Npcs.Add(new N { cena = F, id = "PeticionariaLacombe", nome = "Sobrevivente", falante = "Sobrevivente", x = 34f, cor = new Color(0.7f, 0.3f, 0.3f),
+            padrao = GddPadrao(F, "PeticionariaLacombe") });
+        Npcs.Add(new N { cena = F, id = "GeorgesDanton", nome = "Georges Danton", falante = "Georges Danton", x = 46f, cor = new Color(0.55f, 0.25f, 0.2f),
+            padrao = GddPadrao(F, "GeorgesDanton") });
+        Npcs.Add(new N { cena = F, id = "GravadorMorel", nome = "Pierre-Paul Sirven", falante = "Pierre-Paul Sirven", x = 58f, cor = new Color(0.3f, 0.45f, 0.6f),
+            padrao = GddPadrao(F, "GravadorMorel") });
 
-        // Dedução ativa: o cliente aponta quem espalha o boato, e quem espalha o boato aponta os dois objetos (o do fato e
-        // o da calúnia). Seguir essas pistas leva às quatro afirmações do quadro em 4h; os outros três lugares não têm nada.
-        Reacoes.Add(new R { npc = "CocheiroJoubert", caso = varennes.caminho, item = varennes.f1.caminho,
-            falas = new[] { "Me contrataram em nome de uma tal baronesa de Korff. Sessenta libras, em moeda francesa, como qualquer frete.",
-                            "Eu só conduzia os cavalos, juro. Tenho o contrato aqui: leia o senhor mesmo.",
-                            "E a peticionária da praça ainda anda contando que me pagaram em ouro da Áustria!" } });
-        Reacoes.Add(new R { npc = "PeticionariaLacombe", caso = varennes.caminho, item = varennes.boato.caminho,
-            falas = new[] { "O cocheiro do Rei? Recebeu ouro austríaco, isso sim, e sabia desde Paris quem levava na berlinda.",
-                            "Os Cordeliers pregaram uma ata no mural contando outra história. E na caixa de tipos alguém largou a prova de um panfleto sobre os cavalos." } });
-        Reacoes.Add(new R { npc = "PeticionariaLacombe", caso = champ.caminho, item = champ.f1.caminho,
-            falas = new[] { "Assinávamos uma petição, sem uma arma sequer. E eles atiraram.", "Guardei a folha. O sangue ainda está nela.",
-                            "E no mercado a viúva do padeiro repete que fomos nós que atiramos primeiro!" } });
-        Reacoes.Add(new R { npc = "ViuvaFrancois", caso = champ.caminho, item = champ.boato.caminho,
-            falas = new[] { "As vizinhas do mercado juram que os peticionários vieram armados e atiraram primeiro. A Guarda só se defendeu.",
-                            "Pregaram uma proclamação no balcão da padaria, e no mural dos Cordeliers colaram um cartaz sobre a bandeira. Cada um conta de um jeito." } });
-        Reacoes.Add(new R { npc = "GravadorMorel", caso = assignats.caminho, item = assignats.f1.caminho,
-            falas = new[] { "Roubaram as minhas chapas, colega! Dei queixa na seção dias antes de me prenderem.", "Aqui está a cópia da queixa, com o carimbo da seção.",
-                            "Os cocheiros espalham que eu inventei o roubo. Pergunte ao Joubert o que andam dizendo." } });
-        Reacoes.Add(new R { npc = "CocheiroJoubert", caso = assignats.caminho, item = assignats.boato.caminho,
-            falas = new[] { "O gravador? Nas tavernas se diz que as chapas nunca saíram da oficina dele. Inventou o roubo depois de preso.",
-                            "Deixaram um papel sobre isso no balcão da padaria. E a caixa de tipos da oficina dele ainda está na rua, se o senhor quiser conferir." } });
+        // Dedução ativa: o cliente aponta quem espalha o boato (e a testemunha, quando não é ele quem entrega o fato), e quem
+        // espalha o boato aponta os dois objetos (o do fato e o da calúnia). Os outros lugares não têm nada.
+        void Reacao(string npc, C caso, P item) =>
+            Reacoes.Add(new R { npc = npc, caso = caso.caminho, item = item?.caminho, falas = Gdd(npc, Path.GetFileNameWithoutExtension(caso.caminho)) });
+        Reacao("GeorgesDanton", champ, null);
+        Reacao("GeorgesDanton", varennes, varennes.boato);
+        Reacao("GeorgesDanton", assignats, null);
+        Reacao("PeticionariaLacombe", champ, champ.f1);
+        Reacao("PeticionariaLacombe", varennes, null);
+        Reacao("PeticionariaLacombe", assignats, null);
+        Reacao("ViuvaFrancois", champ, champ.boato);
+        Reacao("ViuvaFrancois", varennes, null);
+        Reacao("ViuvaFrancois", assignats, assignats.f1);
+        Reacao("CocheiroJoubert", varennes, varennes.f1);
+        Reacao("CocheiroJoubert", assignats, assignats.boato);
+        Reacao("CocheiroJoubert", champ, null);
+        Reacao("GravadorMorel", assignats, null);
+        Reacao("GravadorMorel", champ, null);
+        Reacao("GravadorMorel", varennes, null);
 
-        Loots.Add(new L { cena = F, id = "BalcaoDaPadaria", nome = "Balcão da Padaria", sprite = SpriteMesa, x = -16f, y = -2.1f, escala = 1.2f,
-            porCaso = { { champ.caminho, champ.f2.caminho }, { assignats.caminho, assignats.calunia.caminho } } });
-        Loots.Add(new L { cena = F, id = "MuralDosCordeliers", nome = "Mural dos Cordeliers", sprite = SpritePanfleto, x = 24f, y = 0f, escala = 0.5f,
+        // O balcão da padaria virou a mesa do "Café Popular" do GDD (o ID continua o mesmo).
+        Loots.Add(new L { cena = F, id = "BalcaoDaPadaria", nome = "Mesa do Café", sprite = SpriteMesa, x = -16f, y = -2.1f, escala = 1.2f,
             porCaso = { { varennes.caminho, varennes.f2.caminho }, { champ.caminho, champ.calunia.caminho } } });
+        Loots.Add(new L { cena = F, id = "MuralDosCordeliers", nome = "Mural dos Cordeliers", sprite = SpritePanfleto, x = 24f, y = 0f, escala = 0.5f,
+            porCaso = { { champ.caminho, champ.f2.caminho }, { assignats.caminho, assignats.calunia.caminho } } });
         Loots.Add(new L { cena = F, id = "CaixaDeTipos", nome = "Caixa de Tipos", sprite = SpriteDocumento, x = 70f, y = 0f, escala = 0.2f,
-            porCaso = { { varennes.caminho, varennes.calunia.caminho }, { assignats.caminho, assignats.f2.caminho } } });
+            porCaso = { { assignats.caminho, assignats.f2.caminho }, { varennes.caminho, varennes.calunia.caminho } } });
     }
 
     // ----- Fase 4 (1793, um caso por rota) -----
@@ -523,41 +538,40 @@ public static class CampanhaSetupTool
         girondina.comCalunia = new V(20, 20, 60, -15, -15, "O 'patriota envenenado' morreu de febre. A calúnia voltou-se contra a tipografia.");
         girondina.soAlegacoes = new V(4, 4, 12, -5, -5, "O panfleto só repetia a palavra da viúva. Não convenceu ninguém.");
 
-        Npcs.Add(new N { cena = F, id = "RedatorMarchand", nome = "Redator Marchand", falante = "Redator Marchand", x = -6f, cor = new Color(0.6f, 0.2f, 0.2f),
-            padrao = new[] { "Não posso falar disso agora, cidadão. Cada palavra minha vira prova no tribunal." } });
-        Npcs.Add(new N { cena = F, id = "ComissarioVautrin", nome = "Comissário Vautrin", falante = "Comissário Vautrin", x = 18f, cor = new Color(0.2f, 0.2f, 0.5f),
-            padrao = new[] { "O Comitê não tem nada a lhe dizer sobre isso, cidadão. Circule." } });
-        Npcs.Add(new N { cena = F, id = "CidadaDelorme", nome = "Cidadã Delorme", falante = "Cidadã Delorme", x = 40f, cor = new Color(0.5f, 0.5f, 0.55f),
-            padrao = new[] { "Não sei de nada. Por favor, me deixe em paz." } });
-        Npcs.Add(new N { cena = F, id = "Carcereiro", nome = "Carcereiro da Conciergerie", falante = "Carcereiro", x = 62f, cor = new Color(0.35f, 0.3f, 0.25f),
-            padrao = new[] { "Na Conciergerie a gente ouve de tudo, cidadão. Mas disso aí, nada." } });
+        // Conteúdo do GDD (ferramenta 8): RedatorMarchand = Desmoulins, ComissarioVautrin = Mercador, CidadaDelorme = Vergniaud,
+        // Carcereiro = Brissot. Arquivos de caso: Jornalista = Manifesto da Clemência, Negociante = Mercador de Grãos,
+        // Girondina = Extermínio da Oposição.
+        Npcs.Add(new N { cena = F, id = "RedatorMarchand", nome = "Camille Desmoulins", falante = "Camille Desmoulins", x = -6f, cor = new Color(0.6f, 0.2f, 0.2f),
+            padrao = GddPadrao(F, "RedatorMarchand") });
+        Npcs.Add(new N { cena = F, id = "ComissarioVautrin", nome = "Mercador", falante = "Mercador", x = 18f, cor = new Color(0.2f, 0.2f, 0.5f),
+            padrao = GddPadrao(F, "ComissarioVautrin") });
+        Npcs.Add(new N { cena = F, id = "CidadaDelorme", nome = "Pierre Vergniaud", falante = "Pierre Vergniaud", x = 40f, cor = new Color(0.5f, 0.5f, 0.55f),
+            padrao = GddPadrao(F, "CidadaDelorme") });
+        Npcs.Add(new N { cena = F, id = "Carcereiro", nome = "Jacques-Pierre Brissot", falante = "Jacques-Pierre Brissot", x = 62f, cor = new Color(0.35f, 0.3f, 0.25f),
+            padrao = GddPadrao(F, "Carcereiro") });
 
-        Reacoes.Add(new R { npc = "RedatorMarchand", caso = jornalista.caminho, item = jornalista.f1.caminho,
-            falas = new[] { "Pedi clemência, cidadão. Só isso. Agora querem a minha cabeça.", "Leve os exemplares. Mostre ao tribunal o que eu realmente escrevi.",
-                            "Na Conciergerie, o carcereiro conta aos presos que eu pedi a volta do Rei. Nunca escrevi isso!" } });
-        Reacoes.Add(new R { npc = "Carcereiro", caso = jornalista.caminho, item = jornalista.boato.caminho,
-            falas = new[] { "O redator? Aqui dentro os presos contam que o jornal dele pediu a volta do Rei, num número de outubro.",
-                            "Se quer saber do civismo dele, o arquivo da seção guarda os papéis. E a caixa de denúncias vive cheia de bilhetes sobre ele." } });
-        Reacoes.Add(new R { npc = "ComissarioVautrin", caso = negociante.caminho, item = negociante.f1.caminho,
-            falas = new[] { "O Comitê conta com a sua prensa, cidadão. Garnier rouba o pão do povo.",
-                            "Eis o relatório da inspeção: o trigo estava lá, em bom estado, o dobro do que ele declarou.",
-                            "O carcereiro da Conciergerie jura que o trigo é podre. Não é: eu mesmo o vi." } });
-        Reacoes.Add(new R { npc = "Carcereiro", caso = negociante.caminho, item = negociante.boato.caminho,
-            falas = new[] { "Garnier? Dizem que os armazéns dele estão cheios de trigo podre. Deixa o grão estragar só para o povo passar fome.",
-                            "Os preços que ele cobrou estão na parede de editais. E no arquivo da seção enfiaram um papel sobre ele e os ingleses." } });
-        Reacoes.Add(new R { npc = "CidadaDelorme", caso = girondina.caminho, item = girondina.f1.caminho,
-            falas = new[] { "São só cartas de um marido para a esposa. Leia, por favor.", "Se houver conspiração nelas, eu mesma subo ao cadafalso.",
-                            "O redator Marchand anda dizendo que as cartas trazem um plano de fuga. Ele nunca as leu." } });
-        Reacoes.Add(new R { npc = "RedatorMarchand", caso = girondina.caminho, item = girondina.boato.caminho,
-            falas = new[] { "A viúva Delorme? Dizem que as cartas do marido trazem o plano de fuga dos girondinos, e os nomes de quem os esconde.",
-                            "Eu não afirmaria isso num jornal. Veja a caixa de denúncias e a parede de editais: o vizinho dela não para de escrever." } });
+        void Reacao(string npc, C caso, P item) =>
+            Reacoes.Add(new R { npc = npc, caso = caso.caminho, item = item?.caminho, falas = Gdd(npc, Path.GetFileNameWithoutExtension(caso.caminho)) });
+        Reacao("RedatorMarchand", jornalista, jornalista.f1);
+        Reacao("RedatorMarchand", negociante, negociante.boato);
+        Reacao("RedatorMarchand", girondina, girondina.boato);
+        Reacao("ComissarioVautrin", negociante, negociante.f1);
+        Reacao("ComissarioVautrin", jornalista, null);
+        Reacao("ComissarioVautrin", girondina, null);
+        Reacao("CidadaDelorme", girondina, null); // cliente: só conversa, mais a etapa complementar (BibliotecaSetupTool)
+        Reacao("CidadaDelorme", jornalista, null);
+        Reacao("CidadaDelorme", negociante, null);
+        Reacao("Carcereiro", girondina, girondina.f1);
+        Reacao("Carcereiro", jornalista, jornalista.boato);
+        Reacao("Carcereiro", negociante, null);
 
-        Loots.Add(new L { cena = F, id = "ArquivoDaSecao", nome = "Arquivo da Seção", sprite = SpriteMesa, x = -15f, y = -2.1f, escala = 1.2f,
-            porCaso = { { jornalista.caminho, jornalista.f2.caminho }, { negociante.caminho, negociante.calunia.caminho } } });
+        // O arquivo da seção virou o arquivo do Comitê de Salvação Pública (ambiente da Fase 4 no GDD; o ID continua o mesmo).
+        Loots.Add(new L { cena = F, id = "ArquivoDaSecao", nome = "Arquivo do Comitê", sprite = SpriteMesa, x = -15f, y = -2.1f, escala = 1.2f,
+            porCaso = { { jornalista.caminho, jornalista.f2.caminho }, { girondina.caminho, girondina.f2.caminho } } });
         Loots.Add(new L { cena = F, id = "ParedeDeEditais", nome = "Parede de Editais", sprite = SpritePanfleto, x = 30f, y = 0f, escala = 0.5f,
             porCaso = { { negociante.caminho, negociante.f2.caminho }, { girondina.caminho, girondina.calunia.caminho } } });
         Loots.Add(new L { cena = F, id = "CaixaDeDenuncias", nome = "Caixa de Denúncias", sprite = SpriteDocumento, x = 74f, y = 0f, escala = 0.2f,
-            porCaso = { { jornalista.caminho, jornalista.calunia.caminho }, { girondina.caminho, girondina.f2.caminho } } });
+            porCaso = { { jornalista.caminho, jornalista.calunia.caminho }, { negociante.caminho, negociante.calunia.caminho } } });
     }
 
     // ===== Execução =====
@@ -854,6 +868,10 @@ public static class CampanhaSetupTool
             relatorio.AppendLine($"  {nomeDaCena}: cena atualizada e salva.");
         }
     }
+
+    /// <summary>Cria um NPC na cena a partir do NPCBasic.prefab (mesma regra da ferramenta), para outras ferramentas.</summary>
+    internal static NPCMovement CriarNpcNaCena(Scene cena, string id, string nome, float x, Color cor) =>
+        CriarNpc(new N { id = id, nome = nome, x = x, cor = cor }, cena);
 
     private static NPCMovement CriarNpc(N def, Scene cena)
     {

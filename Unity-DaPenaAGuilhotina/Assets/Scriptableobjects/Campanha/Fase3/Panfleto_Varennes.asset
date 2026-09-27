@@ -15,9 +15,12 @@ MonoBehaviour:
   itemID: panfleto_varennes
   itemImg: {fileID: -6434777298250132992, guid: b2bb80b0c42cdd84889695ff162a2962, type: 3}
   itemAmt: 1
-  itemName: 'Panfleto: A Carruagem de Varennes'
-  descricao: Panfleto impresso sobre a fuga do Rei.
+  itemName: "Mem\xF3rias de Kornmann: Onde a Lei Termina e a Libertinagem Come\xE7a"
+  descricao: "Panfleto da tipografia sobre o processo de Kornmann e a prote\xE7\xE3o
+    dos antigos ministros."
   fonte: Tipografia
   caso: {fileID: 0}
   confiabilidade: 0
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

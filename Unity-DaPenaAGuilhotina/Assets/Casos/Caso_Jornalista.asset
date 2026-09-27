@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
   m_Name: Caso_Jornalista
   m_EditorClassIdentifier: Assembly-CSharp::CaseData
-  caseTitle: O Redator do Velho Sans-culotte
-  caseDescription: "1793. Lucien Marchand, redator de um jornal que pediu clem\xEAncia
-    e o fim do Terror, ser\xE1 julgado pelo Tribunal Revolucion\xE1rio por 'conspira\xE7\xE3o
-    contra a Rep\xFAblica'. O povo l\xEA o seu jornal; o Comit\xEA quer silenci\xE1-lo."
-  objectiveText: Reunir provas para a defesa de Marchand.
+  caseTitle: "O Manifesto da Clem\xEAncia"
+  caseDescription: "Outono de 1793. A Lei dos Suspeitos enche as pris\xF5es de Paris.
+    O jornalista Camille Desmoulins, colega de escola de Robespierre, quer publicar
+    um pedido de clem\xEAncia e j\xE1 \xE9 olhado com desconfian\xE7a pelo Comit\xEA
+    de Salva\xE7\xE3o P\xFAblica. Ele pede \xE0 tipografia um panfleto que mostre
+    ao povo o que se faz no escuro."
+  objectiveText: "Reunir provas para o pedido de clem\xEAncia de Camille Desmoulins."
   moneyReward: 15
   publicOpinionReward: 20
   stateOpinionReward: -20

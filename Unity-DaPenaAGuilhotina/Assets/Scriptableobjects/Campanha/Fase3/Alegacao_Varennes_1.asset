@@ -15,9 +15,12 @@ MonoBehaviour:
   itemID: alegacao_varennes_1
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
-  itemName: "Carta do cocheiro: eu n\xE3o sabia"
-  descricao: "O cocheiro jura que n\xE3o sabia quem levava."
+  itemName: 'Carta de Kornmann: fui desonrado'
+  descricao: "Kornmann jura que a esposa o traiu com um homem protegido por ministros,
+    e que a justi\xE7a do antigo regime fechou os olhos."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

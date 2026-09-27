@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: RedatorMarchand_Padrao
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Redator Marchand
-    text: "N\xE3o posso falar disso agora, cidad\xE3o. Cada palavra minha vira prova
-      no tribunal."
+  - name: Camille Desmoulins
+    text: "Agora n\xE3o, cidad\xE3o. Cada palavra minha vira prova num tribunal."
     dialogueAudio:
       Guid:
         Data1: 0

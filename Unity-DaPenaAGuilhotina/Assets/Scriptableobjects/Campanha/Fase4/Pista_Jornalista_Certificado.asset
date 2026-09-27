@@ -15,10 +15,12 @@ MonoBehaviour:
   itemID: pista_jornalista_2
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: "O certificado da se\xE7\xE3o"
-  descricao: "A se\xE7\xE3o deu a Marchand um certificado de civismo tr\xEAs meses
-    antes da pris\xE3o."
-  fonte: "Arquivo da se\xE7\xE3o"
+  itemName: O manuscrito de Robespierre
+  descricao: "Rascunho de um artigo de Camille, arquivado com os pap\xE9is do Comit\xEA,
+    com anota\xE7\xF5es de Robespierre na margem, na mesma letra dos relat\xF3rios
+    que ele assina: ele risca as frases mais duras, mas escreve 'publicar' ao lado
+    do pedido de clem\xEAncia."
+  fonte: "Arquivo do Comit\xEA"
   caso: {fileID: 11400000, guid: 917d88bbcfe670d4ea21a881e3662a0b, type: 2}
   confiabilidade: 1
   verificadaPor: []

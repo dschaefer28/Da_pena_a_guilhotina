@@ -27,8 +27,9 @@ MonoBehaviour:
     povo: -25
     estado: 40
     ouro: 80
-    textoRevelacao: "O trigo de Garnier estava s\xE3o. O boato impresso comprometeu
-      o Comit\xEA."
+    textoRevelacao: "As faturas e o contrato de aluguel mostraram que a farinha era
+      do atravessador, e n\xE3o do mercador. O boato da se\xE7\xE3o ruiu, e o panfleto
+      que o repetiu perdeu o cr\xE9dito."
     penalidadePovo: -5
     penalidadeEstado: -10
   calunia:
@@ -36,8 +37,9 @@ MonoBehaviour:
     povo: -35
     estado: 50
     ouro: 100
-    textoRevelacao: "Ningu\xE9m provou elo algum com Pitt. At\xE9 o Comit\xEA se
-      afastou da tipografia."
+    textoRevelacao: "Os pr\xF3prios avisos da se\xE7\xE3o admitiam a falta de farinha
+      nas padarias desde o M\xE1ximo. A den\xFAncia que culpava s\xF3 o mercador
+      era cal\xFAnia, e voltou-se contra a tipografia."
     penalidadePovo: -10
     penalidadeEstado: -20
   soAlegacoes:
@@ -45,8 +47,8 @@ MonoBehaviour:
     povo: -6
     estado: 12
     ouro: 24
-    textoRevelacao: "O panfleto s\xF3 repetia o of\xEDcio do Comit\xEA. Soou como
-      propaganda."
+    textoRevelacao: "O panfleto s\xF3 repetia a palavra do mercador. Para uma cidade
+      com fome, soou como desculpa de a\xE7ambarcador."
     penalidadePovo: 0
     penalidadeEstado: -5
   qualificadores:

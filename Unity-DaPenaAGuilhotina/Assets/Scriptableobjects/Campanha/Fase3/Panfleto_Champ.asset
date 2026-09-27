@@ -15,9 +15,12 @@ MonoBehaviour:
   itemID: panfleto_champ
   itemImg: {fileID: -6434777298250132992, guid: b2bb80b0c42cdd84889695ff162a2962, type: 3}
   itemAmt: 1
-  itemName: 'Panfleto: O Champ de Mars'
-  descricao: Panfleto impresso sobre o fuzilamento.
+  itemName: O Grito do Povo Contra os Fuzis de Lafayette
+  descricao: "Panfleto da tipografia em defesa de Danton e dos peticion\xE1rios do
+    Champ de Mars."
   fonte: Tipografia
   caso: {fileID: 0}
   confiabilidade: 0
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

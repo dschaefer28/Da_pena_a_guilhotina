@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: PeticionariaLacombe_Caso_Varennes
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: "Peticion\xE1ria Lacombe"
-    text: "O cocheiro do Rei? Recebeu ouro austr\xEDaco, isso sim, e sabia desde
-      Paris quem levava na berlinda."
+  - name: Sobrevivente
+    text: "Um banqueiro que briga com a mulher... Enquanto isso, as vi\xFAvas do
+      Champ de Mars n\xE3o t\xEAm o que comer."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -24,9 +24,8 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: "Peticion\xE1ria Lacombe"
-    text: "Os Cordeliers pregaram uma ata no mural contando outra hist\xF3ria. E
-      na caixa de tipos algu\xE9m largou a prova de um panfleto sobre os cavalos."
+  - name: Sobrevivente
+    text: "N\xE3o sei nada disso, senhor. Pergunte a quem frequenta os sal\xF5es."
     dialogueAudio:
       Guid:
         Data1: 0

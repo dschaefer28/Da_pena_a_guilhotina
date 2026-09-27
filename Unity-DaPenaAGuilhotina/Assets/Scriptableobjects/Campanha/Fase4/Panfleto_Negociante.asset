@@ -15,9 +15,11 @@ MonoBehaviour:
   itemID: panfleto_negociante
   itemImg: {fileID: -6434777298250132992, guid: b2bb80b0c42cdd84889695ff162a2962, type: 3}
   itemAmt: 1
-  itemName: "Panfleto: O A\xE7ambarcador"
-  descricao: "Panfleto encomendado pelo Comit\xEA."
+  itemName: A Falha das Leis de Abastecimento
+  descricao: Panfleto da tipografia sobre o mercador acusado e as leis de abastecimento.
   fonte: Tipografia
   caso: {fileID: 0}
   confiabilidade: 0
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

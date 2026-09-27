@@ -15,9 +15,9 @@ MonoBehaviour:
   itemID: panfleto_jean
   itemImg: {fileID: -6434777298250132992, guid: b2bb80b0c42cdd84889695ff162a2962, type: 3}
   itemAmt: 1
-  itemName: "Panfleto: Caso de Jean-Baptiste R\xE9veillon"
-  descricao: 
-  fonte: 
+  itemName: "Panfleto: Os Trabalhadores de R\xE9veillon"
+  descricao: "Panfleto da tipografia sobre R\xE9veillon e o motim do faubourg Saint-Antoine."
+  fonte: Tipografia
   caso: {fileID: 0}
   confiabilidade: 0
   verificadaPor: []

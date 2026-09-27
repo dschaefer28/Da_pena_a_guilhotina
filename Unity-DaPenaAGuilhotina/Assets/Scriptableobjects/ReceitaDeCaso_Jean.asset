@@ -27,9 +27,9 @@ MonoBehaviour:
     povo: -25
     estado: 60
     ouro: 70
-    textoRevelacao: "A ata da assembleia desmentiu o boato: R\xE9veillon nunca disse
-      que um oper\xE1rio vive com quinze soldos, e pediu o p\xE3o mais barato junto
-      com o corte. O panfleto que o repetiu desmoronou."
+    textoRevelacao: "A ata da assembleia desmentiu o boato: R\xE9veillon falou em
+      baratear o p\xE3o junto com os sal\xE1rios; n\xE3o pediu s\xF3 o corte. O panfleto
+      que repetiu a vers\xE3o dos oper\xE1rios desmoronou."
     penalidadePovo: -10
     penalidadeEstado: -25
   calunia:

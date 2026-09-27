@@ -15,9 +15,9 @@ MonoBehaviour:
   itemID: panfleto_operario
   itemImg: {fileID: -6434777298250132992, guid: b2bb80b0c42cdd84889695ff162a2962, type: 3}
   itemAmt: 0
-  itemName: "Panfleto: Caso do Oper\xE1rio"
-  descricao: 
-  fonte: 
+  itemName: "Panfleto: O Oper\xE1rio Acusado"
+  descricao: "Panfleto da tipografia em defesa do oper\xE1rio do faubourg Saint-Antoine."
+  fonte: Tipografia
   caso: {fileID: 0}
   confiabilidade: 0
   verificadaPor: []

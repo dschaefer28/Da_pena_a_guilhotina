@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: pista_jornalista_calunia
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: O certificado recusado
-  descricao: "Papel na caixa de den\xFAncias: a se\xE7\xE3o recusou o certificado
-    de civismo a Marchand, que esconde armas no por\xE3o da reda\xE7\xE3o."
-  fonte: "Caixa de den\xFAncias"
+  itemName: "As anota\xE7\xF5es do rascunho"
+  descricao: "Den\xFAncia an\xF4nima: Robespierre nunca leu uma linha de Camille;
+    as anota\xE7\xF5es na margem do rascunho s\xE3o falsifica\xE7\xE3o do pr\xF3prio
+    Camille, que imita a letra do amigo para se proteger."
+  fonte: "Den\xFAncia na caixa de den\xFAncias"
   caso: {fileID: 11400000, guid: 917d88bbcfe670d4ea21a881e3662a0b, type: 2}
   confiabilidade: 3
   verificadaPor: []

@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: Oferta_Jornalista
   m_EditorClassIdentifier: Assembly-CSharp::OfertaDaBiblioteca
   id: biblioteca_jornalista
-  titulo: "Cole\xE7\xE3o encadernada do jornal"
-  descricao: "Todos os n\xFAmeros do Velho Sans-culotte, de mar\xE7o a outubro, encadernados
-    pela Biblioteca Nacional. O de outubro trata da carestia do p\xE3o."
+  titulo: A Lei dos Suspeitos (17 de setembro de 1793)
+  descricao: "Texto do decreto: s\xE3o suspeitos os que, por sua conduta, suas rela\xE7\xF5es,
+    suas palavras ou seus escritos, se mostraram partid\xE1rios da tirania ou do
+    federalismo, al\xE9m de ex-nobres e parentes de emigrados que n\xE3o demonstraram
+    apego \xE0 Revolu\xE7\xE3o. Os comit\xEAs de vigil\xE2ncia fazem as listas e
+    mandam prender."
   preco: 25
   faseMinima: 3
   caso: {fileID: 11400000, guid: 917d88bbcfe670d4ea21a881e3662a0b, type: 2}

@@ -18,14 +18,15 @@ Preparado em 25/09/2026 a partir dos dois PDFs e de inspeção estática do repo
 | 6 | Consequências, rota e tribunal | **Concluído** (26/09 e 27/09) | Sim: testes e Play Mode (escritório e tribunal) | §9 e §14 |
 | 7 | Tutorial, transições e UI integrada | **Concluído** (partes em 26/09; o restante em 27/09), junto com 6h nas Fases 2–4 e dedução desde a Fase 2 | Sim: 88 testes, validador e Play Mode (16:9, 4:3 e celular simulado) | §9 e §17 |
 | 8 | Validação final e entrega revisável | **Não iniciado** | — | será `docs/VALIDACAO_TCC.md` |
+| — | Conteúdo narrativo do GDD nas Fases 2 a 4 (fora da sequência, pedido do grupo) | **Concluído** (27/09) | Sim: validador, 90 testes e Play Mode dos 9 casos | §18 |
 
-Próximo: **Prompt 8**, depois dos testes manuais do STATUS §17.9.
+Próximo: **Prompt 8**, depois dos testes manuais do STATUS §17.9 e §18.9.
 
 ## Como usar
 
 1. Abra o Claude Code na raiz `Da_pena_a_guilhotina`. O projeto Unity está na subpasta `Unity-DaPenaAGuilhotina`.
 2. Envie o **Prompt base** e peça a leitura de `docs/STATUS_IMPLEMENTACAO_TCC.md`.
-3. Os Prompts 0 a 7 já foram executados. Falta o **8**, depois dos testes manuais do STATUS §17.9.
+3. Os Prompts 0 a 7 já foram executados. Falta o **8**, depois dos testes manuais do STATUS §17.9 e §18.9.
 4. Um prompt por vez. Confira o resultado de cada etapa antes da próxima.
 5. Em uma conversa nova, reenvie o prompt base, peça a leitura dos relatórios já gerados e envie somente a próxima etapa.
 6. Não é necessário reenviar os PDFs a cada etapa: os requisitos operacionais estão abaixo. Mantenha os originais como referência para resolver dúvidas.
@@ -475,4 +476,4 @@ pendentes; não trate inspeção textual como campanha validada. Não faça push
 
 - "Tarefas de Programação TCC.pdf", páginas 1–4: fluxo, fases, biblioteca, tribunal e tarefas globais. Fica fora do repositório (cada pessoa do grupo tem sua cópia).
 - "Mecanica de dificuldade.pdf", páginas 1–4: A/B existentes, C/D propostas, parâmetros e pendência de conteúdo. Também fora do repositório.
-- Código, assets e Build Settings do repositório disponíveis na data da análise. O GDD mencionado pelos PDFs não foi localizado.
+- Código, assets e Build Settings do repositório disponíveis na data da análise. O GDD mencionado pelos PDFs não tinha sido localizado; desde 27/09 o conteúdo das Fases 2 a 4 segue o GDD do grupo ("Da Pena à Guilhotina", IFPR, 2026) e a planilha "30 Casos Reais" (STATUS §18). Os dois ficam fora do repositório.

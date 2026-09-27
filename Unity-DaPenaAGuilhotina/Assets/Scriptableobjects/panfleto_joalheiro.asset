@@ -15,9 +15,9 @@ MonoBehaviour:
   itemID: panfleto_joias
   itemImg: {fileID: -6434777298250132992, guid: b2bb80b0c42cdd84889695ff162a2962, type: 3}
   itemAmt: 0
-  itemName: 'Panfleto: Caso das Joias'
-  descricao: 
-  fonte: 
+  itemName: 'Panfleto: O Colar da Rainha'
+  descricao: Panfleto da tipografia sobre o colar vendido em nome da Rainha.
+  fonte: Tipografia
   caso: {fileID: 0}
   confiabilidade: 0
   verificadaPor: []

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: ViuvaFrancois_Caso_ChampDeMars
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: "Vi\xFAva Fran\xE7ois"
-    text: "As vizinhas do mercado juram que os peticion\xE1rios vieram armados e
-      atiraram primeiro. A Guarda s\xF3 se defendeu."
+  - name: "M\xE9dico"
+    text: "Depois do Champ de Mars, tratei dois guardas com a cabe\xE7a aberta por
+      pedradas."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -24,9 +24,10 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: "Vi\xFAva Fran\xE7ois"
-    text: "Pregaram uma proclama\xE7\xE3o no balc\xE3o da padaria, e no mural dos
-      Cordeliers colaram um cartaz sobre a bandeira. Cada um conta de um jeito."
+  - name: "M\xE9dico"
+    text: "Eles juram que no altar n\xE3o se assinava peti\xE7\xE3o nenhuma: Danton
+      mandou armar o povo, e a folha de assinaturas foi escrita depois, para disfar\xE7ar
+      a insurrei\xE7\xE3o."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -35,3 +36,18 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
+  - name: "M\xE9dico"
+    text: "Os Cordeliers pregaram artigos da Constitui\xE7\xE3o no mural, e algu\xE9m
+      deixou um bilhete sobre a lei na mesa do caf\xE9. Cada um conta de um jeito."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices:
+    - choiceText: "O senhor viu algum peticion\xE1rio armado?"
+      nextDialogue: {fileID: 11400000, guid: 0fee315acbdf17b4a8e0805ec99cff28, type: 2}
+    - choiceText: Por que o senhor acredita nos guardas?
+      nextDialogue: {fileID: 11400000, guid: dd4b74e371f190e459c6b39514a12c0e, type: 2}

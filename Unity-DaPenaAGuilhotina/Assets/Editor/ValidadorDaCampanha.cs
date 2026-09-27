@@ -18,7 +18,7 @@ public static class ValidadorDaCampanha
     public const int CasosEsperadosFase2 = 3;
     public const int CasosEsperadosFase3 = 3; // decisão do grupo (27/09): um caso entre três, como na Fase 2
     public const int OportunidadesMinimas = 6;
-    public const int OportunidadesMaximas = 7;
+    public const int OportunidadesMaximas = 8; // conteúdo do GDD: a Fase 3 tem 5 NPCs (Danton, Kornmann, Sirven, Sobrevivente, Médico) + 3 objetos
     public const int HorasEsperadasPorCaso = 6; // decisão do grupo (27/09): 6h no relógio nas Fases 2, 3 e 4
     public const int PrimeiraFaseComDeducao = 2; // decisão do grupo (27/09): o quadro de dedução vale desde a Fase 2
 

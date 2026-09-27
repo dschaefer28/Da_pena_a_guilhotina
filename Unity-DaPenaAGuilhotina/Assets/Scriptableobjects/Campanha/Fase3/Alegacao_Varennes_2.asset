@@ -15,9 +15,12 @@ MonoBehaviour:
   itemID: alegacao_varennes_2
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
-  itemName: "Carta do cocheiro: fui amea\xE7ado"
-  descricao: "Ele diz que foi amea\xE7ado para n\xE3o parar a carruagem."
+  itemName: 'Carta de Kornmann: os ministros a acobertaram'
+  descricao: "Ele afirma que ministros do Rei e o tenente de pol\xEDcia a tiraram
+    da reclus\xE3o para agradar amigos poderosos."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

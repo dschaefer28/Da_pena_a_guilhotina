@@ -2264,16 +2264,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].caso
       value: 
       objectReference: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[1].caso
+      value: 
+      objectReference: {fileID: 11400000, guid: 5c0733705941aa94db8fdec6796223e7, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[2].caso
+      value: 
+      objectReference: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].dialogoInicialDoCaso
       value: 
       objectReference: {fileID: 11400000, guid: c58f27ed9b03f3a499f8062499574c16, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[1].dialogoInicialDoCaso
+      value: 
+      objectReference: {fileID: 11400000, guid: 67268e100ee365e46972cc7874ef3843, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[2].dialogoInicialDoCaso
+      value: 
+      objectReference: {fileID: 11400000, guid: aa06c1ba08557374386fd8e9800034d8, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].dialogoDepoisDaEntrega
       value: 
@@ -2442,7 +2458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].caso
@@ -2453,6 +2469,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 5c0733705941aa94db8fdec6796223e7, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[2].caso
+      value: 
+      objectReference: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].dialogoInicialDoCaso
       value: 
       objectReference: {fileID: 11400000, guid: 63bc0bacd86be554283bd0ec87d8d056, type: 2}
@@ -2460,6 +2480,10 @@ PrefabInstance:
       propertyPath: reacoesDeCaso.Array.data[1].dialogoInicialDoCaso
       value: 
       objectReference: {fileID: 11400000, guid: 06eac12a90ea5174ea1a6ef98b7be421, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[2].dialogoInicialDoCaso
+      value: 
+      objectReference: {fileID: 11400000, guid: 1afa81aefba06cf418d00c43c24b84ab, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: OnDialogueComplete.m_PersistentCalls.m_Calls.Array.size
       value: 0
@@ -2636,7 +2660,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].caso
@@ -2647,6 +2671,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[2].caso
+      value: 
+      objectReference: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].dialogoInicialDoCaso
       value: 
       objectReference: {fileID: 11400000, guid: f27d773ce1be70b4c96caa2674644288, type: 2}
@@ -2654,6 +2682,14 @@ PrefabInstance:
       propertyPath: reacoesDeCaso.Array.data[1].dialogoInicialDoCaso
       value: 
       objectReference: {fileID: 11400000, guid: 7c95b26c8719f1f4caba6a2b31ef35e7, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[2].dialogoInicialDoCaso
+      value: 
+      objectReference: {fileID: 11400000, guid: 34535927c7e7f4145bc38beb3f512b2b, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[0].dialogoDepoisDaEntrega
+      value: 
+      objectReference: {fileID: 11400000, guid: 95f0d701fd536374fb6f778d81433480, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].recompensasDoDialogo.Array.size
       value: 1
@@ -3049,7 +3085,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].caso
@@ -3060,6 +3096,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 5c0733705941aa94db8fdec6796223e7, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[2].caso
+      value: 
+      objectReference: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].dialogoInicialDoCaso
       value: 
       objectReference: {fileID: 11400000, guid: b4c2cea48397acf48a53804e9fda36e7, type: 2}
@@ -3067,6 +3107,14 @@ PrefabInstance:
       propertyPath: reacoesDeCaso.Array.data[1].dialogoInicialDoCaso
       value: 
       objectReference: {fileID: 11400000, guid: 9ef41fa4ea3e5084980a14781c5aef8d, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[2].dialogoInicialDoCaso
+      value: 
+      objectReference: {fileID: 11400000, guid: 419ad3bf2df675a48b7e72184c6ca373, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[0].dialogoDepoisDaEntrega
+      value: 
+      objectReference: {fileID: 11400000, guid: 04f6c3e3aaf2881409e64f1dd896566a, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: OnDialogueComplete.m_PersistentCalls.m_Calls.Array.size
       value: 1

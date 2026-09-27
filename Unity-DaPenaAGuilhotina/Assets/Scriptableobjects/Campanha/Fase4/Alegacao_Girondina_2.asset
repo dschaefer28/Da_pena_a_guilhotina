@@ -15,9 +15,11 @@ MonoBehaviour:
   itemID: alegacao_girondina_2
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
-  itemName: "Carta de Delorme: ele amava a Rep\xFAblica"
-  descricao: "Ela jura que o marido morreu fiel \xE0 Rep\xFAblica."
+  itemName: "Carta de Vergniaud: o julgamento \xE9 uma farsa"
+  descricao: "Ele afirma que o tribunal decidiu a senten\xE7a antes de ouvir a defesa."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
   confiabilidade: 2
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

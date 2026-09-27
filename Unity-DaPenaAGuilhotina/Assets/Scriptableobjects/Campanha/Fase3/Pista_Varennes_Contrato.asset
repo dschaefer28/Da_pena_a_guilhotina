@@ -15,11 +15,12 @@ MonoBehaviour:
   itemID: pista_varennes_1
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: A viagem da baronesa
-  descricao: 'O cocheiro mostra o contrato em nome de uma ''baronesa de Korff'':
-    sessenta libras em moeda francesa por uma viagem de aluguel, sem dizer quem iria
-    na berlinda.'
-  fonte: Cocheiro Joubert
+  itemName: "O di\xE1rio da esposa"
+  descricao: "Kornmann mostra o di\xE1rio da esposa, com a mesma letra das cartas
+    que ela assinou no processo: ela escreve que o amante lhe prometeu a prote\xE7\xE3o
+    de gente do minist\xE9rio e do tenente de pol\xEDcia contra qualquer queixa do
+    marido."
+  fonte: Guillaume Kornmann
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   confiabilidade: 1
   verificadaPor: []

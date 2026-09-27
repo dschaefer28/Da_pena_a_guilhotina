@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: RedatorMarchand_Caso_Girondina
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
-  - name: Redator Marchand
-    text: "A vi\xFAva Delorme? Dizem que as cartas do marido trazem o plano de fuga
-      dos girondinos, e os nomes de quem os esconde."
+  - name: Camille Desmoulins
+    text: "As cartas de Brissot? Dizem que mandam as prov\xEDncias se separarem de
+      Paris e abrir os portos aos ingleses, como fizeram em Toulon."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -24,9 +24,10 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
-  - name: Redator Marchand
-    text: "Eu n\xE3o afirmaria isso num jornal. Veja a caixa de den\xFAncias e a
-      parede de editais: o vizinho dela n\xE3o para de escrever."
+  - name: Camille Desmoulins
+    text: "Robespierre deixou uma nota sobre o julgamento no arquivo do Comit\xEA,
+      e colaram um cartaz sobre os debates na parede de editais. Leia voc\xEA mesmo;
+      eu j\xE1 escrevi demais sobre esses homens."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -34,4 +35,8 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices: []
+    choices:
+    - choiceText: O senhor leu as cartas?
+      nextDialogue: {fileID: 11400000, guid: c9daecc51f7071b4dac92e7d2019c78a, type: 2}
+    - choiceText: O senhor acredita que eles merecem a morte?
+      nextDialogue: {fileID: 11400000, guid: 9e74ab1284149274982c574b650d86ce, type: 2}

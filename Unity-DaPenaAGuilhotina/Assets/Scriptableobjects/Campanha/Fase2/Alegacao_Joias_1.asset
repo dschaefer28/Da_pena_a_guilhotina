@@ -15,9 +15,10 @@ MonoBehaviour:
   itemID: alegacao_joias_1
   itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
   itemAmt: 1
-  itemName: 'Carta do joalheiro: fui enganado'
-  descricao: "O joalheiro jura que acreditou estar negociando com a Rainha, e reclama
-    que o gazeteiro da esquina conta outra hist\xF3ria."
+  itemName: 'Carta do duque: a Rainha quis o colar'
+  descricao: "O duque de Orl\xE9ans afirma que a Rainha cobi\xE7ou o colar e depois
+    fingiu n\xE3o saber de nada. Diz que o gazeteiro da esquina conhece a hist\xF3ria
+    que Paris comenta."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
   confiabilidade: 2

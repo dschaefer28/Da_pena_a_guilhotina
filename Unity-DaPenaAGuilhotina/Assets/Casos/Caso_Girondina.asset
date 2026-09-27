@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3a40fd8b7f6b47873ddb8ab32ce5e, type: 3}
   m_Name: Caso_Girondina
   m_EditorClassIdentifier: Assembly-CSharp::CaseData
-  caseTitle: "A Vi\xFAva Girondina"
-  caseDescription: "1793. Depois da queda dos girondinos, a cidad\xE3 Delorme, vi\xFAva
-    de um deputado, \xE9 acusada de guardar cartas de conspira\xE7\xE3o. Nem o povo
-    nem o Comit\xEA confiam nela, nem em voc\xEA."
-  objectiveText: Descobrir o que dizem as cartas.
+  caseTitle: "O Exterm\xEDnio da Oposi\xE7\xE3o"
+  caseDescription: "Outubro de 1793. Vinte e um deputados girondinos, entre eles
+    Vergniaud e Brissot, est\xE3o diante do Tribunal Revolucion\xE1rio, acusados
+    de federalismo e de conspirar contra a unidade da Rep\xFAblica. A eloqu\xEAncia
+    de Vergniaud come\xE7a a comover as galerias, e o Comit\xEA tem pressa. Vergniaud
+    pede \xE0 tipografia que mostre ao povo o que as provas dizem."
+  objectiveText: Descobrir o que as provas contra os girondinos realmente mostram.
   moneyReward: 30
   publicOpinionReward: 5
   stateOpinionReward: 5
