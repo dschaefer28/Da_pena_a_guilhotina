@@ -97,16 +97,17 @@ public class CampanhaTests
     }
 
     [Test]
-    public void Fase4_UmCasoPorRota_EFase3ComQuatroCasosDistintos()
+    public void Fase4_UmCasoPorRota_EFase3ComTresCasosDistintos()
     {
         List<CaseData> casos = CasosDaMesa();
-        Assert.AreEqual(4, casos.FindAll(c => c.fase == 3).Count);
+        Assert.AreEqual(3, casos.FindAll(c => c.fase == 3).Count, "decisão do grupo (27/09): três casos na Fase 3");
+        Assert.IsNull(casos.Find(c => c.name == "Caso_Padeiro"), "o caso do Padeiro saiu da campanha");
         foreach (RotaFinal rota in new[] { RotaFinal.A_Guilhotina, RotaFinal.B_Tirano, RotaFinal.C_Equilibrio })
-            Assert.AreEqual(1, casos.FindAll(c => c.fase == 4 && (c.rota == rota || c.rota == RotaFinal.Nenhuma)).Count, rota.ToString());
+            Assert.AreEqual(1, casos.FindAll(c => c.fase == 4 && c.rota == rota).Count, rota.ToString());
     }
 
     [Test]
-    public void Mesa_TresEstados_EFase3ExigeDoisCasosDistintos()
+    public void Mesa_Fase3_UmCasoEntreTres_OsOutrosFicamBloqueados_EAFase4Comeca()
     {
         var go = new GameObject("GM_Teste");
         criados.Add(go);
@@ -114,21 +115,30 @@ public class CampanhaTests
         gm.faseAtual = 3;
         gm.casoEscolhido = null;
         List<CaseData> fase3 = CasosDaMesa().FindAll(c => c.fase == 3);
+        Assert.AreEqual(1, gm.CasosNecessariosNaFase, "a Fase 3 pede um caso");
 
-        Assert.AreEqual(CaseSelectionUI.EstadoDoCaso.Disponivel, CaseSelectionUI.EstadoDe(fase3[0], gm));
+        foreach (CaseData caso in fase3) Assert.AreEqual(CaseSelectionUI.EstadoDoCaso.Disponivel, CaseSelectionUI.EstadoDe(caso, gm));
         Assert.IsTrue(gm.ConfirmarCaso(fase3[0]));
         Assert.AreEqual(CaseSelectionUI.EstadoDoCaso.EmAndamento, CaseSelectionUI.EstadoDe(fase3[0], gm));
-        Assert.IsFalse(gm.ConfirmarCaso(fase3[1]), "só um em andamento");
+        for (int i = 1; i < fase3.Count; i++)
+        {
+            Assert.AreEqual(CaseSelectionUI.EstadoDoCaso.Bloqueado, CaseSelectionUI.EstadoDe(fase3[i], gm), "escolhido um, os outros bloqueiam");
+            Assert.IsFalse(gm.ConfirmarCaso(fase3[i]));
+        }
 
         Assert.IsTrue(gm.ConcluirCaso(fase3[0]));
+        Assert.IsTrue(gm.FaseConcluida, "concluir o escolhido basta");
         Assert.AreEqual(CaseSelectionUI.EstadoDoCaso.Concluido, CaseSelectionUI.EstadoDe(fase3[0], gm));
-        Assert.IsFalse(gm.FaseConcluida, "a Fase 3 pede dois casos");
-        Assert.IsFalse(gm.ConfirmarCaso(fase3[0]), "concluído não volta");
+        for (int i = 1; i < fase3.Count; i++)
+        {
+            Assert.AreEqual(CaseSelectionUI.EstadoDoCaso.Bloqueado, CaseSelectionUI.EstadoDe(fase3[i], gm), "continuam bloqueados depois da conclusão");
+            Assert.IsFalse(gm.ConfirmarCaso(fase3[i]));
+        }
 
-        Assert.IsTrue(gm.ConfirmarCaso(fase3[1]));
-        Assert.IsTrue(gm.ConcluirCaso(fase3[1]));
-        Assert.IsTrue(gm.FaseConcluida);
-        Assert.IsFalse(gm.ConfirmarCaso(fase3[2]), "a fase pede dois: um terceiro caso não é aceito");
+        gm.EncerrarFase(); // o que o FimDeFase faz ao voltar ao escritório
+        Assert.AreEqual(4, gm.faseAtual, "a Fase 4 começa");
+        Assert.AreNotEqual(RotaFinal.Nenhuma, gm.rotaFinal);
+        foreach (CaseData caso in fase3) Assert.IsFalse(CaseSelectionUI.CasoVisivel(caso, gm), "os casos da Fase 3 saem da mesa");
     }
 
     [Test]

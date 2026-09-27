@@ -33,3 +33,14 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
+  - name: Redator Marchand
+    text: Na Conciergerie, o carcereiro conta aos presos que eu pedi a volta do Rei.
+      Nunca escrevi isso!
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []

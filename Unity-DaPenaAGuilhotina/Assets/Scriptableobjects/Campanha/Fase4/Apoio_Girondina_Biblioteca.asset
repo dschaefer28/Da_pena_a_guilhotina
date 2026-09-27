@@ -16,8 +16,9 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
   itemName: "Correspond\xEAncia arquivada na Conven\xE7\xE3o"
-  descricao: "Cartas do deputado Delorme arquivadas na Conven\xE7\xE3o, com o carimbo
-    do arquivo."
+  descricao: "C\xF3pias das cartas do deputado Delorme arquivadas na Conven\xE7\xE3o,
+    com o carimbo do arquivo: fam\xEDlia, d\xEDvidas e saudade, nenhuma palavra sobre
+    fuga."
   fonte: Biblioteca (compra)
   caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
   confiabilidade: 0

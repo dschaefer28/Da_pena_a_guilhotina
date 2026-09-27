@@ -23,7 +23,8 @@ public static class SistemaDeSave
     // 4: biblioteca (compras), evidências obtidas e histórico completo de cada publicação
     // 5: histórico guarda também o que foi aplicado de fato (depois do limite 0–100)
     // 6: linha editorial da publicação (tom, modificador e agravamento) e da revelação pendente
-    public const int VersaoAtual = 6;
+    // 7: dedução ativa (hipóteses do jogador por caso e pista, e quadros confirmados)
+    public const int VersaoAtual = 7;
     private const string CenaPadrao = "Jogo";
 
     [Serializable]
@@ -99,6 +100,10 @@ public static class SistemaDeSave
         // v4
         public List<string> comprasDaBiblioteca = new List<string>();
         public List<string> evidenciasObtidas = new List<string>();
+
+        // v7 (ausente em saves antigos = nenhuma hipótese e nenhum quadro confirmado)
+        public List<MarcacaoDeDeducao> marcacoesDeDeducao = new List<MarcacaoDeDeducao>();
+        public List<string> deducoesConfirmadas = new List<string>();
     }
 
     public static string CaminhoDoArquivo => Path.Combine(Application.persistentDataPath, "save.json");
@@ -169,7 +174,9 @@ public static class SistemaDeSave
             casosComEstadoLegado = new List<string>(registro.casosComEstadoLegado),
             interacoesPagasLegadas = new List<string>(registro.interacoesPagasLegadas),
             comprasDaBiblioteca = new List<string>(gm.comprasDaBiblioteca),
-            evidenciasObtidas = new List<string>(gm.evidenciasObtidas)
+            evidenciasObtidas = new List<string>(gm.evidenciasObtidas),
+            marcacoesDeDeducao = CopiaDasMarcacoes(gm.marcacoesDeDeducao),
+            deducoesConfirmadas = new List<string>(gm.deducoesConfirmadas)
         };
 
         foreach (CaseData caso in gm.casosJaSelecionados)
@@ -328,6 +335,11 @@ public static class SistemaDeSave
         if (dados.versao < 4) // save antigo: o que está no inventário foi obtido, com certeza (nada além disso é deduzido)
             foreach (Item item in gm.inventarioSalvo) gm.RegistrarEvidencia(item);
 
+        // v < 7 não tinha dedução: nenhuma hipótese é inventada, e pistas "verificadas" pela regra antiga
+        // (pistasVerificadas) não viram quadro confirmado.
+        gm.marcacoesDeDeducao = dados.versao >= 7 ? CopiaDasMarcacoes(dados.marcacoesDeDeducao) : new List<MarcacaoDeDeducao>();
+        gm.deducoesConfirmadas = dados.versao >= 7 ? Copia(dados.deducoesConfirmadas) : new List<string>();
+
         gm.revelacoesPendentes = new List<GameManager.RevelacaoPendente>();
         foreach (RevelacaoSalva r in dados.revelacoesPendentes)
             gm.revelacoesPendentes.Add(new GameManager.RevelacaoPendente
@@ -356,6 +368,16 @@ public static class SistemaDeSave
     }
 
     private static List<string> Copia(List<string> lista) => lista != null ? new List<string>(lista) : new List<string>();
+
+    private static List<MarcacaoDeDeducao> CopiaDasMarcacoes(List<MarcacaoDeDeducao> lista)
+    {
+        var copia = new List<MarcacaoDeDeducao>();
+        if (lista == null) return copia;
+        foreach (MarcacaoDeDeducao m in lista)
+            if (m != null && !string.IsNullOrEmpty(m.caso) && !string.IsNullOrEmpty(m.pista) && m.marca != MarcacaoDaPista.NaoMarcada)
+                copia.Add(new MarcacaoDeDeducao { caso = m.caso, pista = m.pista, marca = m.marca });
+        return copia;
+    }
 
     /// <summary>
     /// Save v1/v2: as horas pagas eram "cena/nomeDoGameObject" do caso em andamento, sem registro de loot nem de

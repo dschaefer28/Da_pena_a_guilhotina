@@ -165,12 +165,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheckpointDoTribunal
   cenaDoTribunal: Tribunal
+  evidenciasExigidas: []
   dialogoNaoPronto: {fileID: 11400000, guid: a72d65f9cced69c4684cb35a772f4535, type: 2}
   dialogoPronto: {fileID: 11400000, guid: 8da65efacc630f6489e9b06047643be9, type: 2}
   avisoNaoPronto: "Dupaty: Ainda n\xE3o. Aceite o caso na mesa, investigue e imprima
     o panfleto antes do julgamento."
   avisoPronto: "Dupaty: As provas est\xE3o reunidas e o panfleto est\xE1 pronto.
     Vamos ao Tribunal."
+  avisoSemPanfleto: "Dupaty: N\xE3o encontro o panfleto deste caso. Sem ele n\xE3o
+    h\xE1 defesa para levar ao tribunal."
+  avisoFaltaEvidencia: 'Dupaty: Ainda falta uma prova que o tribunal vai exigir deste
+    caso.'
 --- !u!61 &99585576
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1791,7 +1796,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TableInteractable
   caseSelectionUI: {fileID: 1674497308671956037}
-  itemObrigatorio: {fileID: 11400000, guid: d04d15091bf2cef4592686f23f1968f5, type: 2}
+  exigeTutorialConcluido: 1
+  itemObrigatorio: {fileID: 0}
   pensamentoBloqueado: {fileID: 0}
   avisoSemCasos: "N\xE3o h\xE1 novos casos na mesa por enquanto."
 --- !u!61 &1517696813
@@ -3724,6 +3730,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 293229140343442623, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
       propertyPath: destinoPeloCaso
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 293229140343442623, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
+      propertyPath: exigeTutorialConcluido
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2396127502576580076, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}

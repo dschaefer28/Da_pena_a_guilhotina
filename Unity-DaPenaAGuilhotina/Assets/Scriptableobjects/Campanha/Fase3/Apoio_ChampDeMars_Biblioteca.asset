@@ -16,8 +16,9 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
   itemName: Ata da prefeitura de Paris
-  descricao: "Ata oficial da sess\xE3o em que se decidiu hastear a bandeira vermelha
-    da lei marcial no Champ de Mars."
+  descricao: "Ata oficial da sess\xE3o da prefeitura: a lei marcial foi votada e
+    a bandeira vermelha hasteada \xE0 tarde, antes de a Guarda sair para o Champ
+    de Mars."
   fonte: Biblioteca (compra)
   caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
   confiabilidade: 0

@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OfertaDaBiblioteca
   id: biblioteca_girondina
   titulo: "Correspond\xEAncia arquivada na Conven\xE7\xE3o"
-  descricao: "Cartas do deputado Delorme arquivadas na Conven\xE7\xE3o, com o carimbo
-    do arquivo."
+  descricao: "C\xF3pias das cartas do deputado Delorme arquivadas na Conven\xE7\xE3o,
+    com o carimbo do arquivo: fam\xEDlia, d\xEDvidas e saudade, nenhuma palavra sobre
+    fuga."
   preco: 25
   faseMinima: 3
   caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}

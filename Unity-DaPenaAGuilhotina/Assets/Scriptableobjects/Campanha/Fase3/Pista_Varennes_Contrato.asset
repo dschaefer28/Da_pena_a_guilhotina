@@ -16,8 +16,9 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
   itemName: A viagem da baronesa
-  descricao: "O cocheiro mostra o contrato em nome de uma 'baronesa de Korff': uma
-    viagem de aluguel comum, sem men\xE7\xE3o a quem seria levado."
+  descricao: 'O cocheiro mostra o contrato em nome de uma ''baronesa de Korff'':
+    sessenta libras em moeda francesa por uma viagem de aluguel, sem dizer quem iria
+    na berlinda.'
   fonte: Cocheiro Joubert
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   confiabilidade: 1

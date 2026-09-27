@@ -137,6 +137,15 @@ public class ComponentesTests
         return loot;
     }
 
+    // Na Fase 4 a mesa só aceita o caso da rota travada (Prompt 6).
+    private void NaFase4(CaseData caso)
+    {
+        caso.fase = 4;
+        caso.rota = RotaFinal.A_Guilhotina;
+        gm.faseAtual = 4;
+        gm.rotaFinal = RotaFinal.A_Guilhotina;
+    }
+
     private void Lotar()
     {
         int n = 0;
@@ -355,8 +364,7 @@ public class ComponentesTests
     {
         // Caso da Fase 4: as sobras ficam na prensa ao concluir (antes da Fase 4 seriam arquivadas), então o
         // 2º clique encontra pistas nas entradas e quem barra é a regra de publicação única.
-        casoA.fase = 4;
-        gm.faseAtual = 4;
+        NaFase4(casoA);
         Receita(casoA);
         Item f1 = Pista("f1", casoA), f2 = Pista("f2", casoA), deB1 = Pista("b1", casoB), deB2 = Pista("b2", casoB);
         gm.ConfirmarCaso(casoA);
@@ -439,8 +447,8 @@ public class ComponentesTests
         inv.ClearItemSlot(prensa.slotOutput); // o jogador tira o panfleto pronto
         CaseData final = Caso("CasoFinal", 4);
         Receita(final);
-        gm.faseAtual = 4;
-        gm.ConfirmarCaso(final);
+        NaFase4(final);
+        Assert.IsTrue(gm.ConfirmarCaso(final));
         inv.AddItem(Pista("prova", final));
         NasEntradas(Pista("g1", final), Pista("g2", final));
         prensa.CombineItems();
@@ -468,8 +476,7 @@ public class ComponentesTests
     public void Prensa_LinhaEditorial_PedeAntesDeConsumir_CancelarNaoGasta_DuploCliquePublicaUmaVez()
     {
         // Fase 4: as sobras ficam nas entradas ao concluir, então os cliques repetidos encontram pistas para consumir.
-        casoA.fase = 4;
-        gm.faseAtual = 4;
+        NaFase4(casoA);
         ReceitaDeCaso receita = ReceitaComLinha(casoA);
         gm.ConfirmarCaso(casoA);
         int pedidos = 0;
@@ -559,6 +566,33 @@ public class ComponentesTests
         CollectionAssert.Contains(gm.casosConcluidos, tutorial);
         Assert.AreEqual(65, gm.opiniaoPublicaAtual);
         Assert.AreEqual(20, gm.capitalAtual);
+    }
+
+    // ===== Dedução ativa (Prompt 4) =====
+
+    [Test]
+    public void Prensa_CasoComDeducao_PublicaSemConferir_EAVersaoVemDaVerdade()
+    {
+        ReceitaDeCaso r = Receita(casoA);
+        r.comBoato = new ReceitaDeCaso.Versao { povo = 30, estado = -15, ouro = 40, penalidadePovo = -10 };
+        Item fato = Pista("fato", casoA), boato = Pista("boato", casoA, Confiabilidade.Boato);
+        Item f2 = Pista("f2", casoA), calunia = Pista("calunia", casoA, Confiabilidade.Calunia);
+        casoA.deducao = new ConfiguracaoDeDeducao
+        {
+            ativa = true,
+            pares = new List<ParContraditorio> { new ParContraditorio { a = fato, b = boato }, new ParContraditorio { a = f2, b = calunia } }
+        };
+        gm.ConfirmarCaso(casoA);
+        inv.AddItem(fato);
+        inv.AddItem(boato);
+        Assert.IsTrue(Deducao.Marcar(gm, casoA, boato, MarcacaoDaPista.Confiavel)); // hipótese errada, sem conferir
+
+        NasEntradas(fato, boato);
+        prensa.CombineItems();
+        Assert.AreEqual(1, gm.panfletosPublicados.Count, "a dedução não é exigida para publicar");
+        Assert.AreEqual(NivelDoPanfleto.ComBoato, gm.panfletosPublicados[0].nivel, "a versão vem da verdade, não da hipótese");
+        Assert.IsFalse(Deducao.Confirmada(gm, casoA));
+        Assert.AreEqual(1, gm.revelacoesPendentes.Count, "o boato continua sendo exposto no fim da fase");
     }
 
     // ===== Biblioteca com o inventário real =====

@@ -33,3 +33,14 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
+  - name: "Cidad\xE3 Delorme"
+    text: O redator Marchand anda dizendo que as cartas trazem um plano de fuga.
+      Ele nunca as leu.
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []

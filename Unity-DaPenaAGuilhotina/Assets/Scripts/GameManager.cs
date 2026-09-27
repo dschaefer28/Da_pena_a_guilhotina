@@ -21,8 +21,8 @@ public class GameManager : MonoBehaviour
     public const int UltimaFase = 4;
 
     [Tooltip("Quantos casos o jogador precisa concluir em cada fase para avançar (elemento 0 = Fase 1). " +
-             "Documento: a partir da Fase 3 o jogador escolhe mais de um caso por fase.")]
-    public int[] casosPorFase = { 1, 1, 2, 1 };
+             "Decisão do grupo (27/09): nas Fases 2 e 3 o jogador escolhe um caso entre três; os outros ficam bloqueados.")]
+    public int[] casosPorFase = { 1, 1, 1, 1 };
 
     [Tooltip("Casos cujo panfleto já foi impresso. Um caso concluído libera a Mesa de Casos para o próximo.")]
     public List<CaseData> casosConcluidos = new List<CaseData>();
@@ -50,8 +50,8 @@ public class GameManager : MonoBehaviour
     [Tooltip("Travada ao entrar na Fase 4 pelo desnível entre Povo e Estado. Define o caso da Fase 4 e o final.")]
     public RotaFinal rotaFinal = RotaFinal.Nenhuma;
     [Tooltip("Diferença mínima entre Opinião Pública e Opinião do Estado para a rota pender para um lado. " +
-             "Abaixo disso, a rota é a C (equilíbrio).")]
-    [Min(0)] public int margemDaRota = 20;
+             "Abaixo disso, a rota é a C (equilíbrio). Mínimo 1: com 0, o empate iria para a rota A.")]
+    [Min(1)] public int margemDaRota = 20;
 
     [Header("Status Globais (HUD)")]
     public int capitalAtual = 0;
@@ -60,6 +60,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Persistência (Entre Cenas)")]
     public List<Item> inventarioSalvo = new List<Item>();
+    [Tooltip("Itens que não couberam na grade ao restaurar o inventário (grade cheia). Não se perdem: vão junto ao trocar " +
+             "de cena e no save, e voltam para a grade assim que houver espaço.")]
+    public List<Item> itensForaDaGrade = new List<Item>();
 
     /// <summary>Histórico de uma publicação com SNAPSHOT dos valores aplicados: mudar receitas depois não altera
     /// publicações já feitas. "legado" = veio de um save anterior à versão 4, sem esses detalhes.</summary>
@@ -111,6 +114,12 @@ public class GameManager : MonoBehaviour
     [Header("Biblioteca (Fase 3 em diante)")]
     [Tooltip("\"oferta|caso\" das compras feitas (OfertaDaBiblioteca.ChaveDeCompra).")]
     public List<string> comprasDaBiblioteca = new List<string>();
+
+    [Header("Dedução ativa (Prompt 4, Fases 3 e 4)")]
+    [Tooltip("Hipóteses do jogador no quadro de dedução, por caso e pista (Deducao). Nunca mudam a verdade das pistas.")]
+    public List<MarcacaoDeDeducao> marcacoesDeDeducao = new List<MarcacaoDeDeducao>();
+    [Tooltip("Casos (CaseData.name) cujo quadro de dedução foi conferido e confirmado.")]
+    public List<string> deducoesConfirmadas = new List<string>();
 
     [Header("Dependências Globais")]
     public InventoryManager inventoryManager;
@@ -184,9 +193,22 @@ public class GameManager : MonoBehaviour
         if (casosJaSelecionados.Contains(caso)) { motivo = "Este caso já foi escolhido antes."; return false; }
         if (caso.fase != faseAtual) { motivo = "Este caso não pertence à fase atual."; return false; }
         if (FaseConcluida) { motivo = "Os casos desta fase já foram concluídos."; return false; }
-        if (caso.rota != RotaFinal.Nenhuma && caso.rota != rotaFinal) { motivo = "Este caso não pertence a esta rota."; return false; }
+        if (!CasoDaRotaAtual(caso)) { motivo = "Este caso não pertence a esta rota."; return false; }
         return true;
     }
+
+    /// <summary>Filtro de rota da mesa (documento, "Filtro Dinâmico de Casos"). Antes da Fase 4 valem os casos sem rota;
+    /// na Fase 4, só o caso da rota travada — um caso sem rota nunca aparece junto dele.</summary>
+    public bool CasoDaRotaAtual(CaseData caso)
+    {
+        if (caso == null) return false;
+        if (caso.rota == RotaFinal.Nenhuma) return faseAtual < UltimaFase;
+        return caso.rota == rotaFinal;
+    }
+
+    /// <summary>O tutorial (caso da Fase 1) terminou. Regra de progresso da Mesa de Casos e da porta do escritório:
+    /// não depende de o panfleto do tutorial ainda estar no inventário.</summary>
+    public bool TutorialConcluido => faseAtual > 1 || casosConcluidos.Exists(c => c != null && c.fase == 1);
 
     /// <summary>Aceita o caso. Falso se a regra de domínio recusar. Confirmar de novo o caso em andamento não
     /// reinicia o relógio (o orçamento de horas já gasto continua valendo).</summary>
@@ -543,13 +565,27 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    /// <summary>Documento (Fase 4, "Definição de Rota"): Povo alto e Estado baixo = A; o contrário = B; equilíbrio = C.</summary>
+    /// <summary>Documento (Fase 4, "Definição de Rota"): Povo alto e Estado baixo = A; o contrário = B; equilíbrio = C.
+    /// Desnível ≥ margem → A; ≤ −margem → B; o resto → C.</summary>
     public RotaFinal CalcularRota()
     {
+        int margem = MargemValida;
         int desnivel = opiniaoPublicaAtual - opiniaoEstadoAtual;
-        if (desnivel >= margemDaRota) return RotaFinal.A_Guilhotina;
-        if (desnivel <= -margemDaRota) return RotaFinal.B_Tirano;
+        if (desnivel >= margem) return RotaFinal.A_Guilhotina;
+        if (desnivel <= -margem) return RotaFinal.B_Tirano;
         return RotaFinal.C_Equilibrio;
+    }
+
+    /// <summary>Margem usada no cálculo da rota. Uma margem 0 ou negativa (só possível por código) faria o empate
+    /// (desnível 0) cair na rota A; com o mínimo de 1, o empate fica na C, sem pender para nenhum lado.</summary>
+    public int MargemValida
+    {
+        get
+        {
+            if (margemDaRota >= 1) return margemDaRota;
+            Debug.LogWarning($"[FASES] Margem da rota inválida ({margemDaRota}): usando 1, para o empate continuar na rota C.");
+            return 1;
+        }
     }
 
     public void DefinirRota()

@@ -1,12 +1,12 @@
 # Prompts para Claude Code — Da Pena à Guilhotina
 
-Preparado em 25/09/2026 a partir dos dois PDFs e de inspeção estática do repositório. **Atualizado em 26/09/2026:** Prompts 0 a 3 e 5 concluídos; a verificação completa de 26/09 adiantou partes dos Prompts 6 e 7 (marcadas como "Já feito" em cada prompt). O estado atual do projeto está sempre em `docs/STATUS_IMPLEMENTACAO_TCC.md`, que prevalece sobre o diagnóstico inicial abaixo.
+Preparado em 25/09/2026 a partir dos dois PDFs e de inspeção estática do repositório. **Atualizado em 27/09/2026:** Prompts 0 a 6 concluídos (o 4 entrou por decisão do grupo; o restante do 6 foi feito em 27/09); a Fase 3 passou a ter três casos, com um concluído (decisão do grupo). Do Prompt 7, partes já foram adiantadas na verificação de 26/09 ("Já feito"). O estado atual do projeto está sempre em `docs/STATUS_IMPLEMENTACAO_TCC.md`, que prevalece sobre o diagnóstico inicial abaixo.
 
 ## Como usar
 
 1. Abra o Claude Code na raiz `Da_pena_a_guilhotina`. O projeto Unity está na subpasta `Unity-DaPenaAGuilhotina`.
 2. Envie o **Prompt base** e peça a leitura de `docs/STATUS_IMPLEMENTACAO_TCC.md`.
-3. Os Prompts 0 a 3 e o 5 já foram executados. Ordem recomendada daqui em diante: **6 → 7 → 8**. O **Prompt 4 é opcional**: as propostas C e D são "proposta, não implementada" no documento de dificuldade, e o 4 exige reescrever as pistas de 7 casos em pares contraditórios. Decidam em grupo se ele entra no TCC.
+3. Os Prompts 0 a 6 já foram executados. Ordem daqui em diante: **7 → 8**, depois da validação do grupo (STATUS §16.3).
 4. Um prompt por vez. Confira o resultado de cada etapa antes da próxima.
 5. Em uma conversa nova, reenvie o prompt base, peça a leitura dos relatórios já gerados e envie somente a próxima etapa.
 6. Não é necessário reenviar os PDFs a cada etapa: os requisitos operacionais estão abaixo. Mantenha os originais como referência para resolver dúvidas.
@@ -56,7 +56,7 @@ Estas são interpretações/propostas deste plano, não novas afirmações conti
 5. **Escopo C:** dedução ativa nas Fases 3 e 4, por caso. A variante de confrontar NPCs com provas fica fora da primeira implementação.
 6. **Escopo D:** linha editorial a partir da Fase 2; tutorial continua com receita simples. Tom não transforma boato em fato.
 7. **Receita expandida:** manter os dois slots de pistas e usar evidências complementares como qualificadores opcionais cadastrados por receita. Não criar quantidade variável de slots nesta primeira versão.
-8. **Campanha:** Fase 2 conclui um de três casos; Fase 3 conclui dois distintos entre quatro; Fase 4 recebe exatamente um caso correspondente à rota travada.
+8. **Campanha:** Fase 2 conclui um de três casos; ~~Fase 3 conclui dois distintos entre quatro~~ Fase 3 conclui um de três (decisão do grupo, 27/09; saiu o caso do Padeiro); Fase 4 recebe exatamente um caso correspondente à rota travada.
 9. **Sem bloqueio por falta de pistas:** tempo limitado precisa coexistir com uma saída de conclusão. Primeiro validar o desenho dos casos; quando necessário, fornecer duas alegações iniciais distintas, explicitamente não verificadas, com consequências inferiores. Essa saída é proposta de design, não requisito literal dos PDFs, e deve constar no relatório.
 10. **Valores novos:** preços, bônus, textos e casos ausentes são parâmetros/protótipos editáveis. Reutilizar narrativa existente; conteúdo novo deve ser rotulado como provisório. Não inventar que foi retirado do GDD.
 11. **Destino do jogador e do réu (grupo, 26/09):** pista melhor gera panfleto melhor; as barras decidem o final do jogador (rota); o panfleto do caso da Fase 4 decide o destino do réu (versão Fatos = absolvido; boato, calúnia ou só alegações = condenado). As provas apresentadas no tribunal não mudam nenhum dos dois.
@@ -186,6 +186,8 @@ save antigo e novo; sair e voltar com zero horas. Tutorial deve continuar funcio
 
 ## Prompt 2 — completar conteúdo e progressão das fases (concluído)
 
+Em 27/09 a Fase 3 passou para três casos, com um concluído (decisão do grupo, STATUS §15); o texto abaixo é o pedido original.
+
 ```text
 Aplicando o prompt base, configure campanha e investigação sobre os sistemas
 existentes e as correções do Prompt 1. Ainda não implemente biblioteca/dedução/tom.
@@ -258,7 +260,9 @@ comprar/reabrir/recarregar; documento de outro caso; bônus aplicado uma vez;
 exemplo numérico; coexistência com despesas e perda de horas por dívida.
 ```
 
-## Prompt 4 — dedução ativa e pistas conflitantes (C) — opcional, decisão do grupo
+## Prompt 4 — dedução ativa e pistas conflitantes (C) (concluído em 27/09)
+
+Incluído por decisão do grupo. Resultado, arquivos e testes em `STATUS_IMPLEMENTACAO_TCC.md` §13. Menu de configuração: Ferramentas > Campanha > 5 - Aplicar dedução ativa. Decisão pendente do grupo: horas da dedução (STATUS §13.6).
 
 ```text
 Aplicando o prompt base, implemente dedução ativa por caso nas Fases 3 e 4.
@@ -338,9 +342,9 @@ superior; fato sensacionalista sem penalidade de mentira inventada; boato com
 agravamento configurado; cancelar/duplo clique/save; tutorial sem etapa extra.
 ```
 
-## Prompt 6 — consequências, rota e tribunal integrados
+## Prompt 6 — consequências, rota e tribunal integrados (concluído em 27/09)
 
-Já feito em 26/09 (não refazer; ver STATUS §9): ordem revelações → despesas → rota em `GameManager.EncerrarFase`; revelação na cutscene do `FimDeFase`; provas do tribunal pelo histórico do caso da Fase 4 (`TribunalManager.ProvasDoCaso`); destino do réu pelo panfleto; Final C "O Esquecido" com a barra terminando no meio; uma prova não pode ser apresentada duas vezes. O que resta: Dupaty exigir panfleto recuperável/evidências, perda silenciosa ao restaurar inventário cheio, a mesa depender do panfleto do tutorial, testes de limite da rota e a exploração de encerrar a defesa cedo.
+Feito em 26/09 (STATUS §9): ordem revelações → despesas → rota em `GameManager.EncerrarFase`; revelação na cutscene do `FimDeFase`; provas do tribunal pelo histórico do caso da Fase 4 (`TribunalManager.ProvasDoCaso`); destino do réu pelo panfleto; Final C "O Esquecido" com a barra terminando no meio; uma prova não pode ser apresentada duas vezes. Feito em 27/09 (STATUS §14): Dupaty confere caso da rota, panfleto e pistas pelo histórico; inventário cheio não perde itens; mesa e porta do escritório pela regra de progresso; limites e margem da rota; Fase 4 só com o caso da rota; mínimo de provas para encerrar a defesa.
 
 ```text
 Aplicando o prompt base, integre os sistemas novos ao fim das fases e ao tribunal.
@@ -383,7 +387,7 @@ de provas; Fase 4 alterando barras sem recalcular o final; saída da prensa ocup
 
 ## Prompt 7 — tutorial, transições e UI integrada
 
-Já feito em 26/09 (não refazer; ver STATUS §9): tutorial de status ao abrir a prensa, com o HUD piscando e etapas que pulam ações já feitas; fade de cena acima de toda a UI (ordem 1000) e cutscenes de início de cena que já nascem pretas (o cenário não pisca); textos do tutorial verificados em PC e celular; pop-up abaixo do relógio; botão Biblioteca escondido com a mesa aberta; ícone de interação nas Fases 2–4; som da porta (`event:/portaabrir`) e do alçapão (`event:/bauabrir`). O que resta: Marie ausente depois de save/load, dicas de primeira vez para despesas/biblioteca/tom, sequência de modais abertos e revisão de resoluções e área segura.
+Já feito em 26/09 (não refazer; ver STATUS §9): tutorial de status ao abrir a prensa, com o HUD piscando e etapas que pulam ações já feitas; fade de cena acima de toda a UI (ordem 1000) e cutscenes de início de cena que já nascem pretas (o cenário não pisca); textos do tutorial verificados em PC e celular; pop-up abaixo do relógio; botão Biblioteca escondido com a mesa aberta; ícone de interação nas Fases 2–4; som da porta (`event:/portaabrir`) e do alçapão (`event:/bauabrir`). O que resta: Marie ausente depois de save/load, dicas de primeira vez para despesas/biblioteca/tom/dedução, texto da dica de fato/boato (ainda fala em "procurar outra fonte que confirme"; STATUS §13.6), sequência de modais abertos (o Quadro de pistas já existe e usa `JanelasModais`) e revisão de resoluções e área segura.
 
 ```text
 Aplicando o prompt base, feche lacunas de apresentação e integração. Reutilize
@@ -433,7 +437,7 @@ do escopo. Não adicione novas mecânicas nem reescreva sistemas que já passara
 4. Teste salvar/carregar após compra, marcação parcial, dedução confirmada,
    publicação sensacionalista, consequência aplicada e rota definida. Teste
    Novo Jogo após Continuar; não reutilizar estados da campanha anterior.
-5. Valide assets: IDs únicos, referências, catálogo de save, quatro casos na Fase 3,
+5. Valide assets: IDs únicos, referências, catálogo de save, três casos na Fase 3,
    três alternativas de Fase 4 e exatamente uma visível por rota; orçamento viável;
    pares contraditórios; receitas e suportes pertencentes aos casos corretos.
 6. Confirme que setup idempotente não duplica objetos e que nenhuma dependência,

@@ -151,8 +151,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootInteractable
   pistasPossiveis:
-  - caso: {fileID: 11400000, guid: 178eabcdb503f204f95a3b35d983e066, type: 2}
-    itemParaDar: {fileID: 11400000, guid: 2238f6ee1466c3248b95579dfce70c2f, type: 2}
   - caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
     itemParaDar: {fileID: 11400000, guid: 45ea98a49d642a74384245c9067ae620, type: 2}
   - caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
@@ -1581,12 +1579,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].caso
       value: 
-      objectReference: {fileID: 11400000, guid: 178eabcdb503f204f95a3b35d983e066, type: 2}
+      objectReference: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[1].caso
       value: 
@@ -1594,7 +1592,7 @@ PrefabInstance:
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].dialogoInicialDoCaso
       value: 
-      objectReference: {fileID: 11400000, guid: 47c61edc41ce92345844df2290ece2a1, type: 2}
+      objectReference: {fileID: 11400000, guid: a40f2a3e184267d46bda95532dec6f24, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[1].dialogoInicialDoCaso
       value: 
@@ -1614,7 +1612,7 @@ PrefabInstance:
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: 'reacoesDeCaso.Array.data[0].recompensasDoDialogo.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: 2db573c3ccf7ac64cb370b2a7a0c22bc, type: 2}
+      objectReference: {fileID: 11400000, guid: e3000d49d40acf04c90bed72c6ee976c, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: 'reacoesDeCaso.Array.data[1].recompensasDoDialogo.Array.data[0]'
       value: 
@@ -1710,16 +1708,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].caso
       value: 
-      objectReference: {fileID: 11400000, guid: 178eabcdb503f204f95a3b35d983e066, type: 2}
+      objectReference: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[1].caso
       value: 
-      objectReference: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
+      objectReference: {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[2].caso
       value: 
@@ -1727,11 +1725,11 @@ PrefabInstance:
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].dialogoInicialDoCaso
       value: 
-      objectReference: {fileID: 11400000, guid: 58e48fb57022e23499a9a1ce766cbed7, type: 2}
+      objectReference: {fileID: 11400000, guid: 64c8e2d5365744f4fac78199324ed899, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[1].dialogoInicialDoCaso
       value: 
-      objectReference: {fileID: 11400000, guid: 64c8e2d5365744f4fac78199324ed899, type: 2}
+      objectReference: {fileID: 11400000, guid: ad679da8467fed34d9e8b6b5163d3543, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[2].dialogoInicialDoCaso
       value: 
@@ -1741,12 +1739,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[0].etapasComplementares.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].recompensasDoDialogo.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[1].etapasComplementares.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[1].recompensasDoDialogo.Array.size
@@ -1759,25 +1761,41 @@ PrefabInstance:
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: 'reacoesDeCaso.Array.data[0].recompensasDoDialogo.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: f07191b52a0c0ec4fbe618b91301d64f, type: 2}
+      objectReference: {fileID: 11400000, guid: d830dc19acc872d44be10e1fbc51a399, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: 'reacoesDeCaso.Array.data[1].recompensasDoDialogo.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: d830dc19acc872d44be10e1fbc51a399, type: 2}
+      objectReference: {fileID: 11400000, guid: 6db250082e1d88a4599da64cfd70503f, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: 'reacoesDeCaso.Array.data[2].recompensasDoDialogo.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: 6db250082e1d88a4599da64cfd70503f, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[0].etapasComplementares.Array.data[0].id
+      value: recibo_da_estalagem
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[1].etapasComplementares.Array.data[0].id
       value: recibo_da_estalagem
       objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[0].etapasComplementares.Array.data[0].dialogo
+      value: 
+      objectReference: {fileID: 11400000, guid: d6d850ff0f39c99429c64eedb85a6c8a, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[1].etapasComplementares.Array.data[0].dialogo
       value: 
       objectReference: {fileID: 11400000, guid: d6d850ff0f39c99429c64eedb85a6c8a, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[0].etapasComplementares.Array.data[0].requisitos.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[1].etapasComplementares.Array.data[0].requisitos.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[0].etapasComplementares.Array.data[0].recompensas.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
@@ -1785,9 +1803,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: 'reacoesDeCaso.Array.data[0].etapasComplementares.Array.data[0].requisitos.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 45ea98a49d642a74384245c9067ae620, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: 'reacoesDeCaso.Array.data[1].etapasComplementares.Array.data[0].requisitos.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: 45ea98a49d642a74384245c9067ae620, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: 'reacoesDeCaso.Array.data[0].etapasComplementares.Array.data[0].recompensas.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 46a912874897d4b479b0eb6865b60655, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: 'reacoesDeCaso.Array.data[1].etapasComplementares.Array.data[0].recompensas.Array.data[0]'
       value: 
@@ -2413,8 +2439,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootInteractable
   pistasPossiveis:
-  - caso: {fileID: 11400000, guid: 178eabcdb503f204f95a3b35d983e066, type: 2}
-    itemParaDar: {fileID: 11400000, guid: 36f70826b88f085428a7f4b91a9eda58, type: 2}
   - caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
     itemParaDar: {fileID: 11400000, guid: c7a70783333a9fb4687c8717e59f8bc4, type: 2}
   - caso: {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}

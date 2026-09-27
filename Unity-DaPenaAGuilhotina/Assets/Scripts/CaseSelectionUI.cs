@@ -90,12 +90,13 @@ public class CaseSelectionUI : MonoBehaviour
             if (opiniaoPopular != null) opiniaoPopular.text = FormatarTendencia("Opinião Popular", caso.publicOpinionReward);
             if (opiniaoEstado != null) opiniaoEstado.text = FormatarTendencia("Opinião do Estado", caso.stateOpinionReward);
 
-            // 5. Documento (Interlúdio, "Mesa de Casos"): três estados. Concluído e em andamento ficam bloqueados;
-            // os disponíveis só aceitam clique quando não há outro caso em andamento (o GameManager confere de novo).
+            // 5. Documento (Interlúdio, "Mesa de Casos"): concluído e em andamento ficam bloqueados; os outros casos da
+            // fase também, depois que um deles foi escolhido (Fases 2 e 3: um caso entre três). O GameManager confere de novo.
             EstadoDoCaso estado = EstadoDe(caso, gm);
             if (titulo != null && estado != EstadoDoCaso.Disponivel)
-                titulo.text += estado == EstadoDoCaso.Concluido ? " (concluído)" : " (em andamento)";
-            if (estado == EstadoDoCaso.Concluido)
+                titulo.text += estado == EstadoDoCaso.Concluido ? " (concluído)"
+                             : estado == EstadoDoCaso.Bloqueado ? " (bloqueado)" : " (em andamento)";
+            if (estado == EstadoDoCaso.Concluido || estado == EstadoDoCaso.Bloqueado)
             {
                 CanvasGroup grupoDoCartao = novoCartao.GetComponent<CanvasGroup>();
                 if (grupoDoCartao == null) grupoDoCartao = novoCartao.AddComponent<CanvasGroup>();
@@ -112,13 +113,15 @@ public class CaseSelectionUI : MonoBehaviour
         }
     }
 
-    public enum EstadoDoCaso { Disponivel, EmAndamento, Concluido }
+    /// <summary>Bloqueado = outro caso da fase já foi escolhido (em andamento) ou a fase já tem os casos que exige.</summary>
+    public enum EstadoDoCaso { Disponivel, EmAndamento, Concluido, Bloqueado }
 
     public static EstadoDoCaso EstadoDe(CaseData caso, GameManager gm)
     {
         if (gm == null || caso == null) return EstadoDoCaso.Disponivel;
         if (gm.casosConcluidos.Contains(caso)) return EstadoDoCaso.Concluido;
         if (gm.casoEscolhido == caso || gm.CasoJaFoiSelecionado(caso)) return EstadoDoCaso.EmAndamento;
+        if (gm.CasoAtualEmAndamento || (caso.fase == gm.faseAtual && gm.FaseConcluida)) return EstadoDoCaso.Bloqueado;
         return EstadoDoCaso.Disponivel;
     }
 
@@ -127,8 +130,7 @@ public class CaseSelectionUI : MonoBehaviour
     {
         if (caso == null) return false;
         if (gm == null) return true;
-        if (caso.fase != gm.faseAtual) return false;
-        return caso.rota == RotaFinal.Nenhuma || caso.rota == gm.rotaFinal;
+        return caso.fase == gm.faseAtual && gm.CasoDaRotaAtual(caso);
     }
 
     /// <summary>Falso quando nenhum caso da lista pertence à fase atual: a mesa avisa em vez de abrir vazia.</summary>

@@ -41,7 +41,7 @@ public class BibliotecaTests
         Item f1 = Carregar<Item>(Pasta + "Fase3/Pista_Champ_Peticao.asset");
         Item f2 = Carregar<Item>(Pasta + "Fase3/Pista_Champ_LeiMarcial.asset");
         Item ata = Carregar<Item>(Pasta + "Fase3/Apoio_ChampDeMars_Biblioteca.asset");
-        Item deOutroCaso = Carregar<Item>(Pasta + "Fase3/Apoio_Padeiro_Biblioteca.asset");
+        Item deOutroCaso = Carregar<Item>(Pasta + "Fase3/Apoio_Assignats_Biblioteca.asset");
 
         // O exemplo do Prompt 3 é a etapa "versão → apoio"; a linha editorial (Prompt 5) soma depois (LinhaEditorialTests).
         ResultadoDoPanfleto sem = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, null);

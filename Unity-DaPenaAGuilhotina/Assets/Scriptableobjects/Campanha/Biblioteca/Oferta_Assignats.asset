@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OfertaDaBiblioteca
   id: biblioteca_assignats
   titulo: Laudo da Casa da Moeda
-  descricao: Laudo dos gravadores da Casa da Moeda comparando as notas falsas com
-    as verdadeiras.
+  descricao: "Laudo dos gravadores da Casa da Moeda comparando as notas falsas com
+    as verdadeiras: as falsas foram impressas com tipos gastos, numa prensa diferente
+    das usadas pelos gravadores da se\xE7\xE3o."
   preco: 20
   faseMinima: 3
   caso: {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}

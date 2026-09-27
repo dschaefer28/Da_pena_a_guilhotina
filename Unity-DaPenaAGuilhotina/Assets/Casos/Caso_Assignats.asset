@@ -29,3 +29,10 @@ MonoBehaviour:
   alegacoesIniciais:
   - {fileID: 11400000, guid: 8c51baa68ea7fc843b0502c280451ebd, type: 2}
   - {fileID: 11400000, guid: 896a0ff2302027948b78d43105257d88, type: 2}
+  deducao:
+    ativa: 1
+    pares:
+    - a: {fileID: 11400000, guid: f87ff9f4618e22e4ba92bbbdde0f2ea9, type: 2}
+      b: {fileID: 11400000, guid: 6db250082e1d88a4599da64cfd70503f, type: 2}
+    - a: {fileID: 11400000, guid: 0f4b2a54426a0b640b528f4b17d34ae6, type: 2}
+      b: {fileID: 11400000, guid: 4f1c271dc25c8764a8fa6e095950a25a, type: 2}

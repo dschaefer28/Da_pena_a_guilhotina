@@ -18,18 +18,28 @@ public class DoorInteractable : MonoBehaviour, IInteractable
     public EventReference somPorta;
 
     [Header("Trava de Progressão (Opcional)")]
+    [Tooltip("Marque na porta do escritório: trancada até o fim do tutorial (caso da Fase 1 concluído). Regra de progresso: " +
+             "não depende de o panfleto do tutorial ainda estar no inventário (Prompt 6).")]
+    public bool exigeTutorialConcluido = false;
+
     [Tooltip("Arraste o ScriptableObject do item necessário para passar. Deixe VAZIO para portas livres.")]
     public Item itemObrigatorio;
-    
+
     [Tooltip("O que o personagem pensa se tentar passar sem o item?")]
     public DialogueData pensamentoBloqueado;
 
-    /// <summary>Falso enquanto o item obrigatório não estiver no inventário: o aviso de interação
-    /// (PromptDeInteracao) só aparece sobre a porta quando ela realmente responde.</summary>
-    public bool PodeInteragir =>
-        itemObrigatorio == null ||
-        (GameManager.Instance != null && GameManager.Instance.inventoryManager != null &&
-         GameManager.Instance.inventoryManager.HasItem(itemObrigatorio.itemID));
+    /// <summary>Falso enquanto a porta estiver trancada (tutorial em andamento ou item obrigatório ausente): o aviso de
+    /// interação (PromptDeInteracao) só aparece sobre a porta quando ela realmente responde.</summary>
+    public bool PodeInteragir
+    {
+        get
+        {
+            GameManager gm = GameManager.Instance;
+            if (exigeTutorialConcluido && (gm == null || !gm.TutorialConcluido)) return false;
+            return itemObrigatorio == null ||
+                   (gm != null && gm.inventoryManager != null && gm.inventoryManager.HasItem(itemObrigatorio.itemID));
+        }
+    }
 
     public void Interact()
     {

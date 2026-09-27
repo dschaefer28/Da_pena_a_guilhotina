@@ -17,7 +17,7 @@ MonoBehaviour:
   itemAmt: 1
   itemName: A bandeira vermelha
   descricao: "Proclama\xE7\xE3o da prefeitura: a bandeira vermelha da lei marcial
-    foi hasteada antes do fogo."
+    foi hasteada por ordem do prefeito antes de a Guarda marchar ao Champ de Mars."
   fonte: "Proclama\xE7\xE3o pregada no balc\xE3o da padaria"
   caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
   confiabilidade: 1

@@ -16,8 +16,8 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
   itemName: "O ouro austr\xEDaco"
-  descricao: "Segundo a peticion\xE1ria, o cocheiro era espi\xE3o da Rainha, pago
-    em ouro austr\xEDaco."
+  descricao: "Segundo a peticion\xE1ria, o cocheiro recebeu ouro austr\xEDaco para
+    levar o Rei e sabia desde Paris quem ia na berlinda."
   fonte: Conversa no Champ de Mars
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   confiabilidade: 2

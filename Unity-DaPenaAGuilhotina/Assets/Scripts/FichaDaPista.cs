@@ -91,8 +91,13 @@ public class FichaDaPista : MonoBehaviour
         if (item.EhPista)
         {
             var inventario = GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
-            bool verificada = inventario != null && inventario.PistaVerificada(item);
-            sb.Append("\n\n<size=85%>Situação: ").Append(item.RotuloSituacao(verificada)).Append("</size>");
+            string situacao = inventario != null ? inventario.RotuloDaPista(item) : item.RotuloSituacao(false);
+            sb.Append("\n\n<size=85%>Situação: ").Append(situacao).Append("</size>");
+
+            // Dedução ativa: a afirmação contrária aparece só quando as duas já foram descobertas.
+            Item contraria = Deducao.Contradicao(GameManager.Instance, item);
+            if (contraria != null)
+                sb.Append("\n<size=85%><color=#C8B89A>Contradiz: ").Append(contraria.NomeExibicao).Append("</color></size>");
         }
         return sb.ToString();
     }

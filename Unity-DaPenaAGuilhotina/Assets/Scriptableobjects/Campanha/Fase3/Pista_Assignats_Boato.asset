@@ -15,9 +15,9 @@ MonoBehaviour:
   itemID: pista_assignats_boato
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: As notas nas tavernas
-  descricao: Segundo os cocheiros, o gravador vendia notas falsas nas tavernas, dez
-    por uma moeda de ouro.
+  itemName: "A hist\xF3ria do roubo"
+  descricao: "Segundo os cocheiros, as chapas nunca sa\xEDram da oficina de Morel:
+    ele inventou o roubo depois de preso, para enganar a se\xE7\xE3o."
   fonte: Conversa de cocheiros
   caso: {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}
   confiabilidade: 2

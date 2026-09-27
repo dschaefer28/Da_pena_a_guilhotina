@@ -36,29 +36,28 @@ public static class BibliotecaSetupTool
         public string[] falas;
     }
 
+    // Descrições revistas na dedução ativa (Prompt 4, 27/09): cada documento dá contexto para julgar um dos pares do caso,
+    // sem dizer qual pista é verdadeira. A oferta do Padeiro saiu com o caso (Ferramentas > Campanha > 6).
     private static readonly Oferta[] Ofertas =
     {
-        new Oferta { caso = "Caso_Padeiro", fase = "Fase3", id = "biblioteca_padeiro", preco = 20, povo = 5, estado = 10, ouro = 15,
-            titulo = "Registro da Halle aux Blés", itemNome = "Registro da Halle aux Blés", fonte = "Biblioteca (compra)",
-            descricao = "Livro oficial do mercado de trigo: quanta farinha o padeiro François comprou no mês da fome." },
         new Oferta { caso = "Caso_Varennes", fase = "Fase3", id = "biblioteca_varennes", preco = 25, povo = 0, estado = 10, ouro = 20,
             titulo = "Relatório da Assembleia sobre a fuga", itemNome = "Relatório da Assembleia sobre a fuga", fonte = "Biblioteca (compra)",
-            descricao = "Cópia do relatório oficial da Assembleia Nacional sobre a fuga do Rei e as pessoas contratadas para a viagem." },
+            descricao = "Cópia do relatório oficial da Assembleia Nacional sobre a fuga do Rei: quem foi contratado para a viagem e como o mestre de posta Drouet, montado num cavalo da posta, deu o alarme em Varennes." },
         new Oferta { caso = "Caso_ChampDeMars", fase = "Fase3", id = "biblioteca_champ", preco = 20, povo = 20, estado = 5, ouro = 20,
             titulo = "Ata da prefeitura de Paris", itemNome = "Ata da prefeitura de Paris", fonte = "Biblioteca (compra)",
-            descricao = "Ata oficial da sessão em que se decidiu hastear a bandeira vermelha da lei marcial no Champ de Mars." },
+            descricao = "Ata oficial da sessão da prefeitura: a lei marcial foi votada e a bandeira vermelha hasteada à tarde, antes de a Guarda sair para o Champ de Mars." },
         new Oferta { caso = "Caso_Assignats", fase = "Fase3", id = "biblioteca_assignats", preco = 20, povo = 5, estado = 10, ouro = 15,
             titulo = "Laudo da Casa da Moeda", itemNome = "Laudo da Casa da Moeda", fonte = "Biblioteca (compra)",
-            descricao = "Laudo dos gravadores da Casa da Moeda comparando as notas falsas com as verdadeiras." },
+            descricao = "Laudo dos gravadores da Casa da Moeda comparando as notas falsas com as verdadeiras: as falsas foram impressas com tipos gastos, numa prensa diferente das usadas pelos gravadores da seção." },
         new Oferta { caso = "Caso_Jornalista", fase = "Fase4", id = "biblioteca_jornalista", preco = 25, povo = 10, estado = 0, ouro = 10,
             titulo = "Coleção encadernada do jornal", itemNome = "Coleção encadernada do jornal", fonte = "Biblioteca (compra)",
-            descricao = "Todos os números do Velho Sans-culotte, encadernados pela Biblioteca Nacional." },
+            descricao = "Todos os números do Velho Sans-culotte, de março a outubro, encadernados pela Biblioteca Nacional. O de outubro trata da carestia do pão." },
         new Oferta { caso = "Caso_Negociante", fase = "Fase4", id = "biblioteca_negociante", preco = 30, povo = 0, estado = 10, ouro = 25,
             titulo = "Livros do Comitê de Subsistência", itemNome = "Livros do Comitê de Subsistência", fonte = "Biblioteca (compra)",
-            descricao = "Livros oficiais de entradas e saídas de grãos da seção, mês a mês." },
+            descricao = "Livros oficiais de entradas e saídas de grãos da seção, mês a mês, com as vendas de Garnier à padaria da seção." },
         new Oferta { caso = "Caso_Girondina", fase = "Fase4", id = "biblioteca_girondina", preco = 25, povo = 5, estado = 5, ouro = 15,
             titulo = "Correspondência arquivada na Convenção", itemNome = "Correspondência arquivada na Convenção", fonte = "Biblioteca (compra)",
-            descricao = "Cartas do deputado Delorme arquivadas na Convenção, com o carimbo do arquivo." },
+            descricao = "Cópias das cartas do deputado Delorme arquivadas na Convenção, com o carimbo do arquivo: família, dívidas e saudade, nenhuma palavra sobre fuga." },
     };
 
     private static readonly Etapa[] Etapas =
@@ -68,7 +67,7 @@ public static class BibliotecaSetupTool
             itemNome = "Recibo da estalagem de Sainte-Menehould", itemFonte = "Cocheiro Joubert",
             itemDescricao = "Recibo da troca de cavalos pago pelo próprio cocheiro, como em qualquer viagem de aluguel.",
             falante = "Cocheiro Joubert",
-            falas = new[] { "O depoimento do mestre de posta! Então o senhor já sabe que eu não falei com ninguém.", "Guardei o recibo da estalagem: paguei os cavalos do meu bolso, como qualquer cocheiro. Leve." } },
+            falas = new[] { "O depoimento do mestre de posta! Então o senhor já sabe que o Drouet reconheceu o Rei sozinho.", "Guardei o recibo da estalagem: paguei os cavalos do meu bolso, como qualquer cocheiro. Leve." } },
         new Etapa { cena = "Fase4", npc = "CidadaDelorme", caso = "Caso_Girondina", fase = "Fase4", id = "carta_da_secao",
             requisito = "Pista_Girondina_Retratacao", itemArquivo = "Apoio_Girondina_Recomendacao", itemId = "apoio_girondina_recomendacao",
             itemNome = "Carta de recomendação da seção", itemFonte = "Cidadã Delorme",
@@ -76,6 +75,14 @@ public static class BibliotecaSetupTool
             falante = "Cidadã Delorme",
             falas = new[] { "Ele retirou a denúncia? Graças a Deus.", "Então tome também isto: a seção me deu esta carta quando doei roupas aos voluntários." } },
     };
+
+    /// <summary>Descrição de referência do documento vendido para o caso (ex.: "Caso_Varennes"), ou null.</summary>
+    internal static string DescricaoDaOferta(string casoArquivo) =>
+        System.Array.Find(Ofertas, o => o.caso == casoArquivo)?.descricao;
+
+    /// <summary>Falas de referência de uma etapa complementar (ex.: "recibo_da_estalagem"), ou null.</summary>
+    internal static string[] FalasDaEtapa(string etapaId) =>
+        System.Array.Find(Etapas, e => e.id == etapaId)?.falas;
 
     [MenuItem("Ferramentas/Campanha/3 - Aplicar biblioteca e documentos de apoio")]
     public static void AplicarPeloMenu() => Debug.Log(Aplicar());

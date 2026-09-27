@@ -16,8 +16,8 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
   itemName: "A peti\xE7\xE3o do altar da p\xE1tria"
-  descricao: "Segundo a peticion\xE1ria, a folha tem dezenas de assinaturas pac\xEDficas
-    e n\xE3o havia armas junto ao altar da p\xE1tria."
+  descricao: "Segundo a peticion\xE1ria, quem assinava estava desarmado: a folha
+    tem dezenas de assinaturas, e nenhum tiro partiu do altar da p\xE1tria."
   fonte: "Peticion\xE1ria Lacombe"
   caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
   confiabilidade: 1

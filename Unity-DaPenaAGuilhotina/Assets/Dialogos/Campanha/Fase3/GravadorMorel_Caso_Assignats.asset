@@ -34,3 +34,14 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices: []
+  - name: Gravador Morel
+    text: Os cocheiros espalham que eu inventei o roubo. Pergunte ao Joubert o que
+      andam dizendo.
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []

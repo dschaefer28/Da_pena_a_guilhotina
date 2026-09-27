@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: "Peticion\xE1ria Lacombe"
-    text: "Assin\xE1vamos uma peti\xE7\xE3o. S\xF3 isso! E eles atiraram."
+    text: "Assin\xE1vamos uma peti\xE7\xE3o, sem uma arma sequer. E eles atiraram."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -25,6 +25,17 @@ MonoBehaviour:
     choices: []
   - name: "Peticion\xE1ria Lacombe"
     text: "Guardei a folha. O sangue ainda est\xE1 nela."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: "Peticion\xE1ria Lacombe"
+    text: "E no mercado a vi\xFAva do padeiro repete que fomos n\xF3s que atiramos
+      primeiro!"
     dialogueAudio:
       Guid:
         Data1: 0

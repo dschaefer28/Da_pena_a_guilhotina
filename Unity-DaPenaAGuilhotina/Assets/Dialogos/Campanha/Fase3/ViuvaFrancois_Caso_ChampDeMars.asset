@@ -14,8 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: "Vi\xFAva Fran\xE7ois"
-    text: "As vizinhas do mercado dizem que os peticion\xE1rios atiraram primeiro
-      e a Guarda s\xF3 se defendeu."
+    text: "As vizinhas do mercado juram que os peticion\xE1rios vieram armados e
+      atiraram primeiro. A Guarda s\xF3 se defendeu."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: "Vi\xFAva Fran\xE7ois"
+    text: "Pregaram uma proclama\xE7\xE3o no balc\xE3o da padaria, e no mural dos
+      Cordeliers colaram um cartaz sobre a bandeira. Cada um conta de um jeito."
     dialogueAudio:
       Guid:
         Data1: 0

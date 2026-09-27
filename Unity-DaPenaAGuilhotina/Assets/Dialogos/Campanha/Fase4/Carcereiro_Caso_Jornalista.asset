@@ -14,8 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: Carcereiro
-    text: "O redator? Aqui dentro dizem que ele recebe cartas com selo ingl\xEAs
-      toda semana."
+    text: "O redator? Aqui dentro os presos contam que o jornal dele pediu a volta
+      do Rei, num n\xFAmero de outubro."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Carcereiro
+    text: "Se quer saber do civismo dele, o arquivo da se\xE7\xE3o guarda os pap\xE9is.
+      E a caixa de den\xFAncias vive cheia de bilhetes sobre ele."
     dialogueAudio:
       Guid:
         Data1: 0

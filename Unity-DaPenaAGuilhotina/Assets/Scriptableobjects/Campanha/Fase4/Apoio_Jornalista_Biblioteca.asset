@@ -16,8 +16,8 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
   itemName: "Cole\xE7\xE3o encadernada do jornal"
-  descricao: "Todos os n\xFAmeros do Velho Sans-culotte, encadernados pela Biblioteca
-    Nacional."
+  descricao: "Todos os n\xFAmeros do Velho Sans-culotte, de mar\xE7o a outubro, encadernados
+    pela Biblioteca Nacional. O de outubro trata da carestia do p\xE3o."
   fonte: Biblioteca (compra)
   caso: {fileID: 11400000, guid: 917d88bbcfe670d4ea21a881e3662a0b, type: 2}
   confiabilidade: 0

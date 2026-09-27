@@ -15,7 +15,7 @@ MonoBehaviour:
   id: biblioteca_negociante
   titulo: "Livros do Comit\xEA de Subsist\xEAncia"
   descricao: "Livros oficiais de entradas e sa\xEDdas de gr\xE3os da se\xE7\xE3o,
-    m\xEAs a m\xEAs."
+    m\xEAs a m\xEAs, com as vendas de Garnier \xE0 padaria da se\xE7\xE3o."
   preco: 30
   faseMinima: 3
   caso: {fileID: 11400000, guid: 08a12328210a2ab45b8948af72c05f4e, type: 2}

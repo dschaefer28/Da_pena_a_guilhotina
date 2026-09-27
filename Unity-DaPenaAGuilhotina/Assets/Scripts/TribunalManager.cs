@@ -77,6 +77,9 @@ public class TribunalManager : MonoBehaviour
     };
     [Tooltip("Quantas provas o jogador apresenta antes do veredito (menos, se tiver menos provas).")]
     [Min(1)] public int maxArgumentos = 5;
+    [Tooltip("Provas que o jogador precisa apresentar antes de poder encerrar a defesa (limitado ao total). Encerrar leva " +
+             "sempre ao veredito completo: a barra vai ao valor final da rota e a bancada reage.")]
+    [Min(1)] public int minimoParaEncerrar = 2;
     [Tooltip("Segundos que a barra leva para chegar ao novo valor.")]
     [Min(0.05f)] public float duracaoDaBarra = 0.8f;
 
@@ -183,6 +186,7 @@ public class TribunalManager : MonoBehaviour
     private int apresentados;
     private float irritacao;
     private bool ocupado = true;
+    private bool vereditoIniciado;
 
     private RectTransform raiz;
     private RectTransform barraFill;
@@ -221,8 +225,9 @@ public class TribunalManager : MonoBehaviour
     private void ColetarProvas(GameManager gm)
     {
         List<Item> itens = ProvasDoCaso(gm, caso, CatalogoDeSave.Instancia);
-        // Sem nada registrado para o caso (ex.: cena aberta direto no Editor): usa o que está no inventário.
-        if (itens.Count == 0 && gm != null && gm.inventarioSalvo != null)
+        // Sem caso (cena aberta direto no Editor): usa o que está no inventário. Com um caso, nunca: um item de outro
+        // caso não vira argumento — sem provas registradas, ficam os argumentos de reserva.
+        if (itens.Count == 0 && caso == null && gm != null && gm.inventarioSalvo != null)
             foreach (Item item in gm.inventarioSalvo)
                 if (item != null && item.itemAmt > 0) itens.Add(item);
 
@@ -278,7 +283,7 @@ public class TribunalManager : MonoBehaviour
 
     private void Apresentar(Prova prova)
     {
-        if (ocupado || prova.botao == null || !prova.botao.interactable) return;
+        if (ocupado || vereditoIniciado || prova.botao == null || !prova.botao.interactable) return;
         prova.botao.interactable = false;
         apresentados++;
         AtualizarContador();
@@ -302,9 +307,14 @@ public class TribunalManager : MonoBehaviour
 
     private void EncerrarDefesa()
     {
-        if (ocupado || apresentados == 0) return;
+        if (ocupado || vereditoIniciado || !PodeEncerrar(apresentados, totalDeArgumentos, minimoParaEncerrar)) return;
         StartCoroutine(Veredito("<i>Você encerra a sua defesa.</i>\n"));
     }
+
+    /// <summary>Encerrar a defesa exige um mínimo de provas apresentadas (nunca mais que o total de argumentos): não dá
+    /// para pular o julgamento com um clique. O veredito que vem depois é o mesmo de apresentar todas.</summary>
+    public static bool PodeEncerrar(int apresentados, int totalDeArgumentos, int minimo) =>
+        apresentados >= Mathf.Clamp(minimo, 1, Mathf.Max(1, totalDeArgumentos));
 
     private bool RestaProva()
     {
@@ -363,6 +373,8 @@ public class TribunalManager : MonoBehaviour
 
     private IEnumerator Veredito(string cabecalho)
     {
+        if (vereditoIniciado) yield break; // última prova e "Encerrar" no mesmo instante: um veredito só
+        vereditoIniciado = true;
         ocupado = true;
         foreach (Prova p in provas) if (p.botao != null) p.botao.interactable = false;
         botaoEncerrar.interactable = false;
@@ -431,8 +443,12 @@ public class TribunalManager : MonoBehaviour
         barraImagem.color = Color.Lerp(CorCalma, CorFuria, p);
     }
 
-    private void AtualizarContador() =>
+    private void AtualizarContador()
+    {
         textoContador.text = $"Argumentos: {apresentados}/{totalDeArgumentos}";
+        if (botaoEncerrar != null && !vereditoIniciado)
+            botaoEncerrar.interactable = PodeEncerrar(apresentados, totalDeArgumentos, minimoParaEncerrar);
+    }
 
     // ===== Fim =====
 

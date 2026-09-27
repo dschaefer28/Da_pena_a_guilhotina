@@ -16,7 +16,8 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
   itemName: "Os pre\xE7os do M\xE1ximo"
-  descricao: "Pela lista de pre\xE7os afixada, Garnier vendeu acima do pre\xE7o m\xE1ximo."
+  descricao: "Pela lista de pre\xE7os afixada, Garnier vendeu trigo \xE0 padaria
+    da se\xE7\xE3o acima do pre\xE7o m\xE1ximo."
   fonte: Parede de editais
   caso: {fileID: 11400000, guid: 08a12328210a2ab45b8948af72c05f4e, type: 2}
   confiabilidade: 1

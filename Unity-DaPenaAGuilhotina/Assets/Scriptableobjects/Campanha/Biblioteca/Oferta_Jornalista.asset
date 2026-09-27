@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OfertaDaBiblioteca
   id: biblioteca_jornalista
   titulo: "Cole\xE7\xE3o encadernada do jornal"
-  descricao: "Todos os n\xFAmeros do Velho Sans-culotte, encadernados pela Biblioteca
-    Nacional."
+  descricao: "Todos os n\xFAmeros do Velho Sans-culotte, de mar\xE7o a outubro, encadernados
+    pela Biblioteca Nacional. O de outubro trata da carestia do p\xE3o."
   preco: 25
   faseMinima: 3
   caso: {fileID: 11400000, guid: 917d88bbcfe670d4ea21a881e3662a0b, type: 2}

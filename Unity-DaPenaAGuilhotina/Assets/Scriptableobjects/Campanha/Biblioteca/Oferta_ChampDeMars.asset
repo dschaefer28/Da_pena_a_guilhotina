@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OfertaDaBiblioteca
   id: biblioteca_champ
   titulo: Ata da prefeitura de Paris
-  descricao: "Ata oficial da sess\xE3o em que se decidiu hastear a bandeira vermelha
-    da lei marcial no Champ de Mars."
+  descricao: "Ata oficial da sess\xE3o da prefeitura: a lei marcial foi votada e
+    a bandeira vermelha hasteada \xE0 tarde, antes de a Guarda sair para o Champ
+    de Mars."
   preco: 20
   faseMinima: 3
   caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}

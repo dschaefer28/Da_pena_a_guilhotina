@@ -15,8 +15,9 @@ MonoBehaviour:
   itemID: pista_girondina_boato
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: Os deputados foragidos
-  descricao: "Segundo o redator, a vi\xFAva esconde deputados foragidos em casa."
+  itemName: O plano de fuga
+  descricao: Segundo o redator, as cartas do deputado trazem o plano de fuga dos
+    girondinos e os nomes de quem os esconde.
   fonte: Redator Marchand
   caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
   confiabilidade: 2

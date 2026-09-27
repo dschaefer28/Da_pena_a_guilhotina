@@ -93,7 +93,7 @@ public class PlayerMove : MonoBehaviour
 
     private bool PodeMover()
     {
-        if (BibliotecaUI.Aberta) return false;
+        if (JanelasModais.AlgumaAberta) return false;
         var dialogo = GameManager.Instance != null ? GameManager.Instance.dialogueSystem : null;
         return dialogo == null || !dialogo.IsDialogueActive;
     }

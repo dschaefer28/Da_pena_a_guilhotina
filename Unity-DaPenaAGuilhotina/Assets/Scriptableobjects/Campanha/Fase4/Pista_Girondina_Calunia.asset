@@ -15,8 +15,9 @@ MonoBehaviour:
   itemID: pista_girondina_calunia
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: O patriota envenenado
-  descricao: "Cartaz na parede de editais: a vi\xFAva envenenou um patriota da se\xE7\xE3o."
+  itemName: "A acusa\xE7\xE3o do vizinho"
+  descricao: "Cartaz na parede de editais: o vizinho que denunciou a vi\xFAva mant\xE9m
+    a acusa\xE7\xE3o, e ela tentou envenen\xE1-lo para que se calasse."
   fonte: Parede de editais
   caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
   confiabilidade: 3

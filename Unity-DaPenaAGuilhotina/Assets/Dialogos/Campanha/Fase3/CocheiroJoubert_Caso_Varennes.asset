@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: Cocheiro Joubert
-    text: "Me contrataram em nome de uma tal baronesa de Korff. Eu s\xF3 conduzia
-      os cavalos, juro."
+    text: Me contrataram em nome de uma tal baronesa de Korff. Sessenta libras, em
+      moeda francesa, como qualquer frete.
     dialogueAudio:
       Guid:
         Data1: 0
@@ -25,7 +25,19 @@ MonoBehaviour:
       Path: 
     choices: []
   - name: Cocheiro Joubert
-    text: Tenho o contrato aqui. Leia o senhor mesmo.
+    text: "Eu s\xF3 conduzia os cavalos, juro. Tenho o contrato aqui: leia o senhor
+      mesmo."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Cocheiro Joubert
+    text: "E a peticion\xE1ria da pra\xE7a ainda anda contando que me pagaram em
+      ouro da \xC1ustria!"
     dialogueAudio:
       Guid:
         Data1: 0

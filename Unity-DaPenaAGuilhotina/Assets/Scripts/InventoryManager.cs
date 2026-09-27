@@ -75,7 +75,7 @@ public class InventoryManager : MonoBehaviour
                 Debug.Log("Não é possível abrir o inventário durante um diálogo.");
                 return;
             }
-            if (vaiAbrir && BibliotecaUI.Aberta) return; // um modal por vez
+            if (vaiAbrir && JanelasModais.AlgumaAberta) return; // um modal por vez (biblioteca, quadro de dedução)
 
             inventoryUI.SetActive(vaiAbrir);
             if (vaiAbrir) ConfigureInventory();
@@ -205,14 +205,26 @@ public class InventoryManager : MonoBehaviour
         if (item == null) return string.Empty;
         if (item.EhSuporte) return $"{item.NomeExibicao} <size=75%>({item.RotuloDeApoio})</size>";
         if (!item.EhPista) return item.NomeExibicao;
-        return $"{item.NomeExibicao} <size=75%>({item.RotuloSituacao(PistaVerificada(item))})</size>";
+        return $"{item.NomeExibicao} <size=75%>({RotuloDaPista(item)})</size>";
     }
 
-    /// <summary>Verdadeiro se o jogador já descobriu a verdade desta pista (tem ou já teve um item de "Verificada Por").</summary>
+    /// <summary>Situação da pista para a lista e a ficha. Casos com dedução ativa (Prompt 4) mostram a hipótese do
+    /// jogador até o quadro ser confirmado; os outros seguem a regra antiga (Verificada Por).</summary>
+    public string RotuloDaPista(Item pista)
+    {
+        if (pista == null || !pista.EhPista) return string.Empty;
+        if (Deducao.Aderente(pista.caso)) return Deducao.Rotulo(GameManager.Instance, pista);
+        return pista.RotuloSituacao(PistaVerificada(pista));
+    }
+
+    /// <summary>Verdadeiro se o jogador já descobriu a verdade desta pista. Caso com dedução ativa: só depois de o quadro
+    /// ser confirmado (adquirir um item de "Verificada Por" não revela nada, e verificações antigas do save não contam).
+    /// Os outros casos: tem ou já teve um item de "Verificada Por".</summary>
     public bool PistaVerificada(Item pista)
     {
         if (pista == null || !pista.EhPista) return false;
         var gm = GameManager.Instance;
+        if (Deducao.Aderente(pista.caso)) return Deducao.PistaConfirmada(gm, pista);
         if (gm != null && gm.pistasVerificadas.Contains(pista.itemID)) return true;
         if (pista.verificadaPor == null) return false;
         foreach (Item prova in pista.verificadaPor)
@@ -238,7 +250,9 @@ public class InventoryManager : MonoBehaviour
 
         foreach (Item item in ItensNaGrade())
         {
-            if (!item.EhPista || gm.pistasVerificadas.Contains(item.itemID) || !PistaVerificada(item)) continue;
+            // Dedução ativa: a verdade só vem do quadro, nunca de um aviso automático ao receber um item.
+            if (!item.EhPista || Deducao.Aderente(item.caso)) continue;
+            if (gm.pistasVerificadas.Contains(item.itemID) || !PistaVerificada(item)) continue;
 
             gm.pistasVerificadas.Add(item.itemID);
             if (!avisar) continue;
@@ -387,6 +401,9 @@ public class InventoryManager : MonoBehaviour
                 if (slot != null && slot.item != null && slot.item.itemAmt > 0) itensParaSalvar.Add(slot.item.Clone());
         if (MouseManager.instance != null && MouseManager.instance.heldItem != null && MouseManager.instance.heldItem.itemAmt > 0)
             itensParaSalvar.Add(MouseManager.instance.heldItem.Clone());
+        // E o que não coube na grade na última restauração (continua guardado: nunca some ao trocar de cena ou salvar).
+        foreach (Item foraDaGrade in GameManager.Instance.itensForaDaGrade)
+            if (foraDaGrade != null && foraDaGrade.itemAmt > 0) itensParaSalvar.Add(foraDaGrade.Clone());
 
         GameManager.Instance.inventarioSalvo = itensParaSalvar;
         Debug.Log($"[SISTEMA] Inventário Salvo: {itensParaSalvar.Count} itens.");
@@ -395,27 +412,52 @@ public class InventoryManager : MonoBehaviour
     // ARQUITETURA: Restaura os itens salvos nos slots vazios da nova cena
    public void RestaurarInventario()
     {
-        if (GameManager.Instance == null || GameManager.Instance.inventarioSalvo == null) return;
+        GameManager gm = GameManager.Instance;
+        if (gm == null || gm.inventarioSalvo == null) return;
 
+        // O que ficou fora da grade antes está dentro do inventarioSalvo (SalvarEstadoAtual) e tenta entrar de novo aqui.
+        gm.itensForaDaGrade.Clear();
         restaurandoInventario = true;
-        foreach (Item itemSalvo in GameManager.Instance.inventarioSalvo)
+        foreach (Item itemSalvo in gm.inventarioSalvo)
         {
             // Proteção contra o NullReferenceException: Ignora itens vazios no cofre
             if (itemSalvo == null) continue;
 
             Item clone = itemSalvo.Clone();
-            AddItem(clone);
+            if (!AddItem(clone)) gm.itensForaDaGrade.Add(clone); // grade cheia: guardado, não perdido
         }
         restaurandoInventario = false;
         RegistrarVerificacoes(avisar: false); // verdade descoberta em outra cena continua valendo, sem repetir o popup
         Debug.Log("[SISTEMA] Inventário Restaurado com segurança.");
+        AvisarItensForaDaGrade();
 
         // Alegações iniciais que não couberam ao aceitar o caso (inventário cheio) entram assim que houver espaço.
-        GameManager.Instance.EntregarAlegacoesPendentes();
+        gm.EntregarAlegacoesPendentes();
     }
 
-    /// <summary>Tira da grade (e das entradas da prensa) todos os itens que atendem à condição. Devolve quantos
-    /// slots foram esvaziados.</summary>
+    private void AvisarItensForaDaGrade()
+    {
+        int quantos = GameManager.Instance != null ? GameManager.Instance.itensForaDaGrade.Count : 0;
+        if (quantos == 0) return;
+        Debug.LogWarning($"[SISTEMA] Inventário cheio: {quantos} item(ns) guardado(s) fora da grade até haver espaço.");
+        AvisoNaTela.Mostrar(quantos == 1
+            ? "Inventário cheio: um item ficou guardado na tipografia. Ele volta quando houver espaço."
+            : $"Inventário cheio: {quantos} itens ficaram guardados na tipografia. Eles voltam quando houver espaço.");
+    }
+
+    /// <summary>Põe na grade o que ficou de fora numa restauração com a grade cheia (sem popup: não é item novo).
+    /// Chamado quando a grade ganha espaço por arquivamento; ao trocar de cena a restauração já tenta de novo.</summary>
+    public void GuardarItensForaDaGrade()
+    {
+        GameManager gm = GameManager.Instance;
+        if (gm == null || gm.itensForaDaGrade.Count == 0) return;
+        restaurandoInventario = true;
+        gm.itensForaDaGrade.RemoveAll(item => item == null || AddItem(item));
+        restaurandoInventario = false;
+    }
+
+    /// <summary>Tira da grade (e das entradas da prensa e do que está guardado fora da grade) todos os itens que atendem
+    /// à condição. Devolve quantos foram removidos.</summary>
     public int RemoverItens(Predicate<Item> condicao)
     {
         if (condicao == null || inventoryGrid == null) return 0;
@@ -431,7 +473,13 @@ public class InventoryManager : MonoBehaviour
         if (prensa != null)
             foreach (UISlotHandler slot in new[] { prensa.slotInput1, prensa.slotInput2 })
                 if (slot != null && slot.item != null && condicao(slot.item)) { ClearItemSlot(slot); removidos++; }
-        if (removidos > 0) ConfigureInventory();
+        if (GameManager.Instance != null)
+            removidos += GameManager.Instance.itensForaDaGrade.RemoveAll(item => item != null && condicao(item));
+        if (removidos > 0)
+        {
+            ConfigureInventory();
+            GuardarItensForaDaGrade(); // o espaço liberado recebe o que estava guardado
+        }
         return removidos;
     }
 
@@ -447,7 +495,8 @@ public class InventoryManager : MonoBehaviour
         return false;
     }
 
-    /// <summary>Tem o item na grade, nas entradas/saída da prensa ou na mão (item tocado e ainda não solto).</summary>
+    /// <summary>Tem o item na grade, nas entradas/saída da prensa, na mão (item tocado e ainda não solto) ou guardado
+    /// fora da grade por falta de espaço.</summary>
     public bool PossuiEmQualquerLugar(string itemID)
     {
         if (HasItem(itemID)) return true;
@@ -455,6 +504,7 @@ public class InventoryManager : MonoBehaviour
         if (prensa != null)
             foreach (UISlotHandler slot in new[] { prensa.slotInput1, prensa.slotInput2, prensa.slotOutput })
                 if (slot != null && slot.item != null && slot.item.itemID == itemID) return true;
+        if (GameManager.Instance != null && GameManager.Instance.itensForaDaGrade.Exists(i => i != null && i.itemID == itemID)) return true;
         return MouseManager.instance != null && MouseManager.instance.heldItem != null && MouseManager.instance.heldItem.itemID == itemID;
     }
 }

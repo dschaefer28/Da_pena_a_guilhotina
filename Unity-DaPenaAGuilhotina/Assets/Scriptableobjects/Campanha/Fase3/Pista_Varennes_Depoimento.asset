@@ -16,8 +16,8 @@ MonoBehaviour:
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
   itemName: A parada em Sainte-Menehould
-  descricao: "Ata no mural: o mestre de posta reconheceu o Rei em Sainte-Menehould;
-    o cocheiro n\xE3o falou com ningu\xE9m na estrada."
+  descricao: "Ata no mural: em Sainte-Menehould, o mestre de posta Drouet reconheceu
+    o Rei sozinho e galopou at\xE9 Varennes num cavalo descansado da pr\xF3pria posta."
   fonte: Ata afixada pelo clube dos Cordeliers
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   confiabilidade: 1

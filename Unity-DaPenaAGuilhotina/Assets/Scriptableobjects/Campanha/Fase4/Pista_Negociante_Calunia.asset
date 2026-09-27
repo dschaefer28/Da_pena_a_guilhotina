@@ -15,9 +15,9 @@ MonoBehaviour:
   itemID: pista_negociante_calunia
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: O dinheiro de Pitt
-  descricao: "Papel no arquivo da se\xE7\xE3o: Garnier \xE9 agente de Pitt e paga
-    os inimigos da Rep\xFAblica."
+  itemName: As vendas de Garnier
+  descricao: "Papel no arquivo da se\xE7\xE3o: Garnier n\xE3o vende gr\xE3o a ningu\xE9m
+    em Paris; guarda tudo para os ingleses, a mando de Pitt."
   fonte: "Arquivo da se\xE7\xE3o"
   caso: {fileID: 11400000, guid: 08a12328210a2ab45b8948af72c05f4e, type: 2}
   confiabilidade: 3

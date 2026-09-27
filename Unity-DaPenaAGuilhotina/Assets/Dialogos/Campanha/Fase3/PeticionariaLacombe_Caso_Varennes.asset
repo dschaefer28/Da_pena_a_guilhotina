@@ -14,8 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: "Peticion\xE1ria Lacombe"
-    text: "O cocheiro do Rei? Todo mundo sabe que era espi\xE3o da Rainha, pago em
-      ouro austr\xEDaco."
+    text: "O cocheiro do Rei? Recebeu ouro austr\xEDaco, isso sim, e sabia desde
+      Paris quem levava na berlinda."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: "Peticion\xE1ria Lacombe"
+    text: "Os Cordeliers pregaram uma ata no mural contando outra hist\xF3ria. E
+      na caixa de tipos algu\xE9m largou a prova de um panfleto sobre os cavalos."
     dialogueAudio:
       Guid:
         Data1: 0

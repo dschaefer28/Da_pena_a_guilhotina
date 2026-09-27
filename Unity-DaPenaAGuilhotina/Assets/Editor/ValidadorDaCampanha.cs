@@ -8,14 +8,15 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Confere se a campanha é jogável do jeito que está nos assets e cenas (sem alterar nada):
 /// quantidade de casos por fase, exatamente um caso por rota na Fase 4, receitas/panfletos/alegações completos,
-/// registro na Mesa de Casos e no CatalogoDeSave, e — por caso, na cena dele — as oportunidades de investigação e o
-/// caminho mínimo até duas pistas Fato dentro do orçamento de horas com dívida.
+/// registro na Mesa de Casos e no CatalogoDeSave, a dedução ativa das Fases 3 e 4 (pares coerentes) e — por caso, na
+/// cena dele — as oportunidades de investigação, o caminho mínimo até duas pistas Fato dentro do orçamento de horas com
+/// dívida e quantas horas custa descobrir o quadro de dedução inteiro.
 /// Menu: Ferramentas > Campanha > 2 - Validar campanha. Também roda no teste EditMode CampanhaTests.
 /// </summary>
 public static class ValidadorDaCampanha
 {
     public const int CasosEsperadosFase2 = 3;
-    public const int CasosEsperadosFase3 = 4;
+    public const int CasosEsperadosFase3 = 3; // decisão do grupo (27/09): um caso entre três, como na Fase 2
     public const int OportunidadesMinimas = 6;
     public const int OportunidadesMaximas = 7;
 
@@ -83,6 +84,7 @@ public static class ValidadorDaCampanha
         foreach (CaseData caso in casos) ValidarDadosDoCaso(caso, catalogo, cenasDoBuild, r);
         ValidarBiblioteca(ui, casos, catalogo, r);
         ValidarLinhaEditorial(ui, casos, r);
+        ValidarDeducao(ui, casos, r);
 
         // Oportunidades: abre cada cena de investigação uma vez (aditiva, sem salvar) e avalia os casos dela.
         var porCena = new Dictionary<string, List<CaseData>>();
@@ -131,18 +133,18 @@ public static class ValidadorDaCampanha
             if (disponiveis < exigidos) r.problemas.Add($"Fase {fase} exige {exigidos} caso(s) concluídos, mas só há {disponiveis}.");
         }
 
-        // Fase 4: com a rota travada, a mesa mostra os casos da rota + os de rota Nenhuma. Tem de ser exatamente 1.
+        // Fase 4: com a rota travada, a mesa mostra só o caso daquela rota (GameManager.CasoDaRotaAtual). Exatamente 1.
         foreach (RotaFinal rota in new[] { RotaFinal.A_Guilhotina, RotaFinal.B_Tirano, RotaFinal.C_Equilibrio })
         {
             int visiveis = 0;
             foreach (CaseData caso in casos)
-                if (caso.fase == GameManager.UltimaFase && (caso.rota == RotaFinal.Nenhuma || caso.rota == rota)) visiveis++;
+                if (caso.fase == GameManager.UltimaFase && caso.rota == rota) visiveis++;
             if (visiveis != 1) r.problemas.Add($"Rota {rota}: a Fase 4 mostraria {visiveis} caso(s); esperado exatamente 1.");
         }
         foreach (CaseData caso in casos)
         {
             if (caso.fase == GameManager.UltimaFase && caso.rota == RotaFinal.Nenhuma)
-                r.problemas.Add($"'{caso.name}' é da Fase 4 com rota Nenhuma: apareceria em todas as rotas.");
+                r.problemas.Add($"'{caso.name}' é da Fase 4 com rota Nenhuma: não apareceria em rota nenhuma.");
             if (caso.fase < GameManager.UltimaFase && caso.rota != RotaFinal.Nenhuma)
                 r.avisos.Add($"'{caso.name}' (Fase {caso.fase}) tem rota {caso.rota}: a rota só é travada na Fase 4 e o caso ficaria oculto.");
         }
@@ -225,6 +227,28 @@ public static class ValidadorDaCampanha
                 r.problemas.Add($"'{receita.name}': Sensacionalista sem agravamento da penalidade de boato.");
         }
         r.resumo.Add($"Linha editorial: {ativas} receita(s) com as três opções.");
+    }
+
+    // Prompt 4: dedução ativa em todo caso das Fases 3 e 4, com pares coerentes (exatamente um Fato por par, pistas do
+    // próprio caso, sem alegações nem documentos de apoio, sem repetir pista). As Fases 1 e 2 seguem a regra antiga.
+    private static void ValidarDeducao(GameObject ui, List<CaseData> casos, Resultado r)
+    {
+        if (ui.GetComponentInChildren<QuadroDeDeducaoUI>(true) == null)
+            r.problemas.Add("QuadroDeDeducaoUI não está no UI.prefab (rode Ferramentas > Campanha > 5).");
+
+        int aderentes = 0;
+        foreach (CaseData caso in casos)
+        {
+            foreach (string p in Deducao.Problemas(caso)) r.problemas.Add($"'{caso.name}' (dedução): {p}");
+            if (Deducao.Aderente(caso))
+            {
+                aderentes++;
+                if (caso.fase < 3) r.avisos.Add($"'{caso.name}' (Fase {caso.fase}) tem dedução ativa: o planejado é só nas Fases 3 e 4.");
+            }
+            else if (caso.fase >= 3)
+                r.problemas.Add($"'{caso.name}' (Fase {caso.fase}) sem dedução ativa: o quadro vale para todo caso das Fases 3 e 4.");
+        }
+        r.resumo.Add($"Dedução ativa: {aderentes} caso(s).");
     }
 
     // Etapas complementares: id estável, único por reação, diferente do id reservado da etapa normal; requisitos e
@@ -358,9 +382,17 @@ public static class ValidadorDaCampanha
 
         int caminho = CaminhoMinimoAteDoisFatos(fontes, caso);
         int vazias = oportunidades - fontes.Count;
+        string deducao = string.Empty;
+        if (Deducao.Aderente(caso))
+        {
+            int horas = CustoDoQuadroInteiro(fontes, caso, r);
+            deducao = "; quadro de dedução inteiro: " + (horas == int.MaxValue ? "impossível" : horas + "h");
+            if (horas == int.MaxValue) r.problemas.Add($"'{caso.name}': alguma pista do quadro de dedução não é entregue por ninguém na cena.");
+            else if (horas > orcamento) r.avisos.Add($"'{caso.name}': descobrir o quadro de dedução inteiro custa {horas}h, acima do orçamento de {orcamento}h.");
+        }
         r.resumo.Add($"{caso.name} ({caso.nextSceneName}): {oportunidades} oportunidades, {fontes.Count} com pista ({fatos} fato(s), " +
                      $"{duvidosas} boato/calúnia), {vazias} sem nada; caminho mínimo até 2 fatos: " +
-                     (caminho == int.MaxValue ? "impossível" : caminho + "h") + $" (orçamento {orcamento}h, {orcamentoComDivida}h endividado).");
+                     (caminho == int.MaxValue ? "impossível" : caminho + "h") + $" (orçamento {orcamento}h, {orcamentoComDivida}h endividado)" + deducao + ".");
 
         if (oportunidades < OportunidadesMinimas) r.problemas.Add($"'{caso.name}': só {oportunidades} oportunidades (mínimo {OportunidadesMinimas}).");
         if (oportunidades > OportunidadesMaximas) r.avisos.Add($"'{caso.name}': {oportunidades} oportunidades (planejado até {OportunidadesMaximas}).");
@@ -371,6 +403,34 @@ public static class ValidadorDaCampanha
     }
 
     private static bool TemFala(DialogueData dialogo) => dialogo != null && dialogo.talkScript != null && dialogo.talkScript.Count > 0;
+
+    // Menor soma de custos das fontes que, juntas, entregam todas as pistas do quadro de dedução (poucas fontes: busca
+    // por subconjuntos). Também avisa de pistas do caso fora do quadro — uma pista sem contradição seria um indício.
+    private static int CustoDoQuadroInteiro(List<Fonte> fontes, CaseData caso, Resultado r)
+    {
+        var conjunto = new HashSet<string>();
+        foreach (Item pista in caso.deducao.Conjunto()) conjunto.Add(pista.itemID);
+        foreach (Fonte f in fontes)
+            foreach (Item item in f.itens)
+                if (item.caso == caso && item.EhPista && !caso.EhAlegacao(item) && !conjunto.Contains(item.itemID))
+                    r.avisos.Add($"'{caso.name}': '{item.name}' ({f.nome}) é pista do caso mas não está em nenhum par do quadro.");
+
+        int melhor = int.MaxValue;
+        int n = Mathf.Min(fontes.Count, 16);
+        for (int mascara = 1; mascara < (1 << n); mascara++)
+        {
+            int custo = 0;
+            var cobertas = new HashSet<string>();
+            for (int i = 0; i < n; i++)
+            {
+                if ((mascara & (1 << i)) == 0) continue;
+                custo += fontes[i].custo;
+                foreach (Item item in fontes[i].itens) if (conjunto.Contains(item.itemID)) cobertas.Add(item.itemID);
+            }
+            if (cobertas.Count == conjunto.Count && custo < melhor) melhor = custo;
+        }
+        return melhor;
+    }
 
     // Menor soma de custos para juntar duas pistas Fato DIFERENTES do caso (uma fonte pode dar as duas).
     private static int CaminhoMinimoAteDoisFatos(List<Fonte> fontes, CaseData caso)

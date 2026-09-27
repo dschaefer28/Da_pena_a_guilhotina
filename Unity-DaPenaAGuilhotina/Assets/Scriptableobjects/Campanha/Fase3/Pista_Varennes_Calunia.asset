@@ -15,9 +15,9 @@ MonoBehaviour:
   itemID: pista_varennes_calunia
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 1
-  itemName: Os cavalos da Guarda
-  descricao: "Prova de impress\xE3o na caixa de tipos: o cocheiro envenenou os cavalos
-    da Guarda para atrasar a persegui\xE7\xE3o."
+  itemName: Os cavalos da posta
+  descricao: "Prova de impress\xE3o na caixa de tipos: o cocheiro envenenou todos
+    os cavalos da posta de Sainte-Menehould para que ningu\xE9m alcan\xE7asse a berlinda."
   fonte: "Prova de impress\xE3o abandonada"
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   confiabilidade: 3

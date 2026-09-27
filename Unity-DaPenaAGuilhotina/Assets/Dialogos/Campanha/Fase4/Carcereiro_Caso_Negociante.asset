@@ -14,8 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: Carcereiro
-    text: "Garnier? Dizem que ele deixa o trigo apodrecer s\xF3 para matar o povo
-      de fome."
+    text: "Garnier? Dizem que os armaz\xE9ns dele est\xE3o cheios de trigo podre.
+      Deixa o gr\xE3o estragar s\xF3 para o povo passar fome."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Carcereiro
+    text: "Os pre\xE7os que ele cobrou est\xE3o na parede de editais. E no arquivo
+      da se\xE7\xE3o enfiaram um papel sobre ele e os ingleses."
     dialogueAudio:
       Guid:
         Data1: 0

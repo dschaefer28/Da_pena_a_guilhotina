@@ -17,7 +17,8 @@ MonoBehaviour:
   itemAmt: 1
   itemName: "Relat\xF3rio da Assembleia sobre a fuga"
   descricao: "C\xF3pia do relat\xF3rio oficial da Assembleia Nacional sobre a fuga
-    do Rei e as pessoas contratadas para a viagem."
+    do Rei: quem foi contratado para a viagem e como o mestre de posta Drouet, montado
+    num cavalo da posta, deu o alarme em Varennes."
   fonte: Biblioteca (compra)
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   confiabilidade: 0

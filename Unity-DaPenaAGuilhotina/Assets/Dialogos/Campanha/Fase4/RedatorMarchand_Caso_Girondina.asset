@@ -14,8 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: Redator Marchand
-    text: "A vi\xFAva Delorme? Dizem que ela esconde deputados foragidos em casa.
-      Eu n\xE3o afirmaria isso num jornal."
+    text: "A vi\xFAva Delorme? Dizem que as cartas do marido trazem o plano de fuga
+      dos girondinos, e os nomes de quem os esconde."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Redator Marchand
+    text: "Eu n\xE3o afirmaria isso num jornal. Veja a caixa de den\xFAncias e a
+      parede de editais: o vizinho dela n\xE3o para de escrever."
     dialogueAudio:
       Guid:
         Data1: 0

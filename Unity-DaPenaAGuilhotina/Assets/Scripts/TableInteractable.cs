@@ -6,22 +6,32 @@ public class TableInteractable : MonoBehaviour, IInteractable
     [Tooltip("Arraste o GameObject do painel de Casos (UI) aqui")]
     public GameObject caseSelectionUI;
 
-    [Header("Trava de Progressão (Opcional)")]
-    [Tooltip("Arraste o ScriptableObject do item necessário para liberar a mesa.")]
+    [Header("Trava de Progressão")]
+    [Tooltip("A mesa só abre depois do tutorial (caso da Fase 1 concluído). Regra de progresso: não depende de o panfleto " +
+             "do tutorial ainda estar no inventário (Prompt 6).")]
+    public bool exigeTutorialConcluido = true;
+
+    [Tooltip("Opcional: item que também precisa estar no inventário. Deixe vazio; a trava do tutorial é a regra acima.")]
     public Item itemObrigatorio;
-    
+
     [Tooltip("O que ele pensa se tentar mexer na mesa antes da hora?")]
     public DialogueData pensamentoBloqueado;
 
     [Tooltip("Aviso quando não há casos cadastrados para a fase atual.")]
     public string avisoSemCasos = "Não há novos casos na mesa por enquanto.";
 
-    /// <summary>Falso enquanto o item obrigatório não estiver no inventário: o aviso de interação
-    /// (PromptDeInteracao) só aparece sobre a mesa quando ela realmente responde.</summary>
-    public bool PodeInteragir =>
-        itemObrigatorio == null ||
-        (GameManager.Instance != null && GameManager.Instance.inventoryManager != null &&
-         GameManager.Instance.inventoryManager.HasItem(itemObrigatorio.itemID));
+    /// <summary>Falso antes do fim do tutorial (ou sem o item opcional): o aviso de interação (PromptDeInteracao) só
+    /// aparece sobre a mesa quando ela realmente responde.</summary>
+    public bool PodeInteragir
+    {
+        get
+        {
+            GameManager gm = GameManager.Instance;
+            if (exigeTutorialConcluido && (gm == null || !gm.TutorialConcluido)) return false;
+            return itemObrigatorio == null ||
+                   (gm != null && gm.inventoryManager != null && gm.inventoryManager.HasItem(itemObrigatorio.itemID));
+        }
+    }
 
     public void Interact()
     {

@@ -1456,7 +1456,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
   - {fileID: 11400000, guid: 5c0733705941aa94db8fdec6796223e7, type: 2}
   - {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
-  - {fileID: 11400000, guid: 178eabcdb503f204f95a3b35d983e066, type: 2}
   - {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
   - {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
   - {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}
@@ -1613,6 +1612,68 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!1 &3191011262650859890
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 289487415648489230}
+  - component: {fileID: 4139719288875479631}
+  m_Layer: 5
+  m_Name: QuadroDeDeducao
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &289487415648489230
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3191011262650859890}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8125072818572955969}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4139719288875479631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3191011262650859890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 759c9a2dc64856848b60661cde89bb1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuadroDeDeducaoUI
+  faseMinima: 3
+  fonte: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  rotuloDoBotao: Quadro de pistas
+  regras: "Cada pista deste quadro tem uma afirma\xE7\xE3o contr\xE1ria no mesmo
+    caso, e s\xF3 uma das duas \xE9 verdadeira. Marque o que voc\xEA acha confi\xE1vel
+    ou duvidoso. A confer\xEAncia s\xF3 diz se o quadro inteiro est\xE1 certo."
+  semPistas: "Nenhuma pista deste caso no quadro ainda. Cada pista que voc\xEA obtiver
+    aparece aqui."
+  respostaConfirmada: "A dedu\xE7\xE3o se sustenta: as suas marca\xE7\xF5es est\xE3o
+    certas."
+  respostaGenerica: "A dedu\xE7\xE3o ainda n\xE3o se sustenta. Pode faltar uma pista,
+    ou alguma marca\xE7\xE3o pode estar errada."
+  lembreteDaPrensa: "Marcar n\xE3o muda as pistas: a prensa imprime o que voc\xEA
+    puser nela, conferido ou n\xE3o."
 --- !u!1 &3264690210486560097
 GameObject:
   m_ObjectHideFlags: 0
@@ -2640,6 +2701,7 @@ RectTransform:
   - {fileID: 5365064909655987966}
   - {fileID: 1281736035957756029}
   - {fileID: 4229822974208257258}
+  - {fileID: 289487415648489230}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7720,7 +7782,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BibliotecaUI
   ofertas:
-  - {fileID: 11400000, guid: d8259922afcc3d0429281b1675a46636, type: 2}
   - {fileID: 11400000, guid: 72be454b01dd5ec479197311e37367f3, type: 2}
   - {fileID: 11400000, guid: dd9eea00566651b4982f1d225c5ec112, type: 2}
   - {fileID: 11400000, guid: 90c7339703c92dd4280d13d84b6e8192, type: 2}

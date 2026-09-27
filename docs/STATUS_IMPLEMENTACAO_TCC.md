@@ -1,16 +1,16 @@
 ﻿# Status de implementação — Da Pena à Guilhotina
 
-Atualizado em 27/09/2026 (diálogos narrativos, §12). Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminhos relativos a `Unity-DaPenaAGuilhotina/`.
+Atualizado em 27/09/2026 (Prompt 4, restante do Prompt 6 e Fase 3 com três casos, §13 a §16). Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminhos relativos a `Unity-DaPenaAGuilhotina/`.
 
 Estados usados: **validado** (testado em runtime ou em teste automatizado), **existente não validado** (código/asset presente, sem teste de runtime), **parcial**, **ausente**.
 
-Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achados corrigidos (§7); **verificação completa contra os dois PDFs em 26/09, com correções que adiantaram partes dos Prompts 6 e 7 (§9)**; **Prompt 5 (linha editorial) concluído em 26/09 (§10)**. Próximo recomendado: **o que resta dos Prompts 6 e 7**, depois o Prompt 8. O **Prompt 4 é opcional** (decisão do grupo, ver §8).
+Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achados corrigidos (§7); verificação completa contra os dois PDFs em 26/09, com correções que adiantaram partes dos Prompts 6 e 7 (§9); Prompt 5 (linha editorial) concluído em 26/09 (§10); **Prompt 4 (dedução ativa) incluído por decisão do grupo e concluído em 27/09 (§13)**; **restante do Prompt 6 concluído em 27/09 (§14)**; **Fase 3 reduzida a três casos, com um concluído (§15)**. Próximo: **Prompt 7, depois o 8 — só depois da validação do grupo** (§16).
 
 Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4–6:
 - **Alegações:** qualquer impressão com alegação usa a versão Só Alegações.
 - **Arquivamento:** sobras dos casos anteriores à Fase 4 são arquivadas ao concluir.
 - **Inventário cheio:** interação sem espaço para o que entregaria não cobra horas.
-- **Save:** passou para a versão 6 (linha editorial, Prompt 5).
+- **Save:** versão 6 no Prompt 5 (linha editorial); versão 7 em 27/09 (dedução ativa, §13).
 - **Biblioteca:** tem estados por situação.
 - **Pistas:** os nomes são neutros.
 - **Revelações (26/09):** aplicadas no fim da fase por `GameManager.EncerrarFase`, na ordem revelações → despesas → avanço de fase/rota, e mostradas na cutscene do `FimDeFase`. `RevelacaoDeBoatos` foi removido.
@@ -20,6 +20,14 @@ Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4�
 - **Linha editorial (Prompt 5):** a partir da Fase 2, o Misturar pede Defesa do povo / Agradar a Coroa (o Comitê na Fase 4) / Sensacionalista antes de consumir as pistas. Cálculo: versão → apoio → linha. O exemplo do Prompt 3 (40/−5/50) é o valor antes da linha.
 - **Fala depois da entrega (27/09):** `CasoReacao.dialogoDepoisDaEntrega`. Quando a reação já entregou tudo, o NPC diz essa fala curta em vez de repetir a conversa inteira (Dupaty, Marie, Joalheiro). Vazio = comportamento anterior.
 - **Caso das Joias (27/09):** o joalheiro entrega os dois fatos; a Mesa da Taverna ficou vazia nesse caso; caminho mínimo de 1h (§12.3).
+- **Dedução ativa (27/09, §13):** nos seis casos das Fases 3 e 4, dois pares de afirmações contraditórias (fato do cliente × boato; fato do objeto × calúnia). O "Quadro de pistas" (botão na HUD) guarda as hipóteses do jogador; "Conferir dedução" só confirma o quadro inteiro, com uma resposta única para qualquer falha. Não bloqueia a publicação. Nesses casos a verdade não aparece mais sozinha (Verificada Por é ignorada).
+- **Fase 3 (27/09, §15):** três casos (saiu "O Padeiro de Notre-Dame"); o jogador escolhe e conclui um, os outros ficam bloqueados; concluído o caso, a volta ao escritório abre a Fase 4. `casosPorFase` = {1, 1, 1, 1}.
+- **Mesa e porta do escritório (27/09, §14):** abrem pela conclusão do tutorial, não mais pelo panfleto do tutorial no inventário.
+- **Fase 4 (27/09, §14):** a mesa mostra e aceita só o caso da rota travada; um caso sem rota nunca aparece nessa fase.
+- **Dupaty (27/09, §14):** libera o tribunal só com o caso da rota concluído, a publicação registrada com panfleto existente, as pistas impressas no histórico e as evidências extras que forem configuradas.
+- **Inventário cheio ao restaurar (27/09, §14):** o que não cabe fica guardado (`GameManager.itensForaDaGrade`), vai junto em cada troca de cena e no save, e volta para a grade quando houver espaço.
+- **Tribunal (27/09, §14):** "Encerrar a defesa" exige duas provas apresentadas (configurável, limitado ao total); o veredito é sempre o completo.
+- **Rota (27/09, §14):** margem mínima 1; com a margem inválida o empate continua na rota C.
 
 Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não exibir ao jogador).
 
@@ -31,7 +39,7 @@ Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não e
 |---|---|
 | Unity | 6000.3.9f1 aberto no Editor durante o trabalho (projeto `Unity-DaPenaAGuilhotina`) |
 | Unity MCP | Operacional (`com.coplaydev.unity-mcp`): leitura de cenas, compilação, Play Mode, execução de código de Editor e Test Runner |
-| Testes | `com.unity.test-framework` 1.6.0. Não havia testes. Os testes novos ficam em `Assets/Editor/Testes/` (assembly `Assembly-CSharp-Editor`, sem asmdef, porque os scripts do jogo não têm asmdef). Em 26/09: 46 testes EditMode; 57 depois do Prompt 5; 58 em 27/09 (§12.2) |
+| Testes | `com.unity.test-framework` 1.6.0. Não havia testes. Os testes novos ficam em `Assets/Editor/Testes/` (assembly `Assembly-CSharp-Editor`, sem asmdef, porque os scripts do jogo não têm asmdef). Em 26/09: 46 testes EditMode; 57 depois do Prompt 5; 58 em 27/09 (§12.2); 78 depois dos Prompts 4 e 6 (§16) |
 | Compilação | Sem erros. Avisos antigos: `FindObjectOfType` obsoleto em `GameManager`; `Caso_Tutorial` sem `caseTitle`/`npcDialogueRoute` (OnValidate) |
 | Save real do jogador | Até 25/09: não foi lido nem alterado. Em 26/09: ver §9.7 (um save de teste criado e apagado com autorização; duas PlayerPrefs de dica ficaram marcadas) |
 
@@ -44,7 +52,7 @@ Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não e
 5. Dedução ativa (C) nas Fases 3 e 4, por caso; sem confronto com NPC na 1ª versão.
 6. Linha editorial (D) a partir da Fase 2; tutorial com receita simples; tom não muda a verdade.
 7. Receita expandida mantém 2 slots; evidências complementares como qualificadores opcionais.
-8. Campanha: Fase 2 = 1 de 3 casos; Fase 3 = 2 distintos de 4; Fase 4 = 1 caso da rota.
+8. Campanha: Fase 2 = 1 de 3 casos; ~~Fase 3 = 2 distintos de 4~~ Fase 3 = 1 de 3 (decisão do grupo, 27/09, §15); Fase 4 = 1 caso da rota.
 9. Sem bloqueio por falta de pistas (duas alegações não verificadas como saída de design, se necessário).
 10. Valores e textos novos são protótipos editáveis, rotulados como provisórios.
 11. (26/09, decisão do grupo) Pista melhor gera panfleto melhor; as barras decidem o final do jogador; o panfleto do caso da Fase 4 decide o destino do réu.
@@ -394,25 +402,21 @@ Save e PlayerPrefs do jogador restaurados de novo depois dos testes (hash idênt
 
 ## 8. Próximo prompt
 
-~~Prompt 5 — linha editorial (D)~~ Concluído em 26/09 (§10).
+~~Prompt 5 — linha editorial (D)~~ Concluído em 26/09 (§10). ~~Prompt 4 — dedução ativa~~ Concluído em 27/09 (§13). ~~Restante do Prompt 6~~ Concluído em 27/09 (§14).
 
-**Recomendado agora: o que resta dos Prompts 6 e 7** (o que já foi feito está em §9 e §10), depois o Prompt 8. Pontos de atenção vindos do Prompt 5:
-- **Prompt 6/8 (balanceamento):** a linha editorial desloca o desnível Povo × Estado em até 15 pontos por publicação (3 publicações antes da rota). A rota B ficou alcançável com "Agradar"; conferir as três rotas com decisões reais.
-- **Prompt 7 (dicas):** a janela de linha editorial já explica cada opção; falta só a dica de primeira vez prevista no Prompt 7, se o grupo quiser.
-
-**Prompt 4 — dedução ativa (C), opcional.** Se o grupo decidir incluir, os pontos de partida continuam valendo:
-- **Histórico:** `GameManager.evidenciasObtidas` já guarda as pistas obtidas, inclusive as gastas.
-- **Verificação atual:** a verificação automática está em `InventoryManager.PistaVerificada`/`RegistrarVerificacoes` e na `FichaDaPista`; hoje nenhuma pista tem `verificadaPor`.
-- **Fora dos conjuntos de dedução:** alegações e documentos de apoio.
-- **Pistas:** os nomes já são neutros. A **fonte** continua sendo a dica de confiabilidade prevista no desenho original.
+**Próximo: Prompt 7, depois o Prompt 8 — só depois da validação do grupo (pedido de 27/09).** Pontos de atenção:
+- **Prompt 7 (dicas):** faltam as dicas de primeira vez de despesas, biblioteca, linha editorial e dedução. A dica de fato/boato (`TutorialManager.dicaFatoBoato`, texto na cena Jogo) ainda diz "procure outra fonte que confirme antes de imprimir": com a dedução, o certo é comparar as afirmações contrárias no Quadro de pistas.
+- **Prompt 7 (modais):** o quadro entrou na lista "biblioteca, quadro, inventário, prensa, pause e cutscene abertos em sequência".
+- **Prompt 8 (balanceamento):** com um caso só na Fase 3, a rota é decidida por três publicações (tutorial, Fase 2, Fase 3); a linha editorial desloca o desnível em até 15 pontos por publicação. Exemplos de percurso em `MATRIZ_DE_CASOS_TCC.md`.
 
 Questões em aberto:
 - ~~Revelações: onde colocar `RevelacaoDeBoatos` e a ordem em relação à trava de rota~~ Resolvido em 26/09 (§9).
 - ~~Tribunal: provas restritas ao caso, incluindo documentos comprados~~ Resolvido em 26/09 (§9).
-- **Inventário ao restaurar:** perda silenciosa de itens quando a grade está cheia (Prompt 6).
-- **Mesa depende do panfleto do tutorial:** `TableInteractable.itemObrigatorio` exige `Panfleto_MemoireJustificatif` na grade. Em jogo normal ele nunca sai, mas um save sem ele trava a mesa (Prompt 6).
+- ~~Inventário ao restaurar: perda silenciosa de itens quando a grade está cheia~~ Resolvido em 27/09 (§14.2).
+- ~~Mesa depende do panfleto do tutorial~~ Resolvido em 27/09 (§14.3); a porta do escritório tinha a mesma trava e também passou para a regra de progresso.
 - **Marie ausente após save/load:** depende do panfleto do tutorial no inventário ou de um caso diferente do tutorial (Prompt 7).
-- **Referências quebradas:** as listadas em 3.2, item 5.
+- **Referências quebradas:** as listadas em 3.2, item 5 (os "pensamentos" do alçapão continuam usando `Operario_Dialogo`/`resposta_operario`).
+- **Horas da dedução (decisão do grupo, §13.6):** descobrir o quadro inteiro custa 4h; endividado (3h), a conferência fica impossível naquele caso.
 
 ---
 
@@ -645,3 +649,138 @@ Console sem erros nem avisos (inclusive de caractere ausente para ‘ ’ e …)
 ### 12.6 Efeitos no ambiente
 
 `save.json` e PlayerPrefs iguais aos de antes (hash conferido). `Application.runInBackground` só ligado durante as sessões de Play. A Ferramenta 1 regravou 19 assets de casos/receitas com conteúdo idêntico (só final de linha); foram restaurados pelo git. `LiberationSans SDF - Fallback.asset` é um atlas dinâmico que a Unity atualiza ao desenhar caracteres novos; já estava modificado antes e não faz parte desta mudança.
+
+---
+
+## 13. Prompt 4 — dedução ativa (27/09/2026)
+
+Incluído por decisão do grupo (27/09). Vale para os seis casos das Fases 3 e 4; os casos da Fase 2 seguem a regra antiga.
+
+### 13.1 Requisitos atendidos
+
+| Requisito | Implementação | Estado |
+|---|---|---|
+| Conjunto de pistas e pares contraditórios por caso; exatamente uma afirmação verdadeira por par; validar duplicação, referência cruzada e par sem solução | `CaseData.deducao` (`ConfiguracaoDeDeducao`: `ativa` + lista de `ParContraditorio`). O conjunto é a união dos pares. `Deducao.Problemas` acusa par incompleto, pista repetida (no par ou entre pares), pista de outro caso, alegação ou documento de apoio no par e par sem exatamente um Fato. O validador exige dedução em todo caso das Fases 3 e 4 | validado (testes + validador) |
+| Verdade interna separada da marcação do jogador (Não marcada / Confiável / Duvidosa); marcar não muda a pista nem a receita | `MarcacaoDaPista`, guardada em `GameManager.marcacoesDeDeducao` por caso + itemID. `Item.confiabilidade` e `ReceitaDeCaso.Classificar` não mudam | validado (teste) |
+| Quadro com pistas conhecidas, fonte, descrição, contradições descobertas e marcações; sem revelar pista não descoberta nem o gabarito | `QuadroDeDeducaoUI` (botão "Quadro de pistas" na HUD, abaixo da Biblioteca, nas Fases 3 e 4 com o caso em andamento). Lista só as pistas do conjunto já obtidas (`evidenciasObtidas`, inclusive as gastas na prensa), agrupadas por par **na ordem em que o jogador as descobriu**. "Contradiz: X" só aparece quando as duas afirmações do par foram achadas; senão, "A afirmação contrária ainda não foi encontrada". Contador "Contradições encontradas: n de 2" | validado (testes + Play Mode) |
+| "Conferir dedução" confirma só o conjunto inteiro, descoberto e bem marcado; parcial e errada recebem resposta genérica, sem dizer o que acertou nem quantas | `Deducao.Conferir`: percorre o conjunto todo e devolve `NaoSeSustenta` para pista faltando, marca faltando ou marca errada (a mesma mensagem na tela). Confirmado, as marcas travam | validado (testes + Play Mode com os botões reais) |
+| Publicar sem dedução; sem custo por tentativa; sem recurso de confiança novo | A prensa não consulta o quadro; conferir não custa nada | validado (teste com a prensa real) |
+| Remover a revelação automática (Verificada Por) nos casos aderentes; manter o legado nos outros | `InventoryManager.PistaVerificada`/`RotuloDaPista`/`RegistrarVerificacoes` e `FichaDaPista`: caso aderente → a situação vem do quadro (antes da confirmação, só "não verificada" + a hipótese do jogador; depois, "confirmada"/"desmentida"); nenhum aviso automático. Casos da Fase 2: regra antiga | validado (teste) |
+| Consequências depois da publicação continuam | `revelacoesPendentes` e `EncerrarFase` não mudaram | validado (teste) |
+| Biblioteca dá contexto, sem botão que entregue a resposta; conteúdo do Prompt 2 coerente | Descrições dos seis documentos da biblioteca reescritas para dar contexto a um dos pares (§13.2) | configurado |
+| Histórico, marcações e confirmação no save; saves antigos sem hipóteses inventadas; verificação antiga ≠ dedução confirmada | Save **v7**: `marcacoesDeDeducao`, `deducoesConfirmadas`. Saves < 7 carregam sem nenhuma hipótese nem confirmação (mesmo que o JSON traga os campos); `pistasVerificadas` antigas continuam valendo só nos casos sem dedução | validado (testes) |
+
+### 13.2 Conteúdo reescrito (provisório)
+
+Em cada caso: **par 1** = fato do cliente × boato de outro NPC; **par 2** = fato de um objeto × calúnia de outro objeto. As afirmações de cada par tratam do mesmo assunto e não podem ser verdadeiras juntas (ex.: Varennes — o contrato pago "em moeda francesa, sem dizer quem iria" × o boato do "ouro austríaco" e de que o cocheiro "sabia desde Paris"; o mestre de posta que "galopou até Varennes num cavalo da posta" × a calúnia de que o cocheiro "envenenou todos os cavalos da posta"). Textos completos na matriz.
+
+- **Pistas que levam a outras:** o cliente cita quem espalha o boato, e quem espalha o boato cita os dois objetos (o do fato e o da calúnia). Seguindo essas pistas, as quatro afirmações saem em 4h; os três lugares restantes continuam sem nada.
+- **Biblioteca:** cada documento dá contexto a um par (ex.: a Ata da prefeitura diz que a bandeira vermelha foi hasteada antes de a Guarda sair). O documento não aparece no quadro e não confirma nada sozinho.
+- **Nomes:** continuam neutros (o assunto de cada afirmação). Renomeados: "Os cavalos da posta", "A hora da bandeira", "A história do roubo", "A prensa de Morel", "O número de outubro", "O certificado recusado", "As vendas de Garnier", "O plano de fuga", "A acusação do vizinho".
+- **Migração:** Ferramentas > Campanha > 5 só troca um texto que ainda está igual ao de 25/09; um texto editado no Inspector é mantido e listado no relatório. Os textos novos ficam em `CampanhaSetupTool.TextosRevisados` e nas definições de reações, e em `BibliotecaSetupTool` (documentos e a fala da etapa do Cocheiro).
+
+### 13.3 Arquivos
+
+- Código novo: `Scripts/DeducaoAtiva.cs` (`MarcacaoDaPista`, `ParContraditorio`, `ConfiguracaoDeDeducao`, `MarcacaoDeDeducao`, regras em `Deducao`), `Scripts/QuadroDeDeducaoUI.cs` (janela montada por código, como a Biblioteca), `Scripts/JanelasModais.cs` (trava comum da Biblioteca e do quadro).
+- Código alterado: `@CaseData.cs` (`deducao`), `GameManager.cs` (listas da dedução), `InventoryManager.cs` e `FichaDaPista.cs` (etiquetas e fim da revelação automática nos casos aderentes), `SistemaDeSave.cs` (v7), `BibliotecaUI.cs`, `PauseMenu.cs`, `PlayerInteraction.cs`, `PlayerMove.cs` (o quadro bloqueia pause, interação, inventário e movimento como a Biblioteca).
+- Editor: `DeducaoSetupTool.cs` (**Ferramentas > Campanha > 5 - Aplicar dedução ativa**), `ValidadorDaCampanha.cs` (dedução e custo em horas do quadro inteiro), `CampanhaSetupTool.cs` e `BibliotecaSetupTool.cs` (textos de referência).
+- Testes: `Testes/DeducaoTests.cs` (10), `ComponentesTests.cs` (+1: publicar sem conferir, com a prensa real).
+- Assets: 6 casos das Fases 3 e 4 (pares), 19 pistas, 13 diálogos, 6 documentos de apoio e 6 ofertas; `UI.prefab` (objeto `QuadroDeDeducao`).
+
+### 13.4 Configuração realizada
+
+Ferramenta 5 executada via MCP: 6 casos configurados, 19 pistas, 13 falas e 12 descrições reescritas, 2 alterações no `UI.prefab`; nenhum texto mantido por edição manual. Segunda execução: 0 alterações. Ferramentas 1, 3 e 4 reexecutadas: 0 alterações.
+
+### 13.5 Testes
+
+- **EditMode (`DeducaoTests`):** pares coerentes e incoerências acusadas; aquisição não revela o gabarito, Verificada Por e verificações antigas não contam, legado da Fase 2 preservado; incompleta, parcial e errada dão a mesma resposta; conjunto certo confirma, mostra a verdade e trava as marcas; marcar não muda a verdade nem a versão; só o caso em andamento e só pistas descobertas do conjunto; contradição só com as duas pistas e ordem pela descoberta; novo caso não herda marcações; save v7 ida e volta e save v6 sem hipóteses inventadas; os seis casos reais com dois pares coerentes.
+- **Play Mode (Fase3 aberta direto, Varennes, estado montado por código, botões reais via `onClick`):** caso aceito (4h, alegações entregues) → botão do quadro visível e escondido durante o diálogo → Cocheiro (fala nova com a pista para a peticionária) → quadro com 1 pista e "0 de 2" → Peticionária, Mural e Caixa de Tipos: 4 pistas em 4h, "2 de 2" → marcação errada e marcação parcial: mesma resposta genérica → marcação certa: "A dedução se sustenta", marcas e botão travados → inventário com "confirmada"/"desmentida" → com o quadro aberto: jogo pausado, sem interação, inventário e biblioteca não abrem, pause bloqueado; ao fechar tudo volta.
+- **Visual:** capturas em 1920×1080 e 800×480. Corrigidos dois defeitos de layout achados nas capturas: botões de marca espremidos em tela estreita (largura mínima) e cabeçalho/rodapé esticados (não expandem mais na altura).
+
+### 13.6 Limitações e decisões para o grupo
+
+- **Horas:** descobrir o quadro inteiro custa 4h (as quatro fontes). Com o orçamento normal (4h) só dá seguindo as pistas sem errar nenhum lugar; **endividado (3h), a conferência fica impossível naquele caso** (publicar continua possível). Se quiserem a dedução sempre alcançável, a saída é dar 5h aos casos das Fases 3 e 4 (`CaseData.horasDeInvestigacao`); não mudei sem a decisão de vocês.
+- **Busca exaustiva:** a conferência conjunta reduz a informação por tentativa, mas não impede tentar todas as combinações: com dois pares há só quatro coerentes, e conferir é grátis. Nenhuma proteção além disso foi implementada.
+- **Ordem no quadro:** pela ordem de descoberta (escolha do jogador). A ordem alfabética foi descartada porque, por coincidência dos nomes, punha o fato primeiro nos dois pares de Varennes.
+- **Depois de confirmar:** as pistas mostram "confirmada" (fato) e "desmentida" (boato ou calúnia, sem dizer qual).
+- **O quadro só aparece com o caso em andamento;** depois de publicar, some.
+- **Dica de fato/boato (Prompt 7):** o texto atual ainda fala em "procurar outra fonte que confirme".
+- **Não testado:** teclado e toque físicos (o Esc usa o mesmo caminho da Biblioteca), aparelho Android.
+
+### 13.7 Conteúdo provisório
+
+Textos do quadro (`QuadroDeDeducaoUI`, editáveis no Inspector do `UI.prefab`), as 19 pistas, as 13 falas e as 6 descrições reescritas.
+
+---
+
+## 14. Prompt 6 — o que restava (27/09/2026)
+
+### 14.1 Requisitos atendidos
+
+| Requisito | Implementação | Estado |
+|---|---|---|
+| Dupaty só libera o tribunal com o caso correto concluído, panfleto recuperável e evidências exigidas; histórico comprova as pistas gastas | `CheckpointDoTribunal.Avaliar`: caso da Fase 4 **da rota travada** concluído → publicação registrada e panfleto da versão existente na receita → as duas pistas impressas no histórico de evidências (publicações `legado`, de saves antigos, não são barradas) → evidências extras configuráveis por caso (`evidenciasExigidas`, vazio por padrão). Falas próprias para "sem panfleto" e "falta prova" | validado (teste + Play Mode) |
+| Nunca perder item ao trocar de cena | Ao restaurar com a grade cheia, o que não cabe fica em `GameManager.itensForaDaGrade` (aviso na tela), entra em `SalvarEstadoAtual`, no save e na próxima restauração, e volta para a grade quando o arquivamento libera espaço. A saída da prensa já era salva na troca de cena | validado (teste) |
+| Mesa sem depender do panfleto do tutorial | `TableInteractable.exigeTutorialConcluido` (padrão ligado) usa `GameManager.TutorialConcluido` (caso da Fase 1 concluído ou fase > 1). A **porta do escritório** tinha a mesma dependência (herdada do `Porta.prefab`): ganhou `DoorInteractable.exigeTutorialConcluido`, ligado só nela; o prefab perdeu a trava por item | validado (teste + Play Mode) |
+| Limites da rota −21/−20/−19/0/19/20/21; margem inválida sem viés | `GameManager.MargemValida` (mínimo 1, aviso no console); `[Min(1)]` no Inspector. Com margem 0 ou negativa, o empate fica na rota C | validado (testes) |
+| Rota travada na Fase 4, inclusive depois de salvar/carregar; barras da Fase 4 não recalculam o final | Já era assim; agora coberto por teste | validado (teste) |
+| Fase 4 mostra exatamente o caso da rota; caso sem rota nunca aparece junto | `GameManager.CasoDaRotaAtual` (usado pela mesa e pela regra de aceitar) | validado (teste + Play Mode) |
+| Tribunal: item de outro caso não vira argumento | O uso do inventário como prova ficou só para a cena aberta sem caso (teste no Editor); com caso, sem provas registradas, entram os argumentos de reserva | inspecionado |
+| Encerrar a defesa cedo | `TribunalManager.minimoParaEncerrar` (padrão 2, limitado ao total): o botão só habilita depois disso. Encerrar sempre dá o veredito completo (barra final, explosão na rota A, fala e cutscene); um segundo clique no mesmo instante é ignorado | validado (teste + Play Mode) |
+| Consequências sem reaplicar ao reabrir a cena | Coberto por teste: depois de `EncerrarFase` e de salvar/carregar, nada fica pendente e a fase nova não está concluída | validado (teste) |
+
+### 14.2 Arquivos
+
+`CheckpointDoTribunal.cs`, `InventoryManager.cs`, `GameManager.cs`, `TableInteractable.cs`, `DoorInteractable.cs`, `TribunalManager.cs`, `CaseSelectionUI.cs`; `Prefab/Porta.prefab` (sem trava por item); `Scenes/Jogo.unity` (mesa sem item, porta do escritório com a regra do tutorial, campos novos do checkpoint). Testes: `Testes/ProgressaoETribunalTests.cs` (9). Três testes antigos do `ComponentesTests` passaram a dar rota ao caso da Fase 4, que a regra nova exige.
+
+### 14.3 Limitações
+
+- **Evidências exigidas:** depois de publicado, o caso não entrega mais pistas. Exigir uma pista que o jogador pode não ter pego trava a ida ao tribunal; o campo fica vazio por padrão.
+- **Itens guardados fora da grade** só voltam na próxima cena ou quando um arquivamento libera espaço (voltar ao preencher qualquer espaço atrapalharia arrastar itens para a prensa).
+
+---
+
+## 15. Fase 3 com três casos (27/09/2026)
+
+Pedido do grupo: a Fase 3 oferece três casos, o jogador escolhe e conclui um; os outros ficam bloqueados, inclusive depois da conclusão; terminado o caso, a Fase 4 começa.
+
+- **Caso retirado: "O Padeiro de Notre-Dame".** Ficam Champ de Mars (puxa para o Povo; guarda o exemplo numérico do Prompt 3), Varennes (puxa para o Estado; tem a etapa complementar do Cocheiro) e Assignats (sobe os dois). Assim a única publicação da Fase 3 ainda pode empurrar a rota para qualquer lado. Para trocar a escolha, recupere os arquivos pelo git e ajuste a ferramenta 6.
+- **Ferramenta 6** (**Ferramentas > Campanha > 6 - Retirar o caso do Padeiro**): tirou o caso da mesa e a oferta da biblioteca (`UI.prefab`), removeu as 4 reações/entradas dele na cena Fase3 e apagou os 13 assets do caso; o catálogo foi atualizado. Idempotente. As definições das ferramentas 1 e 3 não o recriam mais.
+- **Regra:** `GameManager.casosPorFase` = {1, 1, 1, 1}. Na mesa, os outros casos da fase aparecem "(bloqueado)", esmaecidos e sem aceitar, assim que um é escolhido (novo estado `Bloqueado` em `CaseSelectionUI`) e continuam assim depois da conclusão. Voltando ao escritório, `FimDeFase` encerra a fase (revelações → despesa de 50 → Fase 4 e rota).
+- **Saves antigos:** não há save no meio de um caso. Um save na Fase 3 com um caso concluído (regra antiga: 1 de 2) passa direto para a Fase 4 ao voltar ao escritório. Um save que citasse o Padeiro perde esse caso ao carregar (aviso no console); o do grupo em 27/09 está no início da Fase 2.
+- **Rotas:** com três publicações antes da rota, os exemplos da matriz foram refeitos (A: Joias + Champ de Mars; B: Réveillon + Varennes; C: Réveillon + Champ de Mars).
+- **Testes:** `CampanhaTests` (três casos na Fase 3; um aceito bloqueia os outros, antes e depois da conclusão; `EncerrarFase` abre a Fase 4). Play Mode na cena Jogo: três cartas → aceitar Champ de Mars → os outros "(bloqueado)" → concluir → continuam bloqueados → fim da fase → Fase 4 com um cartão só.
+
+---
+
+## 16. Verificação de 27/09 e o que o grupo precisa conferir
+
+### 16.1 Resultados
+
+| Checagem | Resultado |
+|---|---|
+| Compilação / console | sem erros |
+| EditMode | **78/78** (58 anteriores + 20 novos) |
+| Validador | "Campanha válida", 0 avisos: Fase 2: 3, Fase 3: 3, Fase 4: 3 (um por rota); dedução em 6 casos; quadro inteiro = 4h em cada um; caminho mínimo até 2 fatos = 2h (Joias: 1h) |
+| Ferramentas 1, 3, 4, 5 e 6 reexecutadas | 0 alterações |
+| Play Mode — Fase3 (Varennes) | §13.5 |
+| Play Mode — Jogo | mesa e porta trancadas no tutorial, liberadas pela conclusão sem o panfleto no inventário; Fase 3 com bloqueio (§15); Fase 4 com o cartão da rota A; Dupaty recusa antes da publicação (fala "não pronto", nenhum save) e fica "Pronto" depois (versão Fatos pela prensa real) |
+| Play Mode — Tribunal (carregado direto, sem o save do Dupaty) | 7 provas do caso; "Encerrar" desabilitado com 0 e 1 prova, habilitado com 2; encerrar dá o veredito completo da rota A (barra em 100, réu absolvido); segundo clique ignorado |
+| Git | só as mudanças descritas; ruído de layout do `UI.prefab` que o Unity escreveu no `Jogo.unity` foi revertido; assets regravados sem mudança foram restaurados |
+
+### 16.2 Efeitos no ambiente
+
+- `save.json`: não foi criado, alterado nem apagado (md5 conferido antes e depois).
+- PlayerPrefs: a dica de fato/boato apareceu no Play Mode e marcou `dica_fato_boato_vista`; a chave foi apagada no fim, e as cinco chaves voltaram ao estado anterior.
+- Game View: trocada para 1920×1080 e 800×480 só nas capturas; voltou para "Free Aspect". `Application.runInBackground` só ligado nas sessões de Play. O Editor voltou para a cena Fase2.
+- **`Scenes/Fase2.unity` tem mudanças salvas por vocês durante a sessão** (overrides de fonte/cor/tamanho de textos do UI e uma posição): não são desta etapa e não foram tocadas. Confiram antes do commit.
+- Nada foi commitado.
+
+### 16.3 O que conferir na validação
+
+1. **Jogar um caso da Fase 3 inteiro com teclado/mouse:** mesa com três cartas; depois de aceitar, as outras bloqueadas; pistas levando de uma fonte a outra; Quadro de pistas (marcar, conferir errado, conferir certo); publicar com e sem conferir; voltar ao escritório → Fase 4.
+2. **Textos novos** (provisórios) das pistas, falas e documentos das Fases 3 e 4 (matriz) e do quadro. Se algum for editado no Inspector, a ferramenta 5 não o sobrescreve.
+3. **Decisão de horas** da dedução (§13.6).
+4. **Tribunal:** o mínimo de 2 provas para encerrar está bom?
+5. **Porta e mesa** no tutorial (Novo Jogo): continuam trancadas até imprimir o panfleto e abrem depois.
+6. **Celular/toque:** botão "Quadro de pistas" e janela no aparelho.

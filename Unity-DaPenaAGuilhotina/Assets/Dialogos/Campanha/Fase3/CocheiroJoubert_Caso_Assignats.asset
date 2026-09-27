@@ -14,8 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: Cocheiro Joubert
-    text: O gravador? Dizem nas tavernas que ele vendia notas falsas, dez por uma
-      de ouro.
+    text: "O gravador? Nas tavernas se diz que as chapas nunca sa\xEDram da oficina
+      dele. Inventou o roubo depois de preso."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Cocheiro Joubert
+    text: "Deixaram um papel sobre isso no balc\xE3o da padaria. E a caixa de tipos
+      da oficina dele ainda est\xE1 na rua, se o senhor quiser conferir."
     dialogueAudio:
       Guid:
         Data1: 0

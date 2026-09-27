@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: Cocheiro Joubert
-    text: "O depoimento do mestre de posta! Ent\xE3o o senhor j\xE1 sabe que eu n\xE3o
-      falei com ningu\xE9m."
+    text: "O depoimento do mestre de posta! Ent\xE3o o senhor j\xE1 sabe que o Drouet
+      reconheceu o Rei sozinho."
     dialogueAudio:
       Guid:
         Data1: 0

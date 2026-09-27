@@ -125,42 +125,53 @@ public static class CampanhaSetupTool
         { "pista_operario_2", new[] { "A ordem do comandante", "Cartaz arrancado de um muro", "Cartaz com a ordem do comandante: 'dispersar a multidão por todos os meios', afixado antes de qualquer violência." } },
         { "pista_operario_boato", new[] { "Os agitadores do duque", "Jean-Baptiste Réveillon", "Segundo Réveillon, agitadores pagos pelo duque de Orléans distribuíram dinheiro à multidão na véspera." } },
         { "pista_operario_calunia", new[] { "O fogo na fábrica", "Bilhete sem assinatura", "Bilhete deixado na taverna: foi o operário quem ateou fogo à fábrica com as próprias mãos." } },
-        // Fase 3 — Padeiro
-        { "pista_padeiro_1", new[] { "As fornadas do dia", "Viúva François", "A viúva mostra o livro do marido: seis fornadas vendidas antes do meio-dia; as broas restantes estavam reservadas aos deputados." } },
-        { "pista_padeiro_2", new[] { "O pão dos deputados", "Gaveta do balcão da padaria", "Recibo da Assembleia Nacional pagando ao padeiro François o pão dos deputados." } },
-        { "pista_padeiro_boato", new[] { "A farinha no porão", "Conversa de cocheiros", "Segundo os cocheiros, o padeiro escondia sacos de farinha no porão para vender mais caro." } },
-        { "pista_padeiro_calunia", new[] { "O pão envenenado", "Cartaz sem assinatura", "Cartaz no mural: os padeiros envenenam o pão do povo por ordem da Corte." } },
+        // Fases 3 e 4 — dedução ativa (Prompt 4, 27/09): cada caso tem dois pares de afirmações contraditórias, e
+        // em cada par só uma é verdadeira. Fato do cliente × boato; fato do objeto × calúnia. Os textos de antes
+        // (25/09) estão em DeducaoSetupTool, que migra os assets que ainda os tinham.
         // Fase 3 — Varennes
-        { "pista_varennes_1", new[] { "A viagem da baronesa", "Cocheiro Joubert", "O cocheiro mostra o contrato em nome de uma 'baronesa de Korff': uma viagem de aluguel comum, sem menção a quem seria levado." } },
-        { "pista_varennes_2", new[] { "A parada em Sainte-Menehould", "Ata afixada pelo clube dos Cordeliers", "Ata no mural: o mestre de posta reconheceu o Rei em Sainte-Menehould; o cocheiro não falou com ninguém na estrada." } },
-        { "pista_varennes_boato", new[] { "O ouro austríaco", "Conversa no Champ de Mars", "Segundo a peticionária, o cocheiro era espião da Rainha, pago em ouro austríaco." } },
-        { "pista_varennes_calunia", new[] { "Os cavalos da Guarda", "Prova de impressão abandonada", "Prova de impressão na caixa de tipos: o cocheiro envenenou os cavalos da Guarda para atrasar a perseguição." } },
+        { "pista_varennes_1", new[] { "A viagem da baronesa", "Cocheiro Joubert", "O cocheiro mostra o contrato em nome de uma 'baronesa de Korff': sessenta libras em moeda francesa por uma viagem de aluguel, sem dizer quem iria na berlinda." } },
+        { "pista_varennes_2", new[] { "A parada em Sainte-Menehould", "Ata afixada pelo clube dos Cordeliers", "Ata no mural: em Sainte-Menehould, o mestre de posta Drouet reconheceu o Rei sozinho e galopou até Varennes num cavalo descansado da própria posta." } },
+        { "pista_varennes_boato", new[] { "O ouro austríaco", "Conversa no Champ de Mars", "Segundo a peticionária, o cocheiro recebeu ouro austríaco para levar o Rei e sabia desde Paris quem ia na berlinda." } },
+        { "pista_varennes_calunia", new[] { "Os cavalos da posta", "Prova de impressão abandonada", "Prova de impressão na caixa de tipos: o cocheiro envenenou todos os cavalos da posta de Sainte-Menehould para que ninguém alcançasse a berlinda." } },
         // Fase 3 — Champ de Mars
-        { "pista_champ_1", new[] { "A petição do altar da pátria", "Peticionária Lacombe", "Segundo a peticionária, a folha tem dezenas de assinaturas pacíficas e não havia armas junto ao altar da pátria." } },
-        { "pista_champ_2", new[] { "A bandeira vermelha", "Proclamação pregada no balcão da padaria", "Proclamação da prefeitura: a bandeira vermelha da lei marcial foi hasteada antes do fogo." } },
-        { "pista_champ_boato", new[] { "O primeiro tiro", "Vizinhas do mercado", "Segundo as vizinhas do mercado, os peticionários atiraram primeiro e a Guarda só se defendeu." } },
-        { "pista_champ_calunia", new[] { "Os peticionários pagos", "Cartaz sem assinatura", "Cartaz no mural: os peticionários eram pagos pela Inglaterra para derrubar a Constituição." } },
+        { "pista_champ_1", new[] { "A petição do altar da pátria", "Peticionária Lacombe", "Segundo a peticionária, quem assinava estava desarmado: a folha tem dezenas de assinaturas, e nenhum tiro partiu do altar da pátria." } },
+        { "pista_champ_2", new[] { "A bandeira vermelha", "Proclamação pregada no balcão da padaria", "Proclamação da prefeitura: a bandeira vermelha da lei marcial foi hasteada por ordem do prefeito antes de a Guarda marchar ao Champ de Mars." } },
+        { "pista_champ_boato", new[] { "O primeiro tiro", "Vizinhas do mercado", "Segundo as vizinhas do mercado, os peticionários vieram armados e atiraram primeiro; a Guarda só se defendeu." } },
+        { "pista_champ_calunia", new[] { "A hora da bandeira", "Cartaz sem assinatura", "Cartaz no mural: a bandeira vermelha só foi hasteada depois dos tiros, para esconder que os peticionários, pagos pela Inglaterra, atacaram a Guarda." } },
         // Fase 3 — Assignats
         { "pista_assignats_1", new[] { "As chapas roubadas", "Gravador Morel", "O gravador mostra a cópia da queixa registrada na seção dias antes da prisão: ele denunciou o roubo de chapas de gravação." } },
         { "pista_assignats_2", new[] { "O defeito dos tipos", "Caixa de tipos da oficina", "Os tipos das notas falsas têm um defeito que não existe nos tipos de Morel: foram impressas em outra prensa." } },
-        { "pista_assignats_boato", new[] { "As notas nas tavernas", "Conversa de cocheiros", "Segundo os cocheiros, o gravador vendia notas falsas nas tavernas, dez por uma moeda de ouro." } },
-        { "pista_assignats_calunia", new[] { "Os emigrados de Coblença", "Denúncia anônima na padaria", "Papel deixado no balcão: o gravador trabalha para os emigrados de Coblença." } },
+        { "pista_assignats_boato", new[] { "A história do roubo", "Conversa de cocheiros", "Segundo os cocheiros, as chapas nunca saíram da oficina de Morel: ele inventou o roubo depois de preso, para enganar a seção." } },
+        { "pista_assignats_calunia", new[] { "A prensa de Morel", "Denúncia anônima na padaria", "Papel deixado no balcão: as notas falsas saíram da prensa de Morel, que as imprimia à noite para os emigrados de Coblença." } },
         // Fase 4 — Jornalista
         { "pista_jornalista_1", new[] { "Os números do jornal", "Redator Marchand", "Marchand mostra os números do jornal: pedem clemência e justiça, mas nenhum convoca à revolta nem à volta do Rei." } },
         { "pista_jornalista_2", new[] { "O certificado da seção", "Arquivo da seção", "A seção deu a Marchand um certificado de civismo três meses antes da prisão." } },
-        { "pista_jornalista_boato", new[] { "As cartas com selo inglês", "Carcereiro da Conciergerie", "Segundo o carcereiro, o redator recebe cartas com selo inglês toda semana." } },
-        { "pista_jornalista_calunia", new[] { "As armas da redação", "Caixa de denúncias", "Papel na caixa de denúncias: Marchand esconde armas no porão da redação." } },
+        { "pista_jornalista_boato", new[] { "O número de outubro", "Carcereiro da Conciergerie", "Segundo o carcereiro, os presos contam que o jornal de Marchand pediu a volta do Rei num número de outubro." } },
+        { "pista_jornalista_calunia", new[] { "O certificado recusado", "Caixa de denúncias", "Papel na caixa de denúncias: a seção recusou o certificado de civismo a Marchand, que esconde armas no porão da redação." } },
         // Fase 4 — Negociante
-        { "pista_negociante_1", new[] { "Os armazéns de Garnier", "Comissário Vautrin", "O comissário mostra o relatório oficial: os armazéns de Garnier guardavam mais grãos do que ele declarou." } },
-        { "pista_negociante_2", new[] { "Os preços do Máximo", "Parede de editais", "Pela lista de preços afixada, Garnier vendeu acima do preço máximo." } },
-        { "pista_negociante_boato", new[] { "O trigo apodrecido", "Carcereiro da Conciergerie", "Segundo o carcereiro, Garnier deixa o trigo apodrecer para matar o povo de fome." } },
-        { "pista_negociante_calunia", new[] { "O dinheiro de Pitt", "Arquivo da seção", "Papel no arquivo da seção: Garnier é agente de Pitt e paga os inimigos da República." } },
+        { "pista_negociante_1", new[] { "Os armazéns de Garnier", "Comissário Vautrin", "O comissário mostra o relatório da inspeção: os armazéns de Garnier guardavam trigo em bom estado, o dobro do que ele declarou." } },
+        { "pista_negociante_2", new[] { "Os preços do Máximo", "Parede de editais", "Pela lista de preços afixada, Garnier vendeu trigo à padaria da seção acima do preço máximo." } },
+        { "pista_negociante_boato", new[] { "O trigo apodrecido", "Carcereiro da Conciergerie", "Segundo o carcereiro, os armazéns de Garnier estão cheios de trigo podre: ele deixa o grão estragar para o povo passar fome." } },
+        { "pista_negociante_calunia", new[] { "As vendas de Garnier", "Arquivo da seção", "Papel no arquivo da seção: Garnier não vende grão a ninguém em Paris; guarda tudo para os ingleses, a mando de Pitt." } },
         // Fase 4 — Girondina
-        { "pista_girondina_1", new[] { "As cartas do deputado", "Cidadã Delorme", "A viúva mostra as cartas do marido: falam de família e de dívidas, sem nenhum plano contra a República." } },
+        { "pista_girondina_1", new[] { "As cartas do deputado", "Cidadã Delorme", "A viúva mostra as cartas do marido: falam de família e de dívidas; nenhuma cita fuga, plano ou nome de deputado." } },
         { "pista_girondina_2", new[] { "A denúncia retirada", "Caixa de denúncias", "O vizinho que a denunciou retirou a acusação por escrito: queria o apartamento dela." } },
-        { "pista_girondina_boato", new[] { "Os deputados foragidos", "Redator Marchand", "Segundo o redator, a viúva esconde deputados foragidos em casa." } },
-        { "pista_girondina_calunia", new[] { "O patriota envenenado", "Parede de editais", "Cartaz na parede de editais: a viúva envenenou um patriota da seção." } },
+        { "pista_girondina_boato", new[] { "O plano de fuga", "Redator Marchand", "Segundo o redator, as cartas do deputado trazem o plano de fuga dos girondinos e os nomes de quem os esconde." } },
+        { "pista_girondina_calunia", new[] { "A acusação do vizinho", "Parede de editais", "Cartaz na parede de editais: o vizinho que denunciou a viúva mantém a acusação, e ela tentou envenená-lo para que se calasse." } },
     };
+
+    /// <summary>Nome, fonte e descrição de referência de uma pista (os textos em vigor), ou null. Usado pela ferramenta
+    /// de dedução para migrar assets que ainda tinham os textos anteriores.</summary>
+    internal static string[] TextoDeReferencia(string itemID) =>
+        TextosRevisados.TryGetValue(itemID, out string[] texto) ? texto : null;
+
+    /// <summary>Falas de referência da reação de um NPC a um caso (ex.: "CocheiroJoubert", "Caso_Varennes"), ou null.</summary>
+    internal static string[] FalasDeReferencia(string npcId, string casoArquivo)
+    {
+        Definir();
+        R reacao = Reacoes.Find(x => x.npc == npcId && Path.GetFileNameWithoutExtension(x.caso) == casoArquivo);
+        return reacao != null ? reacao.falas : null;
+    }
 
     // Revelações corrigidas (texto histórico e afirmações discutíveis): texto original -> texto novo.
     private static readonly Dictionary<string, string> RevelacoesRevisadas = new Dictionary<string, string>
@@ -298,31 +309,11 @@ public static class CampanhaSetupTool
         return caso;
     }
 
+    // "O Padeiro de Notre-Dame" (Caso_Padeiro) saiu da campanha em 27/09 (decisão do grupo: a Fase 3 tem três casos e o
+    // jogador conclui um). Ferramentas > Campanha > 6 retira os assets e as reações dele nas cenas já configuradas.
     private static void DefinirFase3()
     {
         const string F = "Fase3";
-
-        C padeiro = NovoCaso("Caso_Padeiro", F, 3, RotaFinal.Nenhuma, "O Padeiro de Notre-Dame", "Descobrir se o padeiro escondia pão.",
-            "Outubro de 1789. O padeiro Denis François foi enforcado por uma multidão que o acusava de esconder pão. A viúva quer limpar o nome do marido e saber quem espalhou a acusação.",
-            30, -15, 20);
-        padeiro.f1 = new P(Item(F, "Pista_Padeiro_Fornadas"), "pista_padeiro_1", "Livro de fornadas", Confiabilidade.Fato, "Viúva François",
-            "Seis fornadas vendidas antes do meio-dia. As poucas broas restantes estavam reservadas aos deputados.");
-        padeiro.f2 = new P(Item(F, "Pista_Padeiro_Encomenda"), "pista_padeiro_2", "Encomenda da Assembleia", Confiabilidade.Fato, "Gaveta do balcão da padaria",
-            "Recibo da Assembleia Nacional pagando o pão dos deputados ao padeiro François.");
-        padeiro.boato = new P(Item(F, "Pista_Padeiro_Boato"), "pista_padeiro_boato", "Conversa sobre a farinha", Confiabilidade.Boato, "Conversa de cocheiros",
-            "Dizem que o padeiro escondia sacos de farinha no porão para vender mais caro.");
-        padeiro.calunia = new P(Item(F, "Pista_Padeiro_Calunia"), "pista_padeiro_calunia", "Cartaz: padeiros envenenadores", Confiabilidade.Calunia, "Cartaz sem assinatura",
-            "'Os padeiros envenenam o pão do povo por ordem da Corte.'");
-        padeiro.alegacoes = new[]
-        {
-            new P(Item(F, "Alegacao_Padeiro_1"), "alegacao_padeiro_1", "Carta da viúva: era honesto", Confiabilidade.Boato, "Carta do cliente", "A viúva jura que o marido nunca escondeu pão."),
-            new P(Item(F, "Alegacao_Padeiro_2"), "alegacao_padeiro_2", "Carta da viúva: foi uma armação", Confiabilidade.Boato, "Carta do cliente", "Ela acredita que alguém incitou a multidão de propósito."),
-        };
-        padeiro.panfleto = new P(Item(F, "Panfleto_Padeiro"), "panfleto_padeiro", "Panfleto: O Padeiro de Notre-Dame", Confiabilidade.NaoEPista, "Tipografia", "Panfleto impresso sobre o caso do padeiro.");
-        padeiro.fatos = new V(-15, 25, 30);
-        padeiro.comBoato = new V(-25, 35, 45, -10, -5, "Nenhum saco de farinha foi achado no porão do padeiro. O boato impresso foi desmentido.");
-        padeiro.comCalunia = new V(-35, 45, 60, -15, -15, "A história dos padeiros envenenadores não tinha fundamento. A tipografia perdeu leitores dos dois lados.");
-        padeiro.soAlegacoes = new V(-5, 10, 12, -5, 0, "O panfleto só repetia a dor da viúva. Sem provas, ninguém mudou de opinião.");
 
         C varennes = NovoCaso("Caso_Varennes", F, 3, RotaFinal.Nenhuma, "A Carruagem de Varennes", "Descobrir o papel do cocheiro na fuga do Rei.",
             "Junho de 1791. A família real foi presa em Varennes tentando fugir. O cocheiro Joubert, que conduziu a berlinda, é acusado de ter ajudado a fuga. Ele pede que a tipografia prove que só cumpria um contrato.",
@@ -399,27 +390,32 @@ public static class CampanhaSetupTool
         Npcs.Add(new N { cena = F, id = "GravadorMorel", nome = "Gravador Morel", falante = "Gravador Morel", x = 58f, cor = new Color(0.3f, 0.45f, 0.6f),
             padrao = new[] { "Não posso ajudar com isso, colega. Já tenho problemas demais com a justiça." } });
 
-        Reacoes.Add(new R { npc = "ViuvaFrancois", caso = padeiro.caminho, item = padeiro.f1.caminho,
-            falas = new[] { "Meu Denis assou seis fornadas naquele dia. Seis! As broas que acharam eram dos deputados.", "Leve o livro dele. Está tudo anotado, com a letra dele." } });
-        Reacoes.Add(new R { npc = "CocheiroJoubert", caso = padeiro.caminho, item = padeiro.boato.caminho,
-            falas = new[] { "O padeiro? Entre cocheiros se dizia que ele escondia farinha no porão para vender mais caro." } });
+        // Dedução ativa: o cliente aponta quem espalha o boato, e quem espalha o boato aponta os dois objetos (o do fato e
+        // o da calúnia). Seguir essas pistas leva às quatro afirmações do quadro em 4h; os outros três lugares não têm nada.
         Reacoes.Add(new R { npc = "CocheiroJoubert", caso = varennes.caminho, item = varennes.f1.caminho,
-            falas = new[] { "Me contrataram em nome de uma tal baronesa de Korff. Eu só conduzia os cavalos, juro.", "Tenho o contrato aqui. Leia o senhor mesmo." } });
+            falas = new[] { "Me contrataram em nome de uma tal baronesa de Korff. Sessenta libras, em moeda francesa, como qualquer frete.",
+                            "Eu só conduzia os cavalos, juro. Tenho o contrato aqui: leia o senhor mesmo.",
+                            "E a peticionária da praça ainda anda contando que me pagaram em ouro da Áustria!" } });
         Reacoes.Add(new R { npc = "PeticionariaLacombe", caso = varennes.caminho, item = varennes.boato.caminho,
-            falas = new[] { "O cocheiro do Rei? Todo mundo sabe que era espião da Rainha, pago em ouro austríaco." } });
+            falas = new[] { "O cocheiro do Rei? Recebeu ouro austríaco, isso sim, e sabia desde Paris quem levava na berlinda.",
+                            "Os Cordeliers pregaram uma ata no mural contando outra história. E na caixa de tipos alguém largou a prova de um panfleto sobre os cavalos." } });
         Reacoes.Add(new R { npc = "PeticionariaLacombe", caso = champ.caminho, item = champ.f1.caminho,
-            falas = new[] { "Assinávamos uma petição. Só isso! E eles atiraram.", "Guardei a folha. O sangue ainda está nela." } });
+            falas = new[] { "Assinávamos uma petição, sem uma arma sequer. E eles atiraram.", "Guardei a folha. O sangue ainda está nela.",
+                            "E no mercado a viúva do padeiro repete que fomos nós que atiramos primeiro!" } });
         Reacoes.Add(new R { npc = "ViuvaFrancois", caso = champ.caminho, item = champ.boato.caminho,
-            falas = new[] { "As vizinhas do mercado dizem que os peticionários atiraram primeiro e a Guarda só se defendeu." } });
+            falas = new[] { "As vizinhas do mercado juram que os peticionários vieram armados e atiraram primeiro. A Guarda só se defendeu.",
+                            "Pregaram uma proclamação no balcão da padaria, e no mural dos Cordeliers colaram um cartaz sobre a bandeira. Cada um conta de um jeito." } });
         Reacoes.Add(new R { npc = "GravadorMorel", caso = assignats.caminho, item = assignats.f1.caminho,
-            falas = new[] { "Roubaram as minhas chapas, colega! Dei queixa na seção dias antes de me prenderem.", "Aqui está a cópia da queixa, com o carimbo da seção." } });
+            falas = new[] { "Roubaram as minhas chapas, colega! Dei queixa na seção dias antes de me prenderem.", "Aqui está a cópia da queixa, com o carimbo da seção.",
+                            "Os cocheiros espalham que eu inventei o roubo. Pergunte ao Joubert o que andam dizendo." } });
         Reacoes.Add(new R { npc = "CocheiroJoubert", caso = assignats.caminho, item = assignats.boato.caminho,
-            falas = new[] { "O gravador? Dizem nas tavernas que ele vendia notas falsas, dez por uma de ouro." } });
+            falas = new[] { "O gravador? Nas tavernas se diz que as chapas nunca saíram da oficina dele. Inventou o roubo depois de preso.",
+                            "Deixaram um papel sobre isso no balcão da padaria. E a caixa de tipos da oficina dele ainda está na rua, se o senhor quiser conferir." } });
 
         Loots.Add(new L { cena = F, id = "BalcaoDaPadaria", nome = "Balcão da Padaria", sprite = SpriteMesa, x = -16f, y = -2.1f, escala = 1.2f,
-            porCaso = { { padeiro.caminho, padeiro.f2.caminho }, { champ.caminho, champ.f2.caminho }, { assignats.caminho, assignats.calunia.caminho } } });
+            porCaso = { { champ.caminho, champ.f2.caminho }, { assignats.caminho, assignats.calunia.caminho } } });
         Loots.Add(new L { cena = F, id = "MuralDosCordeliers", nome = "Mural dos Cordeliers", sprite = SpritePanfleto, x = 24f, y = 0f, escala = 0.5f,
-            porCaso = { { padeiro.caminho, padeiro.calunia.caminho }, { varennes.caminho, varennes.f2.caminho }, { champ.caminho, champ.calunia.caminho } } });
+            porCaso = { { varennes.caminho, varennes.f2.caminho }, { champ.caminho, champ.calunia.caminho } } });
         Loots.Add(new L { cena = F, id = "CaixaDeTipos", nome = "Caixa de Tipos", sprite = SpriteDocumento, x = 70f, y = 0f, escala = 0.2f,
             porCaso = { { varennes.caminho, varennes.calunia.caminho }, { assignats.caminho, assignats.f2.caminho } } });
     }
@@ -506,17 +502,24 @@ public static class CampanhaSetupTool
             padrao = new[] { "Na Conciergerie a gente ouve de tudo, cidadão. Mas disso aí, nada." } });
 
         Reacoes.Add(new R { npc = "RedatorMarchand", caso = jornalista.caminho, item = jornalista.f1.caminho,
-            falas = new[] { "Pedi clemência, cidadão. Só isso. Agora querem a minha cabeça.", "Leve os exemplares. Mostre ao tribunal o que eu realmente escrevi." } });
+            falas = new[] { "Pedi clemência, cidadão. Só isso. Agora querem a minha cabeça.", "Leve os exemplares. Mostre ao tribunal o que eu realmente escrevi.",
+                            "Na Conciergerie, o carcereiro conta aos presos que eu pedi a volta do Rei. Nunca escrevi isso!" } });
         Reacoes.Add(new R { npc = "Carcereiro", caso = jornalista.caminho, item = jornalista.boato.caminho,
-            falas = new[] { "O redator? Aqui dentro dizem que ele recebe cartas com selo inglês toda semana." } });
+            falas = new[] { "O redator? Aqui dentro os presos contam que o jornal dele pediu a volta do Rei, num número de outubro.",
+                            "Se quer saber do civismo dele, o arquivo da seção guarda os papéis. E a caixa de denúncias vive cheia de bilhetes sobre ele." } });
         Reacoes.Add(new R { npc = "ComissarioVautrin", caso = negociante.caminho, item = negociante.f1.caminho,
-            falas = new[] { "O Comitê conta com a sua prensa, cidadão. Garnier rouba o pão do povo.", "Eis o relatório oficial. Use-o bem, e será bem pago." } });
+            falas = new[] { "O Comitê conta com a sua prensa, cidadão. Garnier rouba o pão do povo.",
+                            "Eis o relatório da inspeção: o trigo estava lá, em bom estado, o dobro do que ele declarou.",
+                            "O carcereiro da Conciergerie jura que o trigo é podre. Não é: eu mesmo o vi." } });
         Reacoes.Add(new R { npc = "Carcereiro", caso = negociante.caminho, item = negociante.boato.caminho,
-            falas = new[] { "Garnier? Dizem que ele deixa o trigo apodrecer só para matar o povo de fome." } });
+            falas = new[] { "Garnier? Dizem que os armazéns dele estão cheios de trigo podre. Deixa o grão estragar só para o povo passar fome.",
+                            "Os preços que ele cobrou estão na parede de editais. E no arquivo da seção enfiaram um papel sobre ele e os ingleses." } });
         Reacoes.Add(new R { npc = "CidadaDelorme", caso = girondina.caminho, item = girondina.f1.caminho,
-            falas = new[] { "São só cartas de um marido para a esposa. Leia, por favor.", "Se houver conspiração nelas, eu mesma subo ao cadafalso." } });
+            falas = new[] { "São só cartas de um marido para a esposa. Leia, por favor.", "Se houver conspiração nelas, eu mesma subo ao cadafalso.",
+                            "O redator Marchand anda dizendo que as cartas trazem um plano de fuga. Ele nunca as leu." } });
         Reacoes.Add(new R { npc = "RedatorMarchand", caso = girondina.caminho, item = girondina.boato.caminho,
-            falas = new[] { "A viúva Delorme? Dizem que ela esconde deputados foragidos em casa. Eu não afirmaria isso num jornal." } });
+            falas = new[] { "A viúva Delorme? Dizem que as cartas do marido trazem o plano de fuga dos girondinos, e os nomes de quem os esconde.",
+                            "Eu não afirmaria isso num jornal. Veja a caixa de denúncias e a parede de editais: o vizinho dela não para de escrever." } });
 
         Loots.Add(new L { cena = F, id = "ArquivoDaSecao", nome = "Arquivo da Seção", sprite = SpriteMesa, x = -15f, y = -2.1f, escala = 1.2f,
             porCaso = { { jornalista.caminho, jornalista.f2.caminho }, { negociante.caminho, negociante.calunia.caminho } } });
