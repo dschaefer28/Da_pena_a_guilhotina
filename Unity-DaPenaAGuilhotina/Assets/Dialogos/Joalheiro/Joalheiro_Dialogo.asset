@@ -14,7 +14,90 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: Joalheiro
-    text: "O que procura Rapaz? Uma bela alian\xE7a para pedir a m\xE3o de uma dama?"
+    text: "Procura uma alian\xE7a, rapaz?"
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Julien Valois
+    text: "Procuro informa\xE7\xF5es sobre o colar vendido em nome da rainha."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Joalheiro
+    text: "A encomenda tinha a assinatura dela. Est\xE1 no registro."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Julien Valois
+    text: "Ela veio \xE0 loja?"
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Joalheiro
+    text: "N\xE3o. Um cardeal cuidou do pagamento. Uma mo\xE7a veio buscar o registro,
+      em nome da rainha."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Julien Valois
+    text: "Posso examinar os pap\xE9is?"
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Joalheiro
+    text: "Tenho c\xF3pias do registro e da encomenda. Nesta, assinaram \u2018Marie
+      Antoinette de France\u2019."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Julien Valois
+    text: "Nos documentos oficiais, ela assina apenas \u2018Marie Antoinette\u2019.
+      Essa diferen\xE7a merece aten\xE7\xE3o."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Joalheiro
+    text: Foi a assinatura que me convenceu a entregar o colar.
     dialogueAudio:
       Guid:
         Data1: 0
@@ -23,5 +106,7 @@ MonoBehaviour:
         Data4: 0
       Path: 
     choices:
-    - choiceText: Na verdade, estou procurando um colar de diamantes
-      nextDialogue: {fileID: 11400000, guid: 1e7dc31bbe2e4884a8483cf8800c3fef, type: 2}
+    - choiceText: O senhor chegou a desconfiar?
+      nextDialogue: {fileID: 11400000, guid: e371702555829364497d7ab39e63ab28, type: 2}
+    - choiceText: O registro prova que a rainha autorizou a compra?
+      nextDialogue: {fileID: 11400000, guid: 833e217b2b00b3d439d80f1207329878, type: 2}

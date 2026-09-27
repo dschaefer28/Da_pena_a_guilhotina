@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: Joalheiro
-    text: "Claro que n\xE3o, um Cardeal veio, foi ele que pagou, veio junto com uma
-      bela mo\xE7a. Ela veio buscar o registro de compra. Ele tava em nome da Rainha."
+    text: "Prova que negociei em nome dela. A autoriza\xE7\xE3o\u2026 eu confiei
+      na assinatura e nos intermedi\xE1rios."
     dialogueAudio:
       Guid:
         Data1: 0
@@ -23,6 +23,24 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    choices:
-    - choiceText: "E o senhor n\xE3o desconfiou?"
-      nextDialogue: {fileID: 11400000, guid: e371702555829364497d7ab39e63ab28, type: 2}
+    choices: []
+  - name: Julien Valois
+    text: "Vou separar o que est\xE1 registrado do que o senhor presumiu."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Joalheiro
+    text: "Fa\xE7a isso. Leve as duas c\xF3pias."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []

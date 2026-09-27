@@ -14,10 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   talkScript:
   - name: Joalheiro
-    text: "N\xE3o vou mentir, sim. Mas veja, os neg\xF3cios n\xE3o v\xE3o bem, as
-      coisas est\xE3o ruim para todos, e luxos est\xE3o vendendo muito pouco, s\xF3
-      os ricos, muito ricos, tem comprado. Eu estou falindo, eu precisava finalizar
-      essa compra."
+    text: "Desconfiei. Mas quase ningu\xE9m compra joias. Eu precisava fechar a venda."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Julien Valois
+    text: "Ent\xE3o a necessidade pesou mais que a d\xFAvida."
+    dialogueAudio:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    choices: []
+  - name: Joalheiro
+    text: "Pesou. Leve as duas c\xF3pias. \xC9 o que posso mostrar."
     dialogueAudio:
       Guid:
         Data1: 0

@@ -15,10 +15,11 @@ MonoBehaviour:
   itemID: pista_joias_2
   itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
   itemAmt: 0
-  itemName: A assinatura da encomenda
-  descricao: Carta de encomenda assinada 'Marie Antoinette de France'. Nos documentos
-    oficiais, a Rainha assina apenas 'Marie Antoinette'.
-  fonte: "Pap\xE9is esquecidos na taverna"
+  itemName: Assinatura da encomenda
+  descricao: "A encomenda traz \u2018Marie Antoinette de France\u2019, enquanto os
+    documentos oficiais citados na investiga\xE7\xE3o usam \u2018Marie Antoinette\u2019.
+    A diferen\xE7a p\xF5e a autoriza\xE7\xE3o em d\xFAvida."
+  fonte: "C\xF3pia da encomenda fornecida pelo joalheiro."
   caso: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
   confiabilidade: 1
   verificadaPor: []

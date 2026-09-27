@@ -1,6 +1,6 @@
 ﻿# Status de implementação — Da Pena à Guilhotina
 
-Atualizado em 26/09/2026. Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminhos relativos a `Unity-DaPenaAGuilhotina/`.
+Atualizado em 27/09/2026 (diálogos narrativos, §12). Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminhos relativos a `Unity-DaPenaAGuilhotina/`.
 
 Estados usados: **validado** (testado em runtime ou em teste automatizado), **existente não validado** (código/asset presente, sem teste de runtime), **parcial**, **ausente**.
 
@@ -18,6 +18,8 @@ Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4�
 - **Final C (26/09):** "O Esquecido", definido pelo grupo: barras equilibradas, ninguém condena nem defende o jogador, que é apagado da história.
 - **Tutorial (26/09):** a explicação do status aparece ao abrir a prensa, antes de imprimir.
 - **Linha editorial (Prompt 5):** a partir da Fase 2, o Misturar pede Defesa do povo / Agradar a Coroa (o Comitê na Fase 4) / Sensacionalista antes de consumir as pistas. Cálculo: versão → apoio → linha. O exemplo do Prompt 3 (40/−5/50) é o valor antes da linha.
+- **Fala depois da entrega (27/09):** `CasoReacao.dialogoDepoisDaEntrega`. Quando a reação já entregou tudo, o NPC diz essa fala curta em vez de repetir a conversa inteira (Dupaty, Marie, Joalheiro). Vazio = comportamento anterior.
+- **Caso das Joias (27/09):** o joalheiro entrega os dois fatos; a Mesa da Taverna ficou vazia nesse caso; caminho mínimo de 1h (§12.3).
 
 Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não exibir ao jogador).
 
@@ -29,7 +31,7 @@ Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não e
 |---|---|
 | Unity | 6000.3.9f1 aberto no Editor durante o trabalho (projeto `Unity-DaPenaAGuilhotina`) |
 | Unity MCP | Operacional (`com.coplaydev.unity-mcp`): leitura de cenas, compilação, Play Mode, execução de código de Editor e Test Runner |
-| Testes | `com.unity.test-framework` 1.6.0. Não havia testes. Os testes novos ficam em `Assets/Editor/Testes/` (assembly `Assembly-CSharp-Editor`, sem asmdef, porque os scripts do jogo não têm asmdef). Em 26/09: 46 testes EditMode; 57 depois do Prompt 5 |
+| Testes | `com.unity.test-framework` 1.6.0. Não havia testes. Os testes novos ficam em `Assets/Editor/Testes/` (assembly `Assembly-CSharp-Editor`, sem asmdef, porque os scripts do jogo não têm asmdef). Em 26/09: 46 testes EditMode; 57 depois do Prompt 5; 58 em 27/09 (§12.2) |
 | Compilação | Sem erros. Avisos antigos: `FindObjectOfType` obsoleto em `GameManager`; `Caso_Tutorial` sem `caseTitle`/`npcDialogueRoute` (OnValidate) |
 | Save real do jogador | Até 25/09: não foi lido nem alterado. Em 26/09: ver §9.7 (um save de teste criado e apagado com autorização; duas PlayerPrefs de dica ficaram marcadas) |
 
@@ -578,3 +580,68 @@ Relato do grupo: "os fades de transição entre cenas não funcionam". Duas caus
 | 2 | O primeiro frame depois de carregar uma cena é pesado. O fade contava o tempo real, então um frame lento consumia o meio segundo inteiro e a tela ia de clara a escura de uma vez | cada frame avança no máximo 1/30 s do fade; o clareamento começa um frame depois da cena carregar; uma transição que interrompe outra parte do alpha atual |
 
 Medição (frames com o fade entre 1% e 99%): menu → Jogo, 146 escurecendo e 151 clareando; Jogo → Porão (alçapão) e Porão → Jogo (porta), cerca de 150 por fade. Antes: 0 a 1 frame. Arquivos: `Scripts/SceneTransitionManager.cs`, `Prefab/SceneTransitonManager.prefab`, `Scenes/menu principal.unity` (só o override removido). EditMode 57/57. O save do jogador não foi alterado.
+
+---
+
+## 12. Diálogos narrativos e fala depois da entrega (26–27/09/2026)
+
+Roteiros escritos pelo grupo (aprovados antes da implementação). Nenhum sistema de diálogo novo: `DialogueData`, `NPCMovement.reacoesDeCaso` e a entrega no fim da conversa (`OnDialogueEnded`) continuam os mesmos.
+
+### 12.1 Caso 1 (tutorial): Marie Bradier e Charles Dupaty — commit `796fe1e`
+
+- Três conversas: orientação de Dupaty (sem item), Marie com três abordagens (investigativa, empática, jurídica) que convergem, e Dupaty depois do relato, também com três abordagens e convergência. 26 `DialogueData` em `Dialogos/Marie Bradier` e `Dialogos/Charles Dupaty` (7 reaproveitados, 19 novos).
+- `Jogo.unity`: a reação de Marie ao `Caso_Tutorial` começa em `MarieDialogueData` (antes pulava a primeira fala). `Evidencia_RelatoBradier` passou a se chamar **"Relato de Bradier"** (itemID e GUID iguais).
+- Recompensas, eventos (Dupaty habilita Marie; Marie reabilita Dupaty), receita `ReceitaFase1` (+15/−10/+20) e ordem do tutorial inalterados.
+- Validado em Play Mode (cena Jogo, botões reais do diálogo acionados por código): os 12 caminhos (6 de Marie, 6 de Dupaty), falas iguais ao roteiro na tela, relato e decreto entregues uma vez cada, tutorial na ordem certa, controle devolvido ao jogador, impressão no porão.
+
+### 12.2 Fala depois da entrega (`CasoReacao.dialogoDepoisDaEntrega`)
+
+- **Problema relatado pelo grupo:** depois de entregar o decreto, Dupaty repetia a conversa inteira, com as opções.
+- **Correção:** campo opcional novo em `CasoReacao` (`NPCMovement.cs`). Se todas as recompensas da reação já foram entregues (pelo registro, que sobrevive à troca de cena), o NPC toca essa fala curta, sem opções e sem entregar nada. Uma etapa complementar pendente continua tendo prioridade. Campo vazio = comportamento anterior (nenhum NPC das Fases 2–4 mudou, exceto o joalheiro, §12.3).
+- **Configurado:** Dupaty → `Dupat_Lembrete_Porao` ("Você já tem o relato de Marie e o decreto. Desça ao porão e escreva o memorial na prensa."); Marie → `Marie_Lembrete` ("Já lhe contei o que sei. Leve meu relato ao seu mestre, por favor."); Joalheiro → §12.3.
+- **Marie:** `canInteract` e `BlockFutureEvents` não são persistidos. Voltando do porão sem imprimir, a conversa com Dupaty reativa Marie (evento que já existia). Antes ela repetia a conversa inteira (sem duplicar o relato); agora diz só o lembrete e volta a se desligar. Depois da impressão ela some (`GerenciadorCena1`), como antes.
+- Teste: `ComponentesTests.Npc_DepoisDaEntrega_TocaFalaCurta_SemEntregarDeNovo_CampoVazioRepeteAConversa`.
+
+### 12.3 O colar da rainha (Caso das Joias)
+
+- **Fontes:** roteiro do grupo, com o GDD como referência principal (trechos da Fase 2 sobre o joalheiro conferidos nesta etapa: "Registro de compra", Duque de Orleans). O episódio histórico do colar (1785–1786) aparece em 1789 por adaptação do jogo; as falas são dramatizações. A planilha "30 Casos Reais" estava acessível, mas não foi lida.
+- **Diálogo:** J0 (9 falas, joalheiro e Julien; as duas opções na última) → J1, pressão financeira, ou J2, limites da prova (3 falas cada, fim normal). Fala depois da entrega: "Já lhe dei as cópias. Tudo o que vi está no registro." Sem áudio, como antes.
+  - Assets reaproveitados: J0 `Joalheiro_Dialogo`; J1 `respostaJoalheiro3`; J2 `respostaJoalheiro2`; fala depois da entrega `respostaJoalheiro1`. `repostaJoalheiro` ficou sem uso (não foi apagado). `npcDialogueRoute` continua em `Joalheiro_Dialogo`.
+- **Pistas (as duas Fato, do caso, mesmo sprite):** `pista_joias_1` **"Registro de compra"** (fonte "Livro de vendas do joalheiro.") e `pista_joias_2` **"Assinatura da encomenda"** (fonte "Cópia da encomenda fornecida pelo joalheiro."), com as descrições do roteiro. Apresentadas em J0, entregues juntas no fim de J1 ou J2.
+- **Origem da 2ª pista:** saiu da Mesa da Taverna (só a entrada do Caso das Joias; a do Operário ficou). No joalheiro, a lista efetiva de recompensas passou de 1 para 2 itens (o override antigo do índice 1 já apontava para a assinatura, mas não valia porque a lista tinha tamanho 1).
+- **Caso:** nova `caseDescription`; título "Caso das Joias", receitas, alegações, custos e valores inalterados.
+- **`CampanhaSetupTool`:** a definição da Mesa não traz mais a pista das Joias (senão a ferramenta a devolveria ao ser reexecutada) e os textos de referência das duas pistas foram atualizados.
+- **Consequência de design:** as Joias ficam com 3 fontes com pista, 4 oportunidades vazias e caminho mínimo de **1h** (os demais casos: 2h). Matriz atualizada.
+- **Saves antigos:** o jogo só salva no fim do tutorial, no fim de fase e na ida ao tribunal, nunca no meio de um caso; nenhum save pode ter as Joias em andamento com a Mesa já vasculhada (o save do grupo em 27/09 está no início da Fase 2, sem as Joias). Se um ponto de save no meio de caso for criado, quem já tivesse pego a assinatura na Mesa receberia uma 2ª cópia do joalheiro (o registro é por interação). Nenhuma migração foi feita.
+
+### 12.4 Arquivos
+
+- Código: `Scripts/NPCMovement.cs` (campo e regra), `Editor/CampanhaSetupTool.cs` (Mesa e textos das Joias), `Editor/Testes/ComponentesTests.cs` (+1 teste).
+- Assets: 26 diálogos do tutorial (§12.1), `Dupat_Lembrete_Porao`, `Marie_Lembrete` (novos); `Joalheiro_Dialogo`, `respostaJoalheiro1/2/3`, `Item_joalheiro1/2`, `Caso_Joalheiro`, `Evidencia_RelatoBradier`.
+- Cenas (edições pontuais, sem ruído de layout do `UI.prefab`): `Jogo` (entrada da Marie, lembretes de Dupaty e Marie); `Fase2` (2 recompensas e lembrete no joalheiro; entrada das Joias removida da Mesa).
+- Nenhum prefab, GUID ou `.meta` existente, pacote ou ProjectSettings alterado.
+
+### 12.5 Verificação (27/09)
+
+- **Estática:** validador "Campanha válida" (Joias: 7 oportunidades, 3 com pista, 1h); Ferramentas > Campanha > 1 reexecutada: **0 alterações** (a Mesa não recebe a pista de volta); EditMode **58/58**; grafos dos diálogos sem referência nula, sem ciclo, com opções só na última fala; valores efetivos da cena lidos pela Unity (só o joalheiro entrega `pista_joias_1/2`).
+- **Play Mode** (Editor via MCP; Fase2 aberta direto, caso montado por código; botões reais do diálogo e da prensa acionados por `onClick`):
+
+| Cenário | Resultado |
+|---|---|
+| J0 → J1 | 9 + 3 falas iguais ao roteiro (falantes e botões corretos); 1 de cada pista; −1h |
+| Falar de novo | só a fala depois da entrega; sem hora nem pista a mais |
+| Mesa da Taverna (Joias) | busca vazia (−1h); a 2ª busca não cobra; nenhuma pista |
+| J0 → J2 (sessão nova) | 3 falas; 1 de cada pista |
+| Inventário sem espaço | a conversa não abre e não cobra |
+| 1 espaço livre | entra o Registro; a Assinatura fica pendente com aviso |
+| Pendente sem espaço / com espaço | não abre / conversa completa de novo, entrega a Assinatura sem nova hora; depois só a fala curta |
+| Prensa (Registro + Assinatura, Defesa do povo) | janela da linha editorial sem consumir; versão Fatos 60/−15/20; caso concluído pela impressão |
+| Marie: relato → decreto → porão e volta sem imprimir → Dupaty → Marie | Dupaty diz o lembrete; Marie diz só o lembrete; relato x1 |
+
+Console sem erros nem avisos (inclusive de caractere ausente para ‘ ’ e …).
+
+**Não testado:** teclado/toque físicos, Android, áudio, aparência na tela (conferida pelo texto dos componentes TMP, não por captura).
+
+### 12.6 Efeitos no ambiente
+
+`save.json` e PlayerPrefs iguais aos de antes (hash conferido). `Application.runInBackground` só ligado durante as sessões de Play. A Ferramenta 1 regravou 19 assets de casos/receitas com conteúdo idêntico (só final de linha); foram restaurados pelo git. `LiberationSans SDF - Fallback.asset` é um atlas dinâmico que a Unity atualiza ao desenhar caracteres novos; já estava modificado antes e não faz parte desta mudança.

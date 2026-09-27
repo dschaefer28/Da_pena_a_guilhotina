@@ -1620,8 +1620,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootInteractable
   pistasPossiveis:
-  - caso: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
-    itemParaDar: {fileID: 11400000, guid: a74514a5611ff2247a6e5c0b275cf3c7, type: 2}
   - caso: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
     itemParaDar: {fileID: 11400000, guid: 4c8c01357c9bbb4419151f49967720c6, type: 2}
   amountToGive: 1
@@ -2217,8 +2215,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: c58f27ed9b03f3a499f8062499574c16, type: 2}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: reacoesDeCaso.Array.data[0].dialogoDepoisDaEntrega
+      value: 
+      objectReference: {fileID: 11400000, guid: b40c6b0c843cf9545a0703c74e70d70a, type: 2}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: reacoesDeCaso.Array.data[0].recompensasDoDialogo.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: 'reacoesDeCaso.Array.data[0].recompensasDoDialogo.Array.data[0]'

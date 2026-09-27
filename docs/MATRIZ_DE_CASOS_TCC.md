@@ -2,13 +2,13 @@
 
 **Uso interno. Não exibir ao jogador.** A coluna "verdade" revela a confiabilidade real das pistas.
 
-Gerada com o Prompt 2 em 25/09/2026; revisada no Prompt 3 e na verificação (25/09/2026). Fonte dos dados: `Assets/Editor/CampanhaSetupTool.cs` (conteúdo; textos em vigor na tabela `TextosRevisados`), `Assets/Editor/BibliotecaSetupTool.cs` e `Ferramentas > Campanha > 2 - Validar campanha`. **Todo conteúdo das Fases 3 e 4, as pistas novas da Fase 2 e as alegações são PROVISÓRIOS**: escritos para a campanha ficar jogável na falta do GDD, sem valor canônico. Os casos das Fases 3/4 usam acontecimentos históricos como pano de fundo, com clientes e detalhes fictícios.
+Gerada com o Prompt 2 em 25/09/2026; revisada no Prompt 3 e na verificação (25/09/2026); Caso das Joias atualizado em 27/09/2026 com o roteiro "O colar da rainha" (ver `STATUS_IMPLEMENTACAO_TCC.md` §12.3). Fonte dos dados: `Assets/Editor/CampanhaSetupTool.cs` (conteúdo; textos em vigor na tabela `TextosRevisados`), `Assets/Editor/BibliotecaSetupTool.cs` e `Ferramentas > Campanha > 2 - Validar campanha`. **Todo conteúdo das Fases 3 e 4, as pistas novas da Fase 2 e as alegações são PROVISÓRIOS**: escritos para a campanha ficar jogável na falta do GDD, sem valor canônico. Os casos das Fases 3/4 usam acontecimentos históricos como pano de fundo, com clientes e detalhes fictícios.
 
 ## Regras comuns
 
 - **Custo:** toda interação (NPC ou objeto) custa **1h** na primeira vez no caso; repetir é grátis. Orçamento **4h**; **3h** com dívida. Com o inventário cheio, uma interação que entregaria algo não cobra.
 - **Oportunidades:** cada caso tem **7** na sua cena: 4 NPCs + 3 objetos. Por caso: 2 fatos (F1 com o cliente, F2 num objeto), 1 boato (outro NPC), 1 calúnia (objeto) e 3 oportunidades sem nada útil (2 NPCs com fala "pouco útil" + 1 objeto vazio).
-- **Caminho mínimo:** cliente + objeto de F2 = **2h** (cabe no orçamento com dívida).
+- **Caminho mínimo:** cliente + objeto de F2 = **2h** (cabe no orçamento com dívida). **Exceção (27/09):** no Caso das Joias o joalheiro entrega os dois fatos, então o caminho mínimo é **1h** e o caso tem 4 oportunidades vazias.
 - **Pré-requisitos:** nenhum na fala normal. Etapas complementares (Prompt 3) exigem uma evidência já obtida.
 - **Nomes neutros:** o nome da pista é só o assunto. O que vem de pessoas é relato ("Segundo…" ou "X mostra…"), o que vem de objetos é documento, qualquer que seja a verdade. A confiabilidade se deduz pelo conteúdo e pela fonte. O validador recusa nomes com prefixos que denunciem a verdade ("Conversa sobre", "Libelo", "Folha:", "Cartaz:", "Denúncia:", "Bilhete", "Boato", "Calúnia", "Rumor").
 - **Saída sem bloqueio (proposta de design, não literal dos PDFs):** ao aceitar o caso, o jogador recebe 2 **alegações do cliente** (fonte "Carta do cliente"). **Qualquer impressão com uma alegação** (e sem calúnia) usa a versão **Só Alegações** (ganho menor + consequência própria). Assim, "1 fato + 1 alegação" nunca rende mais que a investigação.
@@ -22,11 +22,11 @@ Gerada com o Prompt 2 em 25/09/2026; revisada no Prompt 3 e na verificação (25
 
 ## Fase 2 — cena `Fase2` (existente, revisada)
 
-NPCs: Joalheiro (x 12,9), Operário (29,2), Jean-Baptiste Réveillon (52,1), **Gazeteiro** (0, novo). Objetos novos: **Banca de Panfletos** (−12), **Muro de Cartazes** (40), **Mesa da Taverna** (68). Mudança: cada cliente entregava as 2 pistas; agora entrega só F1 (F2 foi para um objeto), não exige mais `casoObrigatorio` e não se desliga após a conversa.
+NPCs: Joalheiro (x 12,9), Operário (29,2), Jean-Baptiste Réveillon (52,1), **Gazeteiro** (0, novo). Objetos novos: **Banca de Panfletos** (−12), **Muro de Cartazes** (40), **Mesa da Taverna** (68). Mudança: cada cliente entregava as 2 pistas; agora entrega só F1 (F2 foi para um objeto), não exige mais `casoObrigatorio` e não se desliga após a conversa. **Exceção (27/09, roteiro "O colar da rainha"):** o joalheiro voltou a entregar as duas pistas das Joias, ao fim da conversa; a Mesa da Taverna deixou de dar pista nesse caso.
 
 | Caso | Fonte → item (verdade) | Vazias | Receita Fatos / ComBoato / Calúnia / Só Alegações |
 |---|---|---|---|
-| **Caso das Joias** (`Caso_Joalheiro`) | Joalheiro → A venda do colar (Fato) · Mesa da Taverna → A assinatura da encomenda (Fato) · Gazeteiro → O segredo da Rainha (Boato) · Muro → A Rainha e o Cardeal (Calúnia) | Réveillon, Operário, Banca | 50/−10/20 · 70/−20/35 (pen −30/−5) · 90/−30/50 (pen −50/−15) · 20/−5/8 (pen −5/0) |
+| **Caso das Joias** (`Caso_Joalheiro`) | Joalheiro → Registro de compra (Fato) + Assinatura da encomenda (Fato) · Gazeteiro → O segredo da Rainha (Boato) · Muro → A Rainha e o Cardeal (Calúnia) | Réveillon, Operário, Banca, Mesa da Taverna | 50/−10/20 · 70/−20/35 (pen −30/−5) · 90/−30/50 (pen −50/−15) · 20/−5/8 (pen −5/0) |
 | **Caso de Réveillon** (`Caso_Reveillon`) | Réveillon → O discurso na assembleia (Fato) · Banca → Os salários da manufatura (Fato) · Operário → A ordem de atirar (Boato) · Gazeteiro → O dinheiro inglês (Calúnia) | Joalheiro, Muro, Mesa | −20/50/50 · −25/60/70 (pen −10/−25) · −35/75/90 (pen −15/−45) · −8/20/20 (pen 0/−5) |
 | **Caso do Operário** (`Caso_Operario`) | Operário → O relato do sobrevivente (Fato) · Muro → A ordem do comandante (Fato) · Réveillon → Os agitadores do duque (Boato) · Mesa → O fogo na fábrica (Calúnia) | Joalheiro, Gazeteiro, Banca | 60/−20/10 · 75/−25/25 (pen −30/−5) · 90/−35/40 (pen −50/−15) · 25/−8/5 (pen −5/0) |
 

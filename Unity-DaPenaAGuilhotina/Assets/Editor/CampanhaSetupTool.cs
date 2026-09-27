@@ -110,8 +110,9 @@ public static class CampanhaSetupTool
     private static readonly Dictionary<string, string[]> TextosRevisados = new Dictionary<string, string[]>
     {
         // Fase 2 — Joias
-        { "pista_joias_1", new[] { "A venda do colar", "Livro de vendas do joalheiro", "O joalheiro mostra o livro de vendas: o colar saiu 'em nome da Rainha', pago por um cardeal e retirado por uma moça. A Rainha nunca apareceu na loja." } },
-        { "pista_joias_2", new[] { "A assinatura da encomenda", "Papéis esquecidos na taverna", "Carta de encomenda assinada 'Marie Antoinette de France'. Nos documentos oficiais, a Rainha assina apenas 'Marie Antoinette'." } },
+        // Roteiro "O colar da rainha" (27/09): as duas pistas vêm do joalheiro; a 2ª deixou de ser achada na taverna.
+        { "pista_joias_1", new[] { "Registro de compra", "Livro de vendas do joalheiro.", "Cópia da venda do colar em nome da rainha, negociada por um cardeal e uma intermediária. O joalheiro afirma que a rainha não compareceu." } },
+        { "pista_joias_2", new[] { "Assinatura da encomenda", "Cópia da encomenda fornecida pelo joalheiro.", "A encomenda traz ‘Marie Antoinette de France’, enquanto os documentos oficiais citados na investigação usam ‘Marie Antoinette’. A diferença põe a autorização em dúvida." } },
         { "pista_joias_boato", new[] { "O segredo da Rainha", "Gazeteiro da esquina", "Segundo o gazeteiro, a Rainha encomendou o colar escondida do Rei e depois negou tudo." } },
         { "pista_joias_calunia", new[] { "A Rainha e o Cardeal", "Cartaz sem assinatura", "Folha afixada no muro: a Rainha e o Cardeal são amantes e dividiram o colar entre si." } },
         // Fase 2 — Réveillon
@@ -278,7 +279,7 @@ public static class CampanhaSetupTool
         Loots.Add(new L { cena = F, id = "MuroDeCartazes", nome = "Muro de Cartazes", sprite = SpritePanfleto, x = 40f, y = 0f, escala = 0.5f,
             porCaso = { { Caso("Caso_Joalheiro"), Item(F, "Pista_Joias_Calunia") }, { Caso("Caso_Operario"), SO + "Item_operario2.asset" } } });
         Loots.Add(new L { cena = F, id = "MesaDaTaverna", nome = "Mesa da Taverna", sprite = SpriteMesa, x = 68f, y = -2.1f, escala = 1.2f,
-            porCaso = { { Caso("Caso_Joalheiro"), SO + "Item_joalheiro2.asset" }, { Caso("Caso_Operario"), Item(F, "Pista_Operario_Calunia") } } });
+            porCaso = { { Caso("Caso_Operario"), Item(F, "Pista_Operario_Calunia") } } }); // Joias: a assinatura agora vem do joalheiro
     }
 
     // ----- Fase 3 (1789–1792) -----
