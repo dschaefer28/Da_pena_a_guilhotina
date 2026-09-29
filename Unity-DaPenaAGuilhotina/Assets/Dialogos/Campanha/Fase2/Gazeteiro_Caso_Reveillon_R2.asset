@@ -18,9 +18,9 @@ MonoBehaviour:
       hist\xF3ria vende. Eu n\xE3o pergunto, eu vendo."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/Normal geral_01
     choices: []

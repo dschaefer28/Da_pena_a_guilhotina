@@ -18,9 +18,9 @@ MonoBehaviour:
       deixe a vitrine para quem vai."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -835458270
+        Data2: 1079079484
+        Data3: 380255106
+        Data4: -1659052739
+      Path: event:/bravo geral_04
     choices: []

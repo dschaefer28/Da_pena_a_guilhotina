@@ -18,9 +18,9 @@ MonoBehaviour:
       se ainda houver trabalho."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/Normal_01
     choices: []

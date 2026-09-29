@@ -18,9 +18,9 @@ MonoBehaviour:
       um soldo."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 122739480
+        Data2: 1180258795
+        Data3: 565780876
+        Data4: 322956438
+      Path: event:/bravo geral dois_01
     choices: []
