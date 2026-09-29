@@ -60,7 +60,10 @@ public class ItemPickupNotificationUI : MonoBehaviour
     void OnDisable()
     {
         if (inventoryManagerAtual != null)
+        {
             inventoryManagerAtual.OnItemAdicionado -= HandleItemAdicionado;
+            inventoryManagerAtual.OnInventoryToggled -= HandleInventarioAlternado;
+        }
         // Esquece a referência: senão, ao reativar com o mesmo inventário, VincularInventario achava que já
         // estava inscrito e o popup parava de aparecer.
         inventoryManagerAtual = null;
@@ -82,12 +85,18 @@ public class ItemPickupNotificationUI : MonoBehaviour
         if (atual == inventoryManagerAtual) return;
 
         if (inventoryManagerAtual != null)
+        {
             inventoryManagerAtual.OnItemAdicionado -= HandleItemAdicionado;
+            inventoryManagerAtual.OnInventoryToggled -= HandleInventarioAlternado;
+        }
 
         inventoryManagerAtual = atual;
 
         if (inventoryManagerAtual != null)
+        {
             inventoryManagerAtual.OnItemAdicionado += HandleItemAdicionado;
+            inventoryManagerAtual.OnInventoryToggled += HandleInventarioAlternado;
+        }
         else
             Debug.LogWarning("[ItemPickupNotificationUI] Nenhum InventoryManager encontrado na cena.");
     }
@@ -151,24 +160,167 @@ public class ItemPickupNotificationUI : MonoBehaviour
             textoMensagem.text = texto;
             // O popup se ajusta ao texto (ContentSizeFitter), mas sem limite uma frase longa viraria uma
             // linha só atravessando a tela: a largura do texto é a da frase, até larguraMaximaTexto.
-            LayoutElement le = textoMensagem.GetComponent<LayoutElement>();
-            if (le != null) le.preferredWidth = Mathf.Min(textoMensagem.GetPreferredValues(texto).x + 2f, larguraMaximaTexto);
+            larguraDoTexto = Mathf.Min(textoMensagem.GetPreferredValues(texto).x + 2f, larguraMaximaTexto);
         }
 
         if (painelPopup != null)
         {
             painelPopup.SetActive(true);
-            // Recalcula já, para o primeiro frame não aparecer com o tamanho da mensagem anterior.
-            var rect = painelPopup.transform as RectTransform;
-            if (rect != null)
-            {
-                // Relógio de investigação no topo (mesmo lugar): o popup desce para baixo dele.
-                if (!alturaBasePopup.HasValue) alturaBasePopup = rect.anchoredPosition.y;
-                float borda = HudDoRelogio.BordaInferior;
-                float y = borda > 0f ? Mathf.Min(alturaBasePopup.Value, -(borda + margemAbaixoDoRelogio)) : alturaBasePopup.Value;
-                rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, y);
-                LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
-            }
+            Posicionar();
         }
+    }
+
+    private float larguraDoTexto;
+    private float xBasePopup;
+    private Transform hudDeStatus;
+    private const float MargemAoLadoDoInventario = 16f; // unidades do canvas
+    private const float LarguraMinimaDoTexto = 200f;
+
+    // Recalcula já, para o primeiro frame não aparecer com o tamanho da mensagem anterior.
+    private void Posicionar()
+    {
+        var rect = painelPopup != null ? painelPopup.transform as RectTransform : null;
+        if (rect == null) return;
+        LayoutElement le = textoMensagem != null ? textoMensagem.GetComponent<LayoutElement>() : null;
+        if (le != null) le.preferredWidth = larguraDoTexto;
+
+        // Relógio de investigação no topo (mesmo lugar): o popup desce para baixo dele.
+        if (!alturaBasePopup.HasValue) { alturaBasePopup = rect.anchoredPosition.y; xBasePopup = rect.anchoredPosition.x; }
+        float borda = HudDoRelogio.BordaInferior;
+        float y = borda > 0f ? Mathf.Min(alturaBasePopup.Value, -(borda + margemAbaixoDoRelogio)) : alturaBasePopup.Value;
+        rect.anchoredPosition = new Vector2(xBasePopup, y);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+        AfastarDoInventario(rect, le);
+    }
+
+    private void HandleInventarioAlternado(bool aberto)
+    {
+        if (painelPopup != null && painelPopup.activeSelf) Posicionar();
+    }
+
+    // Com o inventário aberto, o topo central é o título "Inventário": o popup cobria o título. Nesse caso ele procura um
+    // lugar que não cubra nada do que o inventário mostra (textos, ícones e botões da lista, da prensa e, da Fase 3 em
+    // diante, do painel Suporte, à esquerda da lista) nem a HUD de status; o fundo e a moldura dos painéis podem ficar por
+    // baixo. Candidatos, nesta ordem: a faixa à esquerda da lista (abaixo da HUD) e a faixa à direita dela (no topo, acima
+    // da prensa). Fica o primeiro que não cobre nada; se nenhum estiver livre, o que cobre menos, contando a posição
+    // normal. Numa faixa mais estreita que a mensagem, ela quebra em mais linhas.
+    private void AfastarDoInventario(RectTransform rect, LayoutElement le)
+    {
+        InventoryManager inventario = inventoryManagerAtual;
+        if (inventario == null || inventario.inventoryUI == null || !inventario.inventoryUI.activeInHierarchy) return;
+        Canvas canvas = rect.GetComponentInParent<Canvas>();
+        List<Rect> conteudo = ConteudoVisivel(inventario.inventoryUI.transform);
+        if (conteudo.Count == 0) return;
+        Rect lista = inventario.inventoryUI.transform.Find("InventoryBackGround") is RectTransform fundo && fundo.gameObject.activeInHierarchy
+            ? NaTela(fundo) : Uniao(conteudo);
+        Rect? hud = HudDeStatusNaTela(canvas, out Rect hudNaTela) ? hudNaTela : (Rect?)null;
+        if (hud.HasValue) conteudo.Add(hud.Value);
+
+        float melhorArea = AreaCoberta(NaTela(rect), conteudo);
+        if (melhorArea <= 0f) return; // a posição normal já não cobre nada
+        Vector3 melhorPosicao = rect.position;
+        float melhorLargura = larguraDoTexto;
+
+        float escala = canvas != null && canvas.rootCanvas.scaleFactor > 0f ? canvas.rootCanvas.scaleFactor : 1f;
+        float margem = MargemAoLadoDoInventario * escala;
+        Rect seguro = Screen.safeArea;
+        var faixas = new[] { new Vector2(seguro.xMin + margem, lista.xMin - margem), new Vector2(lista.xMax + margem, seguro.xMax - margem) };
+        foreach (Vector2 faixa in faixas)
+        {
+            if (!PosicionarNaFaixa(rect, le, escala, faixa.x, faixa.y, seguro.yMax - margem, hud, margem)) continue;
+            Rect naTela = NaTela(rect);
+            if (naTela.yMin < seguro.yMin) continue;
+            float area = AreaCoberta(naTela, conteudo);
+            if (area >= melhorArea) continue;
+            melhorArea = area;
+            melhorPosicao = rect.position;
+            melhorLargura = le != null ? le.preferredWidth : larguraDoTexto;
+            if (area <= 0f) break;
+        }
+
+        if (le != null) le.preferredWidth = melhorLargura;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+        rect.position = melhorPosicao;
+    }
+
+    // Põe o popup no topo da faixa [xMin, xMax], abaixo da HUD se ela estiver por cima. Falso se ele não couber na largura.
+    private bool PosicionarNaFaixa(RectTransform rect, LayoutElement le, float escala, float xMin, float xMax, float topo,
+                                   Rect? hud, float margem)
+    {
+        float faixa = xMax - xMin;
+        if (faixa <= 0f) return false;
+        if (le != null) le.preferredWidth = larguraDoTexto;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+        float largura = NaTela(rect).width;
+        if (largura > faixa)
+        {
+            if (le == null) return false;
+            le.preferredWidth = Mathf.Max(LarguraMinimaDoTexto, larguraDoTexto - (largura - faixa) / escala);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+            largura = NaTela(rect).width;
+            if (largura > faixa + 1f) return false;
+        }
+
+        float centro = (xMin + xMax) * 0.5f;
+        if (hud.HasValue && hud.Value.xMin < centro + largura * 0.5f && hud.Value.xMax > centro - largura * 0.5f)
+            topo = Mathf.Min(topo, hud.Value.yMin - margem);
+        rect.position = new Vector3(centro, topo, rect.position.z); // pivô no topo central (canvas Screen Space Overlay)
+        return true;
+    }
+
+    // O que o inventário mostra por cima dos fundos (textos, ícones, botões), em pixels de tela. Fundos e molduras de painel
+    // (gráficos que têm outros gráficos visíveis dentro) e imagens transparentes (bloqueios de clique) não contam.
+    private static List<Rect> ConteudoVisivel(Transform raiz)
+    {
+        var visiveis = new List<Graphic>();
+        foreach (Graphic g in raiz.GetComponentsInChildren<Graphic>(false))
+            if (g.enabled && g.color.a > 0.01f && g.canvasRenderer.GetInheritedAlpha() > 0.01f) visiveis.Add(g);
+
+        var rects = new List<Rect>();
+        foreach (Graphic g in visiveis)
+        {
+            bool temConteudoDentro = false;
+            foreach (Graphic outro in visiveis)
+                if (outro != g && outro.transform.IsChildOf(g.transform)) { temConteudoDentro = true; break; }
+            if (!temConteudoDentro) rects.Add(NaTela(g.rectTransform));
+        }
+        return rects;
+    }
+
+    private static float AreaCoberta(Rect r, List<Rect> outros)
+    {
+        float area = 0f;
+        foreach (Rect o in outros)
+        {
+            float largura = Mathf.Min(r.xMax, o.xMax) - Mathf.Max(r.xMin, o.xMin);
+            float altura = Mathf.Min(r.yMax, o.yMax) - Mathf.Max(r.yMin, o.yMin);
+            if (largura > 0f && altura > 0f) area += largura * altura;
+        }
+        return area;
+    }
+
+    private static Rect Uniao(List<Rect> rects)
+    {
+        Rect u = rects[0];
+        foreach (Rect r in rects) u = Rect.MinMaxRect(Mathf.Min(u.xMin, r.xMin), Mathf.Min(u.yMin, r.yMin), Mathf.Max(u.xMax, r.xMax), Mathf.Max(u.yMax, r.yMax));
+        return u;
+    }
+
+    private bool HudDeStatusNaTela(Canvas canvas, out Rect tela)
+    {
+        tela = default;
+        if (hudDeStatus == null && canvas != null)
+            foreach (Transform t in canvas.rootCanvas.GetComponentsInChildren<Transform>(true))
+                if (t.name == "HUD_Status") { hudDeStatus = t; break; }
+        if (hudDeStatus == null || !hudDeStatus.gameObject.activeInHierarchy || !(hudDeStatus is RectTransform rt)) return false;
+        tela = NaTela(rt);
+        return true;
+    }
+
+    private static Rect NaTela(RectTransform rt)
+    {
+        var cantos = new Vector3[4];
+        rt.GetWorldCorners(cantos); // canvas Screen Space Overlay: já em pixels
+        return Rect.MinMaxRect(cantos[0].x, cantos[0].y, cantos[2].x, cantos[2].y);
     }
 }

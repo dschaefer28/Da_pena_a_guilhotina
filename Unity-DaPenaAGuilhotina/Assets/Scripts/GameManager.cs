@@ -168,9 +168,9 @@ public class GameManager : MonoBehaviour
     private void VincularDependenciasLocais()
     {
         if (inventoryManager == null)
-            inventoryManager = FindObjectOfType<InventoryManager>(true);
+            inventoryManager = FindAnyObjectByType<InventoryManager>(FindObjectsInactive.Include);
         if (dialogueSystem == null)
-            dialogueSystem = FindObjectOfType<DialogueSystem>(true);
+            dialogueSystem = FindAnyObjectByType<DialogueSystem>(FindObjectsInactive.Include);
     }
 
     public void ForcarAtualizacaoUI()

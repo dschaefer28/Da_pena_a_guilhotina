@@ -164,7 +164,7 @@ public class TribunalManager : MonoBehaviour
         },
     };
 
-    public string cenaDoMenu = "menu principal";
+    public string cenaDoMenu = PauseMenu.CenaDoMenu;
 
     [Header("Visual")]
     public TMP_FontAsset fonte;
@@ -174,6 +174,11 @@ public class TribunalManager : MonoBehaviour
     private static readonly Color CorTexto = new Color(0.91f, 0.85f, 0.71f);
     private static readonly Color CorPainel = new Color(0.10f, 0.07f, 0.06f, 0.92f);
     private static readonly Color CorBotao = new Color(0.25f, 0.18f, 0.13f);
+    // Botão de ação (mesma cor do "Continuar" do tutorial) com moldura dourada: o "Encerrar a defesa" parecia texto solto.
+    private static readonly Color CorBotaoDeAcao = new Color(0.45f, 0.20f, 0.15f);
+    private static readonly Color CorMoldura = new Color(0.98f, 0.85f, 0.55f);
+    // Prova já apresentada: fundo esverdeado e opaco, com a etiqueta "Apresentada" (antes só ficava um pouco mais escura).
+    private static readonly Color CorApresentada = new Color(0.20f, 0.27f, 0.15f);
     private static readonly Color CorCalma = new Color(0.42f, 0.56f, 0.31f);
     private static readonly Color CorFuria = new Color(0.70f, 0.15f, 0.12f);
     private const float Limite = 100f;
@@ -285,6 +290,7 @@ public class TribunalManager : MonoBehaviour
     {
         if (ocupado || vereditoIniciado || prova.botao == null || !prova.botao.interactable) return;
         prova.botao.interactable = false;
+        MarcarComoApresentada(prova);
         apresentados++;
         AtualizarContador();
 
@@ -303,6 +309,23 @@ public class TribunalManager : MonoBehaviour
         List<string> falas = delta < -3f ? reacoesFavoraveis : delta > 3f ? reacoesHostis : reacoesNeutras;
         textoReacao.text = cabecalho + Formatar(Sortear(falas), juiz, prova.nome);
         StartCoroutine(AnimarBarra(alvo));
+    }
+
+    // Sem a transição de cor do botão desativado (que só a escurecia um pouco e a deixava translúcida): fundo e etiqueta
+    // próprios, que continuam iguais quando o veredito desativa as outras provas.
+    private static void MarcarComoApresentada(Prova prova)
+    {
+        prova.botao.transition = Selectable.Transition.None;
+        var fundo = prova.botao.GetComponent<Image>();
+        if (fundo != null)
+        {
+            // O "interactable = false" já começou a animar o tom de desativado (cinza, alpha 0,45), e trocar a transição
+            // para None não para essa animação: sem isto o fundo verde ficava escuro e translúcido.
+            fundo.CrossFadeColor(Color.white, 0f, true, true);
+            fundo.color = CorApresentada;
+        }
+        var rotulo = prova.botao.transform.Find("Rotulo")?.GetComponent<TextMeshProUGUI>();
+        if (rotulo != null) rotulo.text = $"{prova.nome}\n<size=70%><color=#A5D6A7><b>Apresentada</b></color></size>";
     }
 
     private void EncerrarDefesa()
@@ -447,13 +470,28 @@ public class TribunalManager : MonoBehaviour
     {
         textoContador.text = $"Argumentos: {apresentados}/{totalDeArgumentos}";
         if (botaoEncerrar != null && !vereditoIniciado)
-            botaoEncerrar.interactable = PodeEncerrar(apresentados, totalDeArgumentos, minimoParaEncerrar);
+        {
+            bool pode = PodeEncerrar(apresentados, totalDeArgumentos, minimoParaEncerrar);
+            botaoEncerrar.interactable = pode;
+            // Desativado, o botão diz por quê (antes só ficava apagado e parecia um texto qualquer).
+            int faltam = Mathf.Clamp(minimoParaEncerrar, 1, Mathf.Max(1, totalDeArgumentos)) - apresentados;
+            var rotulo = botaoEncerrar.transform.Find("Rotulo")?.GetComponent<TextMeshProUGUI>();
+            if (rotulo != null)
+                rotulo.text = pode || faltam <= 0 ? "<b>Encerrar a defesa</b>"
+                    : $"<b>Encerrar a defesa</b>\n<size=65%>apresente mais {faltam} prova{(faltam > 1 ? "s" : string.Empty)}</size>";
+        }
     }
 
     // ===== Fim =====
 
     private void MostrarFim(DesfechoDaRota desfecho)
     {
+        // Fim de jogo registrado no save (relatório de 28/09, item 21). Só numa campanha de verdade: com a cena aberta
+        // direto no Editor (rota de teste) nada é gravado.
+        GameManager gm = GameManager.Instance;
+        if (gm != null && gm.rotaFinal != RotaFinal.Nenhuma)
+            SistemaDeSave.RegistrarFimDeJogo(rota, reuAbsolvido, desfecho != null ? desfecho.titulo : null);
+
         RectTransform tela = Painel("TelaFinal", raiz, Vector2.zero, Vector2.one, Color.black);
         Texto("Fim", tela, new Vector2(0.1f, 0.6f), new Vector2(0.9f, 0.75f), 72f, "FIM");
         Texto("Titulo", tela, new Vector2(0.1f, 0.45f), new Vector2(0.9f, 0.6f), 48f, desfecho != null ? desfecho.titulo : string.Empty);
@@ -561,6 +599,7 @@ public class TribunalManager : MonoBehaviour
 
         textoContador = Texto("Contador", raiz, new Vector2(0.78f, 0.22f), new Vector2(0.95f, 0.28f), 26f, string.Empty);
         botaoEncerrar = Botao("Encerrar", raiz, new Vector2(0.78f, 0.1f), new Vector2(0.95f, 0.2f), "Encerrar a defesa", null);
+        EstiloDeBotaoDeAcao(botaoEncerrar);
         botaoEncerrar.onClick.AddListener(EncerrarDefesa);
 
         // Cutscene própria: montada inativa para receber a fonte antes do Awake.
@@ -622,5 +661,20 @@ public class TribunalManager : MonoBehaviour
         }
         Texto("Rotulo", rt, new Vector2(inicioTexto, 0.05f), new Vector2(0.97f, 0.95f), 28f, rotulo);
         return botao;
+    }
+
+    // Fundo de botão de ação, moldura dourada e, desativado, cinza opaco (não some no fundo escuro do salão).
+    private static void EstiloDeBotaoDeAcao(Button botao)
+    {
+        var fundo = botao.GetComponent<Image>();
+        fundo.color = CorBotaoDeAcao;
+        var moldura = botao.gameObject.AddComponent<Outline>();
+        moldura.effectColor = CorMoldura;
+        moldura.effectDistance = new Vector2(3f, -3f);
+        ColorBlock cores = botao.colors;
+        cores.disabledColor = new Color(0.55f, 0.55f, 0.55f, 1f);
+        botao.colors = cores;
+        var rotulo = botao.transform.Find("Rotulo")?.GetComponent<TextMeshProUGUI>();
+        if (rotulo != null) rotulo.color = Color.white;
     }
 }

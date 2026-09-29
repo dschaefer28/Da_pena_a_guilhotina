@@ -23,6 +23,13 @@ public class CaseSelectionUI : MonoBehaviour
              "caber (nunca passa da largura original) e o Fechar fica no canto superior direito, dentro da área segura.")]
     public bool ajustarATela = true;
     [Min(0f)] public float margemDaTela = 24f;
+    [Tooltip("Cartões lado a lado em cada linha. Os casos de uma fase (até três) ficam todos visíveis de uma vez; antes, " +
+             "empilhados na largura toda, só cabia um cartão e meio numa tela 1920 x 1080.")]
+    [Min(1)] public int cartoesPorLinha = 3;
+    [Tooltip("Escurece o cartão de um caso concluído ou bloqueado, sem deixá-lo translúcido.")]
+    public Color corDoVeuDeBloqueio = new Color(0f, 0f, 0f, 0.7f);
+
+    private readonly List<LayoutElement> cartoesNaTela = new List<LayoutElement>();
 
     /// <summary>Painel da mesa aberto (outros botões de tela, como o da Biblioteca, se escondem).</summary>
     public static bool Aberta { get; private set; }
@@ -106,7 +113,7 @@ public class CaseSelectionUI : MonoBehaviour
     {
         ultimoTamanhoDoCanvas = TamanhoDoCanvas();
         ultimaAreaSegura = Screen.safeArea;
-        if (!ajustarATela) return;
+        if (!ajustarATela) { AjustarLarguraDosCartoes(); return; }
 
         var painel = (RectTransform)transform;
         Canvas canvas = GetComponentInParent<Canvas>();
@@ -157,6 +164,52 @@ public class CaseSelectionUI : MonoBehaviour
             // Centrada na faixa livre (entre o Fechar e a base), sem invadir a área segura dos lados.
             areaDosCartoes.anchoredPosition = new Vector2((esquerda - direita) * 0.5f, topoDosCartoes - alturaDaArea * 0.5f);
         }
+        AjustarLarguraDosCartoes();
+    }
+
+    // Largura de uma coluna: a área dos cartões dividida por cartoesPorLinha (um caso só, como na Fase 4, fica centrado
+    // com a mesma largura, em vez de esticar na tela toda).
+    private void AjustarLarguraDosCartoes()
+    {
+        if (cardsContainer == null || cartoesNaTela.Count == 0) return;
+        var conteudo = (RectTransform)cardsContainer;
+        var layout = cardsContainer.GetComponent<HorizontalOrVerticalLayoutGroup>();
+        float util = conteudo.rect.width - (layout != null ? layout.padding.horizontal : 0);
+        float espaco = layout != null ? layout.spacing : 24f;
+        float largura = Mathf.Floor((util - espaco * (cartoesPorLinha - 1)) / cartoesPorLinha);
+        if (largura <= 0f) return;
+        foreach (LayoutElement cartao in cartoesNaTela)
+            if (cartao != null) cartao.minWidth = cartao.preferredWidth = largura;
+    }
+
+    private Transform NovaLinhaDeCartoes()
+    {
+        var linha = new GameObject("LinhaDeCartoes", typeof(RectTransform), typeof(HorizontalLayoutGroup));
+        linha.layer = cardsContainer.gameObject.layer;
+        linha.transform.SetParent(cardsContainer, false);
+        var layout = linha.GetComponent<HorizontalLayoutGroup>();
+        var colunas = cardsContainer.GetComponent<HorizontalOrVerticalLayoutGroup>();
+        layout.spacing = colunas != null ? colunas.spacing : 24f;
+        layout.childAlignment = TextAnchor.UpperCenter;
+        layout.childControlWidth = layout.childControlHeight = true;
+        layout.childForceExpandWidth = false;
+        layout.childForceExpandHeight = true; // cartões da mesma linha com a mesma altura: os "Aceitar Caso" alinhados
+        return linha.transform;
+    }
+
+    // Caso concluído ou bloqueado: um véu escuro por cima do cartão (que continua opaco), em vez de um cartão translúcido.
+    private void Escurecer(GameObject cartao)
+    {
+        var veu = new GameObject("VeuDeBloqueio", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
+        veu.layer = cartao.layer;
+        veu.transform.SetParent(cartao.transform, false);
+        veu.GetComponent<LayoutElement>().ignoreLayout = true;
+        var rt = (RectTransform)veu.transform;
+        rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero;
+        rt.SetAsLastSibling();
+        var imagem = veu.GetComponent<Image>();
+        imagem.color = corDoVeuDeBloqueio;
+        imagem.raycastTarget = false;
     }
 
     private void GerarCartoesNaTela()
@@ -175,13 +228,23 @@ public class CaseSelectionUI : MonoBehaviour
         if (casoEmAndamento)
             AvisoNaTela.Mostrar($"Termine o caso atual antes de aceitar outro: {(gm.casoEscolhido.caseTitle ?? gm.casoEscolhido.name).Trim()}");
 
-        // 2. Loop de Criação: Roda uma vez para cada caso da fase atual
+        // 2. Loop de Criação: Roda uma vez para cada caso da fase atual, em linhas de até cartoesPorLinha cartões
+        cartoesNaTela.Clear();
+        Transform linhaAtual = null;
+        int naLinha = 0;
         foreach (CaseData caso in availableCases)
         {
             if (!CasoVisivel(caso, gm)) continue;
 
-            // Tira a cópia do prefab e joga dentro da AreaDosCartoes
-            GameObject novoCartao = Instantiate(cardPrefab, cardsContainer);
+            if (linhaAtual == null || naLinha >= cartoesPorLinha) { linhaAtual = NovaLinhaDeCartoes(); naLinha = 0; }
+            naLinha++;
+
+            // Tira a cópia do prefab e joga dentro da linha, na AreaDosCartoes
+            GameObject novoCartao = Instantiate(cardPrefab, linhaAtual);
+            LayoutElement coluna = novoCartao.GetComponent<LayoutElement>();
+            if (coluna == null) coluna = novoCartao.AddComponent<LayoutElement>();
+            coluna.flexibleWidth = 0f;
+            cartoesNaTela.Add(coluna);
 
             // 3. Busca os componentes dentro da cópia exata que acabamos de criar
             // ATENÇÃO: Os nomes entre aspas devem ser exatamente iguais aos nomes na Hierarchy!
@@ -224,12 +287,7 @@ public class CaseSelectionUI : MonoBehaviour
             if (titulo != null && estado != EstadoDoCaso.Disponivel)
                 titulo.text += estado == EstadoDoCaso.Concluido ? " (concluído)"
                              : estado == EstadoDoCaso.Bloqueado ? " (bloqueado)" : " (em andamento)";
-            if (estado == EstadoDoCaso.Concluido || estado == EstadoDoCaso.Bloqueado)
-            {
-                CanvasGroup grupoDoCartao = novoCartao.GetComponent<CanvasGroup>();
-                if (grupoDoCartao == null) grupoDoCartao = novoCartao.AddComponent<CanvasGroup>();
-                grupoDoCartao.alpha = 0.45f;
-            }
+            if (estado == EstadoDoCaso.Concluido || estado == EstadoDoCaso.Bloqueado) Escurecer(novoCartao);
 
             if (botaoAceitar != null)
             {
@@ -239,6 +297,7 @@ public class CaseSelectionUI : MonoBehaviour
                 if (podeAceitar) botaoAceitar.onClick.AddListener(() => ConfirmarEscolha(caso));
             }
         }
+        AjustarLarguraDosCartoes();
     }
 
     /// <summary>Bloqueado = outro caso da fase já foi escolhido (em andamento) ou a fase já tem os casos que exige.</summary>

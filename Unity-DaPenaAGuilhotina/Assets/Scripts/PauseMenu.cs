@@ -137,14 +137,18 @@ public class PauseMenu : MonoBehaviour
         if (opções != null) opções.SetActive(false);
     }
 
+    /// <summary>Nome exato da cena do menu (Build Settings: Assets/Scenes/menu principal.unity). Antes o pause pedia
+    /// "Menu principal": funcionava só porque a busca de cena por nome ignora maiúsculas.</summary>
+    public const string CenaDoMenu = "menu principal";
+
     public void MainMenuButton()
     {
 
         Time.timeScale = 1;
         if (SceneTransitionManager.Instance != null)
-            SceneTransitionManager.Instance.LoadScene("Menu principal");
+            SceneTransitionManager.Instance.LoadScene(CenaDoMenu);
         else
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Menu principal");
+            UnityEngine.SceneManagement.SceneManager.LoadScene(CenaDoMenu);
     }
 
     public void TogglePauseMobile()

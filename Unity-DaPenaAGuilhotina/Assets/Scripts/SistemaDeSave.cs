@@ -24,7 +24,8 @@ public static class SistemaDeSave
     // 5: histórico guarda também o que foi aplicado de fato (depois do limite 0–100)
     // 6: linha editorial da publicação (tom, modificador e agravamento) e da revelação pendente
     // 7: dedução ativa (hipóteses do jogador por caso e pista, e quadros confirmados)
-    public const int VersaoAtual = 7;
+    // 8: fim de jogo registrado depois do tribunal (desfecho da rota e destino do réu)
+    public const int VersaoAtual = 8;
     private const string CenaPadrao = "Jogo";
 
     [Serializable]
@@ -104,11 +105,23 @@ public static class SistemaDeSave
         // v7 (ausente em saves antigos = nenhuma hipótese e nenhum quadro confirmado)
         public List<MarcacaoDeDeducao> marcacoesDeDeducao = new List<MarcacaoDeDeducao>();
         public List<string> deducoesConfirmadas = new List<string>();
+
+        // v8 (ausente em saves antigos = partida em andamento): o tribunal terminou e o jogo acabou. Não há o que continuar.
+        public bool jogoConcluido;
+        public RotaFinal desfechoRota;
+        public bool desfechoReuAbsolvido;
+        public string desfechoTitulo;
     }
 
     public static string CaminhoDoArquivo => Path.Combine(Application.persistentDataPath, "save.json");
 
     public static bool ExisteSave => File.Exists(CaminhoDoArquivo);
+
+    /// <summary>Existe um save de uma partida que ainda não terminou (o botão Continuar do menu).</summary>
+    public static bool ExistePartidaEmAndamento => ExisteSave && PodeContinuar(Ler());
+
+    /// <summary>Um save continua a partida se foi lido e o jogo não terminou no tribunal.</summary>
+    public static bool PodeContinuar(DadosDeSave dados) => dados != null && !dados.jogoConcluido;
 
     // Save lido pelo Continuar, esperando o GameManager/TutorialManager da cena nova nascerem.
     private static DadosDeSave dadosPendentesGameManager;
@@ -128,12 +141,47 @@ public static class SistemaDeSave
         // O inventário da tela é a fonte mais atual (o inventarioSalvo só é atualizado ao trocar de cena).
         if (gm.inventoryManager != null) gm.inventoryManager.SalvarEstadoAtual();
 
+        Gravar(DadosDaPartidaAtual(gm));
+    }
+
+    /// <summary>
+    /// Fim de jogo (depois do veredito do tribunal): grava o estado final com o desfecho. Antes o save ficava parado no
+    /// checkpoint anterior ao tribunal, e o Continuar levava de volta para antes do julgamento de um jogo já terminado.
+    /// </summary>
+    public static void RegistrarFimDeJogo(RotaFinal rota, bool reuAbsolvido, string tituloDoDesfecho)
+    {
+        GameManager gm = GameManager.Instance;
+        if (gm == null)
+        {
+            Debug.LogWarning("[SistemaDeSave] Sem GameManager na cena: o fim de jogo não foi registrado.");
+            return;
+        }
+        if (gm.inventoryManager != null) gm.inventoryManager.SalvarEstadoAtual();
+        DadosDeSave dados = DadosDaPartidaAtual(gm);
+        MarcarFimDeJogo(dados, rota, reuAbsolvido, tituloDoDesfecho);
+        Gravar(dados);
+    }
+
+    /// <summary>Marca os dados como jogo concluído, com o desfecho (sem tocar em disco).</summary>
+    public static void MarcarFimDeJogo(DadosDeSave dados, RotaFinal rota, bool reuAbsolvido, string tituloDoDesfecho)
+    {
+        dados.jogoConcluido = true;
+        dados.desfechoRota = rota;
+        dados.desfechoReuAbsolvido = reuAbsolvido;
+        dados.desfechoTitulo = tituloDoDesfecho;
+    }
+
+    private static DadosDeSave DadosDaPartidaAtual(GameManager gm)
+    {
         DadosDeSave dados = CapturarDados(gm, SceneManager.GetActiveScene().name,
             TutorialManager.Instance != null ? TutorialManager.Instance.IndiceAtual : 0);
-
         foreach (string chave in ProgressoDoJogo.ChavesDaPartida)
             if (PlayerPrefs.GetInt(chave, 0) == 1) dados.chavesMarcadas.Add(chave);
+        return dados;
+    }
 
+    private static void Gravar(DadosDeSave dados)
+    {
         try
         {
             // Grava num arquivo temporário e só depois troca: se o jogo fechar no meio, o save antigo continua inteiro.
@@ -141,7 +189,9 @@ public static class SistemaDeSave
             File.WriteAllText(temporario, JsonUtility.ToJson(dados, true));
             if (File.Exists(CaminhoDoArquivo)) File.Delete(CaminhoDoArquivo);
             File.Move(temporario, CaminhoDoArquivo);
-            Debug.Log($"[SistemaDeSave] Jogo salvo na cena '{dados.cena}' ({CaminhoDoArquivo}).");
+            Debug.Log(dados.jogoConcluido
+                ? $"[SistemaDeSave] Fim de jogo registrado (rota {dados.desfechoRota}, réu {(dados.desfechoReuAbsolvido ? "absolvido" : "condenado")}) em {CaminhoDoArquivo}."
+                : $"[SistemaDeSave] Jogo salvo na cena '{dados.cena}' ({CaminhoDoArquivo}).");
         }
         catch (Exception e)
         {
@@ -210,11 +260,12 @@ public static class SistemaDeSave
 
     // ===== Carregar =====
 
-    /// <summary>Descarta a partida atual, restaura o save e carrega a cena salva. Falso se não houver save válido.</summary>
+    /// <summary>Descarta a partida atual, restaura o save e carrega a cena salva. Falso se não houver save válido ou se
+    /// o save for de um jogo já terminado.</summary>
     public static bool Carregar()
     {
         DadosDeSave dados = Ler();
-        if (dados == null) return false;
+        if (!PodeContinuar(dados)) return false; // sem save válido, ou o jogo já terminou no tribunal
 
         ProgressoDoJogo.ComecarNovoJogo();
         foreach (string chave in dados.chavesMarcadas) PlayerPrefs.SetInt(chave, 1);

@@ -41,7 +41,8 @@ public class QuadroDeDeducaoUI : MonoBehaviour
     public static bool BloqueiaPausa => Aberto || frameEmQueFechou == Time.frameCount;
 
     private static readonly Color CorTexto = new Color(0.93f, 0.9f, 0.84f);
-    private static readonly Color CorPainel = new Color(0.11f, 0.08f, 0.07f, 0.97f);
+    // Opaco: no espaço de cor Linear do projeto, alpha 0,97 ainda deixava o cenário aparecer por trás.
+    private static readonly Color CorPainel = new Color(0.11f, 0.08f, 0.07f, 1f);
     private static readonly Color CorLinha = new Color(0.18f, 0.13f, 0.11f, 1f);
     private static readonly Color CorBotao = new Color(0.36f, 0.25f, 0.16f, 1f);
     private static readonly Color CorMarcado = new Color(0.62f, 0.46f, 0.22f, 1f);

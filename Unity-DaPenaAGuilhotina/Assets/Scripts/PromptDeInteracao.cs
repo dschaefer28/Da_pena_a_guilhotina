@@ -9,6 +9,8 @@ using UnityEngine.UI;
 /// do PlayerInteraction; o visual é montado em runtime (canvas em world space), sem arte externa.
 /// </summary>
 [RequireComponent(typeof(PlayerInteraction))]
+// Depois das câmeras (CameraFollow, CinemachineBrain) no LateUpdate: o desvio do relógio projeta com a câmera do frame atual.
+[DefaultExecutionOrder(1000)]
 public class PromptDeInteracao : MonoBehaviour
 {
     [Tooltip("Fonte do texto. Vazio = fonte padrão do TextMesh Pro.")]
@@ -62,6 +64,8 @@ public class PromptDeInteracao : MonoBehaviour
         texto.text = tecla;
         larguraTecla.preferredWidth = tecla.Length <= 3 ? larguraTecla.preferredHeight : -1f;
         canvas.gameObject.SetActive(true);
+        // A tecla nasce com o tamanho padrão (100 x 100) até o primeiro layout: o desvio do relógio precisa do tamanho real.
+        LayoutRebuilder.ForceRebuildLayoutImmediate(raiz);
         Posicionar();
     }
 
@@ -88,7 +92,29 @@ public class PromptDeInteracao : MonoBehaviour
         Vector3 topoJogador = TopoVisual(renderersDoJogador, jogador.gameObject);
         if (topoJogador.y > topo.y) topo.y = topoJogador.y;
 
-        canvas.transform.position = topo + Vector3.up * alturaAcimaDoAlvo;
+        Vector3 posicao = topo + Vector3.up * alturaAcimaDoAlvo;
+        canvas.transform.position = FugirDoRelogio(posicao);
+    }
+
+    private const float MargemAbaixoDoRelogio = 10f; // pixels de tela
+
+    // Ao chegar pela porta nas cenas de investigação, o topo da porta fica na altura do relógio de horas (topo central):
+    // o "E" aparecia atrás dele. Se a tecla cair sobre o relógio, desce até logo abaixo dele.
+    private Vector3 FugirDoRelogio(Vector3 posicao)
+    {
+        Camera cam = Camera.main;
+        if (cam == null || !HudDoRelogio.RetanguloNaTela(out Rect relogio)) return posicao;
+
+        var tecla = (RectTransform)larguraTecla.transform;
+        Vector3 cantoBaixo = cam.WorldToScreenPoint(posicao);
+        Vector3 cantoCima = cam.WorldToScreenPoint(posicao + Vector3.up * (tecla.rect.height * escala));
+        float meiaLargura = Mathf.Abs(cam.WorldToScreenPoint(posicao + Vector3.right * (tecla.rect.width * 0.5f * escala)).x - cantoBaixo.x);
+        Rect naTela = Rect.MinMaxRect(cantoBaixo.x - meiaLargura, cantoBaixo.y, cantoBaixo.x + meiaLargura, cantoCima.y);
+        if (!naTela.Overlaps(relogio) || cantoCima.y - cantoBaixo.y <= 0f) return posicao;
+
+        float descerEmPixels = cantoCima.y - (relogio.yMin - MargemAbaixoDoRelogio);
+        float unidadesPorPixel = (tecla.rect.height * escala) / (cantoCima.y - cantoBaixo.y);
+        return posicao - Vector3.up * (descerEmPixels * unidadesPorPixel);
     }
 
     private static Vector3 TopoVisual(Renderer[] renderers, GameObject fallback)

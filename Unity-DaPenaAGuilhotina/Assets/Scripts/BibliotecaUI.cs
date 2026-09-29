@@ -29,7 +29,8 @@ public class BibliotecaUI : MonoBehaviour
     public static bool BloqueiaPausa => Aberta || frameEmQueFechou == Time.frameCount;
 
     private static readonly Color CorTexto = new Color(0.93f, 0.9f, 0.84f);
-    private static readonly Color CorPainel = new Color(0.11f, 0.08f, 0.07f, 0.97f);
+    // Opaco: no espaço de cor Linear do projeto, alpha 0,97 ainda deixava o cenário aparecer por trás.
+    private static readonly Color CorPainel = new Color(0.11f, 0.08f, 0.07f, 1f);
     private static readonly Color CorLinha = new Color(0.18f, 0.13f, 0.11f, 1f);
     private static readonly Color CorBotao = new Color(0.36f, 0.25f, 0.16f, 1f);
 
@@ -190,9 +191,13 @@ public class BibliotecaUI : MonoBehaviour
             default: situacao = "<color=#9E9E9E>Indisponível</color>"; break;
         }
         var preco = Texto("Preco", linha.transform, 26f, $"<b>{oferta.preco} de ouro</b>\n<size=80%>{situacao}</size>", TextAlignmentOptions.Center);
+        // Sem largura mínima, a descrição (largura preferida enorme) espremia o preço e o botão até quebrar as palavras
+        // no meio ("COM/PRAR", "OUR/O"). A descrição é que encolhe e quebra em mais linhas.
+        preco.GetComponent<LayoutElement>().minWidth = 240f;
         preco.GetComponent<LayoutElement>().preferredWidth = 260f;
 
         Button comprar = Botao("Comprar", linha.transform, estado == GameManager.EstadoDaOferta.Comprada ? "Comprado" : "Comprar");
+        comprar.GetComponent<LayoutElement>().minWidth = 200f;
         comprar.GetComponent<LayoutElement>().preferredWidth = 220f;
         comprar.interactable = podeComprar;
         comprar.onClick.AddListener(() => Comprar(oferta, comprar));
@@ -263,13 +268,22 @@ public class BibliotecaUI : MonoBehaviour
         v.padding = new RectOffset(32, 32, 24, 24); v.spacing = 14f;
         v.childControlWidth = v.childControlHeight = true; v.childForceExpandWidth = true; v.childForceExpandHeight = false;
 
+        // Altura fixa e sem esticar os filhos na altura (como no Quadro de pistas): antes o título inflava a faixa e o
+        // Fechar esticava junto (200 x 267), deixando uma faixa vazia sob o título.
         var cabecalho = new GameObject("Cabecalho", typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
         cabecalho.transform.SetParent(painel.transform, false);
-        cabecalho.GetComponent<LayoutElement>().minHeight = 72f;
+        var leCabecalho = cabecalho.GetComponent<LayoutElement>();
+        leCabecalho.minHeight = leCabecalho.preferredHeight = 72f;
+        leCabecalho.flexibleHeight = 0f;
         var hc = cabecalho.GetComponent<HorizontalLayoutGroup>();
-        hc.childControlWidth = hc.childControlHeight = true; hc.childForceExpandWidth = false; hc.spacing = 16f;
-        Texto("Titulo", cabecalho.transform, 44f, "<b>Biblioteca</b>", TextAlignmentOptions.MidlineLeft).GetComponent<LayoutElement>().flexibleWidth = 1f;
+        hc.childControlWidth = hc.childControlHeight = true; hc.childForceExpandWidth = hc.childForceExpandHeight = false; hc.spacing = 16f;
+        hc.childAlignment = TextAnchor.MiddleLeft;
+        var tituloJanela = Texto("Titulo", cabecalho.transform, 44f, "<b>Biblioteca</b>", TextAlignmentOptions.MidlineLeft);
+        tituloJanela.GetComponent<LayoutElement>().flexibleWidth = 1f;
+        tituloJanela.textWrappingMode = TextWrappingModes.NoWrap;
+        tituloJanela.overflowMode = TextOverflowModes.Ellipsis;
         botaoFechar = Botao("Fechar", cabecalho.transform, "Fechar");
+        botaoFechar.GetComponent<LayoutElement>().minWidth = 160f;
         botaoFechar.GetComponent<LayoutElement>().preferredWidth = 200f;
         botaoFechar.onClick.AddListener(Fechar);
 

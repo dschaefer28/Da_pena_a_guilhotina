@@ -62,8 +62,12 @@ public class CaseData : ScriptableObject
     }
 
 #if UNITY_EDITOR
+    // Só assets salvos (cópias em memória, como as dos testes, não são o que o jogador vê). Título e rota só são exigidos
+    // dos casos que vão à Mesa (Fase 2 em diante): o caso do tutorial (Fase 1) já começa escolhido e nunca aparece na mesa.
     private void OnValidate()
     {
+        if (fase < 2 || !UnityEditor.EditorUtility.IsPersistent(this)) return;
+
         if (string.IsNullOrWhiteSpace(caseTitle))
             Debug.LogWarning($"[CaseData] '{name}' está sem caseTitle.", this);
 

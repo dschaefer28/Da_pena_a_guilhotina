@@ -186,6 +186,7 @@ GameObject:
   m_Component:
   - component: {fileID: 208067578}
   - component: {fileID: 208067577}
+  - component: {fileID: 208067579}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -259,6 +260,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &208067579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208067576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!1001 &529279280
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -355,6 +370,7 @@ MonoBehaviour:
   - nome: Couthon
     retrato: {fileID: 0}
   maxArgumentos: 5
+  minimoParaEncerrar: 2
   duracaoDaBarra: 0.8
   reacoesFavoraveis:
   - '{juiz}: Hm. Isso pesa a favor do acusado.'

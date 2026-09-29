@@ -342,8 +342,9 @@ public class TutorialManager : MonoBehaviour
 
         if (SistemaDeSave.ConsumirEtapaDoTutorial(out int etapaSalva))
         {
-            // Continuar do menu: retoma exatamente a etapa em que o jogo foi salvo.
-            indiceAtual = Mathf.Clamp(etapaSalva, 0, etapas.Count);
+            // Continuar do menu: retoma a etapa em que o jogo foi salvo (o save é aplicado ao GameManager no Awake dele).
+            GameManager gm = GameManager.Instance;
+            indiceAtual = EtapaAoCarregar(etapaSalva, etapas.Count, IndiceDaEtapa(EtapaMesaDeCasos), gm != null && gm.TutorialConcluido);
         }
         else
         {
@@ -356,6 +357,27 @@ public class TutorialManager : MonoBehaviour
 
         Debug.Log($"[TutorialManager] Iniciado. Etapa atual: {(EtapaAtualId ?? "(nenhuma — tutorial concluído/pulado)")}. " +
                   $"Se 'forcarReiniciar' estiver marcado e você já tiver terminado antes, isso é esperado.");
+    }
+
+    /// <summary>Etapa em que o tutorial para quando o caso do tutorial termina (a volta ao escritório com a mesa liberada).</summary>
+    public const string EtapaMesaDeCasos = "mesa_de_casos";
+
+    /// <summary>
+    /// Etapa ao carregar um save. Saves antigos (v6) gravaram a etapa do momento, e alguns ficaram numa etapa anterior à
+    /// mesa (ex.: "desça ao porão") com o tutorial já concluído no GameManager: o jogo pedia de novo a prensa numa fase
+    /// em que o alçapão responde "faltam pistas". Com o tutorial concluído, o tutorial vai ao menos até a mesa de casos.
+    /// </summary>
+    public static int EtapaAoCarregar(int etapaSalva, int totalDeEtapas, int indiceDaMesa, bool tutorialConcluido)
+    {
+        int etapa = Mathf.Clamp(etapaSalva, 0, totalDeEtapas);
+        if (tutorialConcluido && indiceDaMesa >= 0) etapa = Mathf.Max(etapa, Mathf.Min(indiceDaMesa, totalDeEtapas));
+        return etapa;
+    }
+
+    private int IndiceDaEtapa(string etapaId)
+    {
+        if (etapas == null) return -1;
+        return etapas.FindIndex(e => e != null && e.etapaId == etapaId);
     }
 
     // Disparado a cada troca de cena (ex: Jogo -> Porao). Reencontra os sistemas locais da cena nova

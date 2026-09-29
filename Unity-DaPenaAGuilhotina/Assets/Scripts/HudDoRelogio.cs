@@ -28,6 +28,18 @@ public class HudDoRelogio : MonoBehaviour
         }
     }
 
+    /// <summary>Retângulo do relógio em pixels de tela, se ele estiver visível. O aviso "E" dos objetos (canvas no mundo,
+    /// desenhado por baixo da UI) desce para não ficar atrás das horas.</summary>
+    public static bool RetanguloNaTela(out Rect tela)
+    {
+        tela = default;
+        if (atual == null || atual.painel == null || !atual.painel.activeInHierarchy) return false;
+        var cantos = new Vector3[4];
+        ((RectTransform)atual.painel.transform).GetWorldCorners(cantos); // canvas Screen Space Overlay: já em pixels
+        tela = Rect.MinMaxRect(cantos[0].x, cantos[0].y, cantos[2].x, cantos[2].y);
+        return true;
+    }
+
     private void OnEnable()
     {
         atual = this;

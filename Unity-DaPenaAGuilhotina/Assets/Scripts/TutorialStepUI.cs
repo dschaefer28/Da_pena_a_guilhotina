@@ -171,6 +171,7 @@ public class TutorialStepUI : MonoBehaviour
         if (string.IsNullOrEmpty(dica) || painelPopup == null || TelaOcupada()) return false;
 
         mostrandoDica = true;
+        iconeDaEtapa = false;
         if (imagemIcone != null) imagemIcone.gameObject.SetActive(false);
         if (textoMensagem != null) textoMensagem.text = DispositivoDeControle.Substituir(dica);
         DefinirTitulo("Dica");
@@ -260,10 +261,20 @@ public class TutorialStepUI : MonoBehaviour
         }
         popup.anchorMin = ancoraMinOriginal; popup.anchorMax = ancoraMaxOriginal; popup.pivot = pivoOriginal;
         popup.anchoredPosition = posicaoOriginal; popup.sizeDelta = tamanhoOriginal;
+        // Fora do modo compacto, a coluna da esquerda volta a mostrar os glifos e o ícone da etapa.
+        if (containerGlifos != null) containerGlifos.gameObject.SetActive(glifosDaEtapa);
+        if (imagemIcone != null) imagemIcone.gameObject.SetActive(iconeDaEtapa);
 
         AfastarDoInventario(popup);
         EvitarControlesDeToque();
     }
+
+    // O que a etapa na tela mostra na coluna da esquerda (MontarGlifos / MostrarPopup / dica).
+    private bool glifosDaEtapa;
+    private bool iconeDaEtapa;
+
+    // Faixa do topo ocupada pela HUD de status (retrato e barras), que o popup compacto não pode cobrir.
+    private const float AlturaDaHudDoTopo = 270f;
 
     // Com a prensa aberta (etapas do porão) o inventário ocupa o centro da tela de cima a baixo, e o popup do
     // rodapé cobria justamente a lista onde a etapa manda clicar na pista. Nesse caso ele vai para a faixa
@@ -286,8 +297,76 @@ public class TutorialStepUI : MonoBehaviour
 
         popup.anchorMin = popup.anchorMax = popup.pivot = Vector2.zero;
         popup.anchoredPosition = new Vector2(MargemTela, MargemTela);
-        // Mais estreito, o texto quebra em mais linhas: um pouco mais de altura para não encolher a fonte.
-        popup.sizeDelta = new Vector2(Mathf.Min(tamanhoOriginal.x, livre), tamanhoOriginal.y + 60f);
+        float largura = Mathf.Min(tamanhoOriginal.x, livre);
+
+        // Estreito, a coluna de glifos (230) deixava ao texto menos que a largura mínima dele e o texto vazava da moldura.
+        // No modo compacto a coluna só fica se ainda couber ao lado do texto; senão some (o inventário está aberto; a etapa
+        // volta completa quando ele fechar). O popup cresce na altura até o texto caber no tamanho normal da fonte, sem
+        // passar da HUD do topo.
+        float altura = tamanhoOriginal.y;
+        if (textoMensagem != null && popup.parent is RectTransform pai)
+        {
+            RectTransform corpo = CorpoDoPopup(popup);
+            float margensDoCorpo = tamanhoOriginal.y - corpo.rect.height; // título em cima, botões embaixo
+            float larguraDoCorpo = largura - (tamanhoOriginal.x - corpo.rect.width);
+            float colunaEsquerda = LarguraDaColunaEsquerda(corpo);
+            bool cabeAoLado = colunaEsquerda <= 0f || larguraDoCorpo - colunaEsquerda >= LayoutUtility.GetMinWidth(textoMensagem.rectTransform);
+            if (!cabeAoLado) EsconderColunaEsquerda();
+            float larguraDoTexto = larguraDoCorpo - (cabeAoLado ? colunaEsquerda : 0f);
+
+            float alturaDoConteudo = textoMensagem.GetPreferredValues(textoMensagem.text, larguraDoTexto, 0f).y;
+            if (cabeAoLado && containerGlifos != null && containerGlifos.gameObject.activeSelf)
+                alturaDoConteudo = Mathf.Max(alturaDoConteudo, LayoutUtility.GetPreferredHeight((RectTransform)containerGlifos));
+            float maxima = pai.rect.height - AlturaDaHudDoTopo - 2f * MargemTela;
+            altura = Mathf.Clamp(alturaDoConteudo + margensDoCorpo + 12f, tamanhoOriginal.y, Mathf.Max(tamanhoOriginal.y, maxima));
+        }
+        else EsconderColunaEsquerda();
+        popup.sizeDelta = new Vector2(largura, altura);
+
+        // Da Fase 3 em diante a prensa mostra o painel Suporte justamente nessa faixa: se o popup compacto cair sobre
+        // qualquer coisa que o inventário desenha, ele não vai para lá (volta ao rodapé, como antes desta regra).
+        if (SobrepoeOInventario(RetanguloNaTela(popup), inventario.inventoryUI.transform))
+        {
+            popup.anchorMin = ancoraMinOriginal; popup.anchorMax = ancoraMaxOriginal; popup.pivot = pivoOriginal;
+            popup.anchoredPosition = posicaoOriginal; popup.sizeDelta = tamanhoOriginal;
+            if (containerGlifos != null) containerGlifos.gameObject.SetActive(glifosDaEtapa);
+            if (imagemIcone != null) imagemIcone.gameObject.SetActive(iconeDaEtapa);
+        }
+    }
+
+    private static bool SobrepoeOInventario(Rect popup, Transform inventario)
+    {
+        foreach (Graphic g in inventario.GetComponentsInChildren<Graphic>(false))
+            if (g.enabled && g.color.a > 0.01f && g.canvasRenderer.GetInheritedAlpha() > 0.01f && RetanguloNaTela(g.rectTransform).Overlaps(popup))
+                return true;
+        return false;
+    }
+
+    private void EsconderColunaEsquerda()
+    {
+        if (containerGlifos != null) containerGlifos.gameObject.SetActive(false);
+        if (imagemIcone != null) imagemIcone.gameObject.SetActive(false);
+    }
+
+    // Largura ocupada à esquerda do texto no corpo (glifos e ícone visíveis, com o espaçamento do layout).
+    private float LarguraDaColunaEsquerda(RectTransform corpo)
+    {
+        var layout = corpo.GetComponent<HorizontalLayoutGroup>();
+        float espaco = layout != null ? layout.spacing : 0f;
+        float total = 0f;
+        foreach (RectTransform filho in corpo)
+        {
+            if (filho == textoMensagem.rectTransform || !filho.gameObject.activeSelf) continue;
+            total += LayoutUtility.GetPreferredWidth(filho) + espaco;
+        }
+        return total;
+    }
+
+    // Área do texto e da coluna de glifos no popup (TutorialPopupBuilder: "Corpo"); sem ela, o próprio popup.
+    private RectTransform CorpoDoPopup(RectTransform popup)
+    {
+        RectTransform corpo = textoMensagem != null ? textoMensagem.transform.parent as RectTransform : null;
+        return corpo != null && corpo != popup && corpo.IsChildOf(popup) ? corpo : popup;
     }
 
     private void HandleInventarioAlternado(bool aberto)
@@ -328,6 +407,16 @@ public class TutorialStepUI : MonoBehaviour
         float escala = canvas != null ? canvas.rootCanvas.scaleFactor : 1f;
         float subir = (topoDosControles - telaPopup.yMin) / escala + 12f;
         popup.anchoredPosition = new Vector2(popup.anchoredPosition.x, yBase + subir);
+
+        // O popup compacto pode ter crescido na altura contando com a base no rodapé: depois de subir acima do joystick,
+        // o topo não pode passar da HUD (o texto encolhe pelo auto size, que já está ligado).
+        if (popup.parent is RectTransform pai && popup.pivot.y == 0f && popup.anchorMin.y == 0f)
+        {
+            float topoMaximo = pai.rect.height - AlturaDaHudDoTopo - MargemTela;
+            float alturaMaxima = topoMaximo - popup.anchoredPosition.y;
+            if (popup.sizeDelta.y > alturaMaxima)
+                popup.sizeDelta = new Vector2(popup.sizeDelta.x, Mathf.Max(Mathf.Min(tamanhoOriginal.y, popup.sizeDelta.y), alturaMaxima));
+        }
     }
 
     private static Rect RetanguloNaTela(RectTransform rt)
@@ -441,10 +530,11 @@ public class TutorialStepUI : MonoBehaviour
             return;
         }
 
+        iconeDaEtapa = etapa.icone != null;
         if (imagemIcone != null)
         {
             imagemIcone.sprite = etapa.icone;
-            imagemIcone.gameObject.SetActive(etapa.icone != null);
+            imagemIcone.gameObject.SetActive(iconeDaEtapa);
         }
 
         if (textoMensagem != null) textoMensagem.text = DispositivoDeControle.Substituir(etapa.mensagem);
@@ -485,6 +575,7 @@ public class TutorialStepUI : MonoBehaviour
             GlifoDeControle.Criar(containerGlifos, controle, fonte);
             algum = true;
         }
+        glifosDaEtapa = algum;
         containerGlifos.gameObject.SetActive(algum);
     }
 

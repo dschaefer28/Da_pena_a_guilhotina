@@ -1,16 +1,16 @@
 ﻿# Status de implementação — Da Pena à Guilhotina
 
-Atualizado em 27/09/2026 (Prompt 4, restante do Prompt 6 e Fase 3 com três casos, §13 a §16; Prompt 7, 6h nas Fases 2–4 e dedução desde a Fase 2, §17; **conteúdo narrativo do GDD nas Fases 2 a 4, §18**). Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminhos relativos a `Unity-DaPenaAGuilhotina/`.
+Atualizado em 28/09/2026 (Prompt 4, restante do Prompt 6 e Fase 3 com três casos, §13 a §16; Prompt 7, 6h nas Fases 2–4 e dedução desde a Fase 2, §17; conteúdo narrativo do GDD nas Fases 2 a 4, §18; **correções P0 1 e 2 do relatório de testes de 28/09: botão Continuar, confirmação do Novo Jogo e Android só em paisagem, §19**; **itens de interface 3, 4, 8, 14, 15, 16 e 17 do mesmo relatório, §20**; **itens 7, 12, 20, 21, 22 e 23, §21**). Referência: `docs/PROMPTS_CLAUDE_CODE_TCC.md`. Caminhos relativos a `Unity-DaPenaAGuilhotina/`.
 
 Estados usados: **validado** (testado em runtime ou em teste automatizado), **existente não validado** (código/asset presente, sem teste de runtime), **parcial**, **ausente**.
 
-Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achados corrigidos (§7); verificação completa contra os dois PDFs em 26/09, com correções que adiantaram partes dos Prompts 6 e 7 (§9); Prompt 5 (linha editorial) concluído em 26/09 (§10); **Prompt 4 (dedução ativa) incluído por decisão do grupo e concluído em 27/09 (§13)**; **restante do Prompt 6 concluído em 27/09 (§14)**; **Fase 3 reduzida a três casos, com um concluído (§15)**; **Prompt 7 concluído em 27/09 (§17), junto com dois ajustes pedidos pelo grupo: 6h de investigação nas Fases 2, 3 e 4 e dedução ativa desde a Fase 2**; **conteúdo narrativo das Fases 2 a 4 alinhado ao GDD em 27/09 (§18)**. Próximo: **Prompt 8 (não iniciado)**, depois dos testes manuais listados em §17.9 e §18.9.
+Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achados corrigidos (§7); verificação completa contra os dois PDFs em 26/09, com correções que adiantaram partes dos Prompts 6 e 7 (§9); Prompt 5 (linha editorial) concluído em 26/09 (§10); **Prompt 4 (dedução ativa) incluído por decisão do grupo e concluído em 27/09 (§13)**; **restante do Prompt 6 concluído em 27/09 (§14)**; **Fase 3 reduzida a três casos, com um concluído (§15)**; **Prompt 7 concluído em 27/09 (§17), junto com dois ajustes pedidos pelo grupo: 6h de investigação nas Fases 2, 3 e 4 e dedução ativa desde a Fase 2**; **conteúdo narrativo das Fases 2 a 4 alinhado ao GDD em 27/09 (§18)**; **P0 1 e 2 do `docs/RELATORIO_TESTES_2026-09-28.md` corrigidos em 28/09 (§19)**; **itens de interface 3, 4, 8, 14, 15, 16 e 17 do relatório corrigidos em 28/09 (§20)**; **itens 7, 12, 20, 21, 22 e 23 corrigidos em 28/09 (§21)**. Próximo: **Prompt 8 (não iniciado)**, depois dos testes manuais listados em §17.9, §18.9, §19.8 e §20.8. Continuam abertos no relatório os itens 5 e 6 (balanceamento, decisão do grupo), 9, 10, 11, 13, 18, 19 e 24; o 12 tem uma pendência de arte (§21.6).
 
 Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4–6:
 - **Alegações:** qualquer impressão com alegação usa a versão Só Alegações.
 - **Arquivamento:** sobras dos casos anteriores à Fase 4 são arquivadas ao concluir.
 - **Inventário cheio:** interação sem espaço para o que entregaria não cobra horas.
-- **Save:** versão 6 no Prompt 5 (linha editorial); versão 7 em 27/09 (dedução ativa, §13).
+- **Save:** versão 6 no Prompt 5 (linha editorial); versão 7 em 27/09 (dedução ativa, §13); **versão 8 em 28/09: fim de jogo registrado depois do tribunal (§21)**. Com o jogo terminado, o Continuar não aparece.
 - **Biblioteca:** tem estados por situação.
 - **Pistas:** os nomes são neutros.
 - **Revelações (26/09):** aplicadas no fim da fase por `GameManager.EncerrarFase`, na ordem revelações → despesas → avanço de fase/rota, e mostradas na cutscene do `FimDeFase`. `RevelacaoDeBoatos` foi removido.
@@ -34,6 +34,10 @@ Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4�
 - **Tribunal (27/09, §14):** "Encerrar a defesa" exige duas provas apresentadas (configurável, limitado ao total); o veredito é sempre o completo.
 - **Rota (27/09, §14):** margem mínima 1; com a margem inválida o empate continua na rota C.
 - **Conteúdo do GDD (27/09, §18):** os nove casos das Fases 2 a 4 seguem o GDD (títulos, clientes, testemunhas, falas-base, pistas e panfletos). Os arquivos, os itemID e os IDs de interação continuam os antigos por causa do save (ex.: `Caso_Varennes` é o caso de Kornmann; `CocheiroJoubert` é o NPC Kornmann); a correspondência está na matriz. A Fase 3 tem 5 NPCs (Danton é novo) e 8 oportunidades por caso. Textos em vigor: `Editor/NarrativaGddSetupTool.cs` (**Ferramentas > Campanha > 8**). Mecânicas, valores, preços, rotas e regras de bloqueio não mudaram.
+- **Menu principal (28/09, §19):** o **Continuar** voltou (só aparece com save; desde a §21, só com uma partida em andamento: depois do fim do jogo ele some). Com save, o **Jogar** pergunta "Começar um novo jogo?" antes de zerar o progresso, com o foco no NÃO. Sem save, começa direto. Se a cena do menu for editada de novo, **Ferramentas > Menu principal > Recriar Continuar e confirmação do Novo Jogo** recria o que faltar, e o teste `MenuPrincipalTests` acusa a falta.
+- **Orientação (28/09, §19):** Auto Rotation só entre Landscape Left e Landscape Right. Portrait e Portrait Upside Down ficam desligados (vale para Android e iOS).
+- **Interface (28/09, §20):** Mesa de Casos em colunas (até 3 por linha), cartões escuros e opacos, barra de rolagem só quando precisa, caso bloqueado com véu escuro. Janelas modais com painel opaco (alpha 1: no espaço Linear, 0,97 ainda mostra o cenário). Pop-ups do tutorial e "Você recebeu" vão para a faixa livre ao lado do inventário aberto. O "E" das interações nunca fica atrás do relógio. No tribunal, prova apresentada marcada e "Encerrar a defesa" com cara de botão. Para conferir textos em Play Mode: **Ferramentas > UI > Conferir textos na tela**.
+- **Console (28/09, §21):** `Item` e `CaseData` só avisam sobre assets salvos, e o caso do tutorial não precisa de título nem rota. Os testes EditMode não deixam mais objetos na memória. A câmera do porão fica presa às paredes, e menu e Tribunal têm FMOD Studio Listener.
 
 Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não exibir ao jogador).
 
@@ -45,7 +49,7 @@ Documento de autor com a matriz dos casos: `docs/MATRIZ_DE_CASOS_TCC.md` (não e
 |---|---|
 | Unity | 6000.3.9f1 aberto no Editor durante o trabalho (projeto `Unity-DaPenaAGuilhotina`) |
 | Unity MCP | Operacional (`com.coplaydev.unity-mcp`): leitura de cenas, compilação, Play Mode, execução de código de Editor e Test Runner |
-| Testes | `com.unity.test-framework` 1.6.0. Não havia testes. Os testes novos ficam em `Assets/Editor/Testes/` (assembly `Assembly-CSharp-Editor`, sem asmdef, porque os scripts do jogo não têm asmdef). Em 26/09: 46 testes EditMode; 57 depois do Prompt 5; 58 em 27/09 (§12.2); 78 depois dos Prompts 4 e 6 (§16); 88 depois do Prompt 7 (§17) |
+| Testes | `com.unity.test-framework` 1.6.0. Não havia testes. Os testes novos ficam em `Assets/Editor/Testes/` (assembly `Assembly-CSharp-Editor`, sem asmdef, porque os scripts do jogo não têm asmdef). Em 26/09: 46 testes EditMode; 57 depois do Prompt 5; 58 em 27/09 (§12.2); 78 depois dos Prompts 4 e 6 (§16); 88 depois do Prompt 7 (§17); 90 depois do conteúdo do GDD (§18); 93 depois das correções P0 (§19); 95 depois dos itens de interface (§20); 102 depois da §21. Desde a §21 um `SetUpFixture` (`LimpezaDosTestes`) destrói ao fim de cada execução os objetos do jogo que ela criou na memória |
 | Compilação | Sem erros. Avisos antigos: `FindObjectOfType` obsoleto em `GameManager`; `Caso_Tutorial` sem `caseTitle`/`npcDialogueRoute` (OnValidate) |
 | Save real do jogador | Até 25/09: não foi lido nem alterado. Em 26/09: ver §9.7 (um save de teste criado e apagado com autorização; duas PlayerPrefs de dica ficaram marcadas) |
 
@@ -411,7 +415,7 @@ Save e PlayerPrefs do jogador restaurados de novo depois dos testes (hash idênt
 
 ~~Prompt 5 — linha editorial (D)~~ Concluído em 26/09 (§10). ~~Prompt 4 — dedução ativa~~ Concluído em 27/09 (§13). ~~Restante do Prompt 6~~ Concluído em 27/09 (§14). ~~Prompt 7 — tutorial, transições e UI integrada~~ Concluído em 27/09 (§17).
 
-**Próximo: Prompt 8 (validação final), não iniciado.** Antes dele, os testes manuais de §17.9 (teclado/toque físicos, aparelho Android, leitura dos textos novos) e de §18.9 (conteúdo do GDD nas Fases 2 a 4). Pontos de atenção:
+**Próximo: Prompt 8 (validação final), não iniciado.** Antes dele, os testes manuais de §17.9 (teclado/toque físicos, aparelho Android, leitura dos textos novos), de §18.9 (conteúdo do GDD nas Fases 2 a 4) de §19.8 (menu e orientação em aparelho real) e de §20.8 (janelas no toque e em aparelho real). Do relatório de 28/09 foram corrigidos os P0 (§19), os itens de interface 3, 4, 8, 14 a 17 (§20) e os itens 7, 12, 20 a 23 (§21); continuam abertos os itens 5, 6, 9, 10, 11, 13, 18, 19 e 24 em `docs/RELATORIO_TESTES_2026-09-28.md`, e o 12 tem pendência de arte (§21.6). Pontos de atenção:
 - **Prompt 8 (balanceamento):** com um caso só na Fase 3, a rota é decidida por três publicações (tutorial, Fase 2, Fase 3); a linha editorial desloca o desnível em até 15 pontos por publicação. Exemplos de percurso em `MATRIZ_DE_CASOS_TCC.md`.
 - **Prompt 8 (tempo):** com 6h e caminho mínimo de 1–2h, sobra folga em todos os casos; vale medir, jogando, se a pressão do relógio ainda existe (antes: 4h).
 
@@ -1020,3 +1024,293 @@ Boatos, calúnias, cartas do cliente, falas de quem espalha boatos, falas sem pi
 1. **Ferramentas > Campanha > 8** duas vezes: a segunda mostra "Já com o conteúdo do GDD" nos 9 casos e 0 alterações. **Ferramentas > Campanha > 1, 3, 4, 5, 6 e 7**: 0 alterações. **Ferramentas > Campanha > 2**: "Campanha válida", 0 avisos.
 2. Test Runner > EditMode > Run All → **90/90**.
 3. Roteiro manual de §18.9.
+
+---
+
+## 19. Correções P0 do relatório de testes: Continuar, Novo Jogo e orientação (28/09/2026)
+
+Pedido: corrigir só os itens **P0 1 e 2** de `docs/RELATORIO_TESTES_2026-09-28.md`. (1) Recriar o botão "Continuar" na cena "menu principal", com o visual dos outros botões, OnClick em `MenuPrincipalManager.Continuar` e ligado ao campo `botaoContinuar`, visível só com save; com save, o "Jogar" pede confirmação antes do `ComecarNovoJogo`. (2) Android só em paisagem. Aceite: no Play Mode, a partir do menu, o Continuar carrega o save e o Jogar com save pede confirmação, sem alterar o `save.json` nem as PlayerPrefs de quem testa. Os itens P1 a P3 do relatório não foram mexidos.
+
+### 19.1 Situação de cada requisito
+
+Estados desta seção: **implementado** (está no projeto), **validado** (visto funcionando em Play Mode ou em teste automatizado), **pendente de validação** (implementado, mas ainda sem a verificação necessária).
+
+| # | Requisito | Implementação | Estado |
+|---|---|---|---|
+| 1a | Botão Continuar na cena "menu principal", no mesmo visual | `ContinuarButton` é cópia do JOGAR (fundo preto 56%, 360×100, Cinzel-Regular 45 em negrito, som de clique `event:/clique1`), logo acima dele na coluna (x −689, y 73: a posição que tinha antes do commit `27cfe24`) | implementado e **validado** (captura 01) |
+| 1b | OnClick em `MenuPrincipalManager.Continuar`, ligado ao campo `botaoContinuar` | ligação persistente na cena + campo preenchido | **validado** (teste EditMode e clique real de mouse no Play Mode) |
+| 1c | Continuar só aparece com save | `Start` do menu (código que já existia; faltava o botão) | **validado** (Play Mode com e sem save, capturas 01 e 05) |
+| 1d | Continuar carrega o save | `SistemaDeSave.Carregar` (já existia) | **validado** (valores do save conferidos na cena carregada, captura 03) |
+| 1e | Com save, Jogar pede confirmação antes do `ComecarNovoJogo` | `Jogar` abre `painelConfirmarNovoJogo` quando `SistemaDeSave.ExisteSave`; SIM → `ConfirmarNovoJogo`; NÃO → `FecharConfirmacaoNovoJogo`. Painel copiado do painel do SAIR | **validado** (pergunta, NÃO pelo Enter e pelo mouse sem apagar nada, SIM iniciando o Novo Jogo; capturas 02 e 04) |
+| 1f | Sem save, Jogar começa direto | mesmo método `Jogar` | **validado** (Play Mode sem save) |
+| 2 | Android só em paisagem | Default Orientation = **Auto Rotation** com Landscape Left e Landscape Right; Portrait e Portrait Upside Down desligados | implementado e **validado na configuração** (`ProjectSettings.asset` e teste EditMode); comportamento no celular **pendente de validação** (§19.7) |
+
+**Aceite:** item 1 **validado** em Play Mode a partir do menu. Item 2: configuração validada; o aceite fica **pendente** até o teste em um Android real (§19.8, passo 1).
+
+### 19.2 Decisões desta etapa
+
+- **Visual:** o Continuar é cópia do JOGAR, e a pergunta é cópia do painel do SAIR (mesma moldura marrom, fontes e botões SIM/NÃO), em vez de um desenho novo. Título "COMEÇAR UM NOVO JOGO?" e aviso "O progresso salvo será substituído." (textos provisórios, editáveis na cena).
+- **Foco no NÃO:** quando a pergunta abre, o foco do teclado vai para o NÃO, então Enter ou Espaço cancelam e o SIM precisa ser escolhido. Ao fechar, o foco volta ao botão que o tinha antes.
+- **O SIM não apaga o `save.json`:** o comportamento de antes foi mantido. O save antigo só é substituído no próximo ponto de save (fim do tutorial, fim de fase ou ida ao tribunal). Se o grupo preferir apagar o save no SIM, é uma linha em `ConfirmarNovoJogo`.
+- **Auto Rotation com as duas paisagens** em vez de fixar Landscape Left: o jogador pode virar o celular para qualquer um dos lados. O "Auto Rotation Behavior" do Android continua **User**, que respeita a trava de rotação do aparelho. A configuração vale também para iOS e não tem efeito no Windows.
+- **Ferramentas idempotentes** (padrão do projeto) em vez de edição manual: se a cena do menu for editada de novo e o botão sumir, como no `27cfe24`, a ferramenta recria o que faltar, e o `MenuPrincipalTests` falha antes.
+
+### 19.3 Arquivos
+
+- Script: `Assets/Scripts/MenuPrincipalManager.cs`. O `Jogar` pergunta quando há save; métodos novos `ConfirmarNovoJogo` e `FecharConfirmacaoNovoJogo`; campos novos `painelConfirmarNovoJogo` e `botaoCancelarNovoJogo`. `Continuar`, `Start` e os métodos dos outros painéis não mudaram.
+- Editor (novos): `Assets/Editor/MenuPrincipalSetupTool.cs` (**Ferramentas > Menu principal > Recriar Continuar e confirmação do Novo Jogo**) e `Assets/Editor/OrientacaoPaisagemTool.cs` (**Ferramentas > Build > Android só em paisagem**).
+- Testes (novo): `Assets/Editor/Testes/MenuPrincipalTests.cs`, 3 testes.
+- Cena `Assets/Scenes/menu principal.unity`: 10 GameObjects novos (`ContinuarButton` e seu texto; `painelConfirmarNovoJogo` com moldura, `titulo`, `aviso`, `BotãoSim` e `BotãoNão` com textos) e os 3 campos do `MenuManager`. Nos objetos que já existiam, só mudou a lista de filhos de `MenuPrincipal` e `Canvas`. No `git diff --histogram` são 1332 linhas inseridas e 1 trocada (`botaoContinuar: {fileID: 0}`); o diff padrão do git parece maior porque alinha mal os blocos YAML. Sem ruído de layout.
+- `ProjectSettings/ProjectSettings.asset`: `allowedAutorotateToPortrait` e `allowedAutorotateToPortraitUpsideDown` de 1 para 0 (2 linhas).
+- `ProjectSettings/TimeManager.asset` aparece como modificado no `git status`, mas o conteúdo é igual ao do HEAD (mesmo blob, `2e23a1f`): o Unity só regravou o arquivo com fim de linha LF. Não precisa entrar em commit.
+- Não mudaram: as outras cenas, os prefabs, `SistemaDeSave`, `ProgressoDoJogo`, o painel do SAIR e os outros botões do menu, Packages, GUIDs e `.meta` existentes.
+
+### 19.4 Configuração realizada
+
+- Ferramenta do menu, executada via MCP: "Continuar: criado acima do JOGAR (110 px), cópia do visual dele" e "Confirmação do Novo Jogo: criada a partir do painel do SAIR (mesmo visual), com título e aviso próprios". Na segunda execução: "já ligado", "já ligada" e "Nenhuma alteração".
+- Ferramenta de orientação: "Antes: AutoRotation (Portrait sim, Portrait Upside Down sim, Landscape Left sim, Landscape Right sim). Agora: AutoRotation (Portrait não, Portrait Upside Down não, Landscape Left sim, Landscape Right sim)". Na segunda execução: "Já estava só em paisagem".
+
+### 19.5 Testes executados
+
+- **EditMode: 93/93** (90 anteriores + 3 novos). `MenuPrincipalTests` usa a cena real: (1) o campo `botaoContinuar` está preenchido, o botão chama `Continuar` e fica na coluna do botão que chama `Jogar`; (2) a pergunta do Novo Jogo está ligada, começa fechada, tem um botão que chama `ConfirmarNovoJogo`, e o botão de cancelar fica dentro dela e chama `FecharConfirmacaoNovoJogo`; (3) Player Settings em Auto Rotation só com as duas paisagens.
+- **Validador:** "Campanha válida", 0 problemas (sem mudança de conteúdo).
+- **Play Mode** no Editor via MCP, sempre a partir da cena "menu principal", Game View em 1920×1080. "Ponteiro" é o evento de clique do uGUI entregue ao botão. "Mouse real" é posição e botão esquerdo injetados no Input System, que passam pelo `InputSystemUIInputModule` e pelo raycast como um clique de verdade.
+
+| # | Cenário | Entrada | Resultado |
+|---|---|---|---|
+| 1 | Menu com save | — | CONTINUAR ativo acima do JOGAR, com o mesmo tamanho, fonte e fundo; o raycast no centro de cada um dos 5 botões acerta o próprio botão (captura 01) |
+| 2 | JOGAR com save | ponteiro | pergunta aberta, menu escondido, foco no NÃO, cena e PlayerPrefs sem mudança; título em 2 linhas e aviso em 1, sem transbordar; o raycast acerta SIM e NÃO (captura 02) |
+| 3 | Enter com a pergunta aberta | tecla Enter pelo Input System | cancelou: pergunta fechada, menu de volta, nada apagado |
+| 4 | NÃO | mouse real | cancelou, igual ao 3 |
+| 5 | CONTINUAR | mouse real | carregou a cena Jogo com os dados do `save.json`: ouro 20, Povo 65, Estado 40, Fase 2, `Caso_Tutorial` concluído, panfleto no inventário, tutorial na etapa 7, só `intro_cutscene_vista` marcada; log "Save de 2026-09-26 02:42 carregado na cena 'Jogo'" (captura 03) |
+| 6 | JOGAR com save → SIM | ponteiro | Novo Jogo: cena Jogo, Fase 1, ouro 0, barras 50/50, tutorial na etapa 0, cutscene de abertura, Marie presente (captura 04) |
+| 7 | Menu sem save (`save.json` tirado da pasta) | — | CONTINUAR escondido; menu igual ao de antes (captura 05) |
+| 8 | JOGAR sem save | ponteiro | começou direto, sem pergunta: cena Jogo, Fase 1, tutorial na etapa 0; nenhum save criado |
+
+Console sem erros em todas as sessões; só os avisos antigos (itens 20 e 22 do relatório). A captura 03 mostra o tutorial em "Com as duas pistas… desça ao porão": é o defeito P2 7 do relatório (save v6 de 26/09), anterior a esta etapa e fora do escopo.
+
+### 19.6 Capturas
+
+Cinco PNGs em 1920×1080, entregues na conversa e fora do repositório: `01_menu_com_save`, `02_confirmar_novo_jogo`, `03_continuar_carregou_jogo`, `04_sim_novo_jogo` e `05_menu_sem_save`. O quadro "FMOD Studio Debug" no canto das capturas 02 a 04 é o overlay de depuração do FMOD no Editor, anterior a esta etapa.
+
+### 19.7 Limitações
+
+- **Orientação sem teste em aparelho nem em build.** O Play Mode do Editor não aplica a orientação do Player Settings. Não foi feito build nem exportação Android: o projeto usa IL2CPP, e o build do FMOD pode regravar os bancos versionados em `Assets/StreamingAssets`. Estado: **pendente de validação**.
+- **Toque real** no menu: não testado (sem aparelho).
+- **Teclado:** o Enter no NÃO foi testado; Tab e setas entre SIM e NÃO, não. O menu continua sem foco inicial (o EventSystem não tem "First Selected"), como antes: sem mouse, o teclado só age depois que algum botão recebe foco. A pergunta do Novo Jogo dá o foco ao NÃO.
+- **Realce de foco** quase invisível: a cor "Selected" dos botões do menu é 96% de branco sobre fundo preto. Padrão dos botões existentes, não foi mudado.
+- **Save antigo depois do SIM:** até o primeiro ponto de save da partida nova, o Continuar ainda leva ao save antigo (§19.2).
+
+### 19.8 O que ainda exige teste manual
+
+1. **Android real:** abrir o jogo com o celular em pé. Ele deve abrir deitado; girado 180°, passa para a outra paisagem; nunca fica em retrato. Com a trava de rotação do aparelho ligada, fica na paisagem em que abriu.
+2. **Toque:** CONTINUAR, e JOGAR → SIM e NÃO.
+3. **Teclado:** Tab e setas entre SIM e NÃO. O Esc não fecha a pergunta, como também não fecha o painel do SAIR.
+4. **SIM e depois fechar o jogo antes do fim do tutorial:** o Continuar ainda aparece e leva ao save antigo. O grupo deve confirmar se é isso que quer.
+
+### 19.9 Efeitos no ambiente de quem testou
+
+- **`save.json`:** copiado para o scratchpad antes dos testes (md5 `7511C8D6…`, 26/09 02:42) e deixado somente leitura nas sessões 1 a 6. Nas sessões 7 e 8, renomeado para `save.json.p0-afastado` na mesma pasta e devolvido depois. No fim, **md5 idêntico**, mesma data, atributo normal e nenhum `save.json.tmp`.
+- **PlayerPrefs:** a chave do Editor no registro foi exportada antes. Depois dos testes, as chaves do jogo estavam iguais. Os três contadores de sessão que o próprio Unity grava a cada Play foram restaurados com a importação do backup, e a exportação final ficou **idêntica ao backup**, também depois dos testes EditMode.
+- `TestResults.xml` (em `persistentDataPath`) foi regravado pelo Test Runner.
+- **Editor:** Game View de volta a "16:9 Landscape"; `runInBackground` desligado; cena "menu principal" aberta e limpa.
+- Nada foi commitado.
+
+### 19.10 Como revalidar
+
+1. **Ferramentas > Menu principal > Recriar Continuar e confirmação do Novo Jogo** → "Nenhuma alteração". **Ferramentas > Build > Android só em paisagem** → "Já estava só em paisagem".
+2. Test Runner > EditMode > Run All → **93/93**.
+3. Com backup do `save.json`, dar Play na cena "menu principal": o CONTINUAR aparece e carrega o save; o JOGAR pergunta; o NÃO volta ao menu.
+4. Roteiro manual de §19.8.
+
+---
+
+## 20. Itens de interface do relatório de testes: 3, 4, 8, 14, 15, 16 e 17 (28/09/2026)
+
+Pedido: corrigir os itens de interface de `docs/RELATORIO_TESTES_2026-09-28.md`, preservando o visual existente, no prefab ou no código (não em cópias da cena). Aceite: capturas em 1920×1080, 4:3 e 2960×1440 de cada janela, sem texto quebrado nem cortado. Os outros itens do relatório (5, 6, 7, 9 a 13, 18 a 24) não foram mexidos.
+
+### 20.1 Situação de cada item
+
+Estados desta seção: **implementado** (está no projeto), **validado** (visto em Play Mode nas três resoluções, com captura e conferência automática dos textos, ou em teste automatizado), **pendente de validação**.
+
+| Item | O que foi feito | Onde | Estado |
+|---|---|---|---|
+| 3. Biblioteca | Preço com `minWidth` 240 e "Comprar" com `minWidth` 200 (a descrição é que encolhe); cabeçalho com altura fixa 72, sem esticar os filhos, título sem quebra; Fechar 160–200 × 64 (era 200×267) | `BibliotecaUI` (montada por código) | **validado** (3 resoluções; estados Disponível, Ouro insuficiente e Termine o caso atual primeiro) |
+| 4. Mesa de Casos | Cartões lado a lado (até 3 por linha, largura calculada pela área), fundo escuro e opaco, "Aceitar Caso" alinhados embaixo, descrição alinhada à esquerda (justificada abria buracos na coluna), barra de rolagem dourada que só aparece quando os cartões não cabem, Fechar em Cinzel, caso bloqueado/concluído com um véu escuro (o cartão continua opaco; antes ficava translúcido) | `CaseSelectionUI`; `CartaoPrefab.prefab` e `UI.prefab` pela ferramenta nova | **validado** (3 resoluções na Fase 2; Fase 3 com o caso mais longo; estado "em andamento/bloqueado"; rolagem forçada para mostrar a barra) |
+| 8. Pop-up do tutorial com o inventário aberto | No modo compacto (faixa à esquerda do inventário), a coluna de glifos e o ícone só ficam se couberem ao lado do texto; senão somem enquanto o inventário estiver aberto. O pop-up cresce na altura até o texto caber na fonte normal, sem passar da HUD do topo. Ao fechar o inventário, volta ao rodapé completo | `TutorialStepUI` | **validado** (passos 6 "volte até Charles Dupaty", com glifo, e 9, o texto mais longo, nas 3 resoluções; em 2960×1440 o glifo cabe e fica; volta ao rodapé com o glifo ao fechar o inventário) |
+| 14. "E" da porta sobre o relógio | O aviso (canvas no mundo, desenhado por baixo da UI) desce para 10 px abaixo do relógio quando cairia sobre ele | `PromptDeInteracao`, `HudDoRelogio.RetanguloNaTela` | **validado** (porta da Fase 2 com o relógio ativo, 3 resoluções: sem sobreposição) |
+| 15. "Você recebeu" sobre o inventário | Com o inventário aberto, o pop-up não pode cobrir texto, ícone ou botão do inventário (lista, prensa e o painel Suporte da Fase 3 em diante) nem a HUD; fundos e molduras de painel podem ficar por baixo. Candidatos: faixa à esquerda da lista (abaixo da HUD), faixa à direita (no topo) e a posição normal; fica o primeiro que não cobre nada ou, sem nenhum livre, o que cobre menos. Numa faixa estreita, a mensagem quebra em mais linhas. Reposiciona quando o inventário abre ou fecha com o pop-up na tela | `ItemPickupNotificationUI` | **validado**. Fase 2, porão, nome longo "Panfleto: Os Trabalhadores de Réveillon": à esquerda em 1920×1080 e 2960×1440, no topo em 4:3, sem cobrir texto. Fase 3 com o Suporte (achado da revisão, §20.11): em 1920×1080 e 2960×1440 não há lugar livre e ele vai para o canto superior direito, encostando no título "Prensa" por 2,5 s (o que menos cobre); em 4:3 fica no topo sem cobrir nada |
+| 16. Janelas translúcidas | Quadro de pistas e Biblioteca: painel com alpha 1 (era 0,97, que no espaço Linear deixava o cenário aparecer). Linha editorial: já era opaca desde o Prompt 5 (conferido pixel a pixel: sobre o filete dourado da prensa a janela sai com a cor do próprio fundo); nela o conteúdo pedia 747 de altura num painel de 720 e o título e a nota eram espremidos: margens verticais menores (715) | `QuadroDeDeducaoUI`, `BibliotecaUI`, `LinhaEditorialDaPrensaUI` | **validado** (3 resoluções cada; alpha do painel 1 e nenhum CanvasGroup acima) |
+| 17. Tribunal | Prova apresentada: fundo esverdeado opaco e etiqueta "Apresentada", que ficam também quando o veredito desativa as outras. "Encerrar a defesa": cor de botão de ação com moldura dourada, desativado em cinza opaco e com o motivo ("apresente mais N provas") | `TribunalManager` (montado por código) | **validado** (caso do mercador, 1 e 2 provas, 3 resoluções, e o veredito). A revisão (§20.11) achou que o fundo verde ainda saía escuro e translúcido; corrigido e revalidado (multiplicador de cor branco, captura `17_prova_apresentada_opaca_1920x1080`) |
+
+**Aceite:** capturas das sete janelas nas três resoluções, com 0 problema na conferência automática de textos em todas. **Validado no Editor.** Continua pendente o que depende de aparelho real (§20.7).
+
+### 20.2 Decisões desta etapa
+
+- **Mesa em colunas** (uma das duas saídas do relatório): os casos de uma fase (três) ficam todos visíveis de uma vez, e o "Aceitar Caso" de cada um fica visível sem rolar. Com mais de três casos, a mesa abre outra linha.
+- **Véu em vez de transparência** no cartão bloqueado/concluído (preto, alpha 0,7): com 0,55 a diferença ficava sutil por causa do espaço Linear.
+- **Glifos no modo compacto:** saem só quando não cabem (em 1920×1080 e 4:3 não cabem; em telas largas, como 2960×1440, ficam). Enquanto o inventário está aberto a etapa não depende do glifo, e ele volta quando o inventário fecha.
+- **"Você recebeu" com o inventário aberto:** à esquerda, abaixo da HUD, em vez de em cima da lista ou do título. Sem inventário aberto, nada muda.
+- **Cores e fontes existentes** foram reaproveitadas: cartão com a cor das linhas da Biblioteca e do Quadro (0,18/0,13/0,11), botão de ação do tribunal com a cor do "Continuar" do tutorial (0,45/0,20/0,15), dourado da HUD (0,98/0,85/0,55).
+
+### 20.3 Arquivos
+
+- Scripts: `BibliotecaUI`, `CaseSelectionUI`, `HudDoRelogio`, `ItemPickupNotificationUI`, `LinhaEditorialDaPrensaUI`, `PromptDeInteracao`, `QuadroDeDeducaoUI`, `TribunalManager`, `TutorialStepUI`.
+- Editor (novos): `MesaDeCasosLayoutTool.cs` (**Ferramentas > UI > Aplicar layout da Mesa de Casos**) e `ConferenciaDeTextosDaUI.cs` (**Ferramentas > UI > Conferir textos na tela (Play Mode)**). A conferência procura, nos textos visíveis, palavra partida no meio, texto maior que a caixa, texto fora da tela, texto que vaza da moldura do painel ou botão e texto cortado pela máscara de uma lista. Serve também para o Prompt 8.
+- Testes (novo): `Editor/Testes/MesaDeCasosTests.cs`, 2 testes.
+- Prefabs: `CartaoPrefab.prefab` (cor do fundo, sem ContentSizeFitter, LayoutElement, espaçador, alinhamento da descrição) e `UI.prefab` (barra de rolagem da Mesa com AutoHide, margem direita 28, fonte e texto do Fechar, os dois campos novos da Mesa com o véu em 0,7). Diff só com esses objetos e campos, sem ruído de layout.
+- Não mudaram: cenas (a única cena alterada no trabalho é o `menu principal`, da §19), `UI_Inventory.prefab`, `GameManager.prefab`, ProjectSettings, Packages, GUIDs e `.meta` existentes.
+
+### 20.4 Configuração realizada
+
+- Ferramenta da Mesa, via MCP: "Cartão: fundo escuro e opaco; sem ContentSizeFitter; LayoutElement; espaçador antes do Aceitar Caso" e "Mesa: Fechar em Cinzel; barra de rolagem; barra só quando há rolagem; margem direita para a barra"; numa segunda rodada, "descrição alinhada à esquerda". Rodando de novo: "Cartão: já ajustado" e "Mesa: já ajustada".
+- Véu da Mesa ajustado no `UI.prefab` de 0,55 para 0,7 pela API de prefab (o campo é novo nesta etapa).
+
+### 20.5 Testes executados
+
+- **EditMode: 95/95** (93 + 2 de `MesaDeCasosTests`: cartão escuro, opaco, sem ContentSizeFitter, com espaçador e descrição não justificada; Mesa com 3 colunas, véu forte, barra de rolagem AutoHide e Fechar na fonte dos cartões).
+- **Validador:** "Campanha válida", 0 problemas.
+- **Play Mode**, no Editor via MCP, com as janelas abertas pelo código do jogo (Abrir, ConfirmarCaso, AddItem, cliques de ponteiro nos botões reais) e o estado do GameManager preparado em memória. Em cada janela e resolução: captura PNG + `ConferenciaDeTextosDaUI.Conferir(<raiz da janela>)`.
+
+| Janela (cena) | 1920×1080 | 4:3 (1440×1080) | 2960×1440 |
+|---|---|---|---|
+| Biblioteca (Fase 3) | 0 problemas | 0 | 0 |
+| Mesa de Casos (Fase 2; Fase 3 em andamento) | 0 | 0 | 0 |
+| Pop-up do tutorial, passos 6 e 9 (Jogo) | 0 | 0 | 0 |
+| "E" da porta × relógio (Fase 2) | 0, 10 px abaixo | 0, 10 px abaixo | 0, 10 px abaixo |
+| "Você recebeu" com inventário e prensa (Porão) | 0 | 0 | 0 |
+| Quadro de pistas (Fase 2) | 0 | 0 | 0 |
+| Linha editorial (Porão) | 0 | 0 | 0 |
+| Tribunal (mercador) | 0 | 0 | 0 |
+
+"Parcialmente fora de lista rolável" aparece em Biblioteca e Quadro quando a última linha passa da borda da lista (a lista rola). Não conta como problema. Console sem erros em todas as sessões (só os avisos antigos dos itens 20 e 22 do relatório).
+
+### 20.6 Capturas
+
+33 PNGs entregues na conversa, fora do repositório: `03_biblioteca_*`, `04_mesa_*` (e `04_mesa_em_andamento_1920x1080`, `04_mesa_fase3_2960x1440`, `04_mesa_rolagem_1920x1080`), `08_tutorial_segunda_pista_*`, `08_tutorial_explicar_efeito_barras_*`, `08_tutorial_inventario_fechado_1920x1080`, `14_tecla_e_relogio_*`, `15_popup_inventario_*`, `16_linha_editorial_*`, `16_quadro_*`, `17_tribunal_*`, mais duas de "antes" (`antes_15_*`, `antes_16_*`). O quadro "FMOD Studio Debug" no canto é o overlay de depuração do FMOD no Editor.
+
+### 20.7 Limitações e pendências
+
+- **Aparelho real:** toque, área segura com notch e legibilidade física não foram testados (as resoluções foram simuladas na Game View).
+- **Estados montados em memória:** as janelas foram abertas com o estado do GameManager preparado pelo teste, não jogando a campanha até lá. As regras do jogo não mudaram; mudou só onde e como as janelas se desenham.
+- **Rolagem da Mesa:** com as descrições atuais, três cartões sempre cabem (Expand mantém o canvas com pelo menos 1920×1080). A barra só foi vista forçando uma coluna por linha no teste.
+- **Botões desativados** (Comprar, provas no veredito) continuam com o tom desbotado de antes. Não fazia parte dos itens.
+
+### 20.8 O que ainda exige teste manual
+
+1. Celular Android: Mesa (tocar em "Aceitar Caso" e rolar, se houver rolagem), Biblioteca (Comprar) e tribunal (provas e Encerrar), no toque.
+2. Tutorial do início com o inventário aberto nos passos 5 e 6: o pop-up à esquerda e, ao fechar, de volta ao rodapé com o glifo.
+3. Imprimir um panfleto no porão: o "Você recebeu" aparece à esquerda, sem cobrir o título do inventário.
+4. Chegar pelas portas das Fases 2, 3 e 4 com o relógio ativo: o "E" sempre abaixo das horas.
+
+### 20.9 Efeitos no ambiente de quem testou
+
+- **`save.json`:** o de quem testava tinha mudado desde a §19 (jogo salvo às 21:00 de 28/09, v7, md5 `ACB0D63D…`). Foi copiado para o scratchpad antes dos testes e ficou somente leitura em todas as sessões de Play. No fim: **md5 idêntico**, mesma data, atributo normal, nenhum `save.json.tmp`.
+- **PlayerPrefs:** a chave do Editor no registro foi exportada antes dos testes. A exportação final, depois das sessões de Play e dos testes EditMode, saiu **idêntica** (as chaves de tutorial e dicas já estavam marcadas).
+- **Editor:** o tamanho temporário "Teste 4:3 (1440x1080)" foi removido da Game View; Game View de volta a "16:9 Landscape"; `runInBackground` desligado; cena "menu principal" aberta e limpa. `TestResults.xml` (em `persistentDataPath`) foi regravado pelo Test Runner.
+- Nenhuma cena foi salva pelas sessões de Play. Nada foi commitado.
+
+### 20.10 Como revalidar
+
+1. **Ferramentas > UI > Aplicar layout da Mesa de Casos** → "já ajustado" / "já ajustada".
+2. Test Runner > EditMode > Run All → **95/95** nesta etapa (102 depois da §21).
+3. Em Play Mode, abrir cada janela e rodar **Ferramentas > UI > Conferir textos na tela (Play Mode)** em 1920×1080, 4:3 e 2960×1440.
+4. Roteiro manual de §20.8.
+
+### 20.11 Revisão adversarial do código (depois das capturas)
+
+Quatro revisores independentes leram o diff (Mesa; pop-ups; HUD e tribunal; janelas e conferência), e cada achado de gravidade média ou alta passou por um cético que tentava refutá-lo lendo o código real (inclusive o código-fonte do uGUI).
+
+| Achado | Veredito | O que foi feito |
+|---|---|---|
+| Tribunal: o `interactable = false` dispara a animação do tom "desativado" (cinza, alpha 0,45), e trocar a transição para None não a interrompe: a prova "apresentada" continuava escura e translúcida | **confirmado** | `CrossFadeColor(Color.white, 0f)` cancela a animação antes de pintar o verde; revalidado |
+| Pop-up "Você recebeu": da Fase 3 em diante o painel Suporte fica à esquerda da lista, e o pop-up ia para cima dele (título "Suporte" e lista de documentos) | **confirmado** | nova regra por conteúdo coberto (item 15 acima); revalidado nas 3 resoluções com o Suporte aberto |
+| Conferência de textos: não detectava reticências horizontais, texto em lista com máscara conta como conferido, "fora da tela" ignora a área segura | refutados (ferramenta de Editor, sem efeito no jogo) | — |
+| Mesa: a barra de rolagem entrava na navegação do teclado e a seta para baixo saindo do Fechar ia para ela, não para os cartões | baixa | barra fora da navegação (ferramenta da Mesa + teste) |
+| Pop-up do tutorial no celular: depois de subir acima do joystick, o topo podia passar da HUD | baixa | altura limitada depois de subir |
+| Pop-up compacto do tutorial sobre o Suporte (mesma causa do item 15) | baixa | se o modo compacto cobrir algo do inventário, fica no rodapé |
+| "E": calculado antes da câmera andar no quadro, e no primeiro quadro com o tamanho padrão da tecla (100×100) | baixa | `[DefaultExecutionOrder(1000)]` e layout forçado ao aparecer |
+| Conferência de textos: um elemento inteiro empurrado para fora do painel pelo layout passava em silêncio | baixa | verificação nova: "empurrado para fora de '…' pelo layout" |
+
+Não validado em runtime: o limite de altura do pop-up do tutorial no celular (sem aparelho; a simulação de toque não foi usada) e o pop-up compacto sobre o Suporte (o `TutorialManager` só existe na cena Jogo, e as dicas com a prensa aberta na Fase 3 já foram vistas na Fase 2). Os dois ficam **pendentes de validação**.
+
+---
+
+## 21. Itens 7, 12, 20, 21, 22 e 23 do relatório de testes (28/09/2026)
+
+Pedido: corrigir os itens 7 (save antigo retomando o tutorial na etapa errada), 12 (câmera do porão), 20 (FMOD Studio Listener no menu e no Tribunal), 21 (registrar o fim de jogo), 22 (avisos do console) e 23 (nome da cena do menu no pause), sem mexer em balanceamento nem em textos narrativos. Aceite: EditMode todo aprovado, validador ok, console limpo ao dar Play depois dos testes.
+
+### 21.1 Situação de cada item
+
+| Item | O que foi feito | Onde | Estado |
+|---|---|---|---|
+| 7. Save antigo retoma o tutorial errado | Ao carregar, se o `GameManager` já tem o tutorial concluído, a etapa vai ao menos até `mesa_de_casos` (etapa salva maior fica como está) | `TutorialManager.EtapaAoCarregar` (usada no `Start`) | **validado**: teste + Play Mode com o próprio save v6 de 26/09 (etapa 7, Fase 2). O Continuar leva ao escritório com "Novos clientes deixaram cartas na mesa…" e a seta na mesa, em vez de "desça ao porão" (captura `07_…`) |
+| 12. Câmera do porão | O limite da câmera apontava para `CameraConfiner`, instância de um prefab que não existe mais, com um polígono além das paredes (x −12,5 a 14,4). Trocado por `LimitesDaCamera` (objeto da cena) com o retângulo da sala, das faces externas das paredes invisíveis e do topo delas até a base do chão (x −11,10 a 11,03; y −4,69 a 6,66); a instância perdida foi removida | cena `Porao`, pela ferramenta nova | **validado** (teste de cena + Play Mode: nas duas pontas a vista para exatamente nas paredes, capturas `antes_12_*` e `12_porao_*`). **Limitação:** a arte do porão cobre só 8×8 unidades (prensa e escada), e em 16:9 a câmera mostra 19,6×11. Dentro da sala, à direita da escada, continua um vazio escuro onde o jogador anda. Resolver isso é arte (estender o cenário) ou decisão de level design (encurtar a sala); ver §21.6 |
+| 20. FMOD Studio Listener | `StudioListener` na câmera do menu e do Tribunal (a ferramenta confere todas as cenas do build; só essas duas não tinham) | cenas `menu principal` e `Tribunal` | **validado** (teste de cena + Play Mode no menu e no Tribunal sem o aviso do FMOD) |
+| 21. Fim de jogo não registrado | Save **v8**: `jogoConcluido`, `desfechoRota`, `desfechoReuAbsolvido` e `desfechoTitulo`. O tribunal grava ao mostrar a tela final (`SistemaDeSave.RegistrarFimDeJogo`), só com rota travada de verdade: a cena aberta direto no Editor não grava. Com o jogo terminado, o Continuar some (não há o que continuar) e `Carregar` recusa; o Jogar ainda pergunta antes de substituir o registro. Saves até a v7 continuam como partida em andamento | `SistemaDeSave`, `TribunalManager`, `MenuPrincipalManager` | **validado** (testes + Play Mode: rota B com réu absolvido gravou v8 com "Final B: O Tirano"; de volta ao menu, o Continuar não aparece e o Jogar pergunta; capturas `21_*`) |
+| 22. Avisos do console | (a) `Caso_Tutorial` sem título/rota: título e rota só são exigidos dos casos que vão à Mesa (Fase 2 em diante); o caso do tutorial nunca aparece nela, e nenhum texto foi inventado. (b) `FindObjectOfType` → `FindAnyObjectByType` (mesma busca, incluindo inativos). (c) Itens que os testes deixavam na memória: um `SetUpFixture` global destrói, no fim de cada execução, os ScriptableObjects do jogo criados na memória durante ela, inclusive os clones que o código testado faz (`Item.Clone`, `DontSave`); além disso, `Item` e `CaseData` só avisam sobre assets salvos | `@CaseData`, `Item`, `GameManager`, `Editor/Testes/LimpezaDosTestes.cs` | **validado**: suíte inteira e Play logo depois, com **0 mensagens** no console (nem aviso, nem erro) depois de 1.680 quadros; 0 objetos do jogo na memória depois da suíte |
+| 23. Nome da cena do menu | `PauseMenu.CenaDoMenu = "menu principal"`, usado pelo pause e como padrão do tribunal | `PauseMenu`, `TribunalManager` | **validado** (teste compara com o Build Settings; Play Mode: pause → menu carregou a cena de índice 0) |
+
+**Aceite:** EditMode **102/102**, validador "Campanha válida" (0 problemas), console vazio ao dar Play depois da suíte. **Validado.**
+
+### 21.2 Decisões desta etapa
+
+- **Fim de jogo esconde o Continuar.** Antes o Continuar levava de volta para antes do julgamento de um jogo que já tinha acabado. Agora o save guarda o desfecho e não há o que continuar. O registro fica disponível para uso futuro (tela de créditos, galeria de finais). Se o grupo preferir poder rejogar o tribunal, dá para voltar a mostrar o Continuar sem perder o registro.
+- **Tutorial "ao menos até a mesa":** vale só quando o `GameManager` do save já tem o tutorial concluído. Um save no meio do tutorial continua na etapa salva.
+- **Título do caso do tutorial:** em vez de inventar um título (seria texto narrativo), a validação deixou de exigi-lo do caso que não vai à Mesa.
+- **Avisos só para assets salvos:** clones de runtime e objetos de teste não são o que o jogador vê. As regras de validação dos assets continuam iguais.
+- **Limpeza única na memória do Editor:** havia 72.556 clones de `Item` de execuções anteriores (testes e simulações da auditoria), que só sairiam ao fechar o Unity. Foram destruídos uma vez, fora do Play Mode. Daqui em diante a limpeza automática impede novos.
+
+### 21.3 Arquivos
+
+- Scripts: `SistemaDeSave` (v8, `RegistrarFimDeJogo`, `MarcarFimDeJogo`, `PodeContinuar`, `ExistePartidaEmAndamento`; `Salvar` dividido em `DadosDaPartidaAtual` + `Gravar`), `TribunalManager` (registro do fim; menu pela constante; correção do item 17), `MenuPrincipalManager` (Continuar só com partida em andamento), `PauseMenu` (`CenaDoMenu`), `TutorialManager` (`EtapaAoCarregar`, `EtapaMesaDeCasos`), `@CaseData` e `Item` (`OnValidate`), `GameManager` (`FindAnyObjectByType`). Correções da revisão da §20: `ItemPickupNotificationUI`, `TutorialStepUI`, `PromptDeInteracao`.
+- Editor (novo): `CamerasECenasTool.cs` (**Ferramentas > Cenas > Aplicar limite da câmera do porão e FMOD Studio Listener**). Alterados: `MesaDeCasosLayoutTool.cs` (barra fora da navegação), `ConferenciaDeTextosDaUI.cs` (elemento empurrado pelo layout).
+- Testes (novos): `Editor/Testes/LimpezaDosTestes.cs` (SetUpFixture) e `Editor/Testes/ItensGeraisDoRelatorioTests.cs` (7 testes). `MesaDeCasosTests` ganhou a verificação da navegação.
+- Cenas: `Porao` (`LimitesDaCamera` no lugar da instância perdida; o confinador aponta para ele), `Tribunal` e `menu principal` (StudioListener na câmera). Ao salvar, o Unity gravou também os valores padrão de campos criados em etapas anteriores (`minimoParaEncerrar: 2`, campos da porta e do `MenuManager` do porão); são os mesmos valores que o código já usava.
+- `UI.prefab`: navegação da barra de rolagem da Mesa.
+- Não mudaram: balanceamento, textos narrativos, casos, receitas, `GameManager.prefab`, ProjectSettings e Packages.
+
+### 21.4 Configuração realizada
+
+- Ferramenta das cenas, via MCP: "menu principal: FMOD Studio Listener em 'Main Camera'"; "Porao: criado 'LimitesDaCamera'; sala x −11,10…11,03, y −4,69…6,66; confinador da câmera ligado a ele; removida a instância do prefab perdido 'CameraConfiner'"; "Tribunal: FMOD Studio Listener em 'Main Camera'". Rodando de novo: "Nenhuma alteração".
+- Ferramenta da Mesa: "barra fora da navegação do teclado". Rodando de novo: "já ajustada".
+
+### 21.5 Testes executados
+
+- **EditMode: 102/102** (95 + 7 de `ItensGeraisDoRelatorioTests`): etapa ao carregar (5 casos); roteiro da cena Jogo com `mesa_de_casos`; save de fim de jogo (ida e volta pelo JSON, não continua); save v7 sem os campos novos continua; nome da cena do menu igual ao do build (maiúsculas contam); câmera do porão dentro das paredes, sem prefab perdido; StudioListener no menu e no Tribunal.
+- **Validador:** "Campanha válida", 0 problemas.
+- **Aceite do console:** console limpo, suíte inteira, console limpo de novo, Play no menu → **0 mensagens** depois de 1.680 quadros. As 16 mensagens que aparecem **durante** a suíte são avisos que os próprios testes provocam de propósito (caso recusado, margem inválida da rota) e não vêm do Play.
+- **Play Mode**, no Editor via MCP:
+
+| Cenário | Resultado |
+|---|---|
+| Menu → Continuar com o save v6 de 26/09 (etapa 7, Fase 2) | cena Jogo, tutorial em `mesa_de_casos`, pop-up e seta da mesa |
+| Pause → Menu | cena "menu principal" (índice 0); console só com um aviso do próprio plugin do MCP |
+| Tribunal (rota B, mercador, Fatos), 2 provas → Encerrar → veredito → tela final | `save.json` v8 com fim de jogo; log "Fim de jogo registrado (rota B_Tirano, réu absolvido)"; prova apresentada verde e opaca |
+| Tribunal → Voltar ao menu | Continuar escondido; Jogar pergunta; console sem avisos |
+| Porão, jogador nas duas pontas | vista presa às paredes (x −11,10…8,46 e −8,53…11,03; antes −12,49…7,07 e −4,82…14,74) |
+| Menu e Tribunal | sem o aviso do FMOD |
+
+### 21.6 Limitações e pendências
+
+- **Porão (item 12):** a câmera não mostra mais nada além das paredes, mas **dentro** da sala a arte só cobre a prensa e a escada. À direita da escada o jogador anda num vazio escuro, e em 16:9 a arte não preenche a tela. Opções para o grupo: estender o cenário do porão até as paredes, ou aproximar as paredes invisíveis da arte (a prensa e a saída ficam entre x −7,6 e −0,8). Pendente de decisão e de arte.
+- **Fim de jogo:** o registro existe no save, mas nada o exibe ainda (por exemplo, uma tela de finais alcançados).
+- **Aparelho real:** nada deste prompt depende de toque. O FMOD foi conferido só pelo console, sem ouvir o som.
+
+### 21.7 Capturas
+
+`07_save_v6_tutorial_na_mesa_1920x1080`, `antes_12_porao_esquerda/direita_1920x1080`, `12_porao_esquerda/direita_1920x1080`, `21_tela_final_1920x1080`, `21_menu_depois_do_fim_1920x1080`, `17_prova_apresentada_opaca_1920x1080` e `15b_popup_fase3_suporte_*` (3 resoluções), entregues na conversa, fora do repositório. O console foi conferido pela leitura do próprio Editor (sem captura de janela).
+
+### 21.8 Efeitos no ambiente de quem testou
+
+- **`save.json`:** copiado antes dos testes (md5 `ACB0D63D…`, 21:00 de 28/09). Foi trocado de propósito duas vezes: pelo save v6 de 26/09, para o item 7, e pelo registro de fim de jogo que o tribunal gravou, no item 21. Nas duas vezes o original voltou em seguida. No fim: **md5 idêntico**, mesma data, atributo normal e nenhum `.tmp`.
+- **PlayerPrefs:** o Continuar com o save v6 zerou e remarcou chaves de progresso. Restauradas pelo registro **e pela API do Unity**, porque o Editor mantém as PlayerPrefs em cache e poderia regravar o valor antigo. A exportação final do registro saiu **idêntica** ao backup.
+- **Memória do Editor:** 72.556 clones antigos de `Item` destruídos (§21.2).
+- **Editor:** tamanho temporário 4:3 removido; Game View em "16:9 Landscape"; `runInBackground` desligado; cena "menu principal" aberta e limpa. `TestResults.xml` regravado pelo Test Runner.
+- Nada foi commitado.
+
+### 21.9 Como revalidar
+
+1. **Ferramentas > Cenas > Aplicar limite da câmera do porão e FMOD Studio Listener** → "Nenhuma alteração".
+2. Test Runner > EditMode > Run All → **102/102**; em seguida, limpar o console e dar Play no menu → console vazio.
+3. Com backup do `save.json`, jogar até o fim do tribunal e voltar ao menu: o Continuar não aparece e o save diz `"jogoConcluido": true`.

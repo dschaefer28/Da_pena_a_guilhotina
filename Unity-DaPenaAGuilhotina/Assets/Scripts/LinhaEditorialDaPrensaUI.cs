@@ -158,7 +158,9 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero; // cobre o painel da prensa
         janela.GetComponent<Image>().color = CorFundo; // e bloqueia o clique nos slots/Misturar por baixo
         var v = janela.GetComponent<VerticalLayoutGroup>();
-        v.padding = new RectOffset(22, 22, 22, 22); v.spacing = 12f;
+        // Margens verticais menores: com 22/12 o conteúdo pedia 747 de altura num painel de 720, e o título e a nota
+        // eram espremidos até passar da própria caixa.
+        v.padding = new RectOffset(22, 22, 16, 16); v.spacing = 8f;
         v.childControlWidth = v.childControlHeight = true; v.childForceExpandWidth = true; v.childForceExpandHeight = false;
 
         textoTitulo = Texto("Titulo", janela.transform, 32f);

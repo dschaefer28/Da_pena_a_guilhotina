@@ -94,10 +94,14 @@ public class Item : ScriptableObject
 #if UNITY_EDITOR
     private void OnValidate()
     {
+        if (itemAmt < 0) itemAmt = 0;
+
+        // Avisos só para assets salvos: clones de runtime (DontSave) e itens criados pelos testes ficam na memória e
+        // passam de novo por aqui ao dar Play, repetindo avisos sobre objetos que o jogador nunca vê.
+        if (!UnityEditor.EditorUtility.IsPersistent(this)) return;
+
         if (string.IsNullOrWhiteSpace(itemID))
             Debug.LogWarning($"[Item] '{name}' está sem itemID. O empilhamento e as buscas de pista podem falhar.", this);
-
-        if (itemAmt < 0) itemAmt = 0;
 
         if (confiabilidade != Confiabilidade.NaoEPista && caso == null)
             Debug.LogWarning($"[Item] '{name}' tem confiabilidade {confiabilidade} mas nenhum caso: a prensa vai tratá-lo como item comum.", this);
