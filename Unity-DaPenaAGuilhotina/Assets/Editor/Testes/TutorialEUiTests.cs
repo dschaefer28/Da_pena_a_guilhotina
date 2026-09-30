@@ -173,6 +173,93 @@ public class TutorialEUiTests
         Assert.AreEqual("depois", tm.EtapaAtualId);
     }
 
+    // ===== Tutorial sem travar (ações fora de ordem e troca de cena no meio) =====
+
+    private static TutorialStep Evento(string id, string evento) =>
+        new TutorialStep { etapaId = id, tipoDeAvanco = TipoDeAvanco.EventoDeJogo, nomeDoEvento = evento };
+
+    private static TutorialStep IrPara(string id, string cena) =>
+        new TutorialStep { etapaId = id, tipoDeAvanco = TipoDeAvanco.CarregamentoDeCena, nomeDaCena = cena };
+
+    // O roteiro da cena Jogo, resumido: escritório -> porão -> escritório.
+    private void MontarRoteiro()
+    {
+        tm.etapas = new List<TutorialStep>
+        {
+            Evento("falar_segunda_personagem", TutorialManager.EVENTO_ITEM_RECEBIDO),
+            Evento("InventoryButton", TutorialManager.EVENTO_INVENTARIO_ALTERNADO),
+            Evento("segunda_pista", TutorialManager.EVENTO_ITEM_RECEBIDO),
+            IrPara("ir_para_porao", "Porao"),
+            Evento("explicar_prensa", TutorialManager.EVENTO_PRENSA_ABERTA),
+            Evento("misturar_itens", TutorialManager.EVENTO_PANFLETO_GERADO),
+            Evento("coletar_resultado_prensa", TutorialManager.EVENTO_PANFLETO_GUARDADO),
+            IrPara("voltar_escritorio", "Jogo"),
+            Evento("mesa_de_casos", TutorialManager.EVENTO_CASO_ESCOLHIDO),
+        };
+    }
+
+    private void IrParaEtapa(string id) =>
+        typeof(TutorialManager).GetField("indiceAtual", BindingFlags.NonPublic | BindingFlags.Instance)
+            .SetValue(tm, tm.etapas.FindIndex(e => e.etapaId == id));
+
+    private void EntrarNaCena(string cena) =>
+        typeof(TutorialManager).GetMethod("SincronizarComACena", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(tm, new object[] { cena });
+
+    [Test]
+    public void AcaoFeitaAntesDaHora_NaoPrendeOTutorial()
+    {
+        MontarRoteiro();
+        IrParaEtapa("falar_segunda_personagem");
+
+        // Abrir o inventário antes da hora não pula a etapa que o ensina (repete-se a qualquer momento).
+        tm.NotificarEvento(TutorialManager.EVENTO_INVENTARIO_ALTERNADO);
+        tm.NotificarEvento(TutorialManager.EVENTO_INVENTARIO_ALTERNADO);
+        tm.NotificarEvento(TutorialManager.EVENTO_ITEM_RECEBIDO); // pista da Marie
+        Assert.AreEqual("InventoryButton", tm.EtapaAtualId);
+
+        // Ignorou o "abra o inventário" e já pegou a segunda pista com Dupaty: ele não a entrega de novo, então a
+        // etapa "volte ao Dupaty" não pode ficar esperando por ela.
+        tm.NotificarEvento(TutorialManager.EVENTO_ITEM_RECEBIDO);
+        Assert.AreEqual("InventoryButton", tm.EtapaAtualId);
+        tm.NotificarEvento(TutorialManager.EVENTO_INVENTARIO_ALTERNADO);
+        Assert.AreEqual("ir_para_porao", tm.EtapaAtualId, "a pista já recebida conta");
+    }
+
+    [Test]
+    public void TrocarDeCenaNoMeioDoTutorial_MostraAEtapaDaCenaNova()
+    {
+        MontarRoteiro();
+
+        // Desceu ao porão sem ter aberto o inventário: segue para as etapas do porão, não fica preso na do escritório.
+        IrParaEtapa("InventoryButton");
+        EntrarNaCena("Porao");
+        Assert.AreEqual("explicar_prensa", tm.EtapaAtualId);
+
+        // Subiu sem imprimir: no escritório a instrução é voltar ao porão; lá, a prensa de novo.
+        tm.NotificarEvento(TutorialManager.EVENTO_PRENSA_ABERTA);
+        Assert.AreEqual("misturar_itens", tm.EtapaAtualId);
+        EntrarNaCena("Jogo");
+        Assert.AreEqual("ir_para_porao", tm.EtapaAtualId);
+        EntrarNaCena("Porao");
+        Assert.AreEqual("explicar_prensa", tm.EtapaAtualId);
+
+        // O menu (saída pelo pause) não é cena do tutorial: nada muda.
+        IrParaEtapa("misturar_itens");
+        EntrarNaCena("menu principal");
+        Assert.AreEqual("misturar_itens", tm.EtapaAtualId);
+
+        // Subiu sem guardar o panfleto: o panfleto já existe, então segue para a mesa (como antes).
+        IrParaEtapa("coletar_resultado_prensa");
+        EntrarNaCena("Jogo");
+        Assert.AreEqual("mesa_de_casos", tm.EtapaAtualId);
+
+        // Voltou ao porão com a mesa pendente: a instrução é subir de novo, não "use a mesa".
+        EntrarNaCena("Porao");
+        Assert.AreEqual("voltar_escritorio", tm.EtapaAtualId);
+        EntrarNaCena("Jogo");
+        Assert.AreEqual("mesa_de_casos", tm.EtapaAtualId);
+    }
+
     // ===== Marie depois do tutorial =====
 
     [Test]

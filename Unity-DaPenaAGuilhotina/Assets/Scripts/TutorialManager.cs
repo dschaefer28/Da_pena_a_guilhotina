@@ -302,6 +302,10 @@ public class TutorialManager : MonoBehaviour
     }
 
     private int indiceAtual = -1;
+    // Eventos que aconteceram antes da etapa que os espera (ex.: pegar a segunda pista com Dupaty sem ter aberto o
+    // inventário). Sem isto a etapa ficava esperando algo que não se repete — ele não entrega a pista de novo — e o
+    // tutorial travava nela, inclusive no porão. Vale só para as etapas da cena atual (zera a cada troca de cena).
+    private readonly Dictionary<string, int> eventosAdiantados = new Dictionary<string, int>();
     private InventoryManager inventoryManagerAtual;
     private CraftingPress craftingPressAtual;
     private Transform jogador;
@@ -386,33 +390,60 @@ public class TutorialManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         VincularDependenciasLocais();
-        BroadcastEtapaAtual();
-
-        TutorialStep etapa = EtapaAtualObjeto();
-        Debug.Log($"[TutorialManager] Cena '{scene.name}' carregada. Etapa atual: {(etapa?.etapaId ?? "(nenhuma)")}, " +
-                  $"tipoDeAvanco: {(etapa != null ? etapa.tipoDeAvanco.ToString() : "-")}, nomeDaCena esperado: '{etapa?.nomeDaCena}'.");
-
-        // O jogador pode sair de uma cena antes de terminar as últimas etapas dela (ex: subir do porão sem
-        // guardar o panfleto — o save já leva o que ficou na prensa). Se só faltavam etapas "dispensáveis"
-        // até a etapa que espera esta cena, o tutorial pula até ela em vez de ficar preso numa instrução
-        // de outra cena.
-        int alvo = IndiceDaProximaEtapaDeCena(scene.name);
-        if (alvo > indiceAtual)
-        {
-            Debug.Log($"[TutorialManager] Saiu antes do fim das etapas de '{etapa?.etapaId}': pulando para '{etapas[alvo].etapaId}'.");
-            indiceAtual = alvo;
-            etapa = etapas[alvo];
-        }
-
-        if (etapa != null && etapa.tipoDeAvanco == TipoDeAvanco.CarregamentoDeCena && etapa.nomeDaCena == scene.name)
-        {
-            Debug.Log($"[TutorialManager] Cena bateu com a etapa '{etapa.etapaId}' — avançando automaticamente.");
-            CompletarEtapaAtual();
-        }
+        SincronizarComACena(scene.name);
     }
 
+    /// <summary>Acerta a etapa atual com a cena em que o jogador acabou de entrar e avisa a UI (OnEtapaAlterada).</summary>
+    private void SincronizarComACena(string cena)
+    {
+        eventosAdiantados.Clear(); // valiam para as etapas da cena anterior
+
+        TutorialStep etapa = EtapaAtualObjeto();
+        Debug.Log($"[TutorialManager] Cena '{cena}' carregada. Etapa atual: {(etapa?.etapaId ?? "(nenhuma)")}, " +
+                  $"tipoDeAvanco: {(etapa != null ? etapa.tipoDeAvanco.ToString() : "-")}, nomeDaCena esperado: '{etapa?.nomeDaCena}'.");
+
+        // Antes do Start (que escolhe a etapa inicial) ou com o tutorial terminado não há o que acertar.
+        if (etapa == null)
+        {
+            BroadcastEtapaAtual();
+            return;
+        }
+
+        // O jogador pode sair de uma cena sem terminar (nem pular) as etapas dela: descer ao porão sem ter aberto o
+        // inventário, subir sem guardar o panfleto... Se o que faltava só guiava o jogador, o tutorial pula até a etapa
+        // que espera esta cena, em vez de ficar preso numa instrução de outra cena.
+        int alvo = IndiceDaProximaEtapaDeCena(cena);
+        if (alvo >= 0)
+        {
+            if (alvo > indiceAtual)
+                Debug.Log($"[TutorialManager] Saiu antes do fim das etapas de '{etapa.etapaId}': pulando para '{etapas[alvo].etapaId}'.");
+            indiceAtual = alvo;
+            Debug.Log($"[TutorialManager] Cena bateu com a etapa '{etapas[alvo].etapaId}' — avançando automaticamente.");
+            CompletarEtapaAtual(); // já avisa a UI
+            return;
+        }
+
+        // Saiu no meio de uma etapa obrigatória (ex.: subiu do porão sem imprimir o panfleto): a instrução da prensa
+        // não faz sentido no escritório, então o tutorial volta para a etapa que leva até lá ("desça ao porão").
+        int volta = IndiceDaEtapaQueLevaDeVolta(cena);
+        if (volta >= 0)
+        {
+            Debug.Log($"[TutorialManager] '{etapa.etapaId}' é de outra cena: voltando para '{etapas[volta].etapaId}'.");
+            indiceAtual = volta;
+        }
+        BroadcastEtapaAtual();
+    }
+
+    // Etapas que só guiam o jogador (andar, conversar, receber pista, abrir o inventário, guardar o panfleto): quem chegou
+    // à cena seguinte sem concluí-las já fez o que importava (o alçapão só abre com as duas pistas), então elas não
+    // prendem o tutorial ao trocar de cena. As da prensa (abrir, encher, misturar) e a da mesa continuam obrigatórias.
+    private static readonly HashSet<string> EventosDispensaveisAoTrocarDeCena = new HashSet<string>
+    {
+        EVENTO_JOGADOR_ANDOU, EVENTO_DIALOGO_FINALIZADO, EVENTO_ITEM_RECEBIDO, EVENTO_INVENTARIO_ALTERNADO, EVENTO_PANFLETO_GUARDADO
+    };
+
     /// <summary>Índice da próxima etapa que espera a cena <paramref name="cena"/> carregar, desde que todas as
-    /// etapas até lá possam ser dispensadas (leitura, ou guardar o panfleto). -1 se não houver.</summary>
+    /// etapas até lá possam ser dispensadas (leitura, ou EventosDispensaveisAoTrocarDeCena). -1 se não houver.</summary>
     private int IndiceDaProximaEtapaDeCena(string cena)
     {
         for (int i = Mathf.Max(indiceAtual, 0); i < etapas.Count; i++)
@@ -420,8 +451,36 @@ public class TutorialManager : MonoBehaviour
             TutorialStep e = etapas[i];
             if (e.tipoDeAvanco == TipoDeAvanco.CarregamentoDeCena) return e.nomeDaCena == cena ? i : -1;
             bool dispensavel = e.tipoDeAvanco == TipoDeAvanco.CliqueDoJogador ||
-                               (e.tipoDeAvanco == TipoDeAvanco.EventoDeJogo && e.nomeDoEvento == EVENTO_PANFLETO_GUARDADO);
+                               (e.tipoDeAvanco == TipoDeAvanco.EventoDeJogo && EventosDispensaveisAoTrocarDeCena.Contains(e.nomeDoEvento));
             if (!dispensavel) return -1;
+        }
+        return -1;
+    }
+
+    /// <summary>Cena em que a etapa acontece: o destino da última etapa de troca de cena antes dela
+    /// (null = a cena em que o tutorial começa).</summary>
+    private string CenaDaEtapa(int indice)
+    {
+        for (int i = Mathf.Min(indice, etapas.Count) - 1; i >= 0; i--)
+            if (etapas[i].tipoDeAvanco == TipoDeAvanco.CarregamentoDeCena) return etapas[i].nomeDaCena;
+        return null;
+    }
+
+    /// <summary>Índice da etapa que, mostrada na cena <paramref name="cena"/>, leva de volta à cena da etapa atual
+    /// (ex.: "desça ao porão" para quem subiu no meio da prensa). -1 se o jogador já está na cena da etapa.</summary>
+    private int IndiceDaEtapaQueLevaDeVolta(string cena)
+    {
+        string cenaDaEtapa = CenaDaEtapa(indiceAtual);
+        if (string.IsNullOrEmpty(cenaDaEtapa) || cenaDaEtapa == cena) return -1;
+        for (int i = indiceAtual - 1; i >= 0; i--)
+        {
+            TutorialStep e = etapas[i];
+            if (e.tipoDeAvanco != TipoDeAvanco.CarregamentoDeCena || e.nomeDaCena != cenaDaEtapa) continue;
+            // Origem sem nome = a cena em que o tutorial começa. O menu (saída pelo pause) não é cena do tutorial.
+            string origem = CenaDaEtapa(i);
+            bool mostradaNestaCena = origem == cena ||
+                (origem == null && etapas.Exists(x => x.tipoDeAvanco == TipoDeAvanco.CarregamentoDeCena && x.nomeDaCena == cena));
+            return mostradaNestaCena ? i : -1;
         }
         return -1;
     }
@@ -532,6 +591,42 @@ public class TutorialManager : MonoBehaviour
         {
             CompletarEtapaAtual();
         }
+        else if (EtapaAdianteNestaCenaEspera(nomeDoEvento))
+        {
+            // Feito antes da hora: a etapa que espera este evento conta como concluída quando chegar a vez dela.
+            eventosAdiantados.TryGetValue(nomeDoEvento, out int vezes);
+            eventosAdiantados[nomeDoEvento] = vezes + 1;
+        }
+    }
+
+    // Só conversa e pista recebida são lembradas antes da hora: não se repetem sob demanda (o NPC não entrega a pista de
+    // novo). Os eventos da prensa já são conferidos pelo estado real (AcaoJaFeita), e abrir o inventário se repete a
+    // qualquer hora (no PC a tecla funciona antes de a etapa "InventoryButton" ensiná-la).
+    private static readonly HashSet<string> EventosLembradosAntesDaHora = new HashSet<string>
+    {
+        EVENTO_DIALOGO_FINALIZADO, EVENTO_ITEM_RECEBIDO
+    };
+
+    // Alguma etapa depois da atual, ainda nesta cena (antes da próxima troca de cena), espera este evento?
+    private bool EtapaAdianteNestaCenaEspera(string nomeDoEvento)
+    {
+        if (string.IsNullOrEmpty(nomeDoEvento) || !EventosLembradosAntesDaHora.Contains(nomeDoEvento)) return false;
+        for (int i = Mathf.Max(indiceAtual, 0); i < etapas.Count; i++)
+        {
+            TutorialStep e = etapas[i];
+            if (e.tipoDeAvanco == TipoDeAvanco.CarregamentoDeCena) return false;
+            if (e.tipoDeAvanco == TipoDeAvanco.EventoDeJogo && e.nomeDoEvento == nomeDoEvento) return true;
+        }
+        return false;
+    }
+
+    private bool ConsumirEventoAdiantado(TutorialStep etapa)
+    {
+        if (etapa == null || etapa.tipoDeAvanco != TipoDeAvanco.EventoDeJogo || string.IsNullOrEmpty(etapa.nomeDoEvento) ||
+            !eventosAdiantados.TryGetValue(etapa.nomeDoEvento, out int vezes)) return false;
+        if (vezes > 1) eventosAdiantados[etapa.nomeDoEvento] = vezes - 1;
+        else eventosAdiantados.Remove(etapa.nomeDoEvento);
+        return true;
     }
 
     public TutorialStep ObterEtapa(string etapaId)
@@ -586,8 +681,9 @@ public class TutorialManager : MonoBehaviour
         if (etapas[indiceAtual].salvarAoConcluir) StartCoroutine(SalvarComACenaPronta());
         indiceAtual++;
         // A ação pedida pela próxima etapa pode já ter sido feita (ex.: o jogador encheu a prensa enquanto lia o
-        // texto do status): ela conta como concluída, senão o tutorial esperaria um evento que não vai se repetir.
-        while (indiceAtual < etapas.Count && AcaoJaFeita(etapas[indiceAtual]))
+        // texto do status, ou pegou a segunda pista antes de abrir o inventário): ela conta como concluída, senão o
+        // tutorial esperaria um evento que não vai se repetir.
+        while (indiceAtual < etapas.Count && (AcaoJaFeita(etapas[indiceAtual]) || ConsumirEventoAdiantado(etapas[indiceAtual])))
         {
             if (etapas[indiceAtual].salvarAoConcluir) StartCoroutine(SalvarComACenaPronta());
             indiceAtual++;
