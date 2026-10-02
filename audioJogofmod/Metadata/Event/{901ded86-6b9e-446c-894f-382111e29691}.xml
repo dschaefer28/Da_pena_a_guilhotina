@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{901ded86-6b9e-446c-894f-382111e29691}">
 		<property name="name">
-			<value>Normal geral_01</value>
+			<value>P2Normal</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -114,6 +114,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{67c5ded8-43b9-48e4-8b5a-6cc0ca8b02c1}">
+		<property name="volume">
+			<value>5</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>

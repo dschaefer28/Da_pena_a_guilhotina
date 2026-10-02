@@ -23,7 +23,7 @@ MonoBehaviour:
         Data2: 1151074371
         Data3: -921428562
         Data4: -1159192161
-      Path: event:/Normal feminino_01
+      Path: event:/NormalFeminino1
     choices:
     - choiceText: "Precisamos pedir que expliquem o reconhecimento, sem inventar
         uma explica\xE7\xE3o no lugar deles."

@@ -19,11 +19,11 @@ MonoBehaviour:
       das falhas do processo n\xE3o deve ser atribu\xEDda \xE0 boca dela."
     dialogueAudio:
       Guid:
-        Data1: -1877086842
-        Data2: 1147956126
-        Data3: 557338505
-        Data4: -1852382703
-      Path: event:/Normal geral_01
+        Data1: -403724050
+        Data2: 1276221962
+        Data3: 2017058486
+        Data4: -235533275
+      Path: event:/P2(2)Normal
     choices:
     - choiceText: "Ent\xE3o o relato n\xE3o basta para demonstrar tudo?"
       nextDialogue: {fileID: 11400000, guid: 2d185da366784d548a44b6c7745e72aa, type: 2}

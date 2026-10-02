@@ -18,9 +18,9 @@ MonoBehaviour:
       e escreva o memorial na prensa."
     dialogueAudio:
       Guid:
-        Data1: -1877086842
-        Data2: 1147956126
-        Data3: 557338505
-        Data4: -1852382703
-      Path: event:/Normal geral_01
+        Data1: -403724050
+        Data2: 1276221962
+        Data3: 2017058486
+        Data4: -235533275
+      Path: event:/P2(2)Normal
     choices: []

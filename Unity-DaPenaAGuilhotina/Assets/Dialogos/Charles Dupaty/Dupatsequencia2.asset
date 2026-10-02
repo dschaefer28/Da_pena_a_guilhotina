@@ -19,11 +19,11 @@ MonoBehaviour:
       p\xFAblico."
     dialogueAudio:
       Guid:
-        Data1: -1877086842
-        Data2: 1147956126
-        Data3: 557338505
-        Data4: -1852382703
-      Path: event:/Normal geral_01
+        Data1: 1073101364
+        Data2: 1084329749
+        Data3: 1909596053
+        Data4: -2045081360
+      Path: event:/P2Reclamar
     choices:
     - choiceText: O memorial pode obrigar os magistrados a responder?
       nextDialogue: {fileID: 11400000, guid: 097c2427d98038b47a1e596236407742, type: 2}

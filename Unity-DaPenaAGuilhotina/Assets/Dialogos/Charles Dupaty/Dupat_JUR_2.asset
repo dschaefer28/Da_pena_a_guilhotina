@@ -23,7 +23,7 @@ MonoBehaviour:
         Data2: 1147956126
         Data3: 557338505
         Data4: -1852382703
-      Path: event:/Normal geral_01
+      Path: event:/P2Normal
     choices:
     - choiceText: Devemos atacar os magistrados pelo nome?
       nextDialogue: {fileID: 11400000, guid: 9ba559859f31fab4593b1db6a6e0b37d, type: 2}

@@ -19,11 +19,11 @@ MonoBehaviour:
       tamb\xE9m aquilo que era verdadeiro."
     dialogueAudio:
       Guid:
-        Data1: -1877086842
-        Data2: 1147956126
-        Data3: 557338505
-        Data4: -1852382703
-      Path: event:/Normal geral_01
+        Data1: -403724050
+        Data2: 1276221962
+        Data3: 2017058486
+        Data4: -235533275
+      Path: event:/P2(2)Normal
     choices:
     - choiceText: "Publicar pode trazer problemas para n\xF3s?"
       nextDialogue: {fileID: 11400000, guid: a077d4f38785bb24cbe7b9c1064efc79, type: 2}

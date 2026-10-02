@@ -22,7 +22,7 @@ MonoBehaviour:
         Data2: 1151074371
         Data3: -921428562
         Data4: -1159192161
-      Path: event:/Normal feminino_01
+      Path: event:/NormalFeminino1
     choices:
     - choiceText: O que gostaria que as pessoas soubessem sobre eles?
       nextDialogue: {fileID: 11400000, guid: 255748bf9ec3cba4ca3676fb66b77562, type: 2}

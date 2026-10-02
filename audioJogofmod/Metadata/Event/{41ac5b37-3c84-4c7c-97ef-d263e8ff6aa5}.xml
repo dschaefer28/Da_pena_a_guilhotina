@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{41ac5b37-3c84-4c7c-97ef-d263e8ff6aa5}">
 		<property name="name">
-			<value>Normal_01</value>
+			<value>P3Normal</value>
 		</property>
 		<property name="outputFormat">
 			<value>0</value>
@@ -97,6 +97,9 @@
 		</property>
 		<property name="length">
 			<value>3.7999999999999998</value>
+		</property>
+		<property name="pitch">
+			<value>3.79999995</value>
 		</property>
 		<property name="looping">
 			<value>true</value>

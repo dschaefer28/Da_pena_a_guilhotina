@@ -18,11 +18,11 @@ MonoBehaviour:
       sua casa, roubaram suas coisas e bateram nele e na esposa."
     dialogueAudio:
       Guid:
-        Data1: 745793994
-        Data2: 1290263996
-        Data3: -404866682
-        Data4: -1175277728
-      Path: event:/reclamar feminino_02
+        Data1: 1666405146
+        Data2: 1151074371
+        Data3: -921428562
+        Data4: -1159192161
+      Path: event:/NormalFeminino1
     choices:
     - choiceText: Quero entender o que a senhora presenciou naquela noite.
       nextDialogue: {fileID: 11400000, guid: 76e43983ef618f04b92a23d4cd215076, type: 2}

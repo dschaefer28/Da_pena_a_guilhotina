@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{ad3bb853-d97d-4b6b-97d8-12dee3c3f5f4}">
 		<property name="name">
-			<value>tristeza geral_01</value>
+			<value>P2Tristeza</value>
 		</property>
 		<property name="outputFormat">
 			<value>0</value>
@@ -97,6 +97,12 @@
 		</property>
 		<property name="length">
 			<value>6.5999999999999996</value>
+		</property>
+		<property name="volume">
+			<value>6.5</value>
+		</property>
+		<property name="pitch">
+			<value>-4</value>
 		</property>
 		<property name="looping">
 			<value>true</value>

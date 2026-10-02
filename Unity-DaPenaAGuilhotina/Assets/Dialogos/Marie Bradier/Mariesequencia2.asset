@@ -18,11 +18,11 @@ MonoBehaviour:
       estavam seu marido e os outros naquela noite?
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices: []
   - name: Marie Bradier
     text: "Meu marido, Charles Bradier, estava em casa, doente. Meu irm\xE3o Jean
@@ -52,11 +52,11 @@ MonoBehaviour:
       presenciou em casa."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices:
     - choiceText: Posso levar esse relato ao meu mestre?
       nextDialogue: {fileID: 11400000, guid: 14039626ac2fd98419e89ccb4593e7bb, type: 2}

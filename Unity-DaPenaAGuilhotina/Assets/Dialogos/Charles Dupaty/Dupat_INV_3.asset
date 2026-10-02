@@ -23,7 +23,7 @@ MonoBehaviour:
         Data2: 1147956126
         Data3: 557338505
         Data4: -1852382703
-      Path: event:/Normal geral_01
+      Path: event:/P2Normal
     choices:
     - choiceText: "Vou distinguir o testemunho, as d\xFAvidas e o argumento jur\xEDdico."
       nextDialogue: {fileID: 11400000, guid: cec35ce90c196254d8c7d77fa86a150f, type: 2}

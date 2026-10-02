@@ -22,7 +22,7 @@ MonoBehaviour:
         Data2: 1151074371
         Data3: -921428562
         Data4: -1159192161
-      Path: event:/Normal feminino_01
+      Path: event:/NormalFeminino1
     choices:
     - choiceText: O Sr. Thomassin, ele viu quem o atacou?
       nextDialogue: {fileID: 11400000, guid: b3034fac45cc43f4da475772a73a0964, type: 2}
