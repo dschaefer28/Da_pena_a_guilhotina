@@ -34,6 +34,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8520847808080573218}
+  - {fileID: 7147588681901146231}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &118390932720984705
@@ -107,8 +108,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3737362528c1999449c92dc61130dc9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCMovement
+  idDaInteracao: Charles Dupaty
   canInteract: 1
-  myDialogue: {fileID: 11400000, guid: e5581136f19149647a5f2e339c73ba7c, type: 2}
+  disableAfterDialogue: 0
+  custoEmHoras: 1
+  dialogoPadrao: {fileID: 11400000, guid: e5581136f19149647a5f2e339c73ba7c, type: 2}
+  casoObrigatorio: {fileID: 0}
+  reacoesDeCaso:
+  - caso: {fileID: 11400000, guid: d0bd65d553c918045aaf794e01462c68, type: 2}
+    dialogoInicialDoCaso: {fileID: 0}
+    pistaNecessaria: {fileID: 11400000, guid: a41fb3cd7d8b20f479759eb72c5d511b, type: 2}
+    dialogoComPista: {fileID: 11400000, guid: 1963780b3b97bf045baf4e2e59a88d8b, type: 2}
+    recompensasDoDialogo:
+    - {fileID: 11400000, guid: 6c1c1ed830eb85f47a44f2dc6488276f, type: 2}
+    dialogoDepoisDaEntrega: {fileID: 11400000, guid: 3c4d74239c9fedf4fb3a707faf4d6671, type: 2}
+    etapasComplementares: []
   visualIndicator: {fileID: 6668700232254436169}
   OnDialogueComplete:
     m_PersistentCalls:
@@ -125,7 +139,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  dialogueSystem: {fileID: 0}
 --- !u!95 &6015262028971164213
 Animator:
   serializedVersion: 7
@@ -136,7 +149,7 @@ Animator:
   m_GameObject: {fileID: 1680127401970856883}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: eb9b361e07e38e5408d503ef9f63c53f, type: 2}
+  m_Controller: {fileID: 9100000, guid: 5fd838880685c144ca6ac66c3ae63255, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -182,7 +195,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.20906687, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -192,8 +205,111 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
+  m_Size: {x: 4.8271685, y: 6.4375}
+  m_EdgeRadius: 0
+--- !u!1 &3606817305025359081
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7147588681901146231}
+  - component: {fileID: 4389819186420286938}
+  - component: {fileID: 6570202741183807039}
+  m_Layer: 0
+  m_Name: CheckpointTribunal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7147588681901146231
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3606817305025359081}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3662675020942740488}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &4389819186420286938
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3606817305025359081}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   m_Size: {x: 1.6875, y: 6.4375}
   m_EdgeRadius: 0
+--- !u!114 &6570202741183807039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3606817305025359081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f27beee2615d0b4d9dbaf6b98deec12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CheckpointDoTribunal
+  cenaDoTribunal: Tribunal
+  evidenciasExigidas: []
+  dialogoNaoPronto: {fileID: 11400000, guid: a72d65f9cced69c4684cb35a772f4535, type: 2}
+  dialogoPronto: {fileID: 11400000, guid: 8da65efacc630f6489e9b06047643be9, type: 2}
+  avisoNaoPronto: "Dupaty: Ainda n\xE3o. Aceite o caso na mesa, investigue e imprima
+    o panfleto antes do julgamento."
+  avisoPronto: "Dupaty: As provas est\xE3o reunidas e o panfleto est\xE1 pronto.
+    Vamos ao Tribunal."
+  avisoSemPanfleto: "Dupaty: N\xE3o encontro o panfleto deste caso. Sem ele n\xE3o
+    h\xE1 defesa para levar ao tribunal."
+  avisoFaltaEvidencia: 'Dupaty: Ainda falta uma prova que o tribunal vai exigir deste
+    caso.'
 --- !u!1 &6668700232254436169
 GameObject:
   m_ObjectHideFlags: 0
