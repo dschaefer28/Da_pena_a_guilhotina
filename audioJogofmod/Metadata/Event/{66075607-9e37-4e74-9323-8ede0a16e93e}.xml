@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{66075607-9e37-4e74-9323-8ede0a16e93e}">
 		<property name="name">
-			<value>revolucionário geral dois_01</value>
+			<value>P1Revolucionário</value>
 		</property>
 		<property name="outputFormat">
 			<value>0</value>
@@ -97,6 +97,9 @@
 		</property>
 		<property name="length">
 			<value>2.6000000000000001</value>
+		</property>
+		<property name="pitch">
+			<value>2.20000005</value>
 		</property>
 		<property name="looping">
 			<value>true</value>

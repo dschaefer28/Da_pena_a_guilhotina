@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{94b00188-893c-4cfb-93a3-7684381a4f18}">
 		<property name="name">
-			<value>reclamar geral dois_01</value>
+			<value>P1Reclamar</value>
 		</property>
 		<property name="outputFormat">
 			<value>0</value>
@@ -97,6 +97,9 @@
 		</property>
 		<property name="length">
 			<value>1.5999773242630386</value>
+		</property>
+		<property name="pitch">
+			<value>2.20000005</value>
 		</property>
 		<property name="looping">
 			<value>true</value>

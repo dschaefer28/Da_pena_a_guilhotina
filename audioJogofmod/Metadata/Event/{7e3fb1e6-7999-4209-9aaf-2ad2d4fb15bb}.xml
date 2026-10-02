@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{7e3fb1e6-7999-4209-9aaf-2ad2d4fb15bb}">
 		<property name="name">
-			<value>reclamar protagonista_01</value>
+			<value>ReclamarMain</value>
 		</property>
 		<property name="outputFormat">
 			<value>0</value>

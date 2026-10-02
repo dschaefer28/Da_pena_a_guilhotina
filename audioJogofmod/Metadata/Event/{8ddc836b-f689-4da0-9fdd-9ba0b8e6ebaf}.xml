@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{8ddc836b-f689-4da0-9fdd-9ba0b8e6ebaf}">
 		<property name="name">
-			<value>Bravo geral dois_02</value>
+			<value>P1(2)Bravo</value>
 		</property>
 		<property name="outputFormat">
 			<value>0</value>
@@ -98,6 +98,9 @@
 		<property name="length">
 			<value>1.1499773242630384</value>
 		</property>
+		<property name="pitch">
+			<value>2.20000005</value>
+		</property>
 		<property name="looping">
 			<value>true</value>
 		</property>
@@ -109,6 +112,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{74eba856-6458-49a1-ba3f-9771b50aeaea}">
+		<property name="volume">
+			<value>5</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
