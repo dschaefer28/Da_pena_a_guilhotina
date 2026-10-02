@@ -22,7 +22,7 @@ MonoBehaviour:
         Data2: 1151074371
         Data3: -921428562
         Data4: -1159192161
-      Path: event:/Normal feminino_01
+      Path: event:/NormalFeminino1
     choices:
     - choiceText: "A senhora tamb\xE9m estava com Nicolas?"
       nextDialogue: {fileID: 11400000, guid: 3f0599253630cf747b3e4fc0413d2cf9, type: 2}

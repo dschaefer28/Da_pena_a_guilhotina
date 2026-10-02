@@ -22,7 +22,7 @@ MonoBehaviour:
         Data2: 1137269962
         Data3: 1602447276
         Data4: -1031367414
-      Path: event:/reclamar feminino_01
+      Path: event:/ReclamarFeminino1
     choices:
     - choiceText: Por favor, se acalme, vamos te ajudar. O que aconteceu?
       nextDialogue: {fileID: 11400000, guid: a7e42bc888792a24d8f5066c66a3e3fc, type: 2}

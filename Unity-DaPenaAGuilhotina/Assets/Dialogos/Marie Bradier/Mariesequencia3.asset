@@ -19,11 +19,11 @@ MonoBehaviour:
       e estavam errados de qualquer forma."
     dialogueAudio:
       Guid:
-        Data1: 745793994
-        Data2: 1290263996
-        Data3: -404866682
-        Data4: -1175277728
-      Path: event:/reclamar feminino_02
+        Data1: 1666405146
+        Data2: 1151074371
+        Data3: -921428562
+        Data4: -1159192161
+      Path: event:/NormalFeminino1
     choices:
     - choiceText: A senhora sabe por que demoraram tanto?
       nextDialogue: {fileID: 11400000, guid: db8d00167183e4947b1374a33ed1f2bc, type: 2}

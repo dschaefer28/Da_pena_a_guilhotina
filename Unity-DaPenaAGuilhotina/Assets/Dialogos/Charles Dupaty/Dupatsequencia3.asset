@@ -23,7 +23,7 @@ MonoBehaviour:
         Data2: 1147956126
         Data3: 557338505
         Data4: -1852382703
-      Path: event:/Normal geral_01
+      Path: event:/P2Normal
     choices: []
   - name: Charles Dupaty
     text: "Seja preciso: estamos falando da tortura usada para arrancar uma confiss\xE3o
@@ -35,7 +35,7 @@ MonoBehaviour:
         Data2: 1147956126
         Data3: 557338505
         Data4: -1852382703
-      Path: event:/Normal geral_01
+      Path: event:/P2Normal
     choices:
     - choiceText: "O relato mostra o que precisa ser ouvido. O decreto fundamenta
         a cr\xEDtica ao procedimento."

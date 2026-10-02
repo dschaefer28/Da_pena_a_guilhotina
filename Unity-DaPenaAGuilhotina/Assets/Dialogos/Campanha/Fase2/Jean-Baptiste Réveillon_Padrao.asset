@@ -17,9 +17,9 @@ MonoBehaviour:
     text: "J\xE1 disse tudo aos magistrados. N\xE3o sei de nada que lhe interesse."
     dialogueAudio:
       Guid:
-        Data1: -403724050
-        Data2: 1276221962
-        Data3: 2017058486
-        Data4: -235533275
-      Path: event:/Normal geral_02
+        Data1: -922102975
+        Data2: 1274908470
+        Data3: 619609240
+        Data4: 476546802
+      Path: event:/P1Normal
     choices: []

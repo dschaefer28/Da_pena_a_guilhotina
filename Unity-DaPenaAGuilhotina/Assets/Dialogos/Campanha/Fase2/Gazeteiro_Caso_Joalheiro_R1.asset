@@ -18,9 +18,9 @@ MonoBehaviour:
       numa taverna isso vale como prova."
     dialogueAudio:
       Guid:
-        Data1: -922102975
-        Data2: 1274908470
-        Data3: 619609240
-        Data4: 476546802
-      Path: event:/Normal geral dois_01
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices: []

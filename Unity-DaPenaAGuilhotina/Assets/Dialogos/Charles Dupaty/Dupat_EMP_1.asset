@@ -19,11 +19,11 @@ MonoBehaviour:
       nos entregou a pr\xF3pria dor para que fiz\xE9ssemos um espet\xE1culo."
     dialogueAudio:
       Guid:
-        Data1: -1877086842
-        Data2: 1147956126
-        Data3: 557338505
-        Data4: -1852382703
-      Path: event:/Normal geral_01
+        Data1: -403724050
+        Data2: 1276221962
+        Data3: 2017058486
+        Data4: -235533275
+      Path: event:/P2(2)Normal
     choices:
     - choiceText: "E se a verdade n\xE3o bastar para chamar aten\xE7\xE3o?"
       nextDialogue: {fileID: 11400000, guid: 9d43e7995462fbe428213b4a52bd90c4, type: 2}

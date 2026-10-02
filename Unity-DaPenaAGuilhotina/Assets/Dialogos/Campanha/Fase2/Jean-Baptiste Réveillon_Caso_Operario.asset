@@ -18,21 +18,21 @@ MonoBehaviour:
       por agitadores do duque de Orl\xE9ans!"
     dialogueAudio:
       Guid:
-        Data1: -403724050
-        Data2: 1276221962
-        Data3: 2017058486
-        Data4: -235533275
-      Path: event:/Normal geral_02
+        Data1: -922102975
+        Data2: 1274908470
+        Data3: 619609240
+        Data4: 476546802
+      Path: event:/P1Normal
     choices: []
   - name: "Jean R\xE9veillon"
     text: "A Guarda s\xF3 atirou para se defender. Anote isso."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -922102975
+        Data2: 1274908470
+        Data3: 619609240
+        Data4: 476546802
+      Path: event:/P1Normal
     choices: []
   - name: "Jean R\xE9veillon"
     text: "Colaram a ordem da Guarda no muro de cartazes, e na mesa da taverna deixaram

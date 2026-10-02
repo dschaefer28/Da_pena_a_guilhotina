@@ -19,11 +19,11 @@ MonoBehaviour:
       no papel."
     dialogueAudio:
       Guid:
-        Data1: -1877086842
-        Data2: 1147956126
-        Data3: 557338505
-        Data4: -1852382703
-      Path: event:/Normal geral_01
+        Data1: -403724050
+        Data2: 1276221962
+        Data3: 2017058486
+        Data4: -235533275
+      Path: event:/P2(2)Normal
     choices:
     - choiceText: Usarei o nome deles com esse cuidado.
       nextDialogue: {fileID: 11400000, guid: cec35ce90c196254d8c7d77fa86a150f, type: 2}

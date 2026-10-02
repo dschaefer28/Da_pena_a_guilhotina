@@ -22,39 +22,39 @@ MonoBehaviour:
         Data2: 1100021036
         Data3: -1855094377
         Data4: 422503636
-      Path: "event:/m\xFArmurios Bravo_02"
+      Path: event:/P3Bravo
     choices: []
   - name: Julien Valois
     text: E o que dizem nas tavernas?
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices: []
   - name: Gazeteiro
     text: "Que a pr\xF3pria Rainha foi \xE0 loja do joalheiro, disfar\xE7ada, escolher
       o colar escondida do Rei. Depois negou tudo."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices: []
   - name: Gazeteiro
     text: E no muro de cartazes colaram uma folha contando coisa pior, sobre ela
       e o Cardeal.
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices:
     - choiceText: Quem viu a Rainha na loja?
       nextDialogue: {fileID: 11400000, guid: fb03d0b221262ce418fbbe1c5b7b2dc1, type: 2}
