@@ -412,12 +412,12 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 085ec29ed638ab84ba94d4fdc86137e5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 705e8246fa00713448f7e96322c59383, type: 3}
   m_Color: {r: 0.9, g: 0.78, b: 0.66, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 164.27083, y: 20.854694}
+  m_Size: {x: 16.427084, y: 2.0833333}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -430,13 +430,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 239563266}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.65, y: 4.33, z: 0}
-  m_LocalScale: {x: 0.7993621, y: 0.7993621, z: 0.7993621}
+  m_LocalRotation: {x: -0, y: 0.04845355, z: -0, w: 0.99882543}
+  m_LocalPosition: {x: 16.51, y: 4.6, z: 0.22}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 5.555, z: 0}
 --- !u!114 &239563269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,7 +456,7 @@ MonoBehaviour:
       Data2: 1211889147
       Data3: 100311463
       Data4: -907280051
-    Path: event:/baroqueRua
+    Path: event:/musicaFase2
   Event: 
   EventPlayTrigger: 11
   EventStopTrigger: 12
@@ -967,6 +967,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5316180587521241248, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5653717139578666247, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -1026,6 +1030,10 @@ PrefabInstance:
     - target: {fileID: 5827515608162278835, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -4.119995
+      objectReference: {fileID: 0}
+    - target: {fileID: 5952057542437194866, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6122393649401394870, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
@@ -1389,7 +1397,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7374019664807440416, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -32.16136
+      value: -27.052492
       objectReference: {fileID: 0}
     - target: {fileID: 7374019664807440416, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1919,7 +1927,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 131.41666, y: 2.6950684}
+    oldSize: {x: 197.125, y: 4.0426025}
     newSize: {x: 131.41666, y: 2.6950684}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -2992,6 +3000,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: Porta
       objectReference: {fileID: 0}
+    - target: {fileID: 4889408293361878770, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4889408293361878770, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
+      propertyPath: m_Color.b
+      value: 0.14351194
+      objectReference: {fileID: 0}
+    - target: {fileID: 4889408293361878770, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.14351194
+      objectReference: {fileID: 0}
+    - target: {fileID: 4889408293361878770, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
+      propertyPath: m_Color.r
+      value: 0.7075472
+      objectReference: {fileID: 0}
+    - target: {fileID: 4889408293361878770, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4889408293361878770, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4889408293361878770, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6973020966711926227, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
       propertyPath: m_LocalScale.x
       value: 4.519799
@@ -3059,7 +3095,7 @@ PrefabInstance:
       objectReference: {fileID: 904849422}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -32.16136
+      value: -27.052492
       objectReference: {fileID: 0}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3249,7 +3285,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6920069771313339523, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -32.74
+      value: -27.5
       objectReference: {fileID: 0}
     - target: {fileID: 6920069771313339523, guid: 27978c9f3e01b5b48b596fbd6567db68, type: 3}
       propertyPath: m_LocalPosition.y

@@ -77,6 +77,12 @@ MonoBehaviour:
   background: {fileID: 0}
   nameText: {fileID: 0}
   talkText: {fileID: 0}
+  talkScrollRect: {fileID: 0}
+  talkAdvanceButton: {fileID: 0}
+  advanceButton: {fileID: 0}
   choiceButtonPrefab: {fileID: 1035647721168800178, guid: aa70507e4bee4b24686000583922dcf2, type: 3}
   choicesContainer: {fileID: 0}
+  choicesScrollRect: {fileID: 0}
+  protagonistName: Julien Valois
+  flipDuration: 0.22
   speed: 10
