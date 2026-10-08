@@ -18,20 +18,20 @@ MonoBehaviour:
       a nossa defesa assusta."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/P2Normal
     choices: []
   - name: Pierre Vergniaud
     text: "Leve tamb\xE9m as minhas notas. Se eu n\xE3o puder terminar de falar,
       que o seu panfleto termine por mim."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/P2Normal
     choices: []

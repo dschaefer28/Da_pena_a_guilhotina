@@ -18,9 +18,9 @@ MonoBehaviour:
       \xC9 o que me tira o sono."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -121802520
+        Data2: 1137269962
+        Data3: 1602447276
+        Data4: -1031367414
+      Path: event:/ReclamarFeminino1
     choices: []

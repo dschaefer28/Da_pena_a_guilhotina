@@ -18,20 +18,20 @@ MonoBehaviour:
       o trigo sumir dos mercados. Por isso tamb\xE9m nos chamam de inimigos do povo."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -965542973
+        Data2: 1100021036
+        Data3: -1855094377
+        Data4: 422503636
+      Path: event:/P3Bravo
     choices: []
   - name: Jacques-Pierre Brissot
     text: "Sobre esse mercador, n\xE3o sei nada. Daqui de dentro, s\xF3 vejo o p\xE3o
       encolher."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices: []

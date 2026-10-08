@@ -18,9 +18,9 @@ MonoBehaviour:
       mesmo que eles usem o barrete fr\xEDgio."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1163176001
+        Data2: 1092540757
+        Data3: -142373458
+        Data4: 429559178
+      Path: "event:/P2Revolucion\xE1rio"
     choices: []

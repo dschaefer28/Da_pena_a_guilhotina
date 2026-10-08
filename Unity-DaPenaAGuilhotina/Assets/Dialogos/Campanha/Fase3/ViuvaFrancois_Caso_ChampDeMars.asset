@@ -18,11 +18,11 @@ MonoBehaviour:
       pedradas."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/P2Normal
     choices: []
   - name: "M\xE9dico"
     text: "Eles juram que no altar n\xE3o se assinava peti\xE7\xE3o nenhuma: Danton
@@ -30,22 +30,22 @@ MonoBehaviour:
       a insurrei\xE7\xE3o."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -403724050
+        Data2: 1276221962
+        Data3: 2017058486
+        Data4: -235533275
+      Path: event:/P2(2)Normal
     choices: []
   - name: "M\xE9dico"
     text: "Os Cordeliers pregaram artigos da Constitui\xE7\xE3o no mural, e algu\xE9m
       deixou um bilhete sobre a lei na mesa do caf\xE9. Cada um conta de um jeito."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/P2Normal
     choices:
     - choiceText: "O senhor viu algum peticion\xE1rio armado?"
       nextDialogue: {fileID: 11400000, guid: 0fee315acbdf17b4a8e0805ec99cff28, type: 2}

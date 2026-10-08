@@ -17,9 +17,9 @@ MonoBehaviour:
     text: "A peti\xE7\xE3o j\xE1 est\xE1 com voc\xEA. Fa\xE7a com que ela seja lida."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1666405146
+        Data2: 1151074371
+        Data3: -921428562
+        Data4: -1159192161
+      Path: event:/NormalFeminino1
     choices: []

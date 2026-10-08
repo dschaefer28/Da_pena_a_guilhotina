@@ -18,9 +18,9 @@ MonoBehaviour:
       alta nesta rua."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -192394345
+        Data2: 1332210459
+        Data3: 1556689066
+        Data4: 566635019
+      Path: event:/P2Bravo
     choices: []

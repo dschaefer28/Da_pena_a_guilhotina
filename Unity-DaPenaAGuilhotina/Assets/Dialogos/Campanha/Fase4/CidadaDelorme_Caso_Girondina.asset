@@ -18,33 +18,33 @@ MonoBehaviour:
       a ouvir a raz\xE3o. Robespierre est\xE1 com medo de que o povo nos absolva!"
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1073101364
+        Data2: 1084329749
+        Data3: 1909596053
+        Data4: -2045081360
+      Path: event:/P2Reclamar
     choices: []
   - name: Pierre Vergniaud
     text: "Brissot guarda as cartas que a acusa\xE7\xE3o chama de provas de federalismo.
       Leia-as antes de acreditar no que dizem delas."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/P2Normal
     choices: []
   - name: Pierre Vergniaud
     text: "E desconfie de Camille Desmoulins: a pena dele ajudou a nos trazer at\xE9
       aqui, e ainda corre pelas ruas."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -403724050
+        Data2: 1276221962
+        Data3: 2017058486
+        Data4: -235533275
+      Path: event:/P2(2)Normal
     choices:
     - choiceText: "Sua voz \xE9 poderosa, mas o Comit\xEA tem o poder de cal\xE1-la
         por decreto. Precisamos agir r\xE1pido."

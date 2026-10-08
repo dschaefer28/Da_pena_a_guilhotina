@@ -18,44 +18,44 @@ MonoBehaviour:
       meu sil\xEAncio."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -502641341
+        Data2: 1330990861
+        Data3: -759013969
+        Data4: 473500730
+      Path: event:/P3Tristeza
     choices: []
   - name: Pierre-Paul Sirven
     text: "O m\xE9dico que atendeu \xC9lisabeth depois do convento sabe o que ela
       sofria, mas tem medo de falar. Ele est\xE1 aqui mesmo, nesta rua."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices: []
   - name: Pierre-Paul Sirven
     text: "E at\xE9 um banqueiro, esse Kornmann, repete nos caf\xE9s o que os ju\xEDzes
       dizem de mim."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 2118103526
+        Data2: 1107917209
+        Data3: -768954470
+        Data4: -1156187180
+      Path: event:/ReclamarMain
     choices: []
   - name: Pierre-Paul Sirven
     text: "Valois, voc\xEA acredita que a 'Toler\xE2ncia' de Voltaire pode vencer
       o peso desta toga conservadora?"
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices:
     - choiceText: "Vou usar o Tratado sobre a Toler\xE2ncia para provar que este
         tribunal \xE9 uma rel\xEDquia do passado."

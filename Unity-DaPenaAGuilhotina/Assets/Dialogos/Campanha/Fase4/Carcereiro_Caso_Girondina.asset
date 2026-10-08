@@ -18,22 +18,22 @@ MonoBehaviour:
       n\xE3o querem justi\xE7a, querem sil\xEAncio."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -502641341
+        Data2: 1330990861
+        Data3: -759013969
+        Data4: 473500730
+      Path: event:/P3Tristeza
     choices: []
   - name: Jacques-Pierre Brissot
     text: "Voc\xEA ainda acredita que a lei pode vencer o 'Decreto dos Tr\xEAs Dias'
       de Robespierre?"
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices:
     - choiceText: "O Estado exige uma condena\xE7\xE3o r\xE1pida. Talvez usar suas
         cartas de prov\xEDncia ajude a acalmar os radicais e salvar sua vida."

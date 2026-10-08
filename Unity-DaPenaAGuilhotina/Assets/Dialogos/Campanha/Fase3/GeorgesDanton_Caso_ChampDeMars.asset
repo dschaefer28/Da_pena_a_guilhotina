@@ -18,44 +18,44 @@ MonoBehaviour:
       voz que a Constitui\xE7\xE3o me deu."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/P2Normal
     choices: []
   - name: Georges Danton
     text: "Quem assinava no altar da p\xE1tria n\xE3o carregava fuzil. Procure os
       sobreviventes: um deles guardou a peti\xE7\xE3o."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/P2Normal
     choices: []
   - name: Georges Danton
     text: "E desconfie do m\xE9dico da esquina: anda repetindo o que os guardas feridos
       lhe contam."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -403724050
+        Data2: 1276221962
+        Data3: 2017058486
+        Data4: -235533275
+      Path: event:/P2(2)Normal
     choices: []
   - name: Georges Danton
     text: "Valois, voc\xEA consegue convencer o j\xFAri de que a lei protege a voz
       das ruas?"
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1877086842
+        Data2: 1147956126
+        Data3: 557338505
+        Data4: -1852382703
+      Path: event:/P2Normal
     choices:
     - choiceText: "A Constitui\xE7\xE3o de 1791 garante o direito de peti\xE7\xE3o.
         Vou focar na legalidade t\xE9cnica do seu ato."

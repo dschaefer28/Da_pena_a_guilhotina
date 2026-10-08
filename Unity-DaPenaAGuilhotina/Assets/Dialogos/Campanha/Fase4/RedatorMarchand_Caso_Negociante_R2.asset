@@ -18,9 +18,9 @@ MonoBehaviour:
       exige coragem."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 745793994
+        Data2: 1290263996
+        Data3: -404866682
+        Data4: -1175277728
+      Path: event:/ReclamarFeminino2
     choices: []

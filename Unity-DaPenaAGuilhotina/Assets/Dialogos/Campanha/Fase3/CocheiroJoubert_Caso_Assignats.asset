@@ -19,22 +19,22 @@ MonoBehaviour:
       pai a trancava em casa para impedi-la."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -922102975
+        Data2: 1274908470
+        Data3: 619609240
+        Data4: 476546802
+      Path: event:/P1Normal
     choices: []
   - name: Guillaume Kornmann
     text: "A tipografia da esquina reimprime o Tratado de Voltaire na caixa de tipos,
       e colaram um cartaz sobre Calas no mural. Paris adora uma briga de religi\xE3o."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -922102975
+        Data2: 1274908470
+        Data3: 619609240
+        Data4: 476546802
+      Path: event:/P1Normal
     choices:
     - choiceText: "Os ju\xEDzes viram a mo\xE7a depois do convento?"
       nextDialogue: {fileID: 11400000, guid: 83e27a2f71b2bb34cb45e2fd5cce3829, type: 2}

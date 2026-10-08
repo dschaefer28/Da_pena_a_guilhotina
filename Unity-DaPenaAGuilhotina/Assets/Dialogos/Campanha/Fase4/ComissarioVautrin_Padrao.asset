@@ -17,9 +17,9 @@ MonoBehaviour:
     text: "N\xE3o tenho nada para vender, cidad\xE3o. Nem farinha, nem conversa."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1478299652
+        Data2: 1162276150
+        Data3: -1083247725
+        Data4: -607757615
+      Path: event:/P1Tristeza
     choices: []

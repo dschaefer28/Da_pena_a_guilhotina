@@ -18,20 +18,20 @@ MonoBehaviour:
       ser instru\xEDda na f\xE9 cat\xF3lica."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices: []
   - name: Pierre-Paul Sirven
     text: "Quando voltou, falava sozinha e n\xE3o dormia. Eu nunca mais reconheci
       minha filha."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices: []

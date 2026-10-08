@@ -18,19 +18,19 @@ MonoBehaviour:
       filho emigrou. Um padeiro 'indiferente'."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -355864673
+        Data2: 1288698992
+        Data3: 1966850200
+        Data4: -218185111
+      Path: event:/TristezaFeminino1
     choices: []
   - name: Camille Desmoulins
     text: "Indiferente, Valois! Hoje isso d\xE1 pris\xE3o."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 745793994
+        Data2: 1290263996
+        Data3: -404866682
+        Data4: -1175277728
+      Path: event:/ReclamarFeminino2
     choices: []

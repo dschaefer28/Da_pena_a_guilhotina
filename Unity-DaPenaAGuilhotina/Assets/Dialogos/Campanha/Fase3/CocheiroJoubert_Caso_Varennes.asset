@@ -18,44 +18,44 @@ MonoBehaviour:
       porque ela serve ao prazer dos ministros do Rei."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -922102975
+        Data2: 1274908470
+        Data3: 619609240
+        Data4: 476546802
+      Path: event:/P1Normal
     choices: []
   - name: Guillaume Kornmann
     text: "Tenho o di\xE1rio dela, escrito com a letra dela. Est\xE1 tudo ali: o
       amante, as promessas, os protetores."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1478299652
+        Data2: 1162276150
+        Data3: -1083247725
+        Data4: -607757615
+      Path: event:/P1Tristeza
     choices: []
   - name: Guillaume Kornmann
     text: "E aquele advogado dos Cordeliers, o Danton, ri de mim no caf\xE9 dizendo
       que eu mesmo escrevi o di\xE1rio!"
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1800404600
+        Data2: 1291553084
+        Data3: -2072599661
+        Data4: 407837240
+      Path: event:/P1Reclamar
     choices: []
   - name: Guillaume Kornmann
     text: "Eu tenho o ouro, voc\xEA tem a pena. Vamos destruir a reputa\xE7\xE3o
       desses aristocratas?"
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -922102975
+        Data2: 1274908470
+        Data3: 619609240
+        Data4: 476546802
+      Path: event:/P1Normal
     choices:
     - choiceText: "Podemos associar o seu caso ao dramaturgo Beaumarchais para garantir
         que toda Paris fale sobre essa corrup\xE7\xE3o."

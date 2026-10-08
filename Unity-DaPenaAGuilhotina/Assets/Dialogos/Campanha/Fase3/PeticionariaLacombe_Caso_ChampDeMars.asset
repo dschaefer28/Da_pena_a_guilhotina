@@ -18,21 +18,21 @@ MonoBehaviour:
       arma, era um pedido de socorro \xE0 Na\xE7\xE3o!"
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1666405146
+        Data2: 1151074371
+        Data3: -921428562
+        Data4: -1159192161
+      Path: event:/NormalFeminino1
     choices: []
   - name: Sobrevivente
     text: "Guardei isso comigo. Est\xE1 manchado, mas \xE9 a prova da nossa inten\xE7\xE3o."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1666405146
+        Data2: 1151074371
+        Data3: -921428562
+        Data4: -1159192161
+      Path: event:/NormalFeminino1
     choices:
     - choiceText: "Entregue-me a peti\xE7\xE3o. Vou transform\xE1-la em um grito
         que a Assembleia n\xE3o poder\xE1 ignorar."

@@ -18,33 +18,33 @@ MonoBehaviour:
       n\xE3o haver\xE1 sementes para o amanh\xE3."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1478299652
+        Data2: 1162276150
+        Data3: -1083247725
+        Data4: -607757615
+      Path: event:/P1Tristeza
     choices: []
   - name: Mercador
     text: "O povo me chama de a\xE7ambarcador, mas os verdadeiros lucros est\xE3o
       nos bolsos da elite que me usa como dep\xF3sito!"
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1800404600
+        Data2: 1291553084
+        Data3: -2072599661
+        Data4: 407837240
+      Path: event:/P1Reclamar
     choices: []
   - name: Mercador
     text: "E o jornalista Desmoulins j\xE1 escreveu que a farinha \xE9 minha. Na
       se\xE7\xE3o, ningu\xE9m l\xEA outra coisa."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -922102975
+        Data2: 1274908470
+        Data3: 619609240
+        Data4: 476546802
+      Path: event:/P1Normal
     choices:
     - choiceText: "Entregue as faturas. Se provarmos que voc\xEA \xE9 apenas um empregado
         da elite, o \xF3dio da massa ter\xE1 um novo alvo."

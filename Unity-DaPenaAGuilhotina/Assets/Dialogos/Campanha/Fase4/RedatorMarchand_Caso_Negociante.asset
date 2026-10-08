@@ -19,33 +19,33 @@ MonoBehaviour:
       escondidas."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1666405146
+        Data2: 1151074371
+        Data3: -921428562
+        Data4: -1159192161
+      Path: event:/NormalFeminino1
     choices: []
   - name: Camille Desmoulins
     text: "Eu mesmo escrevi isso, que Deus me perdoe. Com fome, ningu\xE9m quer ouvir
       outra vers\xE3o."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1666405146
+        Data2: 1151074371
+        Data3: -921428562
+        Data4: -1159192161
+      Path: event:/NormalFeminino1
     choices: []
   - name: Camille Desmoulins
     text: "A tabela do M\xE1ximo est\xE1 na parede de editais, e a caixa de den\xFAncias
       recebe um bilhete sobre ele por dia."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1666405146
+        Data2: 1151074371
+        Data3: -921428562
+        Data4: -1159192161
+      Path: event:/NormalFeminino1
     choices:
     - choiceText: O senhor viu os sacos?
       nextDialogue: {fileID: 11400000, guid: f0cab02e54e5be54e9a39a2bb104d576, type: 2}

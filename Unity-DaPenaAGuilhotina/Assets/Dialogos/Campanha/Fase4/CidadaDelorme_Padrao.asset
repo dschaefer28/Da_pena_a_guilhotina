@@ -18,9 +18,9 @@ MonoBehaviour:
       o que n\xE3o conhe\xE7o."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1073101364
+        Data2: 1084329749
+        Data3: 1909596053
+        Data4: -2045081360
+      Path: event:/P2Reclamar
     choices: []

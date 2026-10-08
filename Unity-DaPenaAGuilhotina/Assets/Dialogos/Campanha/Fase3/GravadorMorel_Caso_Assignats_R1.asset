@@ -18,19 +18,19 @@ MonoBehaviour:
       sua habilidade de transformar nossa trag\xE9dia em um manifesto contra a barb\xE1rie."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -502641341
+        Data2: 1330990861
+        Data3: -759013969
+        Data4: 473500730
+      Path: event:/P3Tristeza
     choices: []
   - name: Pierre-Paul Sirven
     text: "Dizem que uma tipografia daqui est\xE1 reimprimindo o Tratado."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices: []

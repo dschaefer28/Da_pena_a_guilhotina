@@ -18,20 +18,20 @@ MonoBehaviour:
       a pena dele pedia pressa."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -192394345
+        Data2: 1332210459
+        Data3: 1556689066
+        Data4: 566635019
+      Path: event:/P2Bravo
     choices: []
   - name: Pierre Vergniaud
     text: "Ainda assim, que salve quem puder. A Revolu\xE7\xE3o, como Saturno, est\xE1
       devorando os pr\xF3prios filhos."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1388595117
+        Data2: 1265359229
+        Data3: -569190249
+        Data4: -185220125
+      Path: event:/P2Tristeza
     choices: []

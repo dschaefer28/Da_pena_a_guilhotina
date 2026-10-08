@@ -18,19 +18,19 @@ MonoBehaviour:
       que chega antes das provas."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 2118103526
+        Data2: 1107917209
+        Data3: -768954470
+        Data4: -1156187180
+      Path: event:/ReclamarMain
     choices: []
   - name: Pierre-Paul Sirven
     text: "N\xE3o sei nada do que houve l\xE1, senhor. Mas desejo sorte a esse Danton."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices: []

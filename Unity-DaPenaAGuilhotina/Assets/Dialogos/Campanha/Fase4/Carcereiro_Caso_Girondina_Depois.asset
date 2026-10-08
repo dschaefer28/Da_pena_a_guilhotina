@@ -17,9 +17,9 @@ MonoBehaviour:
     text: "Voc\xEA j\xE1 tem as cartas. Leia-as em voz alta, se tiver coragem."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices: []

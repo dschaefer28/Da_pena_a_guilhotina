@@ -18,20 +18,20 @@ MonoBehaviour:
       contra os girondinos, e n\xE3o quero mais sangue com a minha assinatura."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1666405146
+        Data2: 1151074371
+        Data3: -921428562
+        Data4: -1159192161
+      Path: event:/NormalFeminino1
     choices: []
   - name: Camille Desmoulins
     text: "A pena \xE9 a \xFAnica coisa que me sobrou. Que o povo saiba o que estamos
       fazendo no escuro."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1666405146
+        Data2: 1151074371
+        Data3: -921428562
+        Data4: -1159192161
+      Path: event:/NormalFeminino1
     choices: []

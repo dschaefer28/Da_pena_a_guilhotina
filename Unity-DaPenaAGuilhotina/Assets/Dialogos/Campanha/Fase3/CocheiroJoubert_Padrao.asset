@@ -18,9 +18,9 @@ MonoBehaviour:
       n\xE3o tenho tempo."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1800404600
+        Data2: 1291553084
+        Data3: -2072599661
+        Data4: 407837240
+      Path: event:/P1Reclamar
     choices: []

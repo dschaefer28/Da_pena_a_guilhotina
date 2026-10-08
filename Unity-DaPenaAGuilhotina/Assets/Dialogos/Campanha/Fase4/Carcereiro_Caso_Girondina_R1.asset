@@ -18,20 +18,20 @@ MonoBehaviour:
       a Rep\xFAblica. Tome as c\xF3pias."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1101814583
+        Data2: 1283210372
+        Data3: 1674768279
+        Data4: -1519714328
+      Path: event:/P3Normal
     choices: []
   - name: Jacques-Pierre Brissot
     text: "A Revolu\xE7\xE3o tornou-se um monstro que exige sangue. Se voc\xEA nos
       defender com a verdade, ser\xE1 o vig\xE9simo segundo a subir no cadafalso."
     dialogueAudio:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -502641341
+        Data2: 1330990861
+        Data3: -759013969
+        Data4: 473500730
+      Path: event:/P3Tristeza
     choices: []
