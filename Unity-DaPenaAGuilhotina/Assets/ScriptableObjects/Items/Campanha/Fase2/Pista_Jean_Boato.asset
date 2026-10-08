@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pista_Jean_Boato
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_jean_boato
-  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemImg: {fileID: -1527381816640580200, guid: 2b378c1565699dd4f8fa93ec44455ece, type: 3}
   itemAmt: 1
   itemName: Os quinze soldos
   descricao: "Segundo os oper\xE1rios, R\xE9veillon disse na assembleia que um oper\xE1rio

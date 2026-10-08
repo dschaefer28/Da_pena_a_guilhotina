@@ -61,8 +61,9 @@ public class PromptDeInteracao : MonoBehaviour
         renderersDoAlvo = alvo.GetComponentsInChildren<Renderer>();
 
         string tecla = DispositivoDeControle.Glifo(ControleTutorial.Interagir);
+        // Sem largura fixa: a borda acompanha o miolo. Forçar a tecla curta a um quadrado (48) deixava o miolo, que não
+        // encolhe abaixo de 66 (texto mínimo + margens), vazando para a direita da borda.
         texto.text = tecla;
-        larguraTecla.preferredWidth = tecla.Length <= 3 ? larguraTecla.preferredHeight : -1f;
         canvas.gameObject.SetActive(true);
         // A tecla nasce com o tamanho padrão (100 x 100) até o primeiro layout: o desvio do relógio precisa do tamanho real.
         LayoutRebuilder.ForceRebuildLayoutImmediate(raiz);

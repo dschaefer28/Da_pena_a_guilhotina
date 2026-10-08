@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Item_Jean2
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_jean_2
-  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemImg: {fileID: -181322506959248185, guid: 48627c423f795ac49a136a3fcafb8077, type: 3}
   itemAmt: 0
   itemName: "Os sal\xE1rios da manufatura"
   descricao: "C\xF3pia do livro de sal\xE1rios publicada por uma gazeta: R\xE9veillon

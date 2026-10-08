@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Alegacao_Joias_1
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: alegacao_joias_1
-  itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
+  itemImg: {fileID: 6143731726603372277, guid: 29ceb9755f219b3479f713e79ea86861, type: 3}
   itemAmt: 1
   itemName: 'Carta do duque: a Rainha quis o colar'
   descricao: "O duque de Orl\xE9ans afirma que a Rainha cobi\xE7ou o colar e depois

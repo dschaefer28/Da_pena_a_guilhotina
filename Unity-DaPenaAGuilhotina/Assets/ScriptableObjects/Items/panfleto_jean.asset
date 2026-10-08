@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: panfleto_jean
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: panfleto_jean
-  itemImg: {fileID: 2331561950877647184, guid: 315973fdf3130f5439cbab19b7893f94, type: 3}
+  itemImg: {fileID: -8839012482589888107, guid: 5cdee8b608acb3f44acd6c6f984a83bb, type: 3}
   itemAmt: 1
   itemName: "Panfleto: Os Trabalhadores de R\xE9veillon"
   descricao: "Panfleto da tipografia sobre R\xE9veillon e o motim do faubourg Saint-Antoine."

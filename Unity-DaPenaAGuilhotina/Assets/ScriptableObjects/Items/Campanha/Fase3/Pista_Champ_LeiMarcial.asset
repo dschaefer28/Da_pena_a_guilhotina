@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pista_Champ_LeiMarcial
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_champ_2
-  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemImg: {fileID: -8724897998667788745, guid: cc63286886dd61443952a457bbcc2c61, type: 3}
   itemAmt: 1
   itemName: "A Constitui\xE7\xE3o de 1791: direito de reuni\xE3o"
   descricao: "Artigos da Constitui\xE7\xE3o votada em setembro de 1791, afixados

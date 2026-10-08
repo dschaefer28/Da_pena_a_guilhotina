@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pista_Girondina_Cartas
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_girondina_1
-  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemImg: {fileID: -1527381816640580200, guid: 2b378c1565699dd4f8fa93ec44455ece, type: 3}
   itemAmt: 1
   itemName: Provas de federalismo
   descricao: "C\xF3pias das cartas de Brissot aos departamentos, que a acusa\xE7\xE3o

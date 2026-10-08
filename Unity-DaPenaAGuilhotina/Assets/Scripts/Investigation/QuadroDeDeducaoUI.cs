@@ -23,6 +23,9 @@ public class QuadroDeDeducaoUI : MonoBehaviour
              "Decisão do grupo (27/09): a dedução vale desde a Fase 2.")]
     [Range(1, GameManager.UltimaFase)] public int faseMinima = 2;
     public TMP_FontAsset fonte;
+    [Tooltip("Sprite dos botões: o mesmo \"button\" de Pause, Inventário e Interagir (precisa de borda 9-slice). " +
+             "Vazio = retângulo de cor lisa.")]
+    public Sprite spriteDoBotao;
 
     [Header("Textos (provisórios, editáveis)")]
     public string rotuloDoBotao = "Quadro de pistas";
@@ -46,6 +49,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
     private static readonly Color CorLinha = new Color(0.18f, 0.13f, 0.11f, 1f);
     private static readonly Color CorBotao = new Color(0.36f, 0.25f, 0.16f, 1f);
     private static readonly Color CorMarcado = new Color(0.62f, 0.46f, 0.22f, 1f);
+    private static readonly Color CorMarcaInativa = new Color(0.62f, 0.62f, 0.62f, 1f); // tinta do sprite na marca não escolhida
 
     private RectTransform botaoAbrir;
     private BibliotecaUI biblioteca;
@@ -214,7 +218,9 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         LayoutElement le = b.GetComponent<LayoutElement>();
         le.minWidth = 190f; // o texto da pista encolhe primeiro: o botão continua tocável em telas estreitas
         le.preferredWidth = 210f;
-        if (ativa) b.GetComponent<Image>().color = CorMarcado;
+        // Cor lisa: a marcada clareia. Com o sprite (que não clareia além do branco), a não marcada é que recua.
+        if (spriteDoBotao == null) { if (ativa) b.GetComponent<Image>().color = CorMarcado; }
+        else if (!ativa) b.GetComponent<Image>().color = CorMarcaInativa;
         b.interactable = podeMarcar;
         b.onClick.AddListener(() => Marcar(pista, caso, ativa ? MarcacaoDaPista.NaoMarcada : opcao));
     }
@@ -387,21 +393,56 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         return tmp;
     }
 
+    // Com o sprite "button" (mesmos valores da Biblioteca): 1 pixel da arte = 1/EscalaDaMoldura unidades do canvas.
+    private const float EscalaDaMoldura = 0.7f;
+    // Recuos do rótulo para ele ficar na face do sprite, que não é centrada: a moldura tem 7 px de cada lado (mais 4
+    // unidades de respiro), 9 px de sombra embaixo e 3 px de brilho em cima.
+    private static readonly Vector2 RecuoEsquerdaBaixo = new Vector2(7f / EscalaDaMoldura + 4f, 9f / EscalaDaMoldura);
+    private static readonly Vector2 RecuoDireitaCima = new Vector2(7f / EscalaDaMoldura + 4f, 3f / EscalaDaMoldura);
+
     private Button Botao(string nome, Transform pai, string rotulo)
     {
         var go = new GameObject(nome, typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
         go.transform.SetParent(pai, false);
-        go.GetComponent<Image>().color = CorBotao;
+        var fundo = go.GetComponent<Image>();
         go.GetComponent<LayoutElement>().minHeight = 64f;
         var botao = go.GetComponent<Button>();
-        ColorBlock cores = botao.colors;
-        cores.highlightedColor = new Color(1.2f, 1.15f, 1.05f);
-        cores.selectedColor = new Color(1.25f, 1.2f, 1.1f);
-        cores.disabledColor = new Color(0.55f, 0.55f, 0.55f, 0.6f);
-        botao.colors = cores;
+        bool comSprite = spriteDoBotao != null;
+        if (comSprite)
+        {
+            // Fatiado (9-slice): só o miolo estica, então a moldura não deforma em botões de outras proporções.
+            fundo.sprite = spriteDoBotao;
+            fundo.type = Image.Type.Sliced;
+            fundo.pixelsPerUnitMultiplier = EscalaDaMoldura;
+            // Estados padrão do Button (pressionado e desativado), como em Pause/Inventário/Interagir. A tinta não
+            // clareia o sprite além da cor dele, então o realce e o foco do teclado escurecem um pouco em vez de clarear.
+            ColorBlock cores = botao.colors;
+            cores.highlightedColor = cores.selectedColor = new Color(0.88f, 0.88f, 0.88f, 1f);
+            botao.colors = cores;
+        }
+        else
+        {
+            fundo.color = CorBotao;
+            ColorBlock cores = botao.colors;
+            cores.highlightedColor = new Color(1.2f, 1.15f, 1.05f);
+            cores.selectedColor = new Color(1.25f, 1.2f, 1.1f);
+            cores.disabledColor = new Color(0.55f, 0.55f, 0.55f, 0.6f);
+            botao.colors = cores;
+        }
         var texto = Texto("Rotulo", go.transform, 26f, rotulo, TextAlignmentOptions.Center);
         var rt = (RectTransform)texto.transform;
         rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero;
+        if (comSprite)
+        {
+            // Uma linha só, dentro da face: se o texto não couber, encolhe um pouco em vez de encostar na moldura.
+            texto.color = Color.white;
+            texto.textWrappingMode = TextWrappingModes.NoWrap;
+            texto.enableAutoSizing = true;
+            texto.fontSizeMax = texto.fontSize;
+            texto.fontSizeMin = texto.fontSize * 0.7f;
+            rt.offsetMin = RecuoEsquerdaBaixo;
+            rt.offsetMax = -RecuoDireitaCima;
+        }
         return botao;
     }
 }

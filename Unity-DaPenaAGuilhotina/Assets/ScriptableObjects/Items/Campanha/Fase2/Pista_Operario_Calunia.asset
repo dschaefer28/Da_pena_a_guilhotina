@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pista_Operario_Calunia
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_operario_calunia
-  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemImg: {fileID: 2331561950877647184, guid: 315973fdf3130f5439cbab19b7893f94, type: 3}
   itemAmt: 1
   itemName: "O fogo na f\xE1brica"
   descricao: "Bilhete deixado na taverna: a Guarda s\xF3 recebeu ordem de agir depois

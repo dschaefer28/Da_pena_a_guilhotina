@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Panfleto_Champ
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: panfleto_champ
-  itemImg: {fileID: -6434777298250132992, guid: b2bb80b0c42cdd84889695ff162a2962, type: 3}
+  itemImg: {fileID: -8839012482589888107, guid: 5cdee8b608acb3f44acd6c6f984a83bb, type: 3}
   itemAmt: 1
   itemName: O Grito do Povo Contra os Fuzis de Lafayette
   descricao: "Panfleto da tipografia em defesa de Danton e dos peticion\xE1rios do

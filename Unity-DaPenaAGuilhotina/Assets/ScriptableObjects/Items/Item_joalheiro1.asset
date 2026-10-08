@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Item_joalheiro1
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_joias_1
-  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemImg: {fileID: -181322506959248185, guid: 48627c423f795ac49a136a3fcafb8077, type: 3}
   itemAmt: 0
   itemName: Registro de compra
   descricao: "C\xF3pia da venda do colar em nome da rainha, negociada por um cardeal

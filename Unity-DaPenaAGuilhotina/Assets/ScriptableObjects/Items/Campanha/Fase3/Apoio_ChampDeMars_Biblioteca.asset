@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Apoio_ChampDeMars_Biblioteca
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: apoio_biblioteca_champ
-  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemImg: {fileID: -4657483856072723868, guid: fb03dbddb43f4f14a9a9a31646f13ff2, type: 3}
   itemAmt: 1
   itemName: "Folhas da peti\xE7\xE3o do Champ de Mars"
   descricao: "C\xF3pia das folhas recolhidas no altar da p\xE1tria em 17 de julho

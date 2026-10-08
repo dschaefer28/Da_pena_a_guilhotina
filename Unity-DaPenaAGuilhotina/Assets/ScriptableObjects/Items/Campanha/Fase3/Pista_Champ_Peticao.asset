@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pista_Champ_Peticao
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_champ_1
-  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemImg: {fileID: 2331561950877647184, guid: 315973fdf3130f5439cbab19b7893f94, type: 3}
   itemAmt: 1
   itemName: "A peti\xE7\xE3o manchada de sangue"
   descricao: "Peda\xE7o da peti\xE7\xE3o do altar da p\xE1tria, manchado de sangue

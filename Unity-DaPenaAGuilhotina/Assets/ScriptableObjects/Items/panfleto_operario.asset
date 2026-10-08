@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: panfleto_operario
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: panfleto_operario
-  itemImg: {fileID: -6949663751668995555, guid: 231281618cdded844a51534e6644473c, type: 3}
+  itemImg: {fileID: -8839012482589888107, guid: 5cdee8b608acb3f44acd6c6f984a83bb, type: 3}
   itemAmt: 0
   itemName: "Panfleto: O Oper\xE1rio Acusado"
   descricao: "Panfleto da tipografia em defesa do oper\xE1rio do faubourg Saint-Antoine."

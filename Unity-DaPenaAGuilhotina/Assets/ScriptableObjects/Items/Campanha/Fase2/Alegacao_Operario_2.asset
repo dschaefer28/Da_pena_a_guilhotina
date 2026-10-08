@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Alegacao_Operario_2
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: alegacao_operario_2
-  itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
+  itemImg: {fileID: -2861754768038755919, guid: ada00f84c6b19e04486d280e83944346, type: 3}
   itemAmt: 1
   itemName: "Carta do oper\xE1rio: atiraram primeiro"
   descricao: "Ele afirma que a Guarda abriu fogo antes de qualquer pedra ser atirada,

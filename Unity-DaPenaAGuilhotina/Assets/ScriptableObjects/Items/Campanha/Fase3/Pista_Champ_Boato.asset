@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pista_Champ_Boato
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_champ_boato
-  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemImg: {fileID: 5541137774283347499, guid: 2110574a62c930449b6a46e277d6df0b, type: 3}
   itemAmt: 1
   itemName: As armas do altar
   descricao: "Segundo os guardas que o m\xE9dico tratou, no altar da p\xE1tria n\xE3o

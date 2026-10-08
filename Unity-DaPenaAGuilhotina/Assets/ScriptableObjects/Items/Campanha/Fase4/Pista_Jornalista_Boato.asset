@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pista_Jornalista_Boato
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_jornalista_boato
-  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemImg: {fileID: -1527381816640580200, guid: 2b378c1565699dd4f8fa93ec44455ece, type: 3}
   itemAmt: 1
   itemName: Os nomes da lista
   descricao: "Segundo Brissot, a lista de Camille s\xF3 tem aristocratas e banqueiros

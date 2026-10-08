@@ -1703,6 +1703,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::QuadroDeDeducaoUI
   faseMinima: 2
   fonte: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  spriteDoBotao: {fileID: 2530564911472380330, guid: 2bb51f4bfdd9f15429042932a20935b0, type: 3}
   rotuloDoBotao: Quadro de pistas
   regras: "Cada pista deste quadro tem uma afirma\xE7\xE3o contr\xE1ria no mesmo
     caso, e s\xF3 uma das duas \xE9 verdadeira. Marque o que voc\xEA acha confi\xE1vel
@@ -8030,6 +8031,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b6a0c9d9df2b88947ae33e0253e1bbe0, type: 2}
   faseMinima: 3
   fonte: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  spriteDoBotao: {fileID: 2530564911472380330, guid: 2bb51f4bfdd9f15429042932a20935b0, type: 3}
 --- !u!1 &8856251866982106967
 GameObject:
   m_ObjectHideFlags: 0

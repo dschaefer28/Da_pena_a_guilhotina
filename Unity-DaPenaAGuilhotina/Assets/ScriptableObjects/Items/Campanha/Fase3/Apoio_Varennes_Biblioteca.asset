@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Apoio_Varennes_Biblioteca
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: apoio_biblioteca_varennes
-  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemImg: {fileID: -4657483856072723868, guid: fb03dbddb43f4f14a9a9a31646f13ff2, type: 3}
   itemAmt: 1
   itemName: "O m\xE9moire de Bergasse (1787)"
   descricao: "C\xF3pia do m\xE9moire que o advogado Nicolas Bergasse escreveu por

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Alegacao_Jornalista_1
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: alegacao_jornalista_1
-  itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
+  itemImg: {fileID: 6143731726603372277, guid: 29ceb9755f219b3479f713e79ea86861, type: 3}
   itemAmt: 1
   itemName: "Carta de Camille: quero salvar a Rep\xFAblica"
   descricao: "Camille jura que n\xE3o quer derrubar a Rep\xFAblica, e sim salv\xE1-la

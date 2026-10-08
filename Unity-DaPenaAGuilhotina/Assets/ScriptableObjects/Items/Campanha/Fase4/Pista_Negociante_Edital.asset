@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pista_Negociante_Edital
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: pista_negociante_2
-  itemImg: {fileID: -1300373975926577855, guid: 6399e25a1082bec41992b2d5e6adf36c, type: 3}
+  itemImg: {fileID: -6949663751668995555, guid: 231281618cdded844a51534e6644473c, type: 3}
   itemAmt: 1
   itemName: "A insufici\xEAncia do M\xE1ximo"
   descricao: "Tabela do M\xE1ximo geral, afixada desde setembro: o pre\xE7o da farinha

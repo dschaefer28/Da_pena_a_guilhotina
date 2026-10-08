@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Alegacao_Girondina_1
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemID: alegacao_girondina_1
-  itemImg: {fileID: -2162171364441361573, guid: 70df3a0c3e1421643a4c23015bb6c410, type: 3}
+  itemImg: {fileID: 6143731726603372277, guid: 29ceb9755f219b3479f713e79ea86861, type: 3}
   itemAmt: 1
   itemName: 'Carta de Vergniaud: somos republicanos'
   descricao: "Vergniaud jura que nenhum dos acusados quis dividir a Rep\xFAblica:
