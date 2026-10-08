@@ -24,7 +24,7 @@ public class NarrativaGddTests
 
     private static List<CaseData> CasosDaCampanha()
     {
-        var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefab/UI.prefab");
+        var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/UI.prefab");
         return ui.GetComponentInChildren<CaseSelectionUI>(true).availableCases.FindAll(c => c != null && c.fase >= 2);
     }
 
@@ -33,7 +33,7 @@ public class NarrativaGddTests
     {
         foreach (string nome in CenasDaCampanha)
         {
-            string caminho = $"Assets/Scenes/{nome}.unity";
+            string caminho = $"Assets/_Project/Scenes/{nome}.unity";
             Scene cena = SceneManager.GetSceneByPath(caminho);
             bool abriu = false;
             if (!cena.isLoaded) { cena = EditorSceneManager.OpenScene(caminho, OpenSceneMode.Additive); abriu = true; }
@@ -141,7 +141,7 @@ public class NarrativaGddTests
                 AnotarItem(versao.panfleto);
             }
         }
-        var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefab/UI.prefab");
+        var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/UI.prefab");
         foreach (OfertaDaBiblioteca oferta in ui.GetComponentInChildren<BibliotecaUI>(true).ofertas)
         {
             Anotar(oferta.name, oferta.titulo); Anotar(oferta.name, oferta.descricao);

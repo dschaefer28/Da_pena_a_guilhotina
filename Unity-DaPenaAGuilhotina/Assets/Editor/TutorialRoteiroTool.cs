@@ -17,9 +17,9 @@ using UnityEngine.UI;
 /// </summary>
 public static class TutorialRoteiroTool
 {
-    private const string CaminhoPrefabUI = "Assets/Prefab/UI.prefab";
-    private const string CaminhoFonte = "Assets/Fonts/Cinzel-Regular SDF.asset";
-    private static readonly string[] Cenas = { "Assets/Scenes/Jogo.unity", "Assets/Scenes/Porao.unity" };
+    private const string CaminhoPrefabUI = "Assets/_Project/Prefabs/UI.prefab";
+    private const string CaminhoFonte = "Assets/_Project/Fonts/Cinzel-Regular SDF.asset";
+    private static readonly string[] Cenas = { "Assets/_Project/Scenes/Jogo.unity", "Assets/_Project/Scenes/Porao.unity" };
 
     [MenuItem("Ferramentas/Tutorial/2 - Aplicar roteiro padrão e sincronizar cenas (Jogo, Porao)")]
     public static void Aplicar()

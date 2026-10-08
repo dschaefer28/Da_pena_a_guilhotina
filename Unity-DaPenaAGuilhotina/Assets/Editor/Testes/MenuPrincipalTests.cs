@@ -13,7 +13,7 @@ using UnityEngine.UI;
 /// </summary>
 public class MenuPrincipalTests
 {
-    private const string CenaMenu = "Assets/Scenes/menu principal.unity";
+    private const string CenaMenu = "Assets/_Project/Scenes/menu principal.unity";
 
     private static void ComMenu(System.Action<MenuPrincipalManager> acao)
     {

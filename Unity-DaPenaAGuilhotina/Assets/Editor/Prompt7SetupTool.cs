@@ -21,10 +21,10 @@ using UnityEngine.UI;
 /// </summary>
 public static class Prompt7SetupTool
 {
-    private const string PrefabGameManager = "Assets/Prefab/GameManager.prefab";
-    private const string PrefabUI = "Assets/Prefab/UI.prefab";
-    private const string CenaJogo = "Assets/Scenes/Jogo.unity";
-    private const string PastaPensamentos = "Assets/Dialogos/Julien Valois";
+    private const string PrefabGameManager = "Assets/_Project/Prefabs/GameManager.prefab";
+    private const string PrefabUI = "Assets/_Project/Prefabs/UI.prefab";
+    private const string CenaJogo = "Assets/_Project/Scenes/Jogo.unity";
+    private const string PastaPensamentos = "Assets/_Project/ScriptableObjects/Dialogues/JulienValois";
     private const string Protagonista = "Julien Valois";
 
     public const int HorasPorCaso = 6;
@@ -110,7 +110,7 @@ public static class Prompt7SetupTool
     private static int GarantirPensamento(string caminho, string[] falas)
     {
         if (AssetDatabase.LoadAssetAtPath<DialogueData>(caminho) != null) return 0;
-        if (!AssetDatabase.IsValidFolder(PastaPensamentos)) AssetDatabase.CreateFolder("Assets/Dialogos", "Julien Valois");
+        if (!AssetDatabase.IsValidFolder(PastaPensamentos)) AssetDatabase.CreateFolder("Assets/_Project/ScriptableObjects/Dialogues", "JulienValois");
         var dialogo = ScriptableObject.CreateInstance<DialogueData>();
         dialogo.talkScript = new List<Dialogue>();
         foreach (string fala in falas) dialogo.talkScript.Add(new Dialogue { name = Protagonista, text = fala, choices = new List<Choice>() });

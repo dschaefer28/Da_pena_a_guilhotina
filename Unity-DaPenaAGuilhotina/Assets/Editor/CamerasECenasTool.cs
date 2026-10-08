@@ -20,7 +20,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class CamerasECenasTool
 {
-    private const string CenaPorao = "Assets/Scenes/Porao.unity";
+    private const string CenaPorao = "Assets/_Project/Scenes/Porao.unity";
     private const string NomeDoLimite = "LimitesDaCamera";
     private const float AlturaMinimaDeParede = 5f;
 

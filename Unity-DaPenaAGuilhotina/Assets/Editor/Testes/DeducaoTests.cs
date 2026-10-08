@@ -321,7 +321,7 @@ public class DeducaoTests
     [Test]
     public void CasosReais_FasesDoisATres_TemDoisParesCoerentes_EQuadroDesdeAFaseDois()
     {
-        var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefab/UI.prefab");
+        var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/UI.prefab");
         Assert.AreEqual(2, ui.GetComponentInChildren<QuadroDeDeducaoUI>(true).faseMinima, "o botão do quadro aparece já na Fase 2");
         int daFase2 = 0;
         foreach (CaseData real in ui.GetComponentInChildren<CaseSelectionUI>(true).availableCases)
@@ -350,7 +350,7 @@ public class DeducaoTests
         };
         foreach (var par in esperado)
         {
-            CaseData real = AssetDatabase.LoadAssetAtPath<CaseData>($"Assets/Casos/{par.Key}.asset");
+            CaseData real = AssetDatabase.LoadAssetAtPath<CaseData>($"Assets/_Project/ScriptableObjects/Cases/{par.Key}.asset");
             Assert.IsTrue(Deducao.Aderente(real), par.Key);
             for (int i = 0; i < 2; i++)
             {

@@ -20,7 +20,7 @@ public class CampanhaTests
 
     private static List<CaseData> CasosDaMesa()
     {
-        var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefab/UI.prefab");
+        var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/UI.prefab");
         return new List<CaseData>(ui.GetComponentInChildren<CaseSelectionUI>(true).availableCases);
     }
 

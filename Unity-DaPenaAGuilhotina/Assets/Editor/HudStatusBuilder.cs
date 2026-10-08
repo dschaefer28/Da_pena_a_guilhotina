@@ -16,8 +16,8 @@ using UnityEngine.UI;
 /// </summary>
 public static class HudStatusBuilder
 {
-    private const string CaminhoPrefabUI = "Assets/Prefab/UI.prefab";
-    private const string PastaSprites = "Assets/Sprites/InterfaceButtons/";
+    private const string CaminhoPrefabUI = "Assets/_Project/Prefabs/UI.prefab";
+    private const string PastaSprites = "Assets/_Project/Art/UI/Interface/";
     private const string SpriteRetrato = "iconbar_27";   // as outras fatias dessas texturas são só sujeira do corte automático
     private const string SpriteTrilhoPovo = "barra1_1";
     private const string SpriteTrilhoEstado = "barra2_1";

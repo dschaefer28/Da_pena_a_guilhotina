@@ -18,8 +18,8 @@ using UnityEngine.UI;
 /// </summary>
 public static class MesaDeCasosLayoutTool
 {
-    private const string PrefabUI = "Assets/Prefab/UI.prefab";
-    private const string PrefabCartao = "Assets/Prefab/CartaoPrefab.prefab";
+    private const string PrefabUI = "Assets/_Project/Prefabs/UI.prefab";
+    private const string PrefabCartao = "Assets/_Project/Prefabs/CartaoPrefab.prefab";
     private const string CaminhoDaMesa = "Painel_MesaDeCasos";
 
     private static readonly Color CorAntigaDoCartao = new Color(0.557f, 0.528f, 0.528f, 1f);

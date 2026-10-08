@@ -21,7 +21,7 @@ using UnityEngine.UI;
 /// </summary>
 public static class MenuPrincipalSetupTool
 {
-    private const string CenaMenu = "Assets/Scenes/menu principal.unity";
+    private const string CenaMenu = "Assets/_Project/Scenes/menu principal.unity";
     private const string NomeContinuar = "ContinuarButton";
     private const string NomePainelNovoJogo = "painelConfirmarNovoJogo";
     public const string TextoContinuar = "CONTINUAR";

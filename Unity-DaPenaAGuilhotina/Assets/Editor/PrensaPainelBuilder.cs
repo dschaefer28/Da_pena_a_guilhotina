@@ -12,7 +12,7 @@ using UnityEngine.UI;
 /// </summary>
 public static class PrensaPainelBuilder
 {
-    private const string CaminhoPrefab = "Assets/Prefab/UI_Inventory.prefab";
+    private const string CaminhoPrefab = "Assets/_Project/Prefabs/UI_Inventory.prefab";
 
     // Painel à DIREITA do inventário (760x900 centralizado), alinhado ao topo dele: ocupa x 1380..1820 e
     // y 140..860 do canvas 1920x1080. À esquerda ficam as barras do HUD (que o jogador precisa ver ao
