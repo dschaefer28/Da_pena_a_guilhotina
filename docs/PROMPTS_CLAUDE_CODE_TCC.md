@@ -150,7 +150,7 @@ Leia GameManager, @CaseData, Recipe, ReceitaDeCaso, CraftingPress, Item,
 InventoryManager, NPCMovement, LootInteractable, RelogioDeInvestigacao,
 SistemaDeSave, CatalogoDeSave, CaseSelectionUI, FimDeFase, RevelacaoDeBoatos,
 CheckpointDoTribunal e TribunalManager em Assets/Scripts. Inspecione também
-Assets/Casos, Scriptableobjects, Dialogos, Prefab e Scenes e os builders em Editor.
+Assets/ScriptableObjects (Cases, Items e Dialogues), Prefabs e Scenes e os builders em Editor.
 NPCInvestigacao.cs está comentado na versão analisada: não o assuma como sistema ativo.
 
 Mapeie cada requisito do documento de prompts para código, assets, referências

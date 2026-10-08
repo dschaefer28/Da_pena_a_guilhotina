@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab0150bdad6056046a9111998b1ee8d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UISlotHandler
-  item: {fileID: 11400000, guid: 245b9b3372b662a4ca255dfef98820ba, type: 2}
+  item: {fileID: 0}
   slotImg: {fileID: 5719383240688316483}
   itemCount: {fileID: 9024708212528193584}
   itemNameText: {fileID: 1002861126874148885}
@@ -1767,7 +1767,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab0150bdad6056046a9111998b1ee8d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UISlotHandler
-  item: {fileID: 11400000, guid: 245b9b3372b662a4ca255dfef98820ba, type: 2}
+  item: {fileID: 0}
   slotImg: {fileID: 373962442642543297}
   itemCount: {fileID: 776500886515537865}
   itemNameText: {fileID: 785797379387762751}
@@ -6133,7 +6133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab0150bdad6056046a9111998b1ee8d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UISlotHandler
-  item: {fileID: 11400000, guid: 6fcdf7f3346af604894e3c8d7e8e9992, type: 2}
+  item: {fileID: 0}
   slotImg: {fileID: 9086991968812071487}
   itemCount: {fileID: 1300349578369554296}
   itemNameText: {fileID: 5181003781620190375}
@@ -7220,8 +7220,7 @@ MonoBehaviour:
   slotInput1: {fileID: 7880875715073736845}
   slotInput2: {fileID: 585963138056918864}
   slotOutput: {fileID: 7765182770801861634}
-  recipes:
-  - {fileID: 11400000, guid: b304772c93d6e7f4295274adcdb00031, type: 2}
+  recipes: []
 --- !u!1 &2911981580681886153
 GameObject:
   m_ObjectHideFlags: 0
@@ -10572,7 +10571,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab0150bdad6056046a9111998b1ee8d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UISlotHandler
-  item: {fileID: 11400000, guid: 6fcdf7f3346af604894e3c8d7e8e9992, type: 2}
+  item: {fileID: 0}
   slotImg: {fileID: 8524486322422316182}
   itemCount: {fileID: 5248987828105473832}
   itemNameText: {fileID: 7332569085482570728}
@@ -10883,7 +10882,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab0150bdad6056046a9111998b1ee8d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UISlotHandler
-  item: {fileID: 11400000, guid: c5ebb99b971d3df40840b5b826aaec28, type: 2}
+  item: {fileID: 0}
   slotImg: {fileID: 3042454708910373418}
   itemCount: {fileID: 8517009365910575858}
   itemNameText: {fileID: 5111575065460418121}
@@ -11922,7 +11921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab0150bdad6056046a9111998b1ee8d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UISlotHandler
-  item: {fileID: 11400000, guid: 344378f4913eeba498c2b24bbf13f4ad, type: 2}
+  item: {fileID: 0}
   slotImg: {fileID: 4005947499766442831}
   itemCount: {fileID: 4991190511273684830}
   itemNameText: {fileID: 8407998906205904728}

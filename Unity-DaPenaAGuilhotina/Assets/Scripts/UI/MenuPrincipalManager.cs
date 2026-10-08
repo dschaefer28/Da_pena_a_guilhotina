@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -22,6 +23,16 @@ public class MenuPrincipalManager : MonoBehaviour
     [Tooltip("Botão que recebe o foco do teclado quando a pergunta abre (o \"Não\", para o Enter não apagar o progresso).")]
     [SerializeField] private GameObject botaoCancelarNovoJogo;
 
+    [Header("Sliders de Opções (Áudio e Texto)")]
+    [Tooltip("Slider de volume da tela de Opções (OnValueChanged ligado a OnVolumeSliderChanged).")]
+    [SerializeField] private Slider sliderVolume;
+    [Tooltip("Slider de velocidade do texto da tela de Opções (OnValueChanged ligado a OnTextSpeedSliderChanged).")]
+    [SerializeField] private Slider sliderVelocidadeTexto;
+
+    // Mesmas chaves e padrões do PauseMenu: o que o jogador ajusta aqui vale no jogo, e o contrário.
+    private const string VolumeKey = "opt_volume";
+    private const string TextSpeedKey = "opt_textspeed";
+
     private GameObject focoAntesDaConfirmacao;
 
     // O Continuar aparece com uma partida em andamento no save; depois do tribunal o save registra o fim do jogo e não há
@@ -29,6 +40,16 @@ public class MenuPrincipalManager : MonoBehaviour
     private void Start()
     {
         if (botaoContinuar != null) botaoContinuar.SetActive(SistemaDeSave.ExistePartidaEmAndamento);
+        if (PlayerPrefs.HasKey(VolumeKey)) StartCoroutine(AplicarVolumeSalvo());
+    }
+
+    // O menu é a primeira cena: aplica o volume salvo já aqui (nas cenas do jogo quem faz isso é o PauseMenu). No
+    // aparelho os banks do FMOD carregam aos poucos, e antes disso o bus mestre ainda não existe.
+    private IEnumerator AplicarVolumeSalvo()
+    {
+        float limite = Time.unscaledTime + 5f;
+        while (!AudioSeguro.BanksCarregados && Time.unscaledTime < limite) yield return null;
+        AudioSeguro.DefinirVolumeDoBus("bus:/", PlayerPrefs.GetFloat(VolumeKey, 1f));
     }
 
     // Jogar: sem save, começa direto; com save, pergunta antes, porque o Novo Jogo zera o progresso.
@@ -84,6 +105,26 @@ public class MenuPrincipalManager : MonoBehaviour
     {
         painelMenuInicial.SetActive(false);
         painelOpcoes.SetActive(true);
+
+        // Mostra os sliders já na posição salva (mesmos padrões do menu de pause).
+        if (sliderVolume != null)
+            sliderVolume.SetValueWithoutNotify(PlayerPrefs.GetFloat(VolumeKey, 1f));
+        if (sliderVelocidadeTexto != null)
+            sliderVelocidadeTexto.SetValueWithoutNotify(PlayerPrefs.GetFloat(TextSpeedKey, 0.5f));
+    }
+
+    // Ligado no OnValueChanged do slider de Volume da tela de Opções.
+    public void OnVolumeSliderChanged(float valor01)
+    {
+        PlayerPrefs.SetFloat(VolumeKey, valor01);
+        AudioSeguro.DefinirVolumeDoBus("bus:/", valor01);
+    }
+
+    // Ligado no OnValueChanged do slider de Velocidade de Texto da tela de Opções. No menu não há diálogo na tela: o
+    // valor fica salvo e o TypeTextAnimation de cada cena do jogo o lê ao nascer.
+    public void OnTextSpeedSliderChanged(float valor01)
+    {
+        PlayerPrefs.SetFloat(TextSpeedKey, valor01);
     }
 
     public void FecharOpcoes()

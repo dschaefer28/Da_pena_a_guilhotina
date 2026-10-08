@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 ///    - uma Image preta cobrindo a tela inteira (anchors stretch, cor preta);
 ///    - um CanvasGroup no mesmo GameObject da Image (ou no Canvas).
 /// 3. Arrastar esse CanvasGroup para o campo "Canvas Group" deste script no Inspector.
-/// O prefab (Assets/Prefab/SceneTransitonManager) já vem assim, com o CanvasGroup em Alpha 0 para não cobrir a
+/// O prefab (Assets/Prefabs/SceneTransitonManager) já vem assim, com o CanvasGroup em Alpha 0 para não cobrir a
 /// Game View no Editor. Não desligue o objeto do fade numa cena para enxergá-la: o jogo fica sem transições.
 /// </summary>
 public class SceneTransitionManager : MonoBehaviour

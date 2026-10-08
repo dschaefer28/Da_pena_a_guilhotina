@@ -9881,10 +9881,6 @@ PrefabInstance:
       propertyPath: textObject
       value: 
       objectReference: {fileID: 655509477188732652}
-    - target: {fileID: 5901183943734545682, guid: fd6f672e62297bf41b324d24d968ce00, type: 3}
-      propertyPath: dialogueSystem
-      value: 
-      objectReference: {fileID: 8565590424501811999, guid: 5d9ed92fe09639f4c939ab1f7e3fbc1e, type: 3}
     - target: {fileID: 6874236786095496468, guid: fd6f672e62297bf41b324d24d968ce00, type: 3}
       propertyPath: m_Name
       value: DialogueManager

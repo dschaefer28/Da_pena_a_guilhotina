@@ -89,7 +89,7 @@ public static class DeducaoSetupTool
         public Reacao(string fase, string npc, string caso, params string[] anteriores) { this.fase = fase; this.npc = npc; this.caso = caso; this.anteriores = anteriores; }
     }
 
-    // Falas anteriores das reações (Assets/Dialogos/Campanha/<fase>/<npc>_<caso>.asset). As novas vêm do CampanhaSetupTool.
+    // Falas anteriores das reações (Assets/ScriptableObjects/Dialogues/Campanha/<fase>/<npc>_<caso>.asset). As novas vêm do CampanhaSetupTool.
     private static readonly Reacao[] Reacoes =
     {
         new Reacao("Fase2", "Gazeteiro", "Caso_Joalheiro", "O colar? Nas tavernas só se fala disso!", "Dizem que a própria Rainha o encomendou escondida do Rei, e depois fingiu não saber de nada."),

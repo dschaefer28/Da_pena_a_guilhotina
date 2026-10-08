@@ -125,14 +125,14 @@ Outros achados: as 3 `Recipe` de caso repetem os valores `soFatos` das `ReceitaD
 
 ### 4.2 Arquivos alterados
 
-- `Assets/Scripts/RegistroDaInvestigacao.cs` (novo): `RegistroDaInvestigacao` e `IdDeInteracao`.
-- `Assets/Scripts/GameManager.cs`: `registroDaInvestigacao` (substitui `interacoesPagas`, que era só de runtime e não estava serializado em cena/prefab), `PodeAceitarCaso`, `ConfirmarCaso` → bool, `PodePublicarCaso`, `FoiPublicado`, `ConcluirCaso` → bool, guarda em `RegistrarPanfletoDeCaso`, validação de IDs ao carregar cena.
-- `Assets/Scripts/RelogioDeInvestigacao.cs`: cobrança por ID + registro; conversão das chaves do save v2; `JaPaga`.
-- `Assets/Scripts/NPCMovement.cs`: `idDaInteracao`, entrega transacional, sem desligamento forçado.
-- `Assets/Scripts/LootInteractable.cs`: `idDaInteracao`, estado por caso persistente.
-- `Assets/Scripts/CraftingPress.cs`: validação antes de consumir, publicação única, trava de reentrada.
-- `Assets/Scripts/CaseSelectionUI.cs`: fecha só quando o domínio aceita.
-- `Assets/Scripts/SistemaDeSave.cs`: v3, `CapturarDados` / `DesserializarDados` / `AplicarDados` públicos (testáveis), migração, erro explícito sem catálogo.
+- `Assets/Scripts/Investigation/RegistroDaInvestigacao.cs` (novo): `RegistroDaInvestigacao` e `IdDeInteracao`.
+- `Assets/Scripts/Core/GameManager.cs`: `registroDaInvestigacao` (substitui `interacoesPagas`, que era só de runtime e não estava serializado em cena/prefab), `PodeAceitarCaso`, `ConfirmarCaso` → bool, `PodePublicarCaso`, `FoiPublicado`, `ConcluirCaso` → bool, guarda em `RegistrarPanfletoDeCaso`, validação de IDs ao carregar cena.
+- `Assets/Scripts/Investigation/RelogioDeInvestigacao.cs`: cobrança por ID + registro; conversão das chaves do save v2; `JaPaga`.
+- `Assets/Scripts/Characters/NPCMovement.cs`: `idDaInteracao`, entrega transacional, sem desligamento forçado.
+- `Assets/Scripts/Interaction/LootInteractable.cs`: `idDaInteracao`, estado por caso persistente.
+- `Assets/Scripts/Press/CraftingPress.cs`: validação antes de consumir, publicação única, trava de reentrada.
+- `Assets/Scripts/Investigation/CaseSelectionUI.cs`: fecha só quando o domínio aceita.
+- `Assets/Scripts/Core/SistemaDeSave.cs`: v3, `CapturarDados` / `DesserializarDados` / `AplicarDados` públicos (testáveis), migração, erro explícito sem catálogo.
 - `Assets/Editor/IdsDeInteracaoTool.cs` (novo): menu **Ferramentas > Investigação > Gerar IDs de interação (cenas do build)** e **… > Validar IDs de interação (cenas do build)**. Idempotente; recusa rodar com cena suja ou em Play Mode; restaura as cenas abertas.
 - `Assets/Editor/Testes/InvestigacaoESaveTests.cs` (novo): 11 testes EditMode.
 - `Assets/Scenes/Jogo.unity`, `Assets/Scenes/Fase2.unity`: override `idDaInteracao` nos 5 NPCs. Ao salvar a cena Jogo, o Unity também gravou dois campos que já existiam no código e não estavam serializados (`TutorialManager.dicaTempo`, `TableInteractable.avisoSemCasos`) com o **mesmo valor padrão**, e reformatou a quebra de linha de uma mensagem do tutorial (texto idêntico). Sem mudança de comportamento.
@@ -218,16 +218,16 @@ A distribuição sozinha não garante saída: com 3 oportunidades vazias por cas
 ### 5.3 Arquivos
 
 Código:
-- `Assets/Scripts/@CaseData.cs`: `alegacoesIniciais`, `EhAlegacao`.
-- `Assets/Scripts/ReceitaDeCaso.cs`: `NivelDoPanfleto.Alegacoes`, versão `soAlegacoes`, classificação.
-- `Assets/Scripts/GameManager.cs`: `EntregarAlegacoesPendentes`, arquivamento ao concluir, guarda de cota da fase em `PodeAceitarCaso`.
-- `Assets/Scripts/InventoryManager.cs`: `RemoverItens`; entrega de alegações pendentes após restaurar.
-- `Assets/Scripts/CaseSelectionUI.cs`: três estados; botão segue o domínio.
+- `Assets/Scripts/Investigation/@CaseData.cs`: `alegacoesIniciais`, `EhAlegacao`.
+- `Assets/Scripts/Press/ReceitaDeCaso.cs`: `NivelDoPanfleto.Alegacoes`, versão `soAlegacoes`, classificação.
+- `Assets/Scripts/Core/GameManager.cs`: `EntregarAlegacoesPendentes`, arquivamento ao concluir, guarda de cota da fase em `PodeAceitarCaso`.
+- `Assets/Scripts/Inventory/InventoryManager.cs`: `RemoverItens`; entrega de alegações pendentes após restaurar.
+- `Assets/Scripts/Investigation/CaseSelectionUI.cs`: três estados; botão segue o domínio.
 - `Assets/Editor/CampanhaSetupTool.cs` (novo): **Ferramentas > Campanha > 1 - Aplicar conteúdo da campanha (Fases 2 a 4)**.
 - `Assets/Editor/ValidadorDaCampanha.cs` (novo): **Ferramentas > Campanha > 2 - Validar campanha**.
 - `Assets/Editor/Testes/CampanhaTests.cs` (novo, 6 testes); `InvestigacaoESaveTests.cs` ajustado (ver 5.5).
 
-Assets criados (105): 7 casos em `Assets/Casos/`; 7 receitas, 7 panfletos, 34 pistas e 20 alegações em `Assets/Scriptableobjects/Campanha/Fase2|Fase3|Fase4/`; 30 diálogos em `Assets/Dialogos/Campanha/Fase2|Fase3|Fase4/`.
+Assets criados (105): 7 casos em `Assets/ScriptableObjects/Cases/`; 7 receitas, 7 panfletos, 34 pistas e 20 alegações em `Assets/ScriptableObjects/Items/Campanha/Fase2|Fase3|Fase4/`; 30 diálogos em `Assets/ScriptableObjects/Dialogues/Campanha/Fase2|Fase3|Fase4/`.
 
 Assets alterados (só campos vazios preenchidos): 3 casos da Fase 2 (alegações), 6 pistas da Fase 2 (nome, descrição, fonte, ícone), 3 receitas da Fase 2 (textos de revelação e versão Só Alegações), 3 panfletos da Fase 2 (ícone), `UI.prefab` (7 casos na mesa), `Resources/CatalogoDeSave.asset`.
 
@@ -528,7 +528,7 @@ Teclado e toque físicos, aparelho Android real, Continuar com save real depois 
 - Editor: `LinhaEditorialSetupTool.cs` (novo, **Ferramentas > Campanha > 4 - Aplicar linha editorial**), `ValidadorDaCampanha.cs` (checagens da linha editorial).
 - Testes: `Testes/LinhaEditorialTests.cs` (novo, 8 testes), `ComponentesTests.cs` (+3 testes da prensa real). `BibliotecaTests` e `CampanhaTests` passaram a usar `CalcularAntesDaLinha` para os valores de antes da linha, e `CampanhaTests` confere o atalho de alegação nos três tons.
 - Assets: as 10 `ReceitaDeCaso` das Fases 2–4 (só o bloco `linhaEditorial` acrescentado); `Prefab/UI.prefab` (`LinhaEditorialDaPrensaUI` no `PainelPrensa`, com os textos; o `FimDeFase` ganhou o campo novo serializado com o valor padrão). **Nenhuma cena alterada.** Nenhum GUID, `.meta` existente, pacote ou ProjectSettings alterado.
-- Observação de git: os 10 `Assets/Casos/*.asset` aparecem como "M" no `git status` porque o Unity regravou os arquivos, mas o hash do blob é idêntico ao do HEAD e `git diff` sai vazio: não há mudança a commitar neles.
+- Observação de git: os 10 `Assets/ScriptableObjects/Cases/*.asset` aparecem como "M" no `git status` porque o Unity regravou os arquivos, mas o hash do blob é idêntico ao do HEAD e `git diff` sai vazio: não há mudança a commitar neles.
 
 ### 10.4 Configuração realizada
 
@@ -1057,7 +1057,7 @@ Estados desta seção: **implementado** (está no projeto), **validado** (visto 
 
 ### 19.3 Arquivos
 
-- Script: `Assets/Scripts/MenuPrincipalManager.cs`. O `Jogar` pergunta quando há save; métodos novos `ConfirmarNovoJogo` e `FecharConfirmacaoNovoJogo`; campos novos `painelConfirmarNovoJogo` e `botaoCancelarNovoJogo`. `Continuar`, `Start` e os métodos dos outros painéis não mudaram.
+- Script: `Assets/Scripts/UI/MenuPrincipalManager.cs`. O `Jogar` pergunta quando há save; métodos novos `ConfirmarNovoJogo` e `FecharConfirmacaoNovoJogo`; campos novos `painelConfirmarNovoJogo` e `botaoCancelarNovoJogo`. `Continuar`, `Start` e os métodos dos outros painéis não mudaram.
 - Editor (novos): `Assets/Editor/MenuPrincipalSetupTool.cs` (**Ferramentas > Menu principal > Recriar Continuar e confirmação do Novo Jogo**) e `Assets/Editor/OrientacaoPaisagemTool.cs` (**Ferramentas > Build > Android só em paisagem**).
 - Testes (novo): `Assets/Editor/Testes/MenuPrincipalTests.cs`, 3 testes.
 - Cena `Assets/Scenes/menu principal.unity`: 10 GameObjects novos (`ContinuarButton` e seu texto; `painelConfirmarNovoJogo` com moldura, `titulo`, `aviso`, `BotãoSim` e `BotãoNão` com textos) e os 3 campos do `MenuManager`. Nos objetos que já existiam, só mudou a lista de filhos de `MenuPrincipal` e `Canvas`. No `git diff --histogram` são 1332 linhas inseridas e 1 trocada (`botaoContinuar: {fileID: 0}`); o diff padrão do git parece maior porque alinha mal os blocos YAML. Sem ruído de layout.

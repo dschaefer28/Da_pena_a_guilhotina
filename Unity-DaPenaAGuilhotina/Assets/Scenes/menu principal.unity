@@ -1176,7 +1176,19 @@ MonoBehaviour:
   m_Value: 0.429
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1581640106}
+        m_TargetAssemblyTypeName: MenuPrincipalManager, Assembly-CSharp
+        m_MethodName: OnTextSpeedSliderChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &282782750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4610,7 +4622,19 @@ MonoBehaviour:
   m_Value: 0.429
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1581640106}
+        m_TargetAssemblyTypeName: MenuPrincipalManager, Assembly-CSharp
+        m_MethodName: OnVolumeSliderChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1568161947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4816,6 +4840,8 @@ MonoBehaviour:
   botaoContinuar: {fileID: 1719934476}
   painelConfirmarNovoJogo: {fileID: 1665859173}
   botaoCancelarNovoJogo: {fileID: 1610438468}
+  sliderVolume: {fileID: 1568161946}
+  sliderVelocidadeTexto: {fileID: 282782749}
 --- !u!4 &1581640107
 Transform:
   m_ObjectHideFlags: 0
