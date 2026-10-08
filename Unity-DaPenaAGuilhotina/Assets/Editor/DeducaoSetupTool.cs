@@ -20,11 +20,11 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class DeducaoSetupTool
 {
-    private const string PastaCasos = "Assets/_Project/ScriptableObjects/Cases";
-    private const string PastaItens = "Assets/_Project/ScriptableObjects/Items/Campanha";
-    private const string PastaDialogos = "Assets/_Project/ScriptableObjects/Dialogues/Campanha";
-    private const string PastaFase2Antiga = "Assets/_Project/ScriptableObjects/Items"; // pistas F1/F2 e receitas da Fase 2 (anteriores ao Prompt 2)
-    private const string PrefabUI = "Assets/_Project/Prefabs/UI.prefab";
+    private const string PastaCasos = "Assets/ScriptableObjects/Cases";
+    private const string PastaItens = "Assets/ScriptableObjects/Items/Campanha";
+    private const string PastaDialogos = "Assets/ScriptableObjects/Dialogues/Campanha";
+    private const string PastaFase2Antiga = "Assets/ScriptableObjects/Items"; // pistas F1/F2 e receitas da Fase 2 (anteriores ao Prompt 2)
+    private const string PrefabUI = "Assets/Prefabs/UI.prefab";
 
     /// <summary>Fase a partir da qual o quadro de dedução aparece (decisão do grupo, 27/09).</summary>
     public const int FaseMinimaDoQuadro = 2;

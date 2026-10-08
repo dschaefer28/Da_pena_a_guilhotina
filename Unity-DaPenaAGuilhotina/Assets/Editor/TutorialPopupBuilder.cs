@@ -12,8 +12,8 @@ using UnityEngine.UI;
 /// </summary>
 public static class TutorialPopupBuilder
 {
-    private const string CaminhoPrefabUI = "Assets/_Project/Prefabs/UI.prefab";
-    private const string CaminhoPrefabInventario = "Assets/_Project/Prefabs/UI_Inventory.prefab";
+    private const string CaminhoPrefabUI = "Assets/Prefabs/UI.prefab";
+    private const string CaminhoPrefabInventario = "Assets/Prefabs/UI_Inventory.prefab";
 
     // Rodapé centralizado: entre o joystick (x < 440) e os botões mobile (x > 1365), abaixo da prensa (y > 860).
     private static readonly Vector2 TamanhoPopup = new Vector2(780f, 260f);

@@ -19,25 +19,25 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class Fase3TresCasosTool
 {
-    private const string CaminhoDoCaso = "Assets/_Project/ScriptableObjects/Cases/Caso_Padeiro.asset";
-    private const string PrefabUI = "Assets/_Project/Prefabs/UI.prefab";
-    private const string CenaFase3 = "Assets/_Project/Scenes/Fase3.unity";
+    private const string CaminhoDoCaso = "Assets/ScriptableObjects/Cases/Caso_Padeiro.asset";
+    private const string PrefabUI = "Assets/Prefabs/UI.prefab";
+    private const string CenaFase3 = "Assets/Scenes/Fase3.unity";
 
     private static readonly string[] Assets =
     {
         CaminhoDoCaso,
-        "Assets/_Project/ScriptableObjects/Items/Campanha/Fase3/ReceitaDeCaso_Padeiro.asset",
-        "Assets/_Project/ScriptableObjects/Items/Campanha/Fase3/Panfleto_Padeiro.asset",
-        "Assets/_Project/ScriptableObjects/Items/Campanha/Fase3/Pista_Padeiro_Fornadas.asset",
-        "Assets/_Project/ScriptableObjects/Items/Campanha/Fase3/Pista_Padeiro_Encomenda.asset",
-        "Assets/_Project/ScriptableObjects/Items/Campanha/Fase3/Pista_Padeiro_Boato.asset",
-        "Assets/_Project/ScriptableObjects/Items/Campanha/Fase3/Pista_Padeiro_Calunia.asset",
-        "Assets/_Project/ScriptableObjects/Items/Campanha/Fase3/Alegacao_Padeiro_1.asset",
-        "Assets/_Project/ScriptableObjects/Items/Campanha/Fase3/Alegacao_Padeiro_2.asset",
-        "Assets/_Project/ScriptableObjects/Items/Campanha/Fase3/Apoio_Padeiro_Biblioteca.asset",
-        "Assets/_Project/ScriptableObjects/Items/Campanha/Biblioteca/Oferta_Padeiro.asset",
-        "Assets/_Project/ScriptableObjects/Dialogues/Campanha/Fase3/ViuvaFrancois_Caso_Padeiro.asset",
-        "Assets/_Project/ScriptableObjects/Dialogues/Campanha/Fase3/CocheiroJoubert_Caso_Padeiro.asset",
+        "Assets/ScriptableObjects/Items/Campanha/Fase3/ReceitaDeCaso_Padeiro.asset",
+        "Assets/ScriptableObjects/Items/Campanha/Fase3/Panfleto_Padeiro.asset",
+        "Assets/ScriptableObjects/Items/Campanha/Fase3/Pista_Padeiro_Fornadas.asset",
+        "Assets/ScriptableObjects/Items/Campanha/Fase3/Pista_Padeiro_Encomenda.asset",
+        "Assets/ScriptableObjects/Items/Campanha/Fase3/Pista_Padeiro_Boato.asset",
+        "Assets/ScriptableObjects/Items/Campanha/Fase3/Pista_Padeiro_Calunia.asset",
+        "Assets/ScriptableObjects/Items/Campanha/Fase3/Alegacao_Padeiro_1.asset",
+        "Assets/ScriptableObjects/Items/Campanha/Fase3/Alegacao_Padeiro_2.asset",
+        "Assets/ScriptableObjects/Items/Campanha/Fase3/Apoio_Padeiro_Biblioteca.asset",
+        "Assets/ScriptableObjects/Items/Campanha/Biblioteca/Oferta_Padeiro.asset",
+        "Assets/ScriptableObjects/Dialogues/Campanha/Fase3/ViuvaFrancois_Caso_Padeiro.asset",
+        "Assets/ScriptableObjects/Dialogues/Campanha/Fase3/CocheiroJoubert_Caso_Padeiro.asset",
     };
 
     [MenuItem("Ferramentas/Campanha/6 - Retirar o caso do Padeiro (Fase 3 com três casos)")]
@@ -53,7 +53,7 @@ public static class Fase3TresCasosTool
 
         CaseData padeiro = AssetDatabase.LoadAssetAtPath<CaseData>(CaminhoDoCaso);
         if (padeiro == null) return r.Append("O caso do Padeiro já foi retirado. Nada a fazer.").ToString();
-        OfertaDaBiblioteca oferta = AssetDatabase.LoadAssetAtPath<OfertaDaBiblioteca>("Assets/_Project/ScriptableObjects/Items/Campanha/Biblioteca/Oferta_Padeiro.asset");
+        OfertaDaBiblioteca oferta = AssetDatabase.LoadAssetAtPath<OfertaDaBiblioteca>("Assets/ScriptableObjects/Items/Campanha/Biblioteca/Oferta_Padeiro.asset");
 
         // 1. Referências no prefab UI (mesa e biblioteca).
         GameObject raiz = PrefabUtility.LoadPrefabContents(PrefabUI);

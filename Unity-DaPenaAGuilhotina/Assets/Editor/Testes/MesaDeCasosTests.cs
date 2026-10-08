@@ -11,8 +11,8 @@ using UnityEngine.UI;
 /// </summary>
 public class MesaDeCasosTests
 {
-    private const string PrefabUI = "Assets/_Project/Prefabs/UI.prefab";
-    private const string PrefabCartao = "Assets/_Project/Prefabs/CartaoPrefab.prefab";
+    private const string PrefabUI = "Assets/Prefabs/UI.prefab";
+    private const string PrefabCartao = "Assets/Prefabs/CartaoPrefab.prefab";
 
     [Test]
     public void Cartao_EscuroOpacoEDimensionadoPelaLinha()

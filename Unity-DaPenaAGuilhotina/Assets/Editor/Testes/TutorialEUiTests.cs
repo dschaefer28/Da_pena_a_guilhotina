@@ -102,7 +102,7 @@ public class TutorialEUiTests
     {
         PlayerPrefs.DeleteKey(TutorialManager.CHAVE_DICA_FATO_BOATO);
         PlayerPrefs.DeleteKey(TutorialManager.CHAVE_DICA_DEDUCAO);
-        CaseData caso = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/_Project/ScriptableObjects/Cases/Caso_Joalheiro.asset");
+        CaseData caso = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/ScriptableObjects/Cases/Caso_Joalheiro.asset");
         MethodInfo aoReceber = typeof(TutorialManager).GetMethod("HandleItemAdicionado", BindingFlags.NonPublic | BindingFlags.Instance);
 
         aoReceber.Invoke(tm, new object[] { caso.alegacoesIniciais[0] }); // a carta do cliente, ao aceitar o caso
@@ -302,17 +302,17 @@ public class TutorialEUiTests
     [Test]
     public void Orcamento_SeisHorasNasFasesDoisATres_CincoEndividado()
     {
-        GameManager prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/GameManager.prefab").GetComponent<GameManager>();
+        GameManager prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/GameManager.prefab").GetComponent<GameManager>();
         Assert.AreEqual(6, prefab.horasPorCaso);
         Assert.AreEqual(6, gm.horasPorCaso, "o padrão do código é o mesmo do prefab");
 
-        var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/UI.prefab");
+        var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI.prefab");
         foreach (CaseData caso in ui.GetComponentInChildren<CaseSelectionUI>(true).availableCases)
             if (caso.fase >= 2) Assert.AreEqual(6, ValidadorDaCampanha.HorasDoCaso(caso, prefab), caso.name);
 
         // Um caso real da Fase 2 no relógio: 6h; endividado, 5h (a conversão continua 1h por interação nova).
         gm.faseAtual = 2;
-        CaseData joias = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/_Project/ScriptableObjects/Cases/Caso_Joalheiro.asset");
+        CaseData joias = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/ScriptableObjects/Cases/Caso_Joalheiro.asset");
         Assert.IsTrue(gm.ConfirmarCaso(joias));
         Assert.AreEqual(6, gm.horasRestantes);
 
@@ -382,7 +382,7 @@ public class TutorialEUiTests
         QuadroDeDeducaoUI quadro = Go("Quadro").AddComponent<QuadroDeDeducaoUI>();
         Assert.AreEqual(2, quadro.faseMinima, "padrão do código");
         gm.faseAtual = 2;
-        CaseData operario = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/_Project/ScriptableObjects/Cases/Caso_Operario.asset");
+        CaseData operario = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/ScriptableObjects/Cases/Caso_Operario.asset");
         Assert.IsFalse(quadro.Disponivel, "sem caso em andamento");
         Assert.IsTrue(gm.ConfirmarCaso(operario));
         Assert.IsTrue(quadro.Disponivel);

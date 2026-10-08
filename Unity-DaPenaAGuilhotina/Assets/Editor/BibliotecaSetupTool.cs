@@ -18,11 +18,11 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class BibliotecaSetupTool
 {
-    private const string PastaItens = "Assets/_Project/ScriptableObjects/Items/Campanha";
-    private const string PastaOfertas = "Assets/_Project/ScriptableObjects/Items/Campanha/Biblioteca";
-    private const string PastaDialogos = "Assets/_Project/ScriptableObjects/Dialogues/Campanha";
-    private const string PrefabUI = "Assets/_Project/Prefabs/UI.prefab";
-    private const string SpriteDocumento = "Assets/_Project/Art/UI/paper-scroll-banner-3.png";
+    private const string PastaItens = "Assets/ScriptableObjects/Items/Campanha";
+    private const string PastaOfertas = "Assets/ScriptableObjects/Items/Campanha/Biblioteca";
+    private const string PastaDialogos = "Assets/ScriptableObjects/Dialogues/Campanha";
+    private const string PrefabUI = "Assets/Prefabs/UI.prefab";
+    private const string SpriteDocumento = "Assets/Art/UI/paper-scroll-banner-3.png";
 
     private class Oferta
     {
@@ -105,7 +105,7 @@ public static class BibliotecaSetupTool
         var docsDeNpc = new Dictionary<string, string>(); // caso -> caminho do documento
         foreach (Etapa e in Etapas)
         {
-            CaseData caso = AssetDatabase.LoadAssetAtPath<CaseData>($"Assets/_Project/ScriptableObjects/Cases/{e.caso}.asset");
+            CaseData caso = AssetDatabase.LoadAssetAtPath<CaseData>($"Assets/ScriptableObjects/Cases/{e.caso}.asset");
             string caminho = $"{PastaItens}/{e.fase}/{e.itemArquivo}.asset";
             GarantirSuporte(caminho, e.itemId, e.itemNome, e.itemDescricao, e.itemFonte, caso, documento, ref criados, ref alterados);
             docsDeNpc[e.caso] = caminho;
@@ -114,7 +114,7 @@ public static class BibliotecaSetupTool
         var caminhosDasOfertas = new List<string>();
         foreach (Oferta o in Ofertas)
         {
-            CaseData caso = AssetDatabase.LoadAssetAtPath<CaseData>($"Assets/_Project/ScriptableObjects/Cases/{o.caso}.asset");
+            CaseData caso = AssetDatabase.LoadAssetAtPath<CaseData>($"Assets/ScriptableObjects/Cases/{o.caso}.asset");
             if (caso == null) { r.AppendLine($"  AVISO: caso '{o.caso}' não existe (rode antes a ferramenta 1)."); continue; }
             string caminhoItem = $"{PastaItens}/{o.fase}/Apoio_{o.caso.Replace("Caso_", "")}_Biblioteca.asset";
             Item item = GarantirSuporte(caminhoItem, "apoio_" + o.id, o.itemNome, o.descricao, o.fonte, caso, documento, ref criados, ref alterados);
@@ -175,7 +175,7 @@ public static class BibliotecaSetupTool
         {
             foreach (string nomeDaCena in new[] { "Fase3", "Fase4" })
             {
-                Scene cena = EditorSceneManager.OpenScene($"Assets/_Project/Scenes/{nomeDaCena}.unity", OpenSceneMode.Single);
+                Scene cena = EditorSceneManager.OpenScene($"Assets/Scenes/{nomeDaCena}.unity", OpenSceneMode.Single);
                 bool mudou = false;
                 foreach (Etapa e in System.Array.FindAll(Etapas, x => x.cena == nomeDaCena))
                     mudou |= GarantirEtapa(cena, e, falas[e.id], docsDeNpc[e.caso], ref alterados, r);
@@ -196,7 +196,7 @@ public static class BibliotecaSetupTool
     // Exemplo verificável pedido pelo Prompt 3. Só troca os valores provisórios do Prompt 2 se ninguém os editou.
     private static void MigrarExemploDoChampDeMars(ref int alterados)
     {
-        CaseData caso = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/_Project/ScriptableObjects/Cases/Caso_ChampDeMars.asset");
+        CaseData caso = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/ScriptableObjects/Cases/Caso_ChampDeMars.asset");
         if (caso == null || caso.receitaDoPanfleto == null) return;
         ReceitaDeCaso r = caso.receitaDoPanfleto;
         bool Trocar(ReceitaDeCaso.Versao v, int p0, int e0, int o0, int p1, int e1, int o1)
@@ -226,7 +226,7 @@ public static class BibliotecaSetupTool
             if (par.Key is NPCMovement n && IdDeInteracao.IdEfetivo(n, n.idDaInteracao) == e.npc) npc = n;
         if (npc == null) { r.AppendLine($"  AVISO: NPC '{e.npc}' não encontrado em {cena.name}."); return false; }
 
-        CaseData caso = AssetDatabase.LoadAssetAtPath<CaseData>($"Assets/_Project/ScriptableObjects/Cases/{e.caso}.asset");
+        CaseData caso = AssetDatabase.LoadAssetAtPath<CaseData>($"Assets/ScriptableObjects/Cases/{e.caso}.asset");
         int i = npc.reacoesDeCaso.FindIndex(x => x.caso == caso);
         if (i < 0) { r.AppendLine($"  AVISO: '{e.npc}' não tem reação ao caso '{e.caso}'."); return false; }
 

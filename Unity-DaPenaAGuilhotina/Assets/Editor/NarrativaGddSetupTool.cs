@@ -31,18 +31,18 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class NarrativaGddSetupTool
 {
-    private const string PastaCasos = "Assets/_Project/ScriptableObjects/Cases/";
-    private const string SO = "Assets/_Project/ScriptableObjects/Items/";
-    private const string P2 = "Assets/_Project/ScriptableObjects/Items/Campanha/Fase2/";
-    private const string P3 = "Assets/_Project/ScriptableObjects/Items/Campanha/Fase3/";
-    private const string P4 = "Assets/_Project/ScriptableObjects/Items/Campanha/Fase4/";
-    private const string OF = "Assets/_Project/ScriptableObjects/Items/Campanha/Biblioteca/";
-    private const string D2 = "Assets/_Project/ScriptableObjects/Dialogues/Campanha/Fase2/";
-    private const string D3 = "Assets/_Project/ScriptableObjects/Dialogues/Campanha/Fase3/";
-    private const string D4 = "Assets/_Project/ScriptableObjects/Dialogues/Campanha/Fase4/";
-    private const string DJoa = "Assets/_Project/ScriptableObjects/Dialogues/Joalheiro/";
-    private const string DRev = "Assets/_Project/ScriptableObjects/Dialogues/JeanBaptisteReveillon/";
-    private const string DOpe = "Assets/_Project/ScriptableObjects/Dialogues/Operário/";
+    private const string PastaCasos = "Assets/ScriptableObjects/Cases/";
+    private const string SO = "Assets/ScriptableObjects/Items/";
+    private const string P2 = "Assets/ScriptableObjects/Items/Campanha/Fase2/";
+    private const string P3 = "Assets/ScriptableObjects/Items/Campanha/Fase3/";
+    private const string P4 = "Assets/ScriptableObjects/Items/Campanha/Fase4/";
+    private const string OF = "Assets/ScriptableObjects/Items/Campanha/Biblioteca/";
+    private const string D2 = "Assets/ScriptableObjects/Dialogues/Campanha/Fase2/";
+    private const string D3 = "Assets/ScriptableObjects/Dialogues/Campanha/Fase3/";
+    private const string D4 = "Assets/ScriptableObjects/Dialogues/Campanha/Fase4/";
+    private const string DJoa = "Assets/ScriptableObjects/Dialogues/Joalheiro/";
+    private const string DRev = "Assets/ScriptableObjects/Dialogues/JeanBaptisteReveillon/";
+    private const string DOpe = "Assets/ScriptableObjects/Dialogues/Operário/";
 
     // Falantes (o nome aparece na caixa de diálogo; o do protagonista vira a caixa para o lado dele).
     private const string J = "Julien Valois";
@@ -1123,7 +1123,7 @@ public static class NarrativaGddSetupTool
     private static void ConfigurarCena(string nomeDaCena, HashSet<string> migrar, Contagem cont, StringBuilder r)
     {
         if (!Casos.Exists(c => c.cena == nomeDaCena && migrar.Contains(c.arquivo))) return;
-        Scene cena = EditorSceneManager.OpenScene($"Assets/_Project/Scenes/{nomeDaCena}.unity", OpenSceneMode.Single);
+        Scene cena = EditorSceneManager.OpenScene($"Assets/Scenes/{nomeDaCena}.unity", OpenSceneMode.Single);
 
         var npcs = new Dictionary<string, NPCMovement>();
         var objetos = new Dictionary<string, LootInteractable>();

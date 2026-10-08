@@ -13,9 +13,9 @@ using UnityEngine.UI;
 /// </summary>
 public static class InventarioListaBuilder
 {
-    private const string CaminhoPrefab = "Assets/_Project/Prefabs/UI_Inventory.prefab";
-    private const string CaminhoPrefabUI = "Assets/_Project/Prefabs/UI.prefab";
-    private static readonly string[] CenasParaSincronizar = { "Assets/_Project/Scenes/Jogo.unity", "Assets/_Project/Scenes/Porao.unity" };
+    private const string CaminhoPrefab = "Assets/Prefabs/UI_Inventory.prefab";
+    private const string CaminhoPrefabUI = "Assets/Prefabs/UI.prefab";
+    private static readonly string[] CenasParaSincronizar = { "Assets/Scenes/Jogo.unity", "Assets/Scenes/Porao.unity" };
 
     private const int LinhasDesejadas = 24;
 
@@ -190,7 +190,7 @@ public static class InventarioListaBuilder
     // O atlas "Cinzel-VariableFont_wght SDF" (512px, 97 caracteres) não tem á/é/ç etc., e o TMP cai na
     // LiberationSans para esses glifos ("Inventário" saía com o "á" em outra fonte). O Cinzel-Regular
     // tem a tabela Latin-1 completa.
-    private const string CaminhoFonte = "Assets/_Project/Fonts/Cinzel-Regular SDF.asset";
+    private const string CaminhoFonte = "Assets/Art/Fonts/Cinzel-Regular SDF.asset";
 
     internal static TMP_FontAsset ObterFonte(RectTransform conteudo)
     {

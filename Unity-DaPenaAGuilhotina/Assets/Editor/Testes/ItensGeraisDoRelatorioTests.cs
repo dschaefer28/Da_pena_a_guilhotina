@@ -41,7 +41,7 @@ public class ItensGeraisDoRelatorioTests
     [Test]
     public void Tutorial_RoteiroDaCenaJogoTemAEtapaDaMesa()
     {
-        ComCena("Assets/_Project/Scenes/Jogo.unity", cena =>
+        ComCena("Assets/Scenes/Jogo.unity", cena =>
         {
             TutorialManager tm = null;
             foreach (GameObject raiz in cena.GetRootGameObjects()) if (tm == null) tm = raiz.GetComponentInChildren<TutorialManager>(true);
@@ -102,7 +102,7 @@ public class ItensGeraisDoRelatorioTests
     [Test]
     public void Porao_CameraLimitadaASala()
     {
-        ComCena("Assets/_Project/Scenes/Porao.unity", cena =>
+        ComCena("Assets/Scenes/Porao.unity", cena =>
         {
             CinemachineConfiner2D confinador = null;
             foreach (GameObject raiz in cena.GetRootGameObjects()) if (confinador == null) confinador = raiz.GetComponentInChildren<CinemachineConfiner2D>(true);
@@ -125,7 +125,7 @@ public class ItensGeraisDoRelatorioTests
     [Test]
     public void Cenas_MenuETribunal_TemFmodStudioListener()
     {
-        foreach (string caminho in new[] { "Assets/_Project/Scenes/menu principal.unity", "Assets/_Project/Scenes/Tribunal.unity" })
+        foreach (string caminho in new[] { "Assets/Scenes/menu principal.unity", "Assets/Scenes/Tribunal.unity" })
             ComCena(caminho, cena =>
             {
                 bool temOuvinte = false;

@@ -23,16 +23,16 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class CampanhaSetupTool
 {
-    private const string PastaItens = "Assets/_Project/ScriptableObjects/Items/Campanha";
-    private const string PastaDialogos = "Assets/_Project/ScriptableObjects/Dialogues/Campanha";
-    private const string PastaCasos = "Assets/_Project/ScriptableObjects/Cases";
-    private const string PrefabNpc = "Assets/_Project/Prefabs/NPCBasic.prefab";
-    private const string PrefabUI = "Assets/_Project/Prefabs/UI.prefab";
+    private const string PastaItens = "Assets/ScriptableObjects/Items/Campanha";
+    private const string PastaDialogos = "Assets/ScriptableObjects/Dialogues/Campanha";
+    private const string PastaCasos = "Assets/ScriptableObjects/Cases";
+    private const string PrefabNpc = "Assets/Prefabs/NPCBasic.prefab";
+    private const string PrefabUI = "Assets/Prefabs/UI.prefab";
 
-    private const string SpriteDocumento = "Assets/_Project/Art/UI/paper-scroll-banner-3.png";
-    private const string SpriteCarta = "Assets/_Project/Art/UI/Menu/vibrant-red-wax-seal-with-a-textured-surface-and-glossy-shine-cut-out-transparent-png.png";
-    private const string SpritePanfleto = "Assets/_Project/Art/UI/Menu/pngtree-aged-parchment-with-faded-script-rests-on-wood-image_16688678.jpg";
-    private const string SpriteMesa = "Assets/_Project/Art/Props/mesa.png";
+    private const string SpriteDocumento = "Assets/Art/UI/paper-scroll-banner-3.png";
+    private const string SpriteCarta = "Assets/Art/UI/Menu/vibrant-red-wax-seal-with-a-textured-surface-and-glossy-shine-cut-out-transparent-png.png";
+    private const string SpritePanfleto = "Assets/Art/UI/Menu/pngtree-aged-parchment-with-faded-script-rests-on-wood-image_16688678.jpg";
+    private const string SpriteMesa = "Assets/Art/Props/mesa.png";
 
     // ===== Definições =====
 
@@ -232,7 +232,7 @@ public static class CampanhaSetupTool
     private static void DefinirFase2()
     {
         const string F = "Fase2";
-        const string SO = "Assets/_Project/ScriptableObjects/Items/";
+        const string SO = "Assets/ScriptableObjects/Items/";
 
         Casos.Add(new C
         {
@@ -819,7 +819,7 @@ public static class CampanhaSetupTool
 
     private static void ConfigurarCena(string nomeDaCena, Dictionary<string, string> dialogos, Contagem contagem, StringBuilder relatorio)
     {
-        string caminho = $"Assets/_Project/Scenes/{nomeDaCena}.unity";
+        string caminho = $"Assets/Scenes/{nomeDaCena}.unity";
         Scene cena = EditorSceneManager.OpenScene(caminho, OpenSceneMode.Single);
         int alteracoesAntes = contagem.npcsCriados + contagem.lootsCriados + contagem.reacoesAdicionadas + contagem.migracoes;
         bool mudou = false;

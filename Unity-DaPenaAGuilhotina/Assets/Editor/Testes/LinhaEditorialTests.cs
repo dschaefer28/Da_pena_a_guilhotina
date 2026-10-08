@@ -171,8 +171,8 @@ public class LinhaEditorialTests
     [Test]
     public void ComSuporteSuperior_ChampDeMars_VersaoDepoisApoioDepoisLinha()
     {
-        const string pasta = "Assets/_Project/ScriptableObjects/Items/Campanha/Fase3/";
-        CaseData champ = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/_Project/ScriptableObjects/Cases/Caso_ChampDeMars.asset");
+        const string pasta = "Assets/ScriptableObjects/Items/Campanha/Fase3/";
+        CaseData champ = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/ScriptableObjects/Cases/Caso_ChampDeMars.asset");
         ReceitaDeCaso r = champ.receitaDoPanfleto;
         Item f1 = AssetDatabase.LoadAssetAtPath<Item>(pasta + "Pista_Champ_Peticao.asset");
         Item f2 = AssetDatabase.LoadAssetAtPath<Item>(pasta + "Pista_Champ_LeiMarcial.asset");
@@ -246,7 +246,7 @@ public class LinhaEditorialTests
     public void Save_V6_PreservaTomDaPublicacaoEDaRevelacao()
     {
         CatalogoDeSave catalogo = AssetDatabase.LoadAssetAtPath<CatalogoDeSave>("Assets/Resources/CatalogoDeSave.asset");
-        CaseData joias = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/_Project/ScriptableObjects/Cases/Caso_Joalheiro.asset");
+        CaseData joias = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/ScriptableObjects/Cases/Caso_Joalheiro.asset");
         GameManager origem = CriarGameManager(2);
         // Valores da receita de teste; o save guarda o caso pelo nome do asset, então a publicação vai em um caso do catálogo.
         ResultadoDoPanfleto r = Calcular(fato1, calunia, LinhaEditorial.Sensacionalista);

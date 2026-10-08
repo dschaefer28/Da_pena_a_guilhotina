@@ -13,8 +13,8 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class TrocaFonteUI
 {
-    private const string CaminhoFonteVelha = "Assets/_Project/Fonts/Cinzel-VariableFont_wght SDF.asset";
-    private const string CaminhoFonteNova = "Assets/_Project/Fonts/Cinzel-Regular SDF.asset";
+    private const string CaminhoFonteVelha = "Assets/Art/Fonts/Cinzel-VariableFont_wght SDF.asset";
+    private const string CaminhoFonteNova = "Assets/Art/Fonts/Cinzel-Regular SDF.asset";
 
     [MenuItem("Ferramentas/Fontes/Trocar Cinzel Variable (sem acentos) por Cinzel-Regular")]
     public static void Trocar()

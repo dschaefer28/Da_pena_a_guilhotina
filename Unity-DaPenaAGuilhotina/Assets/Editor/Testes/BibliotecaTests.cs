@@ -9,7 +9,7 @@ using UnityEngine;
 /// </summary>
 public class BibliotecaTests
 {
-    private const string Pasta = "Assets/_Project/ScriptableObjects/Items/Campanha/";
+    private const string Pasta = "Assets/ScriptableObjects/Items/Campanha/";
     private readonly List<Object> criados = new List<Object>();
 
     [TearDown]
@@ -36,7 +36,7 @@ public class BibliotecaTests
     [Test]
     public void ExemploNumerico_ChampDeMars_ApoioMudaDe20_10_30Para40_5_50()
     {
-        CaseData champ = Carregar<CaseData>("Assets/_Project/ScriptableObjects/Cases/Caso_ChampDeMars.asset");
+        CaseData champ = Carregar<CaseData>("Assets/ScriptableObjects/Cases/Caso_ChampDeMars.asset");
         ReceitaDeCaso receita = champ.receitaDoPanfleto;
         Item f1 = Carregar<Item>(Pasta + "Fase3/Pista_Champ_Peticao.asset");
         Item f2 = Carregar<Item>(Pasta + "Fase3/Pista_Champ_LeiMarcial.asset");
@@ -65,7 +65,7 @@ public class BibliotecaTests
     [Test]
     public void Qualidade_NaoMudaAVerdade_NemAVersao()
     {
-        CaseData champ = Carregar<CaseData>("Assets/_Project/ScriptableObjects/Cases/Caso_ChampDeMars.asset");
+        CaseData champ = Carregar<CaseData>("Assets/ScriptableObjects/Cases/Caso_ChampDeMars.asset");
         Item fato = Carregar<Item>(Pasta + "Fase3/Pista_Champ_Peticao.asset");
         Item boato = Carregar<Item>(Pasta + "Fase3/Pista_Champ_Boato.asset");
         Item ata = Carregar<Item>(Pasta + "Fase3/Apoio_ChampDeMars_Biblioteca.asset");
@@ -185,7 +185,7 @@ public class BibliotecaTests
     public void Oferta_ApoioEquivalenteJaObtido_NaoEhVendida()
     {
         // Varennes: o documento da biblioteca e o recibo do Cocheiro ativam o mesmo reforço.
-        CaseData varennes = Carregar<CaseData>("Assets/_Project/ScriptableObjects/Cases/Caso_Varennes.asset");
+        CaseData varennes = Carregar<CaseData>("Assets/ScriptableObjects/Cases/Caso_Varennes.asset");
         OfertaDaBiblioteca oferta = Carregar<OfertaDaBiblioteca>(Pasta + "Biblioteca/Oferta_Varennes.asset");
         Item recibo = Carregar<Item>(Pasta + "Fase3/Apoio_Varennes_Recibo.asset");
         GameManager gm = CriarGameManager(varennes, 100);
@@ -224,7 +224,7 @@ public class BibliotecaTests
     [Test]
     public void Save_V4_PreservaCompras_Evidencias_EHistoricoDaPublicacao()
     {
-        CaseData champ = Carregar<CaseData>("Assets/_Project/ScriptableObjects/Cases/Caso_ChampDeMars.asset");
+        CaseData champ = Carregar<CaseData>("Assets/ScriptableObjects/Cases/Caso_ChampDeMars.asset");
         var catalogo = Carregar<CatalogoDeSave>("Assets/Resources/CatalogoDeSave.asset");
         GameManager origem = CriarGameManager(champ, -5);
         origem.comprasDaBiblioteca.Add("biblioteca_champ|Caso_ChampDeMars");

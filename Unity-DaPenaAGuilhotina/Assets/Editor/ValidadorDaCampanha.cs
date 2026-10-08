@@ -57,10 +57,10 @@ public static class ValidadorDaCampanha
     {
         var r = new Resultado();
 
-        GameManager gm = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/GameManager.prefab")?.GetComponent<GameManager>();
+        GameManager gm = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/GameManager.prefab")?.GetComponent<GameManager>();
         if (gm == null) { r.problemas.Add("GameManager.prefab não encontrado."); return r; }
 
-        GameObject ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/UI.prefab");
+        GameObject ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI.prefab");
         CaseSelectionUI mesa = ui != null ? ui.GetComponentInChildren<CaseSelectionUI>(true) : null;
         if (mesa == null || mesa.availableCases == null) { r.problemas.Add("Mesa de Casos (CaseSelectionUI no UI.prefab) não encontrada."); return r; }
         CatalogoDeSave catalogo = AssetDatabase.LoadAssetAtPath<CatalogoDeSave>("Assets/Resources/CatalogoDeSave.asset");
@@ -97,7 +97,7 @@ public static class ValidadorDaCampanha
         }
         foreach (var par in porCena)
         {
-            string caminho = $"Assets/_Project/Scenes/{par.Key}.unity";
+            string caminho = $"Assets/Scenes/{par.Key}.unity";
             Scene cena = SceneManager.GetSceneByPath(caminho);
             bool abriu = false;
             if (!cena.isLoaded)

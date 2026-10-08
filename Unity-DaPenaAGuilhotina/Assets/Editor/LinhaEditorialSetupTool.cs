@@ -14,7 +14,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class LinhaEditorialSetupTool
 {
-    private const string PrefabUI = "Assets/_Project/Prefabs/UI.prefab";
+    private const string PrefabUI = "Assets/Prefabs/UI.prefab";
 
     // Valores provisórios (Povo / Estado / Ouro). Iguais em todas as versões da receita, para a escolha não depender
     // da verdade das pistas. Defesa e Agradar deslocam o desnível Povo × Estado em 15 pontos por publicação (a margem
