@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 152037314}
   - component: {fileID: 152037313}
   m_Layer: 0
-  m_Name: SetaMesa
+  m_Name: CaseTableArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 206957688}
   - component: {fileID: 206957687}
   m_Layer: 0
-  m_Name: Sc
+  m_Name: Scene1Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -422,7 +422,7 @@ GameObject:
   - component: {fileID: 412563810}
   - component: {fileID: 412563809}
   m_Layer: 0
-  m_Name: fundo
+  m_Name: Backdrop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -513,7 +513,7 @@ GameObject:
   - component: {fileID: 469027926}
   - component: {fileID: 469027925}
   m_Layer: 0
-  m_Name: chao
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -605,7 +605,7 @@ GameObject:
   - component: {fileID: 470665824}
   - component: {fileID: 470665823}
   m_Layer: 0
-  m_Name: Square
+  m_Name: GroundCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1107,7 +1107,7 @@ GameObject:
   - component: {fileID: 847434239}
   - component: {fileID: 847434238}
   m_Layer: 0
-  m_Name: Limite LD
+  m_Name: RightWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1186,7 +1186,7 @@ GameObject:
   - component: {fileID: 1159654253}
   - component: {fileID: 1159654256}
   m_Layer: 0
-  m_Name: Alcapao
+  m_Name: Trapdoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1600,7 +1600,7 @@ GameObject:
   - component: {fileID: 1517696812}
   - component: {fileID: 1517696815}
   m_Layer: 0
-  m_Name: MesaCartas
+  m_Name: CaseTable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1766,7 +1766,7 @@ GameObject:
   - component: {fileID: 1633355307}
   - component: {fileID: 1633355309}
   m_Layer: 0
-  m_Name: Square (1)
+  m_Name: LeftWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1986,7 +1986,7 @@ GameObject:
   - component: {fileID: 1837868802}
   - component: {fileID: 1837868801}
   m_Layer: 0
-  m_Name: escritorio
+  m_Name: OfficeBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2066,6 +2066,68 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1874530089
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1874530090}
+  m_Layer: 0
+  m_Name: --- GAMEPLAY ---
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1874530090
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1874530089}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1956992741
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1956992742}
+  m_Layer: 0
+  m_Name: --- UI ---
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1956992742
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956992741}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1970655855 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 22473429104203323, guid: 0297e90a85155ac4f97d902242847821, type: 3}
@@ -2089,7 +2151,7 @@ GameObject:
   - component: {fileID: 2075154300}
   - component: {fileID: 2075154302}
   m_Layer: 0
-  m_Name: escritorio
+  m_Name: MusicEmitter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2200,6 +2262,99 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+--- !u!1 &2100372882
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2100372883}
+  m_Layer: 0
+  m_Name: --- ENVIRONMENT ---
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2100372883
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100372882}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2125442064
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2125442065}
+  m_Layer: 0
+  m_Name: --- CAMERAS ---
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2125442065
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2125442064}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2130561288
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2130561289}
+  m_Layer: 0
+  m_Name: --- MANAGERS ---
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2130561289
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130561288}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &618163540152377320
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3616,7 +3771,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8745683906588527501, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_Name
-      value: Main Camera
+      value: MainCamera
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3673,7 +3828,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2839023747088503929, guid: 808e88043f9b00b488697c5805fc4b0a, type: 3}
       propertyPath: m_Name
-      value: SceneTransitonManager
+      value: SceneTransitionManager
       objectReference: {fileID: 0}
     - target: {fileID: 2839023747088503929, guid: 808e88043f9b00b488697c5805fc4b0a, type: 3}
       propertyPath: m_IsActive
@@ -3717,7 +3872,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2396127502576580076, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
       propertyPath: m_Name
-      value: Porta
+      value: Door
       objectReference: {fileID: 0}
     - target: {fileID: 6973020966711926227, guid: 5c5e87e2f8a5d5a4fa70e2f1f7c9062e, type: 3}
       propertyPath: m_LocalScale.x
@@ -3797,7 +3952,7 @@ GameObject:
   - component: {fileID: 6976429621351604902}
   - component: {fileID: 3128194101464975663}
   m_Layer: 0
-  m_Name: SetaAlcapao
+  m_Name: TrapdoorArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4113,29 +4268,34 @@ SpriteRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1741353204521291834}
-  - {fileID: 2796620136956860199}
-  - {fileID: 752816042}
+  - {fileID: 2130561289}
+  - {fileID: 4845008847869591833}
+  - {fileID: 2326748046899083334}
+  - {fileID: 780209768}
   - {fileID: 559079708}
-  - {fileID: 6744143684552005281}
-  - {fileID: 618163540152377320}
-  - {fileID: 189412083}
-  - {fileID: 1220264835}
+  - {fileID: 206957688}
+  - {fileID: 2100372883}
+  - {fileID: 412563810}
   - {fileID: 1837868802}
   - {fileID: 469027926}
   - {fileID: 470665825}
-  - {fileID: 292087536}
-  - {fileID: 2075154301}
-  - {fileID: 412563810}
   - {fileID: 1633355308}
+  - {fileID: 847434239}
+  - {fileID: 2075154301}
+  - {fileID: 1874530090}
+  - {fileID: 189412083}
+  - {fileID: 292087536}
+  - {fileID: 1220264835}
   - {fileID: 2809893009831944838}
-  - {fileID: 4845008847869591833}
   - {fileID: 1517696814}
   - {fileID: 1159654255}
-  - {fileID: 206957688}
-  - {fileID: 4751969138081047417}
-  - {fileID: 847434239}
-  - {fileID: 1778687601}
-  - {fileID: 2326748046899083334}
-  - {fileID: 780209768}
   - {fileID: 152037315}
+  - {fileID: 2796620136956860199}
+  - {fileID: 1956992742}
+  - {fileID: 618163540152377320}
+  - {fileID: 6744143684552005281}
+  - {fileID: 752816042}
+  - {fileID: 2125442065}
+  - {fileID: 1741353204521291834}
+  - {fileID: 4751969138081047417}
+  - {fileID: 1778687601}
