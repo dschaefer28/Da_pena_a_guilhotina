@@ -1366,19 +1366,131 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8778272650829275048, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 311638395}
+    - targetCorrespondingSourceObject: {fileID: 8778272650829275048, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 311638394}
+    - targetCorrespondingSourceObject: {fileID: 8608013645000851669, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 311638393}
   m_SourcePrefab: {fileID: 100100000, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
 --- !u!114 &311638390 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2248381147713687340, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
   m_PrefabInstance: {fileID: 311638389}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 311638392}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 329e7d04b805b284bb3e8cc98fa6008c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
+--- !u!1 &311638391 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8608013645000851669, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+  m_PrefabInstance: {fileID: 311638389}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &311638392 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8778272650829275048, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+  m_PrefabInstance: {fileID: 311638389}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &311638393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 311638391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
+  Event: 
+  EventPlayTrigger: 17
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &311638394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 311638392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 825054204
+      Data2: 1074472230
+      Data3: -597216626
+      Data4: 1234452004
+    Path: event:/woosh
+  Event: 
+  EventPlayTrigger: 12
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &311638395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 311638392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 825054204
+      Data2: 1074472230
+      Data3: -597216626
+      Data4: 1234452004
+    Path: event:/woosh
+  Event: 
+  EventPlayTrigger: 11
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &359866481
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1397,7 +1509,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7374019664807440416, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -27.008242
+      value: -26.950293
       objectReference: {fileID: 0}
     - target: {fileID: 7374019664807440416, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3095,7 +3207,7 @@ PrefabInstance:
       objectReference: {fileID: 904849422}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -27.008242
+      value: -26.950293
       objectReference: {fileID: 0}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.y
