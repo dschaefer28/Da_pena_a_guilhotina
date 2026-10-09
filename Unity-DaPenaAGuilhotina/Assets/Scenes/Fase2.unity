@@ -436,10 +436,10 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 1137373097
-      Data2: 1175940345
-      Data3: -674305907
-      Data4: 26101855
+      Data1: -1046137702
+      Data2: 1202043823
+      Data3: -630535283
+      Data4: -215665256
     Path: event:/click
   Event: 
   EventPlayTrigger: 17
@@ -1666,10 +1666,10 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 1137373097
-      Data2: 1175940345
-      Data3: -674305907
-      Data4: 26101855
+      Data1: -1046137702
+      Data2: 1202043823
+      Data3: -630535283
+      Data4: -215665256
     Path: event:/click
   Event: 
   EventPlayTrigger: 17
@@ -1700,7 +1700,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7374019664807440416, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -26.750292
+      value: -26.748795
       objectReference: {fileID: 0}
     - target: {fileID: 7374019664807440416, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1767,10 +1767,10 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 1137373097
-      Data2: 1175940345
-      Data3: -674305907
-      Data4: 26101855
+      Data1: -1046137702
+      Data2: 1202043823
+      Data3: -630535283
+      Data4: -215665256
     Path: event:/click
   Event: 
   EventPlayTrigger: 17
@@ -2387,10 +2387,10 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 1137373097
-      Data2: 1175940345
-      Data3: -674305907
-      Data4: 26101855
+      Data1: -1046137702
+      Data2: 1202043823
+      Data3: -630535283
+      Data4: -215665256
     Path: event:/click
   Event: 
   EventPlayTrigger: 17
@@ -2423,10 +2423,10 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 1137373097
-      Data2: 1175940345
-      Data3: -674305907
-      Data4: 26101855
+      Data1: -1046137702
+      Data2: 1202043823
+      Data3: -630535283
+      Data4: -215665256
     Path: event:/click
   Event: 
   EventPlayTrigger: 17
@@ -3575,7 +3575,7 @@ PrefabInstance:
       objectReference: {fileID: 904849422}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -26.750292
+      value: -26.748795
       objectReference: {fileID: 0}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.y
