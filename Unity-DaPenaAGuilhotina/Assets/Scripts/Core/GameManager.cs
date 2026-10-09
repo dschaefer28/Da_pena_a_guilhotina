@@ -30,8 +30,8 @@ public class GameManager : MonoBehaviour
     [Header("Tempo de Investigação")]
     [Tooltip("Horas que o jogador tem para investigar cada caso, se o CaseData não definir outro valor. " +
              "Cada NPC ou objeto investigado pela primeira vez gasta horas (RelogioDeInvestigacao). Decisão do grupo " +
-             "(27/09): 6h nas Fases 2, 3 e 4 (todos os casos delas usam este valor); o tutorial não tem relógio.")]
-    [Min(1)] public int horasPorCaso = 6;
+             "(27/09): 6h nas Fases 2, 3 e 4, aumentadas para 8h (todos os casos delas usam este valor); o tutorial não tem relógio.")]
+    [Min(1)] public int horasPorCaso = 8;
     [Tooltip("Horas do caso atual (0 = relógio desligado, ex: tutorial).")]
     public int horasDoCaso = 0;
     public int horasRestantes = 0;

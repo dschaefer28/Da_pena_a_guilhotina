@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 /// Confere se a campanha é jogável do jeito que está nos assets e cenas (sem alterar nada):
 /// quantidade de casos por fase, exatamente um caso por rota na Fase 4, receitas/panfletos/alegações completos,
 /// registro na Mesa de Casos e no CatalogoDeSave, a dedução ativa das Fases 2, 3 e 4 (pares coerentes), o orçamento de
-/// horas (6h nas Fases 2 a 4) e — por caso, na cena dele — as oportunidades de investigação, o caminho mínimo até duas
+/// horas (8h nas Fases 2 a 4) e — por caso, na cena dele — as oportunidades de investigação, o caminho mínimo até duas
 /// pistas Fato dentro do orçamento com dívida e quantas horas custa descobrir o quadro de dedução inteiro.
 /// Menu: Ferramentas > Campanha > 2 - Validar campanha. Também roda no teste EditMode CampanhaTests.
 /// </summary>
@@ -19,7 +19,7 @@ public static class ValidadorDaCampanha
     public const int CasosEsperadosFase3 = 3; // decisão do grupo (27/09): um caso entre três, como na Fase 2
     public const int OportunidadesMinimas = 6;
     public const int OportunidadesMaximas = 8; // conteúdo do GDD: a Fase 3 tem 5 NPCs (Danton, Kornmann, Sirven, Sobrevivente, Médico) + 3 objetos
-    public const int HorasEsperadasPorCaso = 6; // decisão do grupo (27/09): 6h no relógio nas Fases 2, 3 e 4
+    public const int HorasEsperadasPorCaso = 8; // decisão do grupo: 8h no relógio nas Fases 2, 3 e 4 (eram 6h desde 27/09)
     public const int PrimeiraFaseComDeducao = 2; // decisão do grupo (27/09): o quadro de dedução vale desde a Fase 2
 
     public class Resultado
@@ -128,7 +128,7 @@ public static class ValidadorDaCampanha
     public static int HorasDoCaso(CaseData caso, GameManager gm) =>
         caso != null && caso.horasDeInvestigacao > 0 ? caso.horasDeInvestigacao : (gm != null ? gm.horasPorCaso : 0);
 
-    // Prompt 7: 6h no relógio para todo caso das Fases 2, 3 e 4 (a conversão continua 1h por interação nova).
+    // Prompt 7: 8h no relógio para todo caso das Fases 2, 3 e 4 (a conversão continua 1h por interação nova).
     private static void ValidarOrcamento(List<CaseData> casos, GameManager gm, Resultado r)
     {
         foreach (CaseData caso in casos)

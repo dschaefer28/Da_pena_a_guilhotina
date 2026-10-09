@@ -51,3 +51,4 @@ MonoBehaviour:
   inventarioSalvo: []
   inventoryManager: {fileID: 0}
   dialogueSystem: {fileID: 0}
+  horasPorCaso: 8

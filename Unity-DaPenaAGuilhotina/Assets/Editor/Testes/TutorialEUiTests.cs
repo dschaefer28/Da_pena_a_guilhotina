@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Prompt 7: dicas de primeira vez (fila, persistência e Novo Jogo), Marie ausente pelo progresso (também depois de
-/// carregar um save), 6h de investigação nas Fases 2 a 4, pause que não abre sob uma cutscene, Mesa de Casos como janela
+/// carregar um save), 8h de investigação nas Fases 2 a 4, pause que não abre sob uma cutscene, Mesa de Casos como janela
 /// modal e o Quadro de pistas desde a Fase 2.
 /// As PlayerPrefs de progresso de quem está testando são guardadas no SetUp e devolvidas no TearDown.
 /// </summary>
@@ -300,26 +300,26 @@ public class TutorialEUiTests
     // ===== Orçamento de horas =====
 
     [Test]
-    public void Orcamento_SeisHorasNasFasesDoisATres_CincoEndividado()
+    public void Orcamento_OitoHorasNasFasesDoisATres_SeteEndividado()
     {
         GameManager prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/GameManager.prefab").GetComponent<GameManager>();
-        Assert.AreEqual(6, prefab.horasPorCaso);
-        Assert.AreEqual(6, gm.horasPorCaso, "o padrão do código é o mesmo do prefab");
+        Assert.AreEqual(8, prefab.horasPorCaso);
+        Assert.AreEqual(8, gm.horasPorCaso, "o padrão do código é o mesmo do prefab");
 
         var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI.prefab");
         foreach (CaseData caso in ui.GetComponentInChildren<CaseSelectionUI>(true).availableCases)
-            if (caso.fase >= 2) Assert.AreEqual(6, ValidadorDaCampanha.HorasDoCaso(caso, prefab), caso.name);
+            if (caso.fase >= 2) Assert.AreEqual(8, ValidadorDaCampanha.HorasDoCaso(caso, prefab), caso.name);
 
-        // Um caso real da Fase 2 no relógio: 6h; endividado, 5h (a conversão continua 1h por interação nova).
+        // Um caso real da Fase 2 no relógio: 8h; endividado, 7h (a conversão continua 1h por interação nova).
         gm.faseAtual = 2;
         CaseData joias = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/ScriptableObjects/Cases/Caso_Joalheiro.asset");
         Assert.IsTrue(gm.ConfirmarCaso(joias));
-        Assert.AreEqual(6, gm.horasRestantes);
+        Assert.AreEqual(8, gm.horasRestantes);
 
         GameManager devendo = Go("GM_Devendo").AddComponent<GameManager>();
         devendo.faseAtual = 2; devendo.capitalAtual = -5;
         Assert.IsTrue(devendo.ConfirmarCaso(joias));
-        Assert.AreEqual(5, devendo.horasDoCaso);
+        Assert.AreEqual(7, devendo.horasDoCaso);
     }
 
     // ===== Janelas modais =====
