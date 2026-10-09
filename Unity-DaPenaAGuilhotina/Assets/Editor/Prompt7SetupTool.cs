@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Prompt 7 (tutorial, transições e UI integrada) e os ajustes pedidos pelo grupo em 27/09:
-/// - GameManager.prefab: 6h de investigação por caso nas Fases 2, 3 e 4 (horasPorCaso; a conversão continua 1h por
+/// - GameManager.prefab: 8h de investigação por caso nas Fases 2, 3 e 4 (horasPorCaso; a conversão continua 1h por
 ///   interação nova). Só troca o valor antigo (4); outro valor escolhido no Inspector fica e é listado;
 /// - UI.prefab: o CanvasScaler passa a "Expand" (continua 1920 x 1080 de referência). Em 16:9 e em telas mais largas
 ///   (celulares) nada muda; em telas mais estreitas (16:10, 4:3) a UI inteira cabe na largura em vez de cortar a prensa;
@@ -27,7 +27,7 @@ public static class Prompt7SetupTool
     private const string PastaPensamentos = "Assets/ScriptableObjects/Dialogues/JulienValois";
     private const string Protagonista = "Julien Valois";
 
-    public const int HorasPorCaso = 6;
+    public const int HorasPorCaso = 8;
     private const int HorasAntigas = 4;
 
     /// <summary>Texto da dica de Fato x Boato até o Prompt 7 (gravado na cena Jogo).</summary>
