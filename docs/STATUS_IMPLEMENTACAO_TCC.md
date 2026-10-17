@@ -8,7 +8,7 @@ Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achado
 
 Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4–6:
 - **Cartas do cliente (17/10, §23):** só leitura. Chegam ao aceitar o caso, saem ao concluí-lo e não são pistas: não vão para a prensa, para o quadro nem para o tribunal. A versão Só Alegações das receitas ficou só para saves antigos.
-- **Balanceamento (17/10, §24):** cada caso tem um lado (pró-povo +20/−10, pró-Estado −10/+25, misto +10/+10 na versão Fatos). Mentir rende mais ouro, mas a revelação tira do lado favorecido e a mentira empurra a rota menos que os fatos. Tutorial +5/+5. Apoio da biblioteca no máximo +5 nas barras. A Mesa mostra os valores da versão Fatos.
+- **Balanceamento (17/10, §24):** cada caso tem um lado (pró-povo +20/−10, pró-Estado −10/+25, misto +10/+10 na versão Fatos). Mentir rende mais ouro, mas a revelação tira do lado favorecido e a mentira empurra a rota menos que os fatos. Tutorial +5/+5. Apoio da biblioteca no máximo +5 nas barras. A Mesa mostra os valores da versão Fatos. Sensacionalista: +10 de ouro e desmentido +25% (§24.1).
 - **Arquivamento:** sobras dos casos anteriores à Fase 4 são arquivadas ao concluir.
 - **Inventário cheio:** interação sem espaço para o que entregaria não cobra horas.
 - **Save:** versão 6 no Prompt 5 (linha editorial); versão 7 em 27/09 (dedução ativa, §13); **versão 8 em 28/09: fim de jogo registrado depois do tribunal (§21)**. Com o jogo terminado, o Continuar não aparece.
@@ -1375,7 +1375,7 @@ Pedido: a distribuição de pontos estava muito desbalanceada. Foi medida simula
 | Misto | Sirven, girondinos | +10/+10 | +15/+15 (−10/−10) | +20/+20 (−20/−20) |
 
 - Ouro da versão Fatos: Colar 30, Operário 30, Réveillon 50, Danton 30, Kornmann 45, Sirven 35, Desmoulins 15, mercador 60, girondinos 30. Com boato +15, com calúnia +30.
-- Tutorial: +5/+5/20 (as barras se mexem sem empurrar para nenhuma rota). Linha editorial sem mudança (+10/−5, −5/+10, ouro +15/+20 e desmentido +50%).
+- Tutorial: +5/+5/20 (as barras se mexem sem empurrar para nenhuma rota). Linha editorial: Defesa e Agradar sem mudança (+10/−5, −5/+10); o sensacionalista mudou depois (§24.1).
 - Apoio da biblioteca no máximo +5 nas barras: Sirven +5/+5/+15, Danton +5/0/+20, Kornmann 0/+5/+20, Desmoulins +5/0/+10, mercador 0/+5/+25, girondinos +5/+5/+15.
 - Mesa de Casos: as estimativas são os valores da versão Fatos.
 - Fase 4: mesma escala. Não muda o final (a rota já está travada e o réu depende só da versão), só o que a barra mostra.
@@ -1399,3 +1399,20 @@ Arquivos: 9 `ReceitaDeCaso_*.asset` (versões e qualificadores), 9 `Caso_*.asset
 Verificação: EditMode **105/105**; validador "Campanha válida", 0 avisos; simulação refeita lendo os assets.
 
 Não testado: uma partida inteira em Play Mode com os valores novos (o ritmo das barras na tela e a cutscene de revelação com perda só de um lado).
+
+### 24.1 Sensacionalista mais fraco (17/10/2026)
+
+Pedido: o sensacionalista mexia demais. Com as perdas do balanceamento (até −45/−50), o desmentido +50% chegava a −75 numa revelação só, e 135 das 324 mentiras sensacionalistas (42%) viravam contra o próprio lado depois de desmentidas.
+
+| | Antes | Depois |
+|---|---|---|
+| Ouro a mais | +15 (Fase 2), +20 (Fases 3 e 4) | +10 em todas |
+| Desmentido | +50% | +25% |
+| Maior perda de uma revelação | 75 | 63 |
+| Mentiras sensacionalistas que viram contra o próprio lado | 135 de 324 | 0 |
+| Rotas A / B / C em todos os caminhos | 34% / 23% / 41% | 33% / 22% / 43% |
+| Pares de casos que alcançam A, B e C | 6 de 9 | 3 de 9 (os outros 6 alcançam duas; nenhum fica preso a uma) |
+
+Arquivos: as 9 `ReceitaDeCaso_*.asset` (`linhaEditorial.sensacionalista.ouro` e `agravamentoPercentual`); `Editor/LinhaEditorialSetupTool.cs` (padrões +10 e 25%, só para receitas novas). O teste `CampanhaTests.Balanceamento_MentiraRendeMaisOuroMasEmpurraMenosARota_EFatosCabemNaBarra` agora também exige ouro ≤ +10, desmentido ≤ 25% e nenhuma mentira sensacionalista virando contra o próprio lado. A janela da prensa lê os valores da receita: passa a mostrar "▲ +10 Ouro" e "desmentido +25%".
+
+Verificação: EditMode **105/105**; validador "Campanha válida", 0 avisos; simulação refeita lendo os assets.

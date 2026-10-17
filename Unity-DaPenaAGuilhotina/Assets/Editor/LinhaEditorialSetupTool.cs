@@ -18,16 +18,17 @@ public static class LinhaEditorialSetupTool
 
     // Valores provisórios (Povo / Estado / Ouro). Iguais em todas as versões da receita, para a escolha não depender
     // da verdade das pistas. Defesa e Agradar deslocam o desnível Povo × Estado em 15 pontos por publicação (a margem
-    // da rota é 20); o sensacionalista paga um pouco mais de ouro e agrava em 50% a perda de uma revelação.
+    // da rota é 20); o sensacionalista paga um pouco mais de ouro e agrava em 25% a perda de uma revelação (era +15/+20
+    // de ouro e 50% até 17/10: com as perdas do balanceamento, 42% das mentiras sensacionalistas viravam contra o próprio lado).
     private class Valores
     {
         public int defesaPovo = 10, defesaEstado = -5;
         public int agradarPovo = -5, agradarEstado = 10;
-        public int sensacionalistaOuro;
-        public int agravamento = 50;
+        public int sensacionalistaOuro = 10;
+        public int agravamento = 25;
     }
 
-    private static Valores ValoresDaFase(int fase) => new Valores { sensacionalistaOuro = fase <= 2 ? 15 : 20 };
+    private static Valores ValoresDaFase(int fase) => new Valores();
 
     [MenuItem("Ferramentas/Campanha/4 - Aplicar linha editorial")]
     public static void AplicarPeloMenu() => Debug.Log(Aplicar());

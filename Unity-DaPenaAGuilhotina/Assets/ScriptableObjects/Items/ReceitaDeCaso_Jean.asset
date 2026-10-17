@@ -65,5 +65,5 @@ MonoBehaviour:
     sensacionalista:
       povo: 0
       estado: 0
-      ouro: 15
-    agravamentoPercentual: 50
+      ouro: 10
+    agravamentoPercentual: 25

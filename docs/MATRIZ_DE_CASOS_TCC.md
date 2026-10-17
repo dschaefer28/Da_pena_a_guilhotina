@@ -133,11 +133,11 @@ A partir da Fase 2, depois de escolher as duas pistas, o jogador escolhe a linha
 
 | Fase (casos) | Defesa do povo | Agradar a Coroa / o Comitê | Sensacionalista |
 |---|---|---|---|
-| 2 (Colar da Rainha, Réveillon, Operário) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar a Coroa") | 0 / 0 / +15; perda da revelação +50% |
-| 3 (Kornmann, Danton, Sirven) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar a Coroa") | 0 / 0 / +20; perda +50% |
-| 4 (Desmoulins, Mercador, Girondinos) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar o Comitê") | 0 / 0 / +20; perda +50% |
+| 2 (Colar da Rainha, Réveillon, Operário) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar a Coroa") | 0 / 0 / +10; perda da revelação +25% (até 17/10: +15 e +50%) |
+| 3 (Kornmann, Danton, Sirven) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar a Coroa") | 0 / 0 / +10; perda +25% (até 17/10: +20 e +50%) |
+| 4 (Desmoulins, Mercador, Girondinos) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar o Comitê") | 0 / 0 / +10; perda +25% (até 17/10: +20 e +50%) |
 
-- **Agravamento:** só no sensacionalista e só se a versão impressa tiver revelação (Com Boato, Calúnia ou Só Alegações). Só as perdas crescem, arredondadas para longe de zero. Ex.: Colar da Rainha Com Boato (pen −25/0) sensacionalista → −38/0. A versão Fatos nunca recebe penalidade.
+- **Agravamento:** só no sensacionalista e só se a versão impressa tiver revelação (Com Boato, Calúnia ou Só Alegações). Só as perdas crescem, arredondadas para longe de zero. Ex.: Colar da Rainha Com Boato (pen −25/0) sensacionalista → −31/0. A versão Fatos nunca recebe penalidade.
 - **Exemplo do Prompt 3:** Danton (`Caso_ChampDeMars`) Fatos + Folhas da petição = 40/−5/50 **antes** da linha; com Defesa do povo = 50/−10/50.
 - **Rota:** Defesa e Agradar deslocam o desnível Povo × Estado em 15 pontos por publicação (margem da rota: 20).
 
@@ -153,4 +153,4 @@ Início 50/50; tutorial (+5/+5) → 55/55, sem pender para nenhuma rota. Com um 
 
 A linha editorial também muda a rota: Colar da Rainha com "Agradar a Coroa" → 70/55; Sirven com "Agradar a Coroa" → 75/75 → 0 → **C**. O mesmo caminho com "Defesa do povo" nas duas → 100/45 → **A**.
 
-**Regras do balanceamento (17/10):** cada caso tem um lado. Pró-povo (Colar, Operário, Danton, Desmoulins): fatos +20/−10. Pró-Estado (Réveillon, Kornmann, mercador): fatos −10/+25. Misto (Sirven, girondinos): fatos +10/+10. Mentir rende mais na hora (cerca de 1,5× com boato e quase 2× com calúnia, ouro +15 e +30), mas a revelação no fim da fase cai sobre o lado que o panfleto favoreceu (pró-povo −25 e −45 no Povo; pró-Estado −30 e −50 no Estado; mistos −10/−10 e −20/−20). Depois de desmentida, a mentira empurra a rota menos que os fatos; com o sensacionalista, a calúnia pode virar contra o próprio lado. Simulando todos os 729 caminhos das Fases 2 e 3 (caso, versão e tom): rota A 34%, B 23%, C 41%; nenhum par de casos fica preso a uma rota só, e 6 dos 9 pares alcançam A, B e C; só com fatos, ninguém termina a Fase 3 endividado (sem comprar na biblioteca). `CampanhaTests` confere essas regras nos assets.
+**Regras do balanceamento (17/10):** cada caso tem um lado. Pró-povo (Colar, Operário, Danton, Desmoulins): fatos +20/−10. Pró-Estado (Réveillon, Kornmann, mercador): fatos −10/+25. Misto (Sirven, girondinos): fatos +10/+10. Mentir rende mais na hora (cerca de 1,5× com boato e quase 2× com calúnia, ouro +15 e +30), mas a revelação no fim da fase cai sobre o lado que o panfleto favoreceu (pró-povo −25 e −45 no Povo; pró-Estado −30 e −50 no Estado; mistos −10/−10 e −20/−20). Depois de desmentida, a mentira empurra a rota menos que os fatos; o sensacionalista (perda +25%) tira ainda mais dela, mas nunca a vira contra o próprio lado. Simulando todos os 729 caminhos das Fases 2 e 3 (caso, versão e tom): rota A 33%, B 22%, C 43%; nenhum par de casos fica preso a uma rota só (3 dos 9 alcançam A, B e C, os outros 6 duas rotas); a maior perda de uma revelação é 63; só com fatos, ninguém termina a Fase 3 endividado (sem comprar na biblioteca). `CampanhaTests` confere essas regras nos assets.
