@@ -7,7 +7,7 @@ using UnityEngine;
 /// juntar um item de "Verificada Por" (ver InventoryManager.PistaVerificada).</summary>
 public enum Confiabilidade
 {
-    NaoEPista, // itens do tutorial, panfletos, etc.: a prensa usa só as receitas exatas (Recipe)
+    NaoEPista, // itens do tutorial, panfletos, cartas do cliente etc.: a prensa usa só as receitas exatas (Recipe)
     Fato,
     Boato,
     Calunia
@@ -67,8 +67,13 @@ public class Item : ScriptableObject
         !EhSuporte ? string.Empty
         : qualidade == QualidadeDaEvidencia.Superior ? "<color=#C9A94E>apoio · qualidade superior</color>" : "<color=#9E9E9E>apoio</color>";
 
-    /// <summary>Verdadeiro para pistas que entram na regra Fato x Boato da prensa.</summary>
-    public bool EhPista => caso != null && confiabilidade != Confiabilidade.NaoEPista;
+    /// <summary>Carta do cliente (CaseData.alegacoesIniciais): documento só de leitura. Chega ao aceitar o caso e sai
+    /// ao concluí-lo; não é pista, não vai para a prensa nem para o tribunal, e nunca é "verificada".</summary>
+    public bool EhLeitura => caso != null && caso.EhAlegacao(this);
+
+    /// <summary>Verdadeiro para pistas que entram na regra Fato x Boato da prensa. Uma carta do cliente nunca é pista,
+    /// mesmo que o asset ainda tenha uma confiabilidade (o validador da campanha acusa).</summary>
+    public bool EhPista => caso != null && confiabilidade != Confiabilidade.NaoEPista && !EhLeitura;
 
     /// <summary>Etiqueta colorida (rich text) da situação da pista para o inventário e a ficha.</summary>
     public string RotuloSituacao(bool verificada)
@@ -105,8 +110,10 @@ public class Item : ScriptableObject
 
         if (confiabilidade != Confiabilidade.NaoEPista && caso == null)
             Debug.LogWarning($"[Item] '{name}' tem confiabilidade {confiabilidade} mas nenhum caso: a prensa vai tratá-lo como item comum.", this);
-        if (caso != null && confiabilidade == Confiabilidade.NaoEPista && !documentoDeSuporte)
+        if (caso != null && confiabilidade == Confiabilidade.NaoEPista && !documentoDeSuporte && !EhLeitura)
             Debug.LogWarning($"[Item] '{name}' tem caso mas está como NaoEPista: escolha Fato, Boato ou Calunia (ou marque Documento De Suporte).", this);
+        if (EhLeitura && confiabilidade != Confiabilidade.NaoEPista)
+            Debug.LogWarning($"[Item] '{name}' é carta do cliente (só leitura): deixe a confiabilidade em NaoEPista.", this);
         if (documentoDeSuporte && confiabilidade != Confiabilidade.NaoEPista)
             Debug.LogWarning($"[Item] '{name}' é documento de suporte: deixe a confiabilidade em NaoEPista (ele não é uma das duas pistas).", this);
     }

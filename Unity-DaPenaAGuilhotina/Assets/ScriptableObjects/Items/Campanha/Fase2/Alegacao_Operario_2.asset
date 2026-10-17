@@ -20,7 +20,7 @@ MonoBehaviour:
     e que o pr\xF3prio R\xE9veillon anda contando outra vers\xE3o."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
-  confiabilidade: 2
+  confiabilidade: 0
   verificadaPor: []
   documentoDeSuporte: 0
   qualidade: 0

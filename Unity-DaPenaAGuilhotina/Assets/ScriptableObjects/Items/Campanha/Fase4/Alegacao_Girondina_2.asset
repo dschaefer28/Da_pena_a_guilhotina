@@ -19,7 +19,7 @@ MonoBehaviour:
   descricao: "Ele afirma que o tribunal decidiu a senten\xE7a antes de ouvir a defesa."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 601ee477e42dfde4086e7ed9a661ccf7, type: 2}
-  confiabilidade: 2
+  confiabilidade: 0
   verificadaPor: []
   documentoDeSuporte: 0
   qualidade: 0

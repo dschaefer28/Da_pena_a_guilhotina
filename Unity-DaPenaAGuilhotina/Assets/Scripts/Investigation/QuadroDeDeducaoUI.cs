@@ -8,14 +8,15 @@ using UnityEngine.UI;
 /// <summary>
 /// Quadro de dedução (Prompt 4, proposta C; desde o Prompt 7, Fases 2, 3 e 4): botão na HUD enquanto o caso em andamento
 /// tiver dedução ativa.
-/// A janela lista só as pistas do conjunto do caso que o jogador já descobriu (mesmo as gastas na prensa), com fonte,
-/// descrição, a afirmação contrária (quando as duas do par já foram achadas) e a hipótese do jogador: Confiável,
-/// Duvidosa ou sem marca. "Conferir dedução" confirma só se TODO o conjunto estiver descoberto e bem marcado; qualquer
-/// falha recebe a mesma resposta, sem dizer o que está certo nem quantas estão certas (regras em Deducao).
+/// A janela agrupa por contradição (par) as pistas do conjunto do caso que o jogador já descobriu (mesmo as gastas na
+/// prensa ou descartadas), com fonte e descrição. Quando as duas afirmações de um par foram achadas, o jogador escolhe em
+/// qual acredita (dois toques: "Escolher esta" e "Confirmar"); a outra sai do inventário de vez. Cada par é decidido à
+/// parte, qualquer escolha é aceita e o quadro nunca diz qual afirmação é a verdadeira (regras em Deducao): a verdade só
+/// decide a versão do panfleto. A prensa não aceita uma pista cujo par ainda espera a escolha.
 ///
-/// Marcar não muda a verdade das pistas nem a prensa: dá para publicar sem conferir. Enquanto aberto: jogo pausado,
-/// movimento, interação, inventário e pause bloqueados, controles de toque desligados; Esc ou Fechar restauram tudo.
-/// Fica no objeto "QuadroDeDeducao" do prefab UI e se monta por código no primeiro uso, como a Biblioteca.
+/// Enquanto aberto: jogo pausado, movimento, interação, inventário e pause bloqueados, controles de toque desligados;
+/// Esc ou Fechar restauram tudo. Fica no objeto "QuadroDeDeducao" do prefab UI e se monta por código no primeiro uso,
+/// como a Biblioteca.
 /// </summary>
 public class QuadroDeDeducaoUI : MonoBehaviour
 {
@@ -31,11 +32,14 @@ public class QuadroDeDeducaoUI : MonoBehaviour
     public string rotuloDoBotao = "Quadro de pistas";
     [TextArea(2, 5)]
     public string regras = "Cada pista deste quadro tem uma afirmação contrária no mesmo caso, e só uma das duas é verdadeira. " +
-                           "Marque o que você acha confiável ou duvidoso. A conferência só diz se o quadro inteiro está certo.";
+                           "Quando encontrar as duas, escolha em qual você acredita. Cada contradição é decidida à parte, " +
+                           "e o quadro nunca diz qual é a verdadeira.";
     [TextArea(1, 3)] public string semPistas = "Nenhuma pista deste caso no quadro ainda. Cada pista que você obtiver aparece aqui.";
-    [TextArea(1, 3)] public string respostaConfirmada = "A dedução se sustenta: as suas marcações estão certas.";
-    [TextArea(1, 3)] public string respostaGenerica = "A dedução ainda não se sustenta. Pode faltar uma pista, ou alguma marcação pode estar errada.";
-    [TextArea(1, 3)] public string lembreteDaPrensa = "Marcar não muda as pistas: a prensa imprime o que você puser nela, conferido ou não.";
+    [Tooltip("Depois do primeiro toque em \"Escolher esta\". {escolhida} e {descartada} viram os nomes das pistas.")]
+    [TextArea(1, 3)] public string pedidoDeConfirmacao = "Toque em Confirmar para ficar com \"{escolhida}\". \"{descartada}\" sai do inventário e não poderá mais ir para a prensa.";
+    [Tooltip("Depois da escolha confirmada. {escolhida} e {descartada} viram os nomes das pistas.")]
+    [TextArea(1, 3)] public string respostaEscolha = "Você ficou com \"{escolhida}\". \"{descartada}\" foi descartada.";
+    [TextArea(1, 3)] public string lembreteDaPrensa = "A escolha não tem volta. De cada contradição, só a afirmação escolhida pode ir para a prensa.";
 
     /// <summary>Verdadeiro com a janela aberta (PauseMenu, inventário, jogador e interação consultam via JanelasModais).</summary>
     public static bool Aberto { get; private set; }
@@ -47,9 +51,12 @@ public class QuadroDeDeducaoUI : MonoBehaviour
     // Opaco: no espaço de cor Linear do projeto, alpha 0,97 ainda deixava o cenário aparecer por trás.
     private static readonly Color CorPainel = new Color(0.11f, 0.08f, 0.07f, 1f);
     private static readonly Color CorLinha = new Color(0.18f, 0.13f, 0.11f, 1f);
+    private static readonly Color CorPista = new Color(0.23f, 0.17f, 0.14f, 1f);
+    // Âmbar, nunca verde: marca a escolha do jogador, não uma resposta certa.
+    private static readonly Color CorEscolhida = new Color(0.36f, 0.27f, 0.14f, 1f);
     private static readonly Color CorBotao = new Color(0.36f, 0.25f, 0.16f, 1f);
     private static readonly Color CorMarcado = new Color(0.62f, 0.46f, 0.22f, 1f);
-    private static readonly Color CorMarcaInativa = new Color(0.62f, 0.62f, 0.62f, 1f); // tinta do sprite na marca não escolhida
+    private static readonly Color CorMarcaInativa = new Color(0.62f, 0.62f, 0.62f, 1f); // tinta do sprite na opção que recua
 
     private RectTransform botaoAbrir;
     private BibliotecaUI biblioteca;
@@ -59,13 +66,13 @@ public class QuadroDeDeducaoUI : MonoBehaviour
     private TextMeshProUGUI textoCaso;
     private TextMeshProUGUI textoContador;
     private TextMeshProUGUI textoMensagem;
-    private Button botaoConferir;
-    private TextMeshProUGUI rotuloConferir;
     private Button botaoFechar;
     private Vector2 posicaoBaseBotao;
     private Rect ultimaArea;
     private float timeScaleAoAbrir = 1f;
     private CaseData casoAberto;
+    // Primeiro toque em "Escolher esta": a escolha só vale no segundo (o descarte não tem volta).
+    private Item pistaAConfirmar;
 
     // Play Mode sem recarregar domínio: o estado estático não pode vazar de uma sessão para a outra.
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -137,7 +144,8 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         if (MobileControlsManager.Instance != null) MobileControlsManager.Instance.SetControlsInteractable(false);
         janela.SetActive(true);
         janela.transform.SetAsLastSibling();
-        textoMensagem.text = Deducao.Confirmada(gm, casoAberto) ? respostaConfirmada : string.Empty;
+        pistaAConfirmar = null;
+        textoMensagem.text = string.Empty;
         Reconstruir();
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(botaoFechar.gameObject);
     }
@@ -148,6 +156,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         Aberto = false;
         frameEmQueFechou = Time.frameCount;
         casoAberto = null;
+        pistaAConfirmar = null;
         if (janela != null) janela.SetActive(false);
         Time.timeScale = timeScaleAoAbrir;
         if (MobileControlsManager.Instance != null) MobileControlsManager.Instance.SetControlsInteractable(true);
@@ -161,11 +170,11 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         GameManager gm = GameManager.Instance;
         CaseData caso = casoAberto;
         if (gm == null || caso == null) return;
-        bool confirmada = Deducao.Confirmada(gm, caso);
 
+        int total = Deducao.TotalDeContradicoes(caso);
         textoCaso.text = $"<b>{Titulo(caso)}</b>";
-        textoContador.text = $"Contradições encontradas: {Deducao.ContradicoesEncontradas(gm, caso)} de {Deducao.TotalDeContradicoes(caso)}" +
-                             (confirmada ? "   <color=#81C784>Dedução confirmada</color>" : string.Empty);
+        textoContador.text = $"Contradições encontradas: {Deducao.ContradicoesEncontradas(gm, caso)} de {total}   ·   " +
+                             $"decididas: {Deducao.ParesDecididos(gm, caso)} de {total}";
 
         for (int i = lista.childCount - 1; i >= 0; i--)
         {
@@ -174,85 +183,104 @@ public class QuadroDeDeducaoUI : MonoBehaviour
             Destroy(velho);
         }
 
-        List<Item> conhecidas = Deducao.PistasConhecidas(gm, caso);
-        foreach (Item pista in conhecidas) CriarLinha(pista, gm, caso, confirmada);
-        if (conhecidas.Count == 0)
+        // A numeração segue a ordem de descoberta (ParesConhecidos), nunca a posição do par no caso.
+        List<List<Item>> pares = Deducao.ParesConhecidos(gm, caso);
+        for (int i = 0; i < pares.Count; i++) CriarPar(i + 1, pares[i], gm, caso);
+        if (pares.Count == 0)
             Texto("Vazio", lista, 28f, $"<color=#9E9E9E>{semPistas}</color>", TextAlignmentOptions.Center).GetComponent<LayoutElement>().minHeight = 120f;
-
-        botaoConferir.interactable = !confirmada;
-        rotuloConferir.text = confirmada ? "Dedução confirmada" : "Conferir dedução";
     }
 
-    private void CriarLinha(Item pista, GameManager gm, CaseData caso, bool confirmada)
+    private void CriarPar(int numero, List<Item> pistas, GameManager gm, CaseData caso)
     {
+        var bloco = new GameObject("Contradicao_" + numero, typeof(RectTransform), typeof(Image), typeof(VerticalLayoutGroup));
+        bloco.transform.SetParent(lista, false);
+        bloco.GetComponent<Image>().color = CorLinha;
+        var v = bloco.GetComponent<VerticalLayoutGroup>();
+        v.padding = new RectOffset(16, 16, 10, 14); v.spacing = 8f;
+        v.childControlWidth = v.childControlHeight = true; v.childForceExpandWidth = true; v.childForceExpandHeight = false;
+
+        string situacao = Deducao.ParDecidido(gm, pistas[0]) ? "decidida"
+                        : pistas.Count < 2 ? "falta encontrar a afirmação contrária"
+                        : "escolha em qual das duas você acredita";
+        Texto("Titulo", bloco.transform, 24f, $"<b>Contradição {numero}</b>  <size=80%><color=#B0A48C>({situacao})</color></size>",
+              TextAlignmentOptions.MidlineLeft);
+        foreach (Item pista in pistas) CriarLinha(pista, bloco.transform, gm, caso);
+    }
+
+    private void CriarLinha(Item pista, Transform pai, GameManager gm, CaseData caso)
+    {
+        bool escolhida = Deducao.Escolhida(gm, pista);
+        bool descartada = Deducao.Descartada(gm, pista);
         var linha = new GameObject("Pista_" + pista.itemID, typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
-        linha.transform.SetParent(lista, false);
-        linha.GetComponent<Image>().color = CorLinha;
-        linha.GetComponent<LayoutElement>().minHeight = 150f;
+        linha.transform.SetParent(pai, false);
+        linha.GetComponent<Image>().color = escolhida ? CorEscolhida : CorPista;
+        linha.GetComponent<LayoutElement>().minHeight = 120f;
         var h = linha.GetComponent<HorizontalLayoutGroup>();
-        h.padding = new RectOffset(20, 20, 14, 14); h.spacing = 18f;
+        h.padding = new RectOffset(16, 16, 10, 10); h.spacing = 18f;
         h.childControlWidth = h.childControlHeight = true; h.childForceExpandHeight = true; h.childForceExpandWidth = false;
 
-        Item contraria = Deducao.Contradicao(gm, pista);
-        string contradicao = contraria != null
-            ? $"<color=#E0C080>Contradiz: {contraria.NomeExibicao}</color>"
-            : "<color=#9E9E9E>A afirmação contrária ainda não foi encontrada.</color>";
+        string nome = descartada ? $"<s>{pista.NomeExibicao}</s>" : $"<b>{pista.NomeExibicao}</b>";
         string fonteDaPista = string.IsNullOrWhiteSpace(pista.fonte) ? string.Empty : $"<size=80%><color=#C8B89A>Fonte: {pista.fonte}</color></size>\n";
         var textos = Texto("Textos", linha.transform, 24f,
-            $"<b>{pista.NomeExibicao}</b>  <size=78%>({Deducao.Rotulo(gm, pista)})</size>\n{fonteDaPista}" +
-            $"<size=85%>{pista.descricao}</size>\n<size=80%>{contradicao}</size>",
+            $"{nome}  <size=78%>({Deducao.Rotulo(gm, pista)})</size>\n{fonteDaPista}<size=85%>{pista.descricao}</size>",
             TextAlignmentOptions.MidlineLeft);
         textos.GetComponent<LayoutElement>().flexibleWidth = 1f;
+        if (descartada) textos.alpha = 0.55f;
 
-        MarcacaoDaPista marca = Deducao.MarcacaoDe(gm, caso, pista);
-        bool podeMarcar = !confirmada && Deducao.PodeMarcar(gm, caso, pista);
-        BotaoDeMarca(linha.transform, pista, caso, MarcacaoDaPista.Confiavel, "Confiável", marca, podeMarcar);
-        BotaoDeMarca(linha.transform, pista, caso, MarcacaoDaPista.Duvidosa, "Duvidosa", marca, podeMarcar);
-    }
+        // Coluna da direita: o botão enquanto o par espera a escolha; depois, só a situação.
+        if (escolhida) { Selo(linha.transform, "<b>Sua escolha</b>"); return; }
+        if (descartada) { Selo(linha.transform, "<color=#9E9E9E>Descartada</color>"); return; }
+        if (!Deducao.PodeEscolher(gm, caso, pista)) { Selo(linha.transform, "<size=85%><color=#9E9E9E>Falta a contrária</color></size>"); return; }
 
-    // Clicar na marcação que já está ativa tira a marca (volta a "não marcada").
-    private void BotaoDeMarca(Transform pai, Item pista, CaseData caso, MarcacaoDaPista opcao, string rotulo, MarcacaoDaPista atual, bool podeMarcar)
-    {
-        bool ativa = atual == opcao;
-        Button b = Botao("Marca_" + opcao, pai, (ativa ? "[x] " : "[  ] ") + rotulo);
+        bool aConfirmar = Mesma(pistaAConfirmar, pista);
+        bool recua = pistaAConfirmar != null && !aConfirmar && Mesma(Deducao.Contradicao(gm, pista), pistaAConfirmar);
+        Button b = Botao("Escolher", linha.transform, aConfirmar ? "Confirmar" : "Escolher esta");
+        // Largura fixa: o texto da pista encolhe primeiro (o botão continua tocável em telas estreitas) e os botões das
+        // duas linhas do par ficam alinhados.
         LayoutElement le = b.GetComponent<LayoutElement>();
-        le.minWidth = 190f; // o texto da pista encolhe primeiro: o botão continua tocável em telas estreitas
-        le.preferredWidth = 210f;
-        // Cor lisa: a marcada clareia. Com o sprite (que não clareia além do branco), a não marcada é que recua.
-        if (spriteDoBotao == null) { if (ativa) b.GetComponent<Image>().color = CorMarcado; }
-        else if (!ativa) b.GetComponent<Image>().color = CorMarcaInativa;
-        b.interactable = podeMarcar;
-        b.onClick.AddListener(() => Marcar(pista, caso, ativa ? MarcacaoDaPista.NaoMarcada : opcao));
+        le.minWidth = le.preferredWidth = LarguraDaColuna;
+        // Cor lisa: o botão a confirmar clareia. Com o sprite (que não clareia além do branco), a outra opção é que recua.
+        if (spriteDoBotao == null) { if (aConfirmar) b.GetComponent<Image>().color = CorMarcado; }
+        else if (recua) b.GetComponent<Image>().color = CorMarcaInativa;
+        b.onClick.AddListener(() => Escolher(pista, caso));
     }
 
-    private void Marcar(Item pista, CaseData caso, MarcacaoDaPista marca)
+    private const float LarguraDaColuna = 220f;
+
+    // Texto fixo na coluna do botão (mesma largura), para as linhas não mudarem de tamanho depois da escolha.
+    private void Selo(Transform pai, string texto)
     {
-        GameManager gm = GameManager.Instance;
-        if (gm == null || !Deducao.Marcar(gm, caso, pista, marca)) return;
-        textoMensagem.text = string.Empty; // a resposta anterior não vale para as marcações novas
-        Reconstruir();
+        LayoutElement le = Texto("Situacao", pai, 24f, texto, TextAlignmentOptions.Center).GetComponent<LayoutElement>();
+        le.minWidth = le.preferredWidth = LarguraDaColuna;
     }
 
-    private void Conferir()
+    private static bool Mesma(Item x, Item y) => x != null && y != null && x.itemID == y.itemID;
+
+    // Primeiro toque: pede confirmação (nada muda). Segundo toque na mesma pista: fica com ela e descarta a contrária.
+    private void Escolher(Item pista, CaseData caso)
     {
         GameManager gm = GameManager.Instance;
-        if (gm == null || casoAberto == null) return;
-        switch (Deducao.Conferir(gm, casoAberto))
+        if (gm == null || !Deducao.PodeEscolher(gm, caso, pista)) return;
+        Item contraria = Deducao.Contradicao(gm, pista);
+
+        if (!Mesma(pistaAConfirmar, pista))
         {
-            case Deducao.Resultado.Confirmada:
-            case Deducao.Resultado.JaConfirmada:
-                textoMensagem.text = $"<color=#81C784>{respostaConfirmada}</color>";
-                break;
-            case Deducao.Resultado.NaoSeSustenta:
-                textoMensagem.text = $"<color=#E0A040>{respostaGenerica}</color>";
-                break;
-            default:
-                textoMensagem.text = "O quadro não está disponível agora.";
-                break;
+            pistaAConfirmar = pista;
+            textoMensagem.text = $"<color=#E0C080>{ComNomes(pedidoDeConfirmacao, pista, contraria)}</color>";
+            Reconstruir();
+            return;
         }
+
+        pistaAConfirmar = null;
+        if (!Deducao.Escolher(gm, caso, pista, out Item descartada)) return;
+        textoMensagem.text = ComNomes(respostaEscolha, pista, descartada);
         Reconstruir();
         if (gm.inventoryManager != null) gm.inventoryManager.ConfigureInventory(); // etiquetas das pistas
     }
+
+    private static string ComNomes(string modelo, Item escolhida, Item descartada) =>
+        (modelo ?? string.Empty).Replace("{escolhida}", escolhida != null ? escolhida.NomeExibicao : "?")
+                                .Replace("{descartada}", descartada != null ? descartada.NomeExibicao : "?");
 
     private static string Titulo(CaseData caso) =>
         string.IsNullOrWhiteSpace(caso.caseTitle) ? caso.name : caso.caseTitle.Trim();
@@ -349,11 +377,6 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         hr.childAlignment = TextAnchor.MiddleLeft;
         textoMensagem = Texto("Mensagem", rodape.transform, 24f, string.Empty, TextAlignmentOptions.MidlineLeft);
         textoMensagem.GetComponent<LayoutElement>().flexibleWidth = 1f;
-        botaoConferir = Botao("Conferir", rodape.transform, "Conferir dedução");
-        botaoConferir.GetComponent<LayoutElement>().minWidth = 260f;
-        botaoConferir.GetComponent<LayoutElement>().preferredWidth = 320f;
-        rotuloConferir = botaoConferir.GetComponentInChildren<TextMeshProUGUI>(true);
-        botaoConferir.onClick.AddListener(Conferir);
 
         Texto("Lembrete", painel.transform, 20f, $"<color=#9E9E9E>{lembreteDaPrensa}</color>", TextAlignmentOptions.MidlineLeft);
 

@@ -153,6 +153,11 @@ public class CraftingPress : MonoBehaviour
             AvisoNaTela.Mostrar("Documentos de apoio não vão nas entradas: selecione-os no campo Suporte.");
             return true;
         }
+        if (a.EhLeitura || b.EhLeitura)
+        {
+            AvisoNaTela.Mostrar("A carta do cliente é só para leitura: ela não vai para a prensa.");
+            return true;
+        }
         if (!a.EhPista || !b.EhPista) return false;
 
         if (a.itemID == b.itemID)
@@ -169,6 +174,14 @@ public class CraftingPress : MonoBehaviour
         if (!GameManager.Instance.PodePublicarCaso(a.caso, out string motivo))
         {
             AvisoNaTela.Mostrar(motivo);
+            return true;
+        }
+        // Dedução ativa: de cada par contraditório só vai para a prensa a afirmação que o jogador escolheu no quadro.
+        // A recusa depende só de o par estar decidido, nunca da verdade das pistas.
+        Item semEscolha = Deducao.AguardandoEscolha(GameManager.Instance, a) ? a : Deducao.AguardandoEscolha(GameManager.Instance, b) ? b : null;
+        if (semEscolha != null)
+        {
+            AvisoNaTela.Mostrar($"\"{semEscolha.NomeExibicao}\" tem uma afirmação contrária. Escolha no Quadro de pistas em qual das duas você acredita antes de imprimir.");
             return true;
         }
 

@@ -121,8 +121,8 @@ public class TutorialManager : MonoBehaviour
     [Tooltip("Mostrada na primeira pista que entra num quadro de dedução (Fases 2 a 4).")]
     public string dicaDeducao =
         "Esta pista entrou no Quadro de pistas (botão no alto, à direita). Cada afirmação do caso tem uma contrária, e só " +
-        "uma das duas é verdadeira. Marque o que parece confiável ou duvidoso e confira: o quadro só diz se está tudo certo. " +
-        "Dá para imprimir sem conferir.";
+        "uma das duas é verdadeira. Quando achar as duas, escolha no quadro em qual você acredita: a outra sai do inventário " +
+        "de vez. O quadro nunca diz qual é a verdadeira.";
 
     [TextArea(3, 5)]
     [Tooltip("Mostrada depois da primeira cobrança de despesas no fim de uma fase (FimDeFase).")]

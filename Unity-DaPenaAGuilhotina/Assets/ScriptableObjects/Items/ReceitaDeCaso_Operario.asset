@@ -16,30 +16,30 @@ MonoBehaviour:
   panfletoPadrao: {fileID: 11400000, guid: 23bc35d5f6fc8c64b80e4fd104db5363, type: 2}
   soFatos:
     panfleto: {fileID: 0}
-    povo: 60
-    estado: -20
-    ouro: 10
+    povo: 20
+    estado: -10
+    ouro: 30
     textoRevelacao: 
     penalidadePovo: 0
     penalidadeEstado: 0
   comBoato:
     panfleto: {fileID: 0}
-    povo: 75
-    estado: -25
-    ouro: 25
+    povo: 30
+    estado: -15
+    ouro: 45
     textoRevelacao: "Nenhum agitador pago foi encontrado. O boato publicado pela
       tipografia n\xE3o se sustentou."
-    penalidadePovo: -30
-    penalidadeEstado: -5
+    penalidadePovo: -25
+    penalidadeEstado: 0
   calunia:
     panfleto: {fileID: 0}
-    povo: 90
-    estado: -35
-    ouro: 40
+    povo: 40
+    estado: -20
+    ouro: 60
     textoRevelacao: "Ningu\xE9m provou que o oper\xE1rio ateou fogo \xE0 f\xE1brica:
       a acusa\xE7\xE3o era an\xF4nima e falsa, e manchou o nome da tipografia."
-    penalidadePovo: -50
-    penalidadeEstado: -15
+    penalidadePovo: -45
+    penalidadeEstado: 0
   soAlegacoes:
     panfleto: {fileID: 0}
     povo: 25

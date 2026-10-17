@@ -248,9 +248,9 @@ public static class CampanhaSetupTool
             alegacoes = new[]
             {
                 // Prompt 7: a carta do cliente aponta quem espalha o boato (as falas do joalheiro são do roteiro do grupo).
-                new P(Item(F, "Alegacao_Joias_1"), "alegacao_joias_1", "Carta do joalheiro: fui enganado", Confiabilidade.Boato, "Carta do cliente",
+                new P(Item(F, "Alegacao_Joias_1"), "alegacao_joias_1", "Carta do joalheiro: fui enganado", Confiabilidade.NaoEPista, "Carta do cliente",
                     AlegacaoComPista("alegacao_joias_1")),
-                new P(Item(F, "Alegacao_Joias_2"), "alegacao_joias_2", "Carta do joalheiro: a Coroa me deve", Confiabilidade.Boato, "Carta do cliente",
+                new P(Item(F, "Alegacao_Joias_2"), "alegacao_joias_2", "Carta do joalheiro: a Coroa me deve", Confiabilidade.NaoEPista, "Carta do cliente",
                     "Ele afirma que a Coroa deveria pagar o colar, já que a fraude usou o nome da Rainha."),
             },
             comBoato = new V(0, 0, 0, revelacao: "Soube-se que a Rainha nunca encomendou o colar em segredo: o boato impresso pela tipografia caiu por terra."),
@@ -271,9 +271,9 @@ public static class CampanhaSetupTool
                 "Acusa Réveillon de ser pago pela Inglaterra para matar Paris de fome."),
             alegacoes = new[]
             {
-                new P(Item(F, "Alegacao_Jean_1"), "alegacao_jean_1", "Carta de Réveillon: fui mal entendido", Confiabilidade.Boato, "Carta do cliente",
+                new P(Item(F, "Alegacao_Jean_1"), "alegacao_jean_1", "Carta de Réveillon: fui mal entendido", Confiabilidade.NaoEPista, "Carta do cliente",
                     AlegacaoComPista("alegacao_jean_1")),
-                new P(Item(F, "Alegacao_Jean_2"), "alegacao_jean_2", "Carta de Réveillon: nunca quis o mal deles", Confiabilidade.Boato, "Carta do cliente",
+                new P(Item(F, "Alegacao_Jean_2"), "alegacao_jean_2", "Carta de Réveillon: nunca quis o mal deles", Confiabilidade.NaoEPista, "Carta do cliente",
                     "Ele afirma que sempre tratou bem os seus operários."),
             },
             comBoato = new V(0, 0, 0, revelacao: "Descobriu-se que Réveillon nunca chamou a Guarda. O boato impresso desmoronou."),
@@ -294,9 +294,9 @@ public static class CampanhaSetupTool
                 "Afirma que foi o operário quem ateou fogo à fábrica."),
             alegacoes = new[]
             {
-                new P(Item(F, "Alegacao_Operario_1"), "alegacao_operario_1", "Carta do operário: só queríamos pão", Confiabilidade.Boato, "Carta do cliente",
+                new P(Item(F, "Alegacao_Operario_1"), "alegacao_operario_1", "Carta do operário: só queríamos pão", Confiabilidade.NaoEPista, "Carta do cliente",
                     "O operário jura que a multidão só pedia comida e salário."),
-                new P(Item(F, "Alegacao_Operario_2"), "alegacao_operario_2", "Carta do operário: atiraram primeiro", Confiabilidade.Boato, "Carta do cliente",
+                new P(Item(F, "Alegacao_Operario_2"), "alegacao_operario_2", "Carta do operário: atiraram primeiro", Confiabilidade.NaoEPista, "Carta do cliente",
                     AlegacaoComPista("alegacao_operario_2")),
             },
             comBoato = new V(0, 0, 0, revelacao: "Nenhum agitador pago foi encontrado. O boato publicado pela tipografia não se sustentou."),
@@ -370,8 +370,8 @@ public static class CampanhaSetupTool
             "'O cocheiro envenenou os cavalos da Guarda para atrasar a perseguição.'");
         varennes.alegacoes = new[]
         {
-            new P(Item(F, "Alegacao_Varennes_1"), "alegacao_varennes_1", "Carta do cocheiro: eu não sabia", Confiabilidade.Boato, "Carta do cliente", "O cocheiro jura que não sabia quem levava."),
-            new P(Item(F, "Alegacao_Varennes_2"), "alegacao_varennes_2", "Carta do cocheiro: fui ameaçado", Confiabilidade.Boato, "Carta do cliente", "Ele diz que foi ameaçado para não parar a carruagem."),
+            new P(Item(F, "Alegacao_Varennes_1"), "alegacao_varennes_1", "Carta do cocheiro: eu não sabia", Confiabilidade.NaoEPista, "Carta do cliente", "O cocheiro jura que não sabia quem levava."),
+            new P(Item(F, "Alegacao_Varennes_2"), "alegacao_varennes_2", "Carta do cocheiro: fui ameaçado", Confiabilidade.NaoEPista, "Carta do cliente", "Ele diz que foi ameaçado para não parar a carruagem."),
         };
         varennes.panfleto = new P(Item(F, "Panfleto_Varennes"), "panfleto_varennes", "Panfleto: A Carruagem de Varennes", Confiabilidade.NaoEPista, "Tipografia", "Panfleto impresso sobre a fuga do Rei.");
         varennes.fatos = new V(-20, 30, 45);
@@ -392,8 +392,8 @@ public static class CampanhaSetupTool
             "'Os peticionários eram pagos pela Inglaterra para derrubar a Constituição.'");
         champ.alegacoes = new[]
         {
-            new P(Item(F, "Alegacao_Champ_1"), "alegacao_champ_1", "Carta da peticionária: éramos pacíficos", Confiabilidade.Boato, "Carta do cliente", "Ela jura que ninguém ali estava armado."),
-            new P(Item(F, "Alegacao_Champ_2"), "alegacao_champ_2", "Carta da peticionária: mandaram atirar", Confiabilidade.Boato, "Carta do cliente", "Ela afirma que os comandantes mandaram atirar para matar."),
+            new P(Item(F, "Alegacao_Champ_1"), "alegacao_champ_1", "Carta da peticionária: éramos pacíficos", Confiabilidade.NaoEPista, "Carta do cliente", "Ela jura que ninguém ali estava armado."),
+            new P(Item(F, "Alegacao_Champ_2"), "alegacao_champ_2", "Carta da peticionária: mandaram atirar", Confiabilidade.NaoEPista, "Carta do cliente", "Ela afirma que os comandantes mandaram atirar para matar."),
         };
         champ.panfleto = new P(Item(F, "Panfleto_Champ"), "panfleto_champ", "Panfleto: O Champ de Mars", Confiabilidade.NaoEPista, "Tipografia", "Panfleto impresso sobre o fuzilamento.");
         champ.fatos = new V(35, -25, 20);
@@ -414,8 +414,8 @@ public static class CampanhaSetupTool
             "'O gravador trabalha para os emigrados de Coblença.'");
         assignats.alegacoes = new[]
         {
-            new P(Item(F, "Alegacao_Assignats_1"), "alegacao_assignats_1", "Carta do gravador: roubaram minhas chapas", Confiabilidade.Boato, "Carta do cliente", "Morel jura que as chapas sumiram da oficina."),
-            new P(Item(F, "Alegacao_Assignats_2"), "alegacao_assignats_2", "Carta do gravador: sou patriota", Confiabilidade.Boato, "Carta do cliente", "Ele lembra que gravou de graça os emblemas da seção."),
+            new P(Item(F, "Alegacao_Assignats_1"), "alegacao_assignats_1", "Carta do gravador: roubaram minhas chapas", Confiabilidade.NaoEPista, "Carta do cliente", "Morel jura que as chapas sumiram da oficina."),
+            new P(Item(F, "Alegacao_Assignats_2"), "alegacao_assignats_2", "Carta do gravador: sou patriota", Confiabilidade.NaoEPista, "Carta do cliente", "Ele lembra que gravou de graça os emblemas da seção."),
         };
         assignats.panfleto = new P(Item(F, "Panfleto_Assignats"), "panfleto_assignats", "Panfleto: Os Assignats Falsos", Confiabilidade.NaoEPista, "Tipografia", "Panfleto impresso sobre as notas falsas.");
         assignats.fatos = new V(15, 10, 35);
@@ -485,8 +485,8 @@ public static class CampanhaSetupTool
             "'Marchand esconde armas no porão da redação.'");
         jornalista.alegacoes = new[]
         {
-            new P(Item(F, "Alegacao_Jornalista_1"), "alegacao_jornalista_1", "Carta de Marchand: escrevi pela República", Confiabilidade.Boato, "Carta do cliente", "Marchand jura que cada linha foi escrita em defesa da República."),
-            new P(Item(F, "Alegacao_Jornalista_2"), "alegacao_jornalista_2", "Carta de Marchand: temem a verdade", Confiabilidade.Boato, "Carta do cliente", "Ele afirma que o Comitê teme o que ele publica."),
+            new P(Item(F, "Alegacao_Jornalista_1"), "alegacao_jornalista_1", "Carta de Marchand: escrevi pela República", Confiabilidade.NaoEPista, "Carta do cliente", "Marchand jura que cada linha foi escrita em defesa da República."),
+            new P(Item(F, "Alegacao_Jornalista_2"), "alegacao_jornalista_2", "Carta de Marchand: temem a verdade", Confiabilidade.NaoEPista, "Carta do cliente", "Ele afirma que o Comitê teme o que ele publica."),
         };
         jornalista.panfleto = new P(Item(F, "Panfleto_Jornalista"), "panfleto_jornalista", "Panfleto: Em defesa de Marchand", Confiabilidade.NaoEPista, "Tipografia", "Panfleto impresso em defesa do redator.");
         jornalista.fatos = new V(20, -20, 15);
@@ -507,8 +507,8 @@ public static class CampanhaSetupTool
             "'Garnier é agente de Pitt e paga os inimigos da República.'");
         negociante.alegacoes = new[]
         {
-            new P(Item(F, "Alegacao_Negociante_1"), "alegacao_negociante_1", "Ofício do Comitê: inimigo do povo", Confiabilidade.Boato, "Carta do cliente", "O Comitê afirma que Garnier é inimigo do povo."),
-            new P(Item(F, "Alegacao_Negociante_2"), "alegacao_negociante_2", "Ofício do Comitê: culpa notória", Confiabilidade.Boato, "Carta do cliente", "O ofício diz que a culpa dele 'é notória'."),
+            new P(Item(F, "Alegacao_Negociante_1"), "alegacao_negociante_1", "Ofício do Comitê: inimigo do povo", Confiabilidade.NaoEPista, "Carta do cliente", "O Comitê afirma que Garnier é inimigo do povo."),
+            new P(Item(F, "Alegacao_Negociante_2"), "alegacao_negociante_2", "Ofício do Comitê: culpa notória", Confiabilidade.NaoEPista, "Carta do cliente", "O ofício diz que a culpa dele 'é notória'."),
         };
         negociante.panfleto = new P(Item(F, "Panfleto_Negociante"), "panfleto_negociante", "Panfleto: O Açambarcador", Confiabilidade.NaoEPista, "Tipografia", "Panfleto encomendado pelo Comitê.");
         negociante.fatos = new V(-15, 30, 60);
@@ -529,8 +529,8 @@ public static class CampanhaSetupTool
             "'A viúva girondina envenenou um patriota da seção.'");
         girondina.alegacoes = new[]
         {
-            new P(Item(F, "Alegacao_Girondina_1"), "alegacao_girondina_1", "Carta de Delorme: sou só uma viúva", Confiabilidade.Boato, "Carta do cliente", "Ela diz que nunca se meteu em política."),
-            new P(Item(F, "Alegacao_Girondina_2"), "alegacao_girondina_2", "Carta de Delorme: ele amava a República", Confiabilidade.Boato, "Carta do cliente", "Ela jura que o marido morreu fiel à República."),
+            new P(Item(F, "Alegacao_Girondina_1"), "alegacao_girondina_1", "Carta de Delorme: sou só uma viúva", Confiabilidade.NaoEPista, "Carta do cliente", "Ela diz que nunca se meteu em política."),
+            new P(Item(F, "Alegacao_Girondina_2"), "alegacao_girondina_2", "Carta de Delorme: ele amava a República", Confiabilidade.NaoEPista, "Carta do cliente", "Ela jura que o marido morreu fiel à República."),
         };
         girondina.panfleto = new P(Item(F, "Panfleto_Girondina"), "panfleto_girondina", "Panfleto: A Viúva Girondina", Confiabilidade.NaoEPista, "Tipografia", "Panfleto impresso sobre a viúva Delorme.");
         girondina.fatos = new V(10, 10, 30);
@@ -796,7 +796,8 @@ public static class CampanhaSetupTool
         if (Vazio(item.fonte)) { item.fonte = def.fonte; contagem.camposPreenchidos++; }
         if (item.itemImg == null && imagem != null) { item.itemImg = imagem; contagem.camposPreenchidos++; }
         if (caso != null && item.caso == null) { item.caso = caso; contagem.camposPreenchidos++; }
-        if (caso != null && item.confiabilidade == Confiabilidade.NaoEPista) { item.confiabilidade = def.conf; contagem.camposPreenchidos++; }
+        // Cartas do cliente ficam em NaoEPista (só leitura): só preenche quem tem uma confiabilidade definida.
+        if (caso != null && item.confiabilidade == Confiabilidade.NaoEPista && def.conf != Confiabilidade.NaoEPista) { item.confiabilidade = def.conf; contagem.camposPreenchidos++; }
         if (novo) item.itemAmt = 1;
         if (novo || contagem.camposPreenchidos != antes) EditorUtility.SetDirty(item);
         return item;

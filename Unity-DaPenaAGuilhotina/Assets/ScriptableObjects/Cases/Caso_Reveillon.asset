@@ -21,8 +21,8 @@ MonoBehaviour:
   objectiveText: "Descobrir o que R\xE9veillon realmente prop\xF4s na assembleia
     e como ele tratava seus oper\xE1rios."
   moneyReward: 50
-  publicOpinionReward: -20
-  stateOpinionReward: 50
+  publicOpinionReward: -10
+  stateOpinionReward: 25
   fase: 2
   rota: 0
   horasDeInvestigacao: 0

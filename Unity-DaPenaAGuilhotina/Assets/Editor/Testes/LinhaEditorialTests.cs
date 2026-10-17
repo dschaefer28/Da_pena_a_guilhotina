@@ -29,7 +29,7 @@ public class LinhaEditorialTests
 
     private CaseData caso;
     private ReceitaDeCaso receita;
-    private Item fato1, fato2, boato, calunia, alegacao1, alegacao2;
+    private Item fato1, fato2, boato, calunia;
 
     private Item Pista(string id, Confiabilidade c)
     {
@@ -65,9 +65,6 @@ public class LinhaEditorialTests
         fato2 = Pista("fato2", Confiabilidade.Fato);
         boato = Pista("boato", Confiabilidade.Boato);
         calunia = Pista("calunia", Confiabilidade.Calunia);
-        alegacao1 = Pista("alegacao1", Confiabilidade.Boato);
-        alegacao2 = Pista("alegacao2", Confiabilidade.Boato);
-        caso.alegacoesIniciais = new List<Item> { alegacao1, alegacao2 };
     }
 
     private ResultadoDoPanfleto Calcular(Item a, Item b, LinhaEditorial linha) =>
@@ -76,14 +73,13 @@ public class LinhaEditorialTests
     // ===== Cálculo =====
 
     [Test]
-    public void TresTons_NasQuatroVersoes_SomamOModificador_ENaoMudamAVersao()
+    public void TresTons_NasTresVersoes_SomamOModificador_ENaoMudamAVersao()
     {
         var pares = new[]
         {
             (a: fato1, b: fato2, nivel: NivelDoPanfleto.Fatos),
             (a: fato1, b: boato, nivel: NivelDoPanfleto.ComBoato),
             (a: fato1, b: calunia, nivel: NivelDoPanfleto.Calunia),
-            (a: alegacao1, b: alegacao2, nivel: NivelDoPanfleto.Alegacoes),
         };
         foreach (var par in pares)
         {
@@ -125,9 +121,6 @@ public class LinhaEditorialTests
         Assert.AreEqual(-30, cal.penalidadePovo);
         Assert.AreEqual(-15, cal.penalidadeEstado);
 
-        ResultadoDoPanfleto alegacoes = Calcular(alegacao1, alegacao2, LinhaEditorial.Sensacionalista);
-        Assert.AreEqual(-8, alegacoes.penalidadePovo, "alegação não verificada também é boato");
-        Assert.AreEqual(0, alegacoes.penalidadeEstado, "o que não tinha perda continua sem perda");
 
         foreach (LinhaEditorial outra in new[] { LinhaEditorial.DefesaDoPovo, LinhaEditorial.AgradarOPoder })
         {
@@ -184,8 +177,8 @@ public class LinhaEditorialTests
         {
             ReceitaDeCaso.ModificadorEditorial mod = r.linhaEditorial.De(linha);
             ResultadoDoPanfleto com = CalculadoraDePanfleto.Calcular(r, f1, f2, new[] { ata, ata }, linha);
-            Assert.AreEqual(40 + mod.povo, com.povo, linha + ": exemplo do Prompt 3 (40/-5/50) + linha");
-            Assert.AreEqual(-5 + mod.estado, com.estado, linha.ToString());
+            Assert.AreEqual(25 + mod.povo, com.povo, linha + ": fatos + apoio (25/-10/50) + linha");
+            Assert.AreEqual(-10 + mod.estado, com.estado, linha.ToString());
             Assert.AreEqual(50 + mod.ouro, com.ouro, linha.ToString());
             CollectionAssert.AreEqual(new[] { "apoio_champdemars" }, com.qualificadores, "o apoio vale uma vez");
 

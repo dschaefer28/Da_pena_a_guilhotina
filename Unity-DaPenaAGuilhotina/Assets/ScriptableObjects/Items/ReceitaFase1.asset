@@ -15,6 +15,6 @@ MonoBehaviour:
   ingrediente1: {fileID: 11400000, guid: a41fb3cd7d8b20f479759eb72c5d511b, type: 2}
   ingrediente2: {fileID: 11400000, guid: 6c1c1ed830eb85f47a44f2dc6488276f, type: 2}
   resultItem: {fileID: 11400000, guid: d04d15091bf2cef4592686f23f1968f5, type: 2}
-  publicOpinionImpact: 15
-  stateOpinionImpact: -10
+  publicOpinionImpact: 5
+  stateOpinionImpact: 5
   moneyReward: 20

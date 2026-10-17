@@ -25,7 +25,9 @@ public static class SistemaDeSave
     // 6: linha editorial da publicação (tom, modificador e agravamento) e da revelação pendente
     // 7: dedução ativa (hipóteses do jogador por caso e pista, e quadros confirmados)
     // 8: fim de jogo registrado depois do tribunal (desfecho da rota e destino do réu)
-    public const int VersaoAtual = 8;
+    // 9: dedução por escolha: em cada par, a pista com que o jogador ficou e a descartada (as hipóteses e os quadros
+    //    confirmados da v7 deixam de existir e são ignorados)
+    public const int VersaoAtual = 9;
     private const string CenaPadrao = "Jogo";
 
     [Serializable]
@@ -102,15 +104,17 @@ public static class SistemaDeSave
         public List<string> comprasDaBiblioteca = new List<string>();
         public List<string> evidenciasObtidas = new List<string>();
 
-        // v7 (ausente em saves antigos = nenhuma hipótese e nenhum quadro confirmado)
-        public List<MarcacaoDeDeducao> marcacoesDeDeducao = new List<MarcacaoDeDeducao>();
-        public List<string> deducoesConfirmadas = new List<string>();
+        // v7 e v8 guardavam aqui as hipóteses (marcacoesDeDeducao) e os quadros confirmados (deducoesConfirmadas).
+        // Desde a v9 esses campos não existem mais: num save antigo, o JSON que os traz é ignorado.
 
         // v8 (ausente em saves antigos = partida em andamento): o tribunal terminou e o jogo acabou. Não há o que continuar.
         public bool jogoConcluido;
         public RotaFinal desfechoRota;
         public bool desfechoReuAbsolvido;
         public string desfechoTitulo;
+
+        // v9 (ausente em saves antigos = nenhum par decidido)
+        public List<EscolhaDeDeducao> escolhasDeDeducao = new List<EscolhaDeDeducao>();
     }
 
     public static string CaminhoDoArquivo => Path.Combine(Application.persistentDataPath, "save.json");
@@ -225,8 +229,7 @@ public static class SistemaDeSave
             interacoesPagasLegadas = new List<string>(registro.interacoesPagasLegadas),
             comprasDaBiblioteca = new List<string>(gm.comprasDaBiblioteca),
             evidenciasObtidas = new List<string>(gm.evidenciasObtidas),
-            marcacoesDeDeducao = CopiaDasMarcacoes(gm.marcacoesDeDeducao),
-            deducoesConfirmadas = new List<string>(gm.deducoesConfirmadas)
+            escolhasDeDeducao = CopiaDasEscolhas(gm.escolhasDeDeducao)
         };
 
         foreach (CaseData caso in gm.casosJaSelecionados)
@@ -386,10 +389,11 @@ public static class SistemaDeSave
         if (dados.versao < 4) // save antigo: o que está no inventário foi obtido, com certeza (nada além disso é deduzido)
             foreach (Item item in gm.inventarioSalvo) gm.RegistrarEvidencia(item);
 
-        // v < 7 não tinha dedução: nenhuma hipótese é inventada, e pistas "verificadas" pela regra antiga
-        // (pistasVerificadas) não viram quadro confirmado.
-        gm.marcacoesDeDeducao = dados.versao >= 7 ? CopiaDasMarcacoes(dados.marcacoesDeDeducao) : new List<MarcacaoDeDeducao>();
-        gm.deducoesConfirmadas = dados.versao >= 7 ? Copia(dados.deducoesConfirmadas) : new List<string>();
+        // v < 9 não tinha escolhas: nenhum par fica decidido (hipóteses e quadros confirmados da v7 não viram escolha, e
+        // pistas "verificadas" pela regra antiga só valem nos casos sem dedução). Com escolhas, a pista descartada nunca
+        // volta ao inventário, mesmo que o save a traga.
+        gm.escolhasDeDeducao = dados.versao >= 9 ? CopiaDasEscolhas(dados.escolhasDeDeducao) : new List<EscolhaDeDeducao>();
+        gm.inventarioSalvo.RemoveAll(item => Deducao.Descartada(gm, item));
 
         gm.revelacoesPendentes = new List<GameManager.RevelacaoPendente>();
         foreach (RevelacaoSalva r in dados.revelacoesPendentes)
@@ -420,13 +424,13 @@ public static class SistemaDeSave
 
     private static List<string> Copia(List<string> lista) => lista != null ? new List<string>(lista) : new List<string>();
 
-    private static List<MarcacaoDeDeducao> CopiaDasMarcacoes(List<MarcacaoDeDeducao> lista)
+    private static List<EscolhaDeDeducao> CopiaDasEscolhas(List<EscolhaDeDeducao> lista)
     {
-        var copia = new List<MarcacaoDeDeducao>();
+        var copia = new List<EscolhaDeDeducao>();
         if (lista == null) return copia;
-        foreach (MarcacaoDeDeducao m in lista)
-            if (m != null && !string.IsNullOrEmpty(m.caso) && !string.IsNullOrEmpty(m.pista) && m.marca != MarcacaoDaPista.NaoMarcada)
-                copia.Add(new MarcacaoDeDeducao { caso = m.caso, pista = m.pista, marca = m.marca });
+        foreach (EscolhaDeDeducao e in lista)
+            if (e != null && !string.IsNullOrEmpty(e.caso) && !string.IsNullOrEmpty(e.escolhida) && !string.IsNullOrEmpty(e.descartada))
+                copia.Add(new EscolhaDeDeducao { caso = e.caso, escolhida = e.escolhida, descartada = e.descartada });
         return copia;
     }
 

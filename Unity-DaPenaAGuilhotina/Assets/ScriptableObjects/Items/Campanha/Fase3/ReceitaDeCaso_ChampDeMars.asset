@@ -26,22 +26,22 @@ MonoBehaviour:
     panfleto: {fileID: 0}
     povo: 30
     estado: -15
-    ouro: 40
+    ouro: 45
     textoRevelacao: "As folhas originais da peti\xE7\xE3o, com milhares de assinaturas,
       desmentiram o boato: no altar da p\xE1tria se assinava uma peti\xE7\xE3o quando
       a Guarda chegou. O panfleto que falava em insurrei\xE7\xE3o ruiu."
-    penalidadePovo: -10
-    penalidadeEstado: -5
+    penalidadePovo: -25
+    penalidadeEstado: 0
   calunia:
     panfleto: {fileID: 0}
     povo: 40
     estado: -20
-    ouro: 55
+    ouro: 60
     textoRevelacao: "A Constitui\xE7\xE3o garantia a reuni\xE3o pac\xEDfica e a peti\xE7\xE3o
       assinada: o bilhete que chamava Danton de criminoso era cal\xFAnia, e a tipografia
       foi acusada de caluniar os mortos."
-    penalidadePovo: -20
-    penalidadeEstado: -10
+    penalidadePovo: -45
+    penalidadeEstado: 0
   soAlegacoes:
     panfleto: {fileID: 0}
     povo: 8
@@ -59,8 +59,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: cb992d913f8c57844838fee1cdd9e5cf, type: 2}
     qualidadeMinima: 1
     niveis: 
-    povo: 20
-    estado: 5
+    povo: 5
+    estado: 0
     ouro: 20
   linhaEditorial:
     ativa: 1

@@ -88,6 +88,8 @@ public class FichaDaPista : MonoBehaviour
             sb.Append("\n\n<size=85%>Documento de apoio (").Append(item.RotuloDeApoio)
               .Append("). Vai no campo Suporte da prensa e não é gasto na impressão.</size>");
         }
+        if (item.EhLeitura)
+            sb.Append("\n\n<size=85%><color=#9E9E9E>Carta do cliente, só para leitura: não é pista e não vai para a prensa.</color></size>");
         if (item.EhPista)
         {
             var inventario = GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;

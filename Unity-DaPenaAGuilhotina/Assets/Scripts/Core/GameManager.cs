@@ -117,10 +117,9 @@ public class GameManager : MonoBehaviour
     public List<string> comprasDaBiblioteca = new List<string>();
 
     [Header("Dedução ativa (Prompt 4; Fases 2, 3 e 4 desde o Prompt 7)")]
-    [Tooltip("Hipóteses do jogador no quadro de dedução, por caso e pista (Deducao). Nunca mudam a verdade das pistas.")]
-    public List<MarcacaoDeDeducao> marcacoesDeDeducao = new List<MarcacaoDeDeducao>();
-    [Tooltip("Casos (CaseData.name) cujo quadro de dedução foi conferido e confirmado.")]
-    public List<string> deducoesConfirmadas = new List<string>();
+    [Tooltip("Escolhas do jogador no quadro de dedução: em cada par contraditório, a pista com que ficou e a descartada " +
+             "(Deducao). Nunca mudam a verdade das pistas.")]
+    public List<EscolhaDeDeducao> escolhasDeDeducao = new List<EscolhaDeDeducao>();
 
     [Header("Dependências Globais")]
     public InventoryManager inventoryManager;
@@ -245,8 +244,9 @@ public class GameManager : MonoBehaviour
     /// <summary>Interação fictícia usada para registrar a entrega das alegações iniciais (uma vez por caso).</summary>
     public const string InteracaoAlegacoes = "mesa/alegacoes_do_cliente";
 
-    /// <summary>Entrega as alegações iniciais do caso em andamento que ainda não entraram no inventário. Chamado ao
-    /// aceitar o caso e sempre que o inventário de uma cena é restaurado: com o inventário cheio, fica para depois.</summary>
+    /// <summary>Entrega as cartas do cliente (só leitura, CaseData.alegacoesIniciais) do caso em andamento que ainda não
+    /// entraram no inventário. Chamado ao aceitar o caso e sempre que o inventário de uma cena é restaurado: com o
+    /// inventário cheio, fica para depois.</summary>
     public void EntregarAlegacoesPendentes()
     {
         CaseData caso = casoEscolhido;
@@ -270,7 +270,7 @@ public class GameManager : MonoBehaviour
 
     /// <summary>
     /// Ao concluir um caso, o que só servia a ele sai do inventário (a grade tem 24 espaços e não há descarte):
-    /// - alegações do cliente: sempre;
+    /// - cartas do cliente: sempre;
     /// - sobras de pistas e documentos de apoio: nos casos antes da Fase 4 (o caso da Fase 4 leva suas provas ao
     ///   tribunal). O histórico (evidenciasObtidas, panfletosPublicados) continua guardando tudo.
     /// Panfletos não têm caso e ficam.
@@ -281,7 +281,7 @@ public class GameManager : MonoBehaviour
         bool tudoDoCaso = caso.fase < UltimaFase;
         int removidos = inventoryManager.RemoverItens(item => caso.EhAlegacao(item) || (tudoDoCaso && item.caso == caso));
         if (removidos > 0)
-            AvisoNaTela.Mostrar(tudoDoCaso ? "Os papéis do caso foram arquivados na tipografia." : "As alegações do cliente foram arquivadas com o caso.");
+            AvisoNaTela.Mostrar(tudoDoCaso ? "Os papéis do caso foram arquivados na tipografia." : "As cartas do cliente foram arquivadas com o caso.");
     }
 
     private static string TituloDe(CaseData caso) =>

@@ -2,15 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>Hipótese do jogador sobre uma pista do quadro de dedução (Prompt 4). Fica separada da verdade interna
-/// (Item.confiabilidade): marcar nunca muda a pista, a versão impressa nem a receita.</summary>
-public enum MarcacaoDaPista
-{
-    NaoMarcada = 0,
-    Confiavel = 1,
-    Duvidosa = 2,
-}
-
 /// <summary>Duas afirmações do mesmo caso que não podem ser verdadeiras juntas: exatamente uma delas é Fato.
 /// A ordem (a/b) não significa nada: o quadro lista as pistas pelo nome, nunca pela posição no par.</summary>
 [Serializable]
@@ -29,12 +20,12 @@ public class ParContraditorio
 }
 
 /// <summary>Dedução ativa de um caso (proposta C do documento de dificuldade; Fases 2, 3 e 4 desde o Prompt 7). O conjunto
-/// de pistas de dedução é a união dos pares; alegações do cliente e documentos de apoio ficam de fora.</summary>
+/// de pistas de dedução é a união dos pares; cartas do cliente e documentos de apoio ficam de fora.</summary>
 [Serializable]
 public class ConfiguracaoDeDeducao
 {
-    [Tooltip("Liga o quadro de dedução neste caso. Ligada, a verdade das pistas do caso não é revelada sozinha " +
-             "(o campo Verificada Por é ignorado): só a conferência do quadro confirma.")]
+    [Tooltip("Liga o quadro de dedução neste caso. Ligada, a verdade das pistas do caso nunca é revelada pelo jogo " +
+             "(o campo Verificada Por é ignorado): em cada par, o jogador escolhe em qual afirmação acredita.")]
     public bool ativa;
 
     [Tooltip("Pares de afirmações contraditórias do caso. Em cada par, exatamente uma pista é Fato (a outra é Boato " +
@@ -75,35 +66,26 @@ public class ConfiguracaoDeDeducao
     }
 }
 
-/// <summary>Uma hipótese guardada: caso (CaseData.name) + pista (itemID). Vai para o save como está.</summary>
+/// <summary>Escolha do jogador num par contraditório: caso (CaseData.name), a pista com que ele ficou e a que foi
+/// descartada (itemID). Não tem volta e vai para o save como está.</summary>
 [Serializable]
-public class MarcacaoDeDeducao
+public class EscolhaDeDeducao
 {
     public string caso;
-    public string pista;
-    public MarcacaoDaPista marca;
+    public string escolhida;
+    public string descartada;
 }
 
 /// <summary>
-/// Regras da dedução ativa (Prompt 4). O estado do jogador fica no GameManager (marcacoesDeDeducao,
-/// deducoesConfirmadas) e as pistas descobertas vêm do histórico de evidências (GameManager.evidenciasObtidas),
-/// que guarda também as pistas já gastas na prensa.
+/// Regras da dedução ativa. O estado do jogador fica no GameManager (escolhasDeDeducao) e as pistas descobertas vêm do
+/// histórico de evidências (GameManager.evidenciasObtidas), que guarda também as pistas já gastas na prensa ou descartadas.
 ///
-/// "Conferir" confirma só quando TODO o conjunto do caso foi descoberto e marcado certo (Fato = Confiável;
-/// Boato/Calúnia = Duvidosa). Qualquer outra situação — pista faltando, marcação faltando ou errada — dá o mesmo
-/// resultado genérico, sem dizer o que acertou nem quantas acertou. Isso reduz a informação por tentativa, mas não
-/// impede uma busca exaustiva: com dois pares há só quatro combinações coerentes, e conferir não custa nada.
+/// Cada par é decidido à parte: quando o jogador já achou as duas afirmações, ele escolhe em qual acredita, e a outra sai
+/// do inventário de vez (não vai mais para a prensa nem para o tribunal). Qualquer escolha é aceita: o jogo nunca diz qual
+/// afirmação é a verdadeira. A verdade (Item.confiabilidade) só decide a versão do panfleto impresso (ReceitaDeCaso).
 /// </summary>
 public static class Deducao
 {
-    public enum Resultado
-    {
-        Confirmada,
-        NaoSeSustenta, // resposta única para incompleta, parcial ou errada
-        JaConfirmada,
-        Indisponivel,  // caso sem dedução, ou não é o caso em andamento
-    }
-
     /// <summary>O caso usa o quadro de dedução (e deixa de revelar a verdade sozinho).</summary>
     public static bool Aderente(CaseData caso) =>
         caso != null && caso.deducao != null && caso.deducao.ativa && caso.deducao.pares != null && caso.deducao.pares.Count > 0;
@@ -113,16 +95,15 @@ public static class Deducao
 
     public static bool Descoberta(GameManager gm, Item pista) => gm != null && gm.EvidenciaObtida(pista);
 
-    /// <summary>Pistas do conjunto que o jogador já descobriu, agrupadas por par, na ordem em que ele as descobriu
-    /// (GameManager.evidenciasObtidas). A ordem vem só das escolhas do jogador: nunca da posição no par nem de outra
-    /// coisa que possa denunciar qual afirmação é a verdadeira.</summary>
-    public static List<Item> PistasConhecidas(GameManager gm, CaseData caso)
+    /// <summary>Pares com alguma pista já descoberta, cada um com as pistas descobertas, na ordem em que o jogador as
+    /// descobriu (GameManager.evidenciasObtidas). A ordem vem só das escolhas do jogador: nunca da posição no par nem de
+    /// outra coisa que possa denunciar qual afirmação é a verdadeira.</summary>
+    public static List<List<Item>> ParesConhecidos(GameManager gm, CaseData caso)
     {
-        var lista = new List<Item>();
-        if (!Aderente(caso) || gm == null) return lista;
+        var grupos = new List<List<Item>>();
+        if (!Aderente(caso) || gm == null) return grupos;
 
         var vistas = new HashSet<string>();
-        var grupos = new List<List<Item>>();
         foreach (ParContraditorio par in caso.deducao.pares)
         {
             if (par == null) continue;
@@ -135,7 +116,14 @@ public static class Deducao
             grupos.Add(grupo);
         }
         grupos.Sort((x, y) => PorDescoberta(gm, x[0], y[0]));
-        foreach (List<Item> grupo in grupos) lista.AddRange(grupo);
+        return grupos;
+    }
+
+    /// <summary>As pistas de ParesConhecidos, em sequência (agrupadas por par).</summary>
+    public static List<Item> PistasConhecidas(GameManager gm, CaseData caso)
+    {
+        var lista = new List<Item>();
+        foreach (List<Item> grupo in ParesConhecidos(gm, caso)) lista.AddRange(grupo);
         return lista;
     }
 
@@ -169,78 +157,83 @@ public static class Deducao
         return total;
     }
 
-    public static bool Confirmada(GameManager gm, CaseData caso) =>
-        gm != null && caso != null && gm.deducoesConfirmadas.Contains(caso.name);
+    // ===== Escolhas =====
 
-    /// <summary>Pista do conjunto de um caso cuja dedução foi confirmada.</summary>
-    public static bool PistaConfirmada(GameManager gm, Item pista) => NoConjunto(pista) && Confirmada(gm, pista.caso);
-
-    public static MarcacaoDaPista MarcacaoDe(GameManager gm, CaseData caso, Item pista)
+    /// <summary>A escolha já feita no par desta pista (ou null).</summary>
+    public static EscolhaDeDeducao EscolhaDoPar(GameManager gm, Item pista)
     {
-        MarcacaoDeDeducao m = Encontrar(gm, caso, pista);
-        return m != null ? m.marca : MarcacaoDaPista.NaoMarcada;
+        if (gm == null || !NoConjunto(pista)) return null;
+        ParContraditorio par = pista.caso.deducao.ParDe(pista);
+        string caso = pista.caso.name;
+        return gm.escolhasDeDeducao.Find(e => e != null && e.caso == caso && DoPar(par, e.escolhida));
     }
 
-    private static MarcacaoDeDeducao Encontrar(GameManager gm, CaseData caso, Item pista)
+    private static bool DoPar(ParContraditorio par, string itemID) =>
+        !string.IsNullOrEmpty(itemID) && ((par.a != null && par.a.itemID == itemID) || (par.b != null && par.b.itemID == itemID));
+
+    public static bool ParDecidido(GameManager gm, Item pista) => EscolhaDoPar(gm, pista) != null;
+
+    /// <summary>O jogador ficou com esta pista no par dela.</summary>
+    public static bool Escolhida(GameManager gm, Item pista)
     {
-        if (gm == null || caso == null || pista == null || string.IsNullOrEmpty(pista.itemID)) return null;
-        return gm.marcacoesDeDeducao.Find(m => m != null && m.caso == caso.name && m.pista == pista.itemID);
+        EscolhaDeDeducao e = EscolhaDoPar(gm, pista);
+        return e != null && e.escolhida == pista.itemID;
     }
 
-    /// <summary>Só o caso em andamento, com dedução não confirmada, e só pistas do conjunto já descobertas.</summary>
-    public static bool PodeMarcar(GameManager gm, CaseData caso, Item pista) =>
-        EmAndamento(gm, caso) && !Confirmada(gm, caso) && caso.deducao.Contem(pista) && Descoberta(gm, pista);
+    /// <summary>O jogador descartou esta pista ao escolher a contrária: ela não volta ao inventário.</summary>
+    public static bool Descartada(GameManager gm, Item pista)
+    {
+        EscolhaDeDeducao e = EscolhaDoPar(gm, pista);
+        return e != null && e.descartada == pista.itemID;
+    }
+
+    /// <summary>Pares do caso já decididos.</summary>
+    public static int ParesDecididos(GameManager gm, CaseData caso)
+    {
+        if (!Aderente(caso) || gm == null) return 0;
+        int total = 0;
+        foreach (ParContraditorio par in caso.deducao.pares)
+            if (par != null && par.a != null && ParDecidido(gm, par.a)) total++;
+        return total;
+    }
+
+    /// <summary>A pista tem uma contrária já descoberta e o par ainda não foi decidido: só uma das duas pode ir para a
+    /// prensa, e quem escolhe é o jogador, no quadro.</summary>
+    public static bool AguardandoEscolha(GameManager gm, Item pista) =>
+        Contradicao(gm, pista) != null && !ParDecidido(gm, pista);
+
+    /// <summary>Só o caso em andamento, com as duas afirmações do par já descobertas e o par ainda sem escolha.</summary>
+    public static bool PodeEscolher(GameManager gm, CaseData caso, Item pista) =>
+        EmAndamento(gm, caso) && pista != null && pista.caso == caso && AguardandoEscolha(gm, pista);
 
     private static bool EmAndamento(GameManager gm, CaseData caso) =>
         gm != null && Aderente(caso) && gm.casoEscolhido == caso && gm.CasoAtualEmAndamento;
 
-    /// <summary>Guarda a hipótese do jogador (NaoMarcada apaga). Falso se a marcação não é permitida agora.</summary>
-    public static bool Marcar(GameManager gm, CaseData caso, Item pista, MarcacaoDaPista marca)
+    /// <summary>Fica com esta pista e descarta a contrária (sai do inventário, das entradas da prensa e do que está
+    /// guardado fora da grade). Falso, sem mudar nada, se a escolha não é permitida agora.</summary>
+    public static bool Escolher(GameManager gm, CaseData caso, Item pista, out Item descartada)
     {
-        if (!PodeMarcar(gm, caso, pista)) return false;
-        MarcacaoDeDeducao existente = Encontrar(gm, caso, pista);
-        if (marca == MarcacaoDaPista.NaoMarcada)
-        {
-            if (existente != null) gm.marcacoesDeDeducao.Remove(existente);
-            return true;
-        }
-        if (existente != null) existente.marca = marca;
-        else gm.marcacoesDeDeducao.Add(new MarcacaoDeDeducao { caso = caso.name, pista = pista.itemID, marca = marca });
+        descartada = null;
+        if (!PodeEscolher(gm, caso, pista)) return false;
+
+        descartada = Contradicao(gm, pista);
+        gm.escolhasDeDeducao.Add(new EscolhaDeDeducao { caso = caso.name, escolhida = pista.itemID, descartada = descartada.itemID });
+
+        string id = descartada.itemID;
+        if (gm.inventoryManager != null) gm.inventoryManager.RemoverItens(item => item != null && item.itemID == id);
+        else if (gm.inventarioSalvo != null) gm.inventarioSalvo.RemoveAll(item => item != null && item.itemID == id);
+        if (MouseManager.instance != null && MouseManager.instance.heldItem != null && MouseManager.instance.heldItem.itemID == id)
+            MouseManager.instance.heldItem = null;
         return true;
     }
 
-    /// <summary>Confere o quadro do caso em andamento. Todas as falhas devolvem NaoSeSustenta.</summary>
-    public static Resultado Conferir(GameManager gm, CaseData caso)
-    {
-        if (!EmAndamento(gm, caso)) return Resultado.Indisponivel;
-        if (Confirmada(gm, caso)) return Resultado.JaConfirmada;
-
-        bool certo = true;
-        foreach (Item pista in caso.deducao.Conjunto())
-        {
-            MarcacaoDaPista esperada = pista.confiabilidade == Confiabilidade.Fato ? MarcacaoDaPista.Confiavel : MarcacaoDaPista.Duvidosa;
-            if (!Descoberta(gm, pista) || MarcacaoDe(gm, caso, pista) != esperada) certo = false; // sem sair antes: nada muda com o motivo
-        }
-        if (!certo) return Resultado.NaoSeSustenta;
-
-        gm.deducoesConfirmadas.Add(caso.name);
-        return Resultado.Confirmada;
-    }
-
-    /// <summary>Etiqueta da situação de uma pista de caso aderente (inventário e ficha). Antes da confirmação mostra só
-    /// a hipótese do jogador; a verdade aparece depois que o quadro inteiro foi confirmado.</summary>
+    /// <summary>Etiqueta da situação de uma pista de caso aderente (inventário, ficha e quadro). Mostra só a decisão do
+    /// jogador, nunca a verdade.</summary>
     public static string Rotulo(GameManager gm, Item pista)
     {
-        if (PistaConfirmada(gm, pista))
-            return pista.confiabilidade == Confiabilidade.Fato ? "<color=#4CAF50>confirmada</color>" : "<color=#E0A030>desmentida</color>";
-
-        MarcacaoDaPista marca = NoConjunto(pista) ? MarcacaoDe(gm, pista.caso, pista) : MarcacaoDaPista.NaoMarcada;
-        switch (marca)
-        {
-            case MarcacaoDaPista.Confiavel: return "<color=#9E9E9E>não verificada · hipótese: confiável</color>";
-            case MarcacaoDaPista.Duvidosa: return "<color=#9E9E9E>não verificada · hipótese: duvidosa</color>";
-            default: return "<color=#9E9E9E>não verificada</color>";
-        }
+        if (Escolhida(gm, pista)) return "<color=#E0C080>sua escolha</color>";
+        if (Descartada(gm, pista)) return "<color=#9E9E9E>descartada</color>";
+        return "<color=#9E9E9E>não verificada</color>";
     }
 
     /// <summary>Problemas de configuração da dedução de um caso (vazio = coerente). Usado pelo validador da campanha.</summary>
@@ -262,8 +255,8 @@ public static class Deducao
             foreach (Item pista in new[] { par.a, par.b })
             {
                 if (pista.caso != caso) problemas.Add($"{onde}: '{pista.name}' pertence a outro caso ({(pista.caso != null ? pista.caso.name : "nenhum")}).");
+                else if (pista.EhLeitura) problemas.Add($"{onde}: '{pista.name}' é carta do cliente (só leitura, fica fora da dedução).");
                 else if (!pista.EhPista || pista.EhSuporte) problemas.Add($"{onde}: '{pista.name}' não é pista (documento de apoio ou item comum).");
-                else if (caso.EhAlegacao(pista)) problemas.Add($"{onde}: '{pista.name}' é alegação do cliente (fica fora da dedução).");
                 if (!string.IsNullOrEmpty(pista.itemID) && !vistas.Add(pista.itemID))
                     problemas.Add($"'{pista.name}' aparece em mais de um par.");
             }

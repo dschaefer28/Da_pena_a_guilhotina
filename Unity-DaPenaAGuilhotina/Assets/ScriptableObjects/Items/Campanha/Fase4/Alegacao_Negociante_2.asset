@@ -20,7 +20,7 @@ MonoBehaviour:
     e que vend\xEA-la agora deixaria o campo sem colheita."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 08a12328210a2ab45b8948af72c05f4e, type: 2}
-  confiabilidade: 2
+  confiabilidade: 0
   verificadaPor: []
   documentoDeSuporte: 0
   qualidade: 0

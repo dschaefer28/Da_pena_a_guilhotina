@@ -20,8 +20,8 @@ MonoBehaviour:
     dos antigos ministros."
   objectiveText: Descobrir quem protegeu a esposa de Kornmann e o que as provas mostram.
   moneyReward: 45
-  publicOpinionReward: -20
-  stateOpinionReward: 30
+  publicOpinionReward: -10
+  stateOpinionReward: 25
   fase: 3
   rota: 0
   horasDeInvestigacao: 0

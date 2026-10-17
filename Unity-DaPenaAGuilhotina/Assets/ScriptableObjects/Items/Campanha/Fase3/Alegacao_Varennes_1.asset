@@ -20,7 +20,7 @@ MonoBehaviour:
     e que a justi\xE7a do antigo regime fechou os olhos."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
-  confiabilidade: 2
+  confiabilidade: 0
   verificadaPor: []
   documentoDeSuporte: 0
   qualidade: 0

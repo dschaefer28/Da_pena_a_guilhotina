@@ -16,32 +16,32 @@ MonoBehaviour:
   panfletoPadrao: {fileID: 11400000, guid: 999fd53f1add1ba4d991296a7967c5e8, type: 2}
   soFatos:
     panfleto: {fileID: 0}
-    povo: -20
-    estado: 30
+    povo: -10
+    estado: 25
     ouro: 45
     textoRevelacao: 
     penalidadePovo: 0
     penalidadeEstado: 0
   comBoato:
     panfleto: {fileID: 0}
-    povo: -30
-    estado: 40
+    povo: -15
+    estado: 35
     ouro: 60
     textoRevelacao: "Peritos compararam o di\xE1rio com as cartas da senhora Kornmann:
       a letra era dela. O boato de que o banqueiro o forjou caiu por terra, e o panfleto
       que o repetiu tamb\xE9m."
-    penalidadePovo: -10
-    penalidadeEstado: -10
+    penalidadePovo: 0
+    penalidadeEstado: -30
   calunia:
     panfleto: {fileID: 0}
-    povo: -40
-    estado: 50
+    povo: -20
+    estado: 45
     ouro: 75
     textoRevelacao: "O pr\xF3prio Beaumarchais tinha admitido, por escrito, que ajudou
       a tirar a senhora Kornmann da reclus\xE3o. O libelo que negava tudo era cal\xFAnia,
       e a tipografia foi acusada de inventar hist\xF3rias."
-    penalidadePovo: -20
-    penalidadeEstado: -15
+    penalidadePovo: 0
+    penalidadeEstado: -50
   soAlegacoes:
     panfleto: {fileID: 0}
     povo: -8
@@ -61,7 +61,7 @@ MonoBehaviour:
     qualidadeMinima: 1
     niveis: 
     povo: 0
-    estado: 10
+    estado: 5
     ouro: 20
   linhaEditorial:
     ativa: 1

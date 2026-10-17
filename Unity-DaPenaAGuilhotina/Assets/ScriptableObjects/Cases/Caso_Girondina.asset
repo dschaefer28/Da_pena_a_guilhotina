@@ -20,8 +20,8 @@ MonoBehaviour:
     pede \xE0 tipografia que mostre ao povo o que as provas dizem."
   objectiveText: Descobrir o que as provas contra os girondinos realmente mostram.
   moneyReward: 30
-  publicOpinionReward: 5
-  stateOpinionReward: 5
+  publicOpinionReward: 10
+  stateOpinionReward: 10
   fase: 4
   rota: 3
   horasDeInvestigacao: 0

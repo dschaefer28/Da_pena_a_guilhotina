@@ -398,27 +398,35 @@ public class ComponentesTests
     }
 
     [Test]
-    public void Prensa_FatoMaisAlegacao_UsaVersaoInferior_EApoioNaoEhGasto()
+    public void Prensa_CartaDoClienteNaoEntra_EApoioContinuaValendo()
     {
         ReceitaDeCaso r = Receita(casoA);
         Item apoio = Pista("apoio", casoA, Confiabilidade.NaoEPista);
         apoio.documentoDeSuporte = true; apoio.qualidade = QualidadeDaEvidencia.Superior;
         r.qualificadores.Add(new ReceitaDeCaso.Qualificador { id = "q", suportesAceitos = new List<Item> { apoio }, povo = 1 });
         gm.ConfirmarCaso(casoA);
-        // Alegações definidas depois de aceitar: aqui as peças vêm à mão, sem a entrega automática.
-        Item alegacao = Pista("aleg", casoA, Confiabilidade.Boato);
-        casoA.alegacoesIniciais = new List<Item> { alegacao, Pista("aleg2", casoA, Confiabilidade.Boato) };
+        // Cartas definidas depois de aceitar: aqui as peças vêm à mão, sem a entrega automática. A primeira imita um asset
+        // antigo, ainda marcado como Boato: mesmo assim é só leitura.
+        Item carta = Pista("aleg", casoA, Confiabilidade.Boato);
+        casoA.alegacoesIniciais = new List<Item> { carta, Pista("aleg2", casoA, Confiabilidade.NaoEPista) };
+        Assert.IsTrue(carta.EhLeitura);
+        Assert.IsFalse(carta.EhPista, "carta do cliente nunca é pista");
 
         inv.AddItem(apoio);
         Assert.IsTrue(prensa.AlternarSuporte(inv.ItemNaGrade("apoio")));
-        NasEntradas(Pista("fato", casoA), alegacao);
+        NasEntradas(Pista("fato", casoA), carta);
         prensa.CombineItems();
+        Assert.AreEqual(0, gm.panfletosPublicados.Count, "a carta não vai para a prensa");
+        Assert.IsNotNull(prensa.slotInput1.item, "nada é consumido");
+        Assert.IsNotNull(prensa.slotInput2.item);
 
+        inv.ClearItemSlot(prensa.slotInput1);
+        inv.ClearItemSlot(prensa.slotInput2);
+        NasEntradas(Pista("fato", casoA), Pista("fato2", casoA));
+        prensa.CombineItems();
         GameManager.PanfletoPublicado p = gm.panfletosPublicados[0];
-        Assert.AreEqual(NivelDoPanfleto.Alegacoes, p.nivel);
-        Assert.AreEqual(6, p.povo, "versão inferior (5) + apoio (1)");
-        Assert.IsTrue(p.aplicadoConhecido);
-        Assert.AreEqual(1, gm.revelacoesPendentes.Count, "a versão inferior tem consequência própria");
+        Assert.AreEqual(NivelDoPanfleto.Fatos, p.nivel);
+        Assert.AreEqual(21, p.povo, "fatos (20) + apoio (1)");
         CollectionAssert.Contains(p.suportes, "apoio");
     }
 
@@ -574,7 +582,7 @@ public class ComponentesTests
     // ===== Dedução ativa (Prompt 4) =====
 
     [Test]
-    public void Prensa_CasoComDeducao_PublicaSemConferir_EAVersaoVemDaVerdade()
+    public void Prensa_CasoComDeducao_ParSemEscolhaNaoImprime_DepoisDaEscolhaAVersaoVemDaVerdade()
     {
         ReceitaDeCaso r = Receita(casoA);
         r.comBoato = new ReceitaDeCaso.Versao { povo = 30, estado = -15, ouro = 40, penalidadePovo = -10 };
@@ -588,13 +596,25 @@ public class ComponentesTests
         gm.ConfirmarCaso(casoA);
         inv.AddItem(fato);
         inv.AddItem(boato);
-        Assert.IsTrue(Deducao.Marcar(gm, casoA, boato, MarcacaoDaPista.Confiavel)); // hipótese errada, sem conferir
+        inv.AddItem(f2); // a calúnia não foi achada: o par 2 não tem o que escolher
 
         NasEntradas(fato, boato);
         prensa.CombineItems();
-        Assert.AreEqual(1, gm.panfletosPublicados.Count, "a dedução não é exigida para publicar");
-        Assert.AreEqual(NivelDoPanfleto.ComBoato, gm.panfletosPublicados[0].nivel, "a versão vem da verdade, não da hipótese");
-        Assert.IsFalse(Deducao.Confirmada(gm, casoA));
+        Assert.AreEqual(0, gm.panfletosPublicados.Count, "as duas afirmações de um par não vão juntas para a prensa");
+        Assert.IsNotNull(prensa.slotInput1.item, "nada é consumido");
+
+        inv.ClearItemSlot(prensa.slotInput1);
+        inv.ClearItemSlot(prensa.slotInput2);
+        NasEntradas(boato, f2);
+        prensa.CombineItems();
+        Assert.AreEqual(0, gm.panfletosPublicados.Count, "o par do boato ainda espera a escolha no quadro");
+
+        Assert.IsTrue(Deducao.Escolher(gm, casoA, boato, out Item descartada), "qualquer escolha é aceita, inclusive o boato");
+        Assert.AreSame(fato, descartada);
+        Assert.IsFalse(inv.PossuiEmQualquerLugar(fato.itemID), "a descartada sai do inventário");
+        prensa.CombineItems();
+        Assert.AreEqual(1, gm.panfletosPublicados.Count);
+        Assert.AreEqual(NivelDoPanfleto.ComBoato, gm.panfletosPublicados[0].nivel, "a versão vem da verdade, não da escolha");
         Assert.AreEqual(1, gm.revelacoesPendentes.Count, "o boato continua sendo exposto no fim da fase");
     }
 

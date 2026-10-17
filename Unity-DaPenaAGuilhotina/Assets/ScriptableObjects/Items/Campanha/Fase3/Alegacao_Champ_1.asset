@@ -20,7 +20,7 @@ MonoBehaviour:
     defendeu uma peti\xE7\xE3o \xE0 Assembleia."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
-  confiabilidade: 2
+  confiabilidade: 0
   verificadaPor: []
   documentoDeSuporte: 0
   qualidade: 0

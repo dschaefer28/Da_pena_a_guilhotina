@@ -7,7 +7,8 @@ Estados usados: **validado** (testado em runtime ou em teste automatizado), **ex
 Etapas: Prompts 0 a 3 concluídos; verificação dos Prompts 0–3 com os achados corrigidos (§7); verificação completa contra os dois PDFs em 26/09, com correções que adiantaram partes dos Prompts 6 e 7 (§9); Prompt 5 (linha editorial) concluído em 26/09 (§10); **Prompt 4 (dedução ativa) incluído por decisão do grupo e concluído em 27/09 (§13)**; **restante do Prompt 6 concluído em 27/09 (§14)**; **Fase 3 reduzida a três casos, com um concluído (§15)**; **Prompt 7 concluído em 27/09 (§17), junto com dois ajustes pedidos pelo grupo: 6h de investigação nas Fases 2, 3 e 4 e dedução ativa desde a Fase 2**; **conteúdo narrativo das Fases 2 a 4 alinhado ao GDD em 27/09 (§18)**; **P0 1 e 2 do `docs/RELATORIO_TESTES_2026-09-28.md` corrigidos em 28/09 (§19)**; **itens de interface 3, 4, 8, 14, 15, 16 e 17 do relatório corrigidos em 28/09 (§20)**; **itens 7, 12, 20, 21, 22 e 23 corrigidos em 28/09 (§21)**. Próximo: **Prompt 8 (não iniciado)**, depois dos testes manuais listados em §17.9, §18.9, §19.8 e §20.8. Continuam abertos no relatório os itens 5 e 6 (balanceamento, decisão do grupo), 9, 10, 11, 13, 18, 19 e 24; o 12 tem uma pendência de arte (§21.6).
 
 Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4–6:
-- **Alegações:** qualquer impressão com alegação usa a versão Só Alegações.
+- **Cartas do cliente (17/10, §23):** só leitura. Chegam ao aceitar o caso, saem ao concluí-lo e não são pistas: não vão para a prensa, para o quadro nem para o tribunal. A versão Só Alegações das receitas ficou só para saves antigos.
+- **Balanceamento (17/10, §24):** cada caso tem um lado (pró-povo +20/−10, pró-Estado −10/+25, misto +10/+10 na versão Fatos). Mentir rende mais ouro, mas a revelação tira do lado favorecido e a mentira empurra a rota menos que os fatos. Tutorial +5/+5. Apoio da biblioteca no máximo +5 nas barras. A Mesa mostra os valores da versão Fatos.
 - **Arquivamento:** sobras dos casos anteriores à Fase 4 são arquivadas ao concluir.
 - **Inventário cheio:** interação sem espaço para o que entregaria não cobra horas.
 - **Save:** versão 6 no Prompt 5 (linha editorial); versão 7 em 27/09 (dedução ativa, §13); **versão 8 em 28/09: fim de jogo registrado depois do tribunal (§21)**. Com o jogo terminado, o Continuar não aparece.
@@ -20,7 +21,7 @@ Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4�
 - **Linha editorial (Prompt 5):** a partir da Fase 2, o Misturar pede Defesa do povo / Agradar a Coroa (o Comitê na Fase 4) / Sensacionalista antes de consumir as pistas. Cálculo: versão → apoio → linha. O exemplo do Prompt 3 (40/−5/50) é o valor antes da linha.
 - **Fala depois da entrega (27/09):** `CasoReacao.dialogoDepoisDaEntrega`. Quando a reação já entregou tudo, o NPC diz essa fala curta em vez de repetir a conversa inteira (Dupaty, Marie, Joalheiro). Vazio = comportamento anterior.
 - **Caso das Joias (27/09):** o joalheiro entrega os dois fatos; a Mesa da Taverna ficou vazia nesse caso; caminho mínimo de 1h (§12.3).
-- **Dedução ativa (27/09, §13; desde a Fase 2 pelo §17):** nos **nove** casos das Fases 2, 3 e 4, dois pares de afirmações contraditórias (fato do cliente × boato; fato do objeto × calúnia). O "Quadro de pistas" (botão na HUD, já na Fase 2) guarda as hipóteses do jogador; "Conferir dedução" só confirma o quadro inteiro, com uma resposta única para qualquer falha. Não bloqueia a publicação. Nesses casos a verdade não aparece mais sozinha (Verificada Por é ignorada).
+- **Dedução ativa (27/09, §13; desde a Fase 2 pelo §17; escolha por par desde 17/10, §22):** nos **nove** casos das Fases 2, 3 e 4, dois pares de afirmações contraditórias (fato do cliente × boato; fato do objeto × calúnia). No "Quadro de pistas" (botão na HUD, já na Fase 2), cada par é decidido à parte: com as duas afirmações achadas, o jogador escolhe em qual acredita e a outra sai do inventário de vez. Qualquer combinação é aceita e o jogo nunca diz qual é a verdadeira; a verdade só decide a versão do panfleto. A prensa recusa uma pista cujo par ainda espera a escolha. ~~"Conferir dedução"~~ removido.
 - **Tempo (27/09, §17):** 6h por caso nas Fases 2, 3 e 4 (`GameManager.horasPorCaso`); a conversão continua 1h por NPC/objeto novo. Endividado: 5h. O quadro inteiro custa até 4h, então a dedução é alcançável mesmo com dívida.
 - **Dicas de primeira vez (27/09, §17):** relógio, fato/boato (agora aponta o Quadro de pistas), dedução, despesas, Biblioteca e linha editorial. Ficam numa fila (não se perdem nem se sobrepõem), vão no save e zeram no Novo Jogo.
 - **Marie e Dupaty depois do tutorial (27/09, §17):** pela regra de progresso (tutorial concluído), não mais pelo panfleto no inventário; vale também depois de carregar um save.
@@ -1314,3 +1315,87 @@ Pedido: corrigir os itens 7 (save antigo retomando o tutorial na etapa errada), 
 1. **Ferramentas > Cenas > Aplicar limite da câmera do porão e FMOD Studio Listener** → "Nenhuma alteração".
 2. Test Runner > EditMode > Run All → **102/102**; em seguida, limpar o console e dar Play no menu → console vazio.
 3. Com backup do `save.json`, jogar até o fim do tribunal e voltar ao menu: o Continuar não aparece e o save diz `"jogoConcluido": true`.
+
+## 22. Dedução por escolha em cada par (17/10/2026)
+
+Pedido: o quadro só aceitava uma rota (o "Conferir dedução" confirmava apenas o quadro inteiro marcado do jeito certo, e as pistas da afirmação contrária continuavam no inventário). O certo é: cada par contraditório é independente; o jogador escolhe uma afirmação em cada par, qualquer que seja; a não escolhida sai do inventário e não pode mais ir para o panfleto; o jogo não diz qual é a verdadeira, só marca a escolha.
+
+| Item | Implementação | Situação |
+|---|---|---|
+| Cada par decidido à parte, qualquer combinação aceita | `Deducao.Escolher` (`DeducaoAtiva.cs`): só no caso em andamento, só com as duas afirmações do par descobertas e só uma vez por par. Hipóteses Confiável/Duvidosa, `Conferir` e a confirmação do quadro inteiro removidos | validado (testes: as 4 combinações de um caso de 2 pares) |
+| A não escolhida sai do inventário e não volta | `InventoryManager.RemoverItens` (grade, entradas da prensa, guardado fora da grade) e o item na mão. NPC e objeto não a entregam de novo (inclusive em save v2); `TribunalManager.ProvasDoCaso` não a leva ao tribunal; o histórico (`evidenciasObtidas`) continua sabendo que ela foi achada | validado (testes + Play Mode) |
+| O jogo não revela a verdade | Etiquetas: "não verificada", "sua escolha" (âmbar) e "descartada". `PistaVerificada` é sempre falso nos casos com dedução | validado (teste: nenhuma etiqueta contém confirmada/desmentida/boato/calúnia/fato) |
+| Prensa: só a afirmação escolhida | `CraftingPress.TentarPanfletoDeCaso` recusa uma pista cujo par tem as duas afirmações achadas e ainda espera a escolha (inclui as duas do mesmo par juntas). A recusa não depende da verdade. A versão do panfleto continua vindo da verdade das pistas impressas (`ReceitaDeCaso.Classificar`) | validado (teste com a prensa real) |
+| Quadro | Agrupado por contradição, na ordem de descoberta; "Escolher esta" → "Confirmar" (dois toques, o descarte não tem volta); depois, "Sua escolha" / "Descartada" (riscada). Contador "encontradas n de N · decididas d de N" | validado (Play Mode, Fase 2, Réveillon, 1920×1080) |
+| Save | **v9**: `escolhasDeDeducao` (caso, escolhida, descartada). Saves v7/v8: hipóteses e quadros confirmados ignorados, nenhum par decidido. Ao carregar, a descartada é tirada do inventário salvo | validado (testes) |
+
+Arquivos: `Scripts/Investigation/DeducaoAtiva.cs`, `QuadroDeDeducaoUI.cs`, `Scripts/Core/GameManager.cs`, `SistemaDeSave.cs`, `Scripts/Inventory/InventoryManager.cs`, `Scripts/Press/CraftingPress.cs`, `Scripts/Court/TribunalManager.cs`, `Scripts/Characters/NPCMovement.cs`, `Scripts/Interaction/LootInteractable.cs`, `Scripts/Tutorial/TutorialManager.cs` (texto da dica), `Editor/ValidadorDaCampanha.cs` (mensagem); `Prefabs/UI.prefab` (textos do quadro) e `Scenes/Jogo.unity` (só o texto de `dicaDeducao`); testes em `DeducaoTests` e `ComponentesTests`.
+
+Verificação: EditMode **104/104**; validador "Campanha válida", 0 avisos; Play Mode na Fase 2 (Réveillon) com o boato escolhido: confirmação em dois toques, "O preço do pão" fora do inventário, "Os quinze soldos (sua escolha)" na lista. `save.json` e PlayerPrefs conferidos por hash antes e depois (iguais).
+
+Em aberto (decisão do grupo): o efeito de cada combinação no panfleto continua sendo o da receita (Fatos, Com Boato, Calúnia; Só Alegações saiu em §23). Hoje cada caso tem **dois** pares e duas cartas do cliente (fora dos pares); o código aceita qualquer número de pares.
+
+## 23. Cartas do cliente só para leitura (17/10/2026)
+
+Pedido: as cartas do cliente (as antigas "alegações iniciais", duas por caso nas Fases 2 a 4) não faziam sentido como pistas. Viraram documentos só de leitura.
+
+Por que eram pistas: eram a "saída sem bloqueio" (§5.2): imprimir duas cartas dava a versão Só Alegações, para quem ficasse sem pistas. Com 8h por caso (7h endividado) e 7 ou 8 lugares por caso, o jogador sempre alcança as pistas, e depois da escolha no quadro (§22) sempre sobram pelo menos duas para imprimir. A saída não é mais necessária.
+
+| Item | Implementação | Situação |
+|---|---|---|
+| Carta = só leitura | `Item.EhLeitura` (item do caso que está em `CaseData.alegacoesIniciais`). `Item.EhPista` exclui as cartas mesmo que o asset ainda tenha uma confiabilidade. Os 18 assets passaram para `NaoEPista` | validado (testes) |
+| Inventário e ficha | Etiqueta "(só leitura)" na lista; a ficha mostra o texto, a fonte e "Carta do cliente, só para leitura: não é pista e não vai para a prensa." Nunca aparece "não verificada" | validado (código; tela não conferida em Play Mode) |
+| Prensa | `CraftingPress.TentarPanfletoDeCaso` recusa a carta ("A carta do cliente é só para leitura: ela não vai para a prensa."), sem consumir nada. `ReceitaDeCaso.Classificar` não tem mais o caso das alegações | validado (teste com a prensa real) |
+| Tribunal, quadro e dicas | `TribunalManager.ProvasDoCaso` não leva as cartas; o quadro já as deixava de fora; a dica de fato/boato passa a aparecer na primeira pista de verdade, e não mais na carta | validado (testes) |
+| Entrega e arquivamento | Sem mudança: chegam ao aceitar o caso e saem ao concluí-lo | — |
+| Só Alegações | `NivelDoPanfleto.Alegacoes` e `ReceitaDeCaso.soAlegacoes` ficam só para panfletos de saves antigos (tribunal e histórico). A prensa não gera mais essa versão | — |
+| Ferramentas | `CampanhaSetupTool` define as cartas como `NaoEPista` e não volta a preencher confiabilidade nelas; o validador exige carta do próprio caso, `NaoEPista`, sem Documento De Suporte (sem carta = aviso) | validado (validador: 0 problemas, 0 avisos) |
+
+Arquivos: `Scripts/Inventory/Item.cs`, `InventoryManager.cs`, `FichaDaPista.cs`, `Scripts/Investigation/@CaseData.cs`, `DeducaoAtiva.cs` (mensagem), `Scripts/Press/ReceitaDeCaso.cs`, `CraftingPress.cs`, `Scripts/Court/TribunalManager.cs`, `Scripts/Core/GameManager.cs` (textos); `Editor/ValidadorDaCampanha.cs`, `CampanhaSetupTool.cs`; 18 assets `Alegacao_*.asset` (só `confiabilidade`); testes em `CampanhaTests`, `ComponentesTests`, `LinhaEditorialTests`, `TutorialEUiTests`, `DeducaoTests`.
+
+Verificação: EditMode **103/103** (três testes da versão Só Alegações deram lugar a dois testes de cartas só leitura); validador "Campanha válida", 0 avisos.
+
+## 24. Balanceamento de Povo, Estado e ouro (17/10/2026)
+
+Pedido: a distribuição de pontos estava muito desbalanceada. Foi medida simulando todos os caminhos das Fases 2 e 3 (3 casos × 3 versões × 3 tons em cada fase = 729), com a ordem do jogo: panfleto e tom → limite 0–100 → revelação no fim da fase → despesas.
+
+**O que estava errado (valores de antes):**
+- Números grandes demais para barras de 0 a 100: um panfleto da Fase 2 movia até 90 pontos; 89% dos caminhos batiam no limite; com o Colar ou o Operário, o Povo chegava a 100 já no panfleto da Fase 2 (18 de 27 combinações).
+- A Fase 2 pesava cerca de 3× a Fase 3: 3 dos 9 pares de casos (Fase 2 → Fase 3) tinham uma rota só, qualquer que fosse a investigação ou o tom.
+- Mentir compensava: boato e calúnia rendiam mais ouro e empurravam a rota igual ou mais forte, porque a revelação caía no lado que o caso já prejudicava (ex.: Colar com fatos +50/−10; com calúnia, já depois da revelação, +40/−45).
+- O tutorial (+15/−10) já deixava o jogador na zona da rota A (65 × 40).
+- Só com fatos, 12 de 81 caminhos terminavam a Fase 3 endividados.
+
+**Regras novas:** cada caso tem um lado.
+
+| Lado | Casos | Fatos | Com Boato (revelação) | Calúnia (revelação) |
+|---|---|---|---|---|
+| Pró-povo | Colar, Operário, Danton, Desmoulins | +20/−10 | +30/−15 (−25/0) | +40/−20 (−45/0) |
+| Pró-Estado | Réveillon, Kornmann, mercador | −10/+25 | −15/+35 (0/−30) | −20/+45 (0/−50) |
+| Misto | Sirven, girondinos | +10/+10 | +15/+15 (−10/−10) | +20/+20 (−20/−20) |
+
+- Ouro da versão Fatos: Colar 30, Operário 30, Réveillon 50, Danton 30, Kornmann 45, Sirven 35, Desmoulins 15, mercador 60, girondinos 30. Com boato +15, com calúnia +30.
+- Tutorial: +5/+5/20 (as barras se mexem sem empurrar para nenhuma rota). Linha editorial sem mudança (+10/−5, −5/+10, ouro +15/+20 e desmentido +50%).
+- Apoio da biblioteca no máximo +5 nas barras: Sirven +5/+5/+15, Danton +5/0/+20, Kornmann 0/+5/+20, Desmoulins +5/0/+10, mercador 0/+5/+25, girondinos +5/+5/+15.
+- Mesa de Casos: as estimativas são os valores da versão Fatos.
+- Fase 4: mesma escala. Não muda o final (a rota já está travada e o réu depende só da versão), só o que a barra mostra.
+- Só Alegações: valores de legado mantidos (§23).
+
+**Resultado (assets reais):**
+
+| | Antes | Depois |
+|---|---|---|
+| Rotas A / B / C em todos os caminhos | 47% / 32% / 19% | 34% / 23% / 41% |
+| Só com fatos (81 caminhos): A / B / C | 48 / 20 / 13 | 33 / 26 / 22 |
+| Caminhos que batem em 0 ou 100 | 89% | 24% |
+| Povo em 100 logo no panfleto da Fase 2 | 18 de 27 | 2 de 27 |
+| Pares de casos presos a uma rota só | 3 de 9 | 0 |
+| Pares que alcançam A, B e C | 3 de 9 | 6 de 9 |
+| Só com fatos, endividado no fim da Fase 3 | 12 de 81 | 0 |
+| Mentira empurra a rota mais que os fatos | sim | não |
+
+Arquivos: 9 `ReceitaDeCaso_*.asset` (versões e qualificadores), 9 `Caso_*.asset` (estimativas da Mesa), `ReceitaFase1.asset`. As ferramentas de setup só preenchem campos vazios ou migram valores antigos específicos, então não desfazem estes. Testes: `CampanhaTests` ganhou dois testes de balanceamento (lados e mentira nos assets; simulação dos pares de casos e dívida do honesto); `BibliotecaTests` e `LinhaEditorialTests` passaram a usar o novo apoio do caso Danton (fatos + apoio = 25/−10/50).
+
+Verificação: EditMode **105/105**; validador "Campanha válida", 0 avisos; simulação refeita lendo os assets.
+
+Não testado: uma partida inteira em Play Mode com os valores novos (o ritmo das barras na tela e a cutscene de revelação com perda só de um lado).

@@ -118,8 +118,10 @@ public class LootInteractable : MonoBehaviour, IInteractable
 
         RegistroDaInvestigacao registro = GameManager.Instance.registroDaInvestigacao;
 
-        // Save v2 (sem registro de loot): quem já tem a pista a recolheu pela regra antiga.
-        if (registro.CasoComEstadoLegado(casoAtual) && inventory.PossuiEmQualquerLugar(itemCorreto.itemID))
+        // Save v2 (sem registro de loot): quem já tem a pista a recolheu pela regra antiga (e a descartada no quadro de
+        // dedução também já foi recolhida: não volta).
+        if (registro.CasoComEstadoLegado(casoAtual) &&
+            (inventory.PossuiEmQualquerLugar(itemCorreto.itemID) || Deducao.Descartada(GameManager.Instance, itemCorreto)))
         {
             registro.RegistrarLoot(casoAtual, ChaveDaInteracao);
             AvisoNaTela.Mostrar("Você já vasculhou aqui.");

@@ -1706,16 +1706,16 @@ MonoBehaviour:
   spriteDoBotao: {fileID: 2530564911472380330, guid: 2bb51f4bfdd9f15429042932a20935b0, type: 3}
   rotuloDoBotao: Quadro de pistas
   regras: "Cada pista deste quadro tem uma afirma\xE7\xE3o contr\xE1ria no mesmo
-    caso, e s\xF3 uma das duas \xE9 verdadeira. Marque o que voc\xEA acha confi\xE1vel
-    ou duvidoso. A confer\xEAncia s\xF3 diz se o quadro inteiro est\xE1 certo."
+    caso, e s\xF3 uma das duas \xE9 verdadeira. Quando encontrar as duas, escolha
+    em qual voc\xEA acredita. Cada contradi\xE7\xE3o \xE9 decidida \xE0 parte, e
+    o quadro nunca diz qual \xE9 a verdadeira."
   semPistas: "Nenhuma pista deste caso no quadro ainda. Cada pista que voc\xEA obtiver
     aparece aqui."
-  respostaConfirmada: "A dedu\xE7\xE3o se sustenta: as suas marca\xE7\xF5es est\xE3o
-    certas."
-  respostaGenerica: "A dedu\xE7\xE3o ainda n\xE3o se sustenta. Pode faltar uma pista,
-    ou alguma marca\xE7\xE3o pode estar errada."
-  lembreteDaPrensa: "Marcar n\xE3o muda as pistas: a prensa imprime o que voc\xEA
-    puser nela, conferido ou n\xE3o."
+  pedidoDeConfirmacao: "Toque em Confirmar para ficar com \"{escolhida}\". \"{descartada}\"
+    sai do invent\xE1rio e n\xE3o poder\xE1 mais ir para a prensa."
+  respostaEscolha: "Voc\xEA ficou com \"{escolhida}\". \"{descartada}\" foi descartada."
+  lembreteDaPrensa: "A escolha n\xE3o tem volta. De cada contradi\xE7\xE3o, s\xF3
+    a afirma\xE7\xE3o escolhida pode ir para a prensa."
 --- !u!1 &3264690210486560097
 GameObject:
   m_ObjectHideFlags: 0

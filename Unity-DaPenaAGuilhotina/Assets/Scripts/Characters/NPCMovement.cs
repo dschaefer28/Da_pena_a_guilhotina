@@ -208,6 +208,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
         if (item == null || string.IsNullOrEmpty(item.itemID)) return false;
         GameManager gm = GameManager.Instance;
         if (gm.registroDaInvestigacao.RecompensaEntregue(caso, ChaveDaInteracao, etapa, item.itemID)) return false;
+        if (Deducao.Descartada(gm, item)) return false; // descartada no quadro de dedução: não volta
         return !(gm.registroDaInvestigacao.CasoComEstadoLegado(caso) && gm.inventoryManager != null &&
                  gm.inventoryManager.PossuiEmQualquerLugar(item.itemID));
     }

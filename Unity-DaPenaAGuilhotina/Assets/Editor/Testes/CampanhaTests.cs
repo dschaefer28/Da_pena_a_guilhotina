@@ -32,7 +32,7 @@ public class CampanhaTests
     }
 
     [Test]
-    public void Prensa_DuasAlegacoesUsamVersaoPropria_MisturadasSeguemFatoXBoato()
+    public void CartasDoCliente_SaoSoLeitura_EAPrensaSegueFatoXBoato()
     {
         CaseData caso = ScriptableObject.CreateInstance<CaseData>();
         Item Pista(string id, Confiabilidade c)
@@ -43,57 +43,115 @@ public class CampanhaTests
             return i;
         }
         criados.Add(caso);
-        Item a1 = Pista("a1", Confiabilidade.Boato), a2 = Pista("a2", Confiabilidade.Boato);
+        // A segunda carta imita um asset antigo, ainda marcado como Boato: continua sendo só leitura.
+        Item a1 = Pista("a1", Confiabilidade.NaoEPista), a2 = Pista("a2", Confiabilidade.Boato);
         Item fato = Pista("f", Confiabilidade.Fato), calunia = Pista("c", Confiabilidade.Calunia), boato = Pista("b", Confiabilidade.Boato);
         caso.alegacoesIniciais = new List<Item> { a1, a2 };
 
-        Assert.AreEqual(NivelDoPanfleto.Alegacoes, ReceitaDeCaso.Classificar(a1, a2));
-        Assert.AreEqual(NivelDoPanfleto.Alegacoes, ReceitaDeCaso.Classificar(a1, fato), "1 fato + 1 alegação não pode render como a investigação");
-        Assert.AreEqual(NivelDoPanfleto.Alegacoes, ReceitaDeCaso.Classificar(boato, a2));
-        Assert.AreEqual(NivelDoPanfleto.Calunia, ReceitaDeCaso.Classificar(a2, calunia), "calúnia continua sendo calúnia");
+        foreach (Item carta in new[] { a1, a2 })
+        {
+            Assert.IsTrue(carta.EhLeitura, carta.itemID);
+            Assert.IsFalse(carta.EhPista, $"{carta.itemID}: carta do cliente não é pista");
+        }
+        Assert.IsFalse(fato.EhLeitura);
+        Assert.IsTrue(fato.EhPista);
         Assert.AreEqual(NivelDoPanfleto.Fatos, ReceitaDeCaso.Classificar(fato, Pista("f2", Confiabilidade.Fato)));
+        Assert.AreEqual(NivelDoPanfleto.ComBoato, ReceitaDeCaso.Classificar(fato, boato));
+        Assert.AreEqual(NivelDoPanfleto.Calunia, ReceitaDeCaso.Classificar(boato, calunia));
     }
 
     [Test]
-    public void AtalhoComAlegacao_NuncaRendeMaisQueAInvestigacao_EmNenhumCaso()
+    public void CartasReais_SaoSoLeitura_EmTodosOsCasos()
     {
         foreach (CaseData caso in CasosDaMesa())
         {
-            ReceitaDeCaso r = caso.receitaDoPanfleto;
-            Item fato = null;
-            foreach (string guid in AssetDatabase.FindAssets("t:Item"))
+            if (caso.fase < 2) continue; // o tutorial não tem cartas
+            Assert.IsNotEmpty(caso.alegacoesIniciais, caso.name);
+            foreach (Item carta in caso.alegacoesIniciais)
             {
-                Item i = AssetDatabase.LoadAssetAtPath<Item>(AssetDatabase.GUIDToAssetPath(guid));
-                if (i.caso == caso && i.confiabilidade == Confiabilidade.Fato) { fato = i; break; }
+                string onde = $"{caso.name}: {carta.name}";
+                Assert.AreEqual(Confiabilidade.NaoEPista, carta.confiabilidade, onde);
+                Assert.IsTrue(carta.EhLeitura, onde);
+                Assert.IsFalse(carta.EhPista, onde);
+                Assert.IsFalse(carta.EhSuporte, onde);
+                Assert.AreEqual("Carta do cliente", carta.fonte, onde);
+                Assert.IsFalse(string.IsNullOrWhiteSpace(carta.descricao), $"{onde}: a carta precisa ter o que ler");
             }
-            Assert.IsNotNull(fato, caso.name);
-            ResultadoDoPanfleto atalho = CalculadoraDePanfleto.CalcularAntesDaLinha(r, fato, caso.alegacoesIniciais[0], null);
-            Assert.AreEqual(NivelDoPanfleto.Alegacoes, atalho.nivel, caso.name);
-            Assert.Less(atalho.ouro, r.soFatos.ouro, caso.name);
-            Assert.Less(Mathf.Abs(atalho.povo) + Mathf.Abs(atalho.estado), Mathf.Abs(r.soFatos.povo) + Mathf.Abs(r.soFatos.estado), caso.name);
+        }
+    }
 
-            // A linha editorial soma o mesmo modificador às duas versões: com qualquer tom o atalho continua rendendo menos.
-            foreach (LinhaEditorial linha in LinhasEditoriais.Opcoes)
+    // ===== Balanceamento (17/10) =====
+
+    private static int Desnivel(ReceitaDeCaso.Versao v, bool depoisDaRevelacao) =>
+        (v.povo + (depoisDaRevelacao ? v.penalidadePovo : 0)) - (v.estado + (depoisDaRevelacao ? v.penalidadeEstado : 0));
+
+    [Test]
+    public void Balanceamento_MentiraRendeMaisOuroMasEmpurraMenosARota_EFatosCabemNaBarra()
+    {
+        foreach (CaseData caso in CasosDaMesa())
+        {
+            if (caso.fase < 2) continue;
+            ReceitaDeCaso r = caso.receitaDoPanfleto;
+            Assert.LessOrEqual(Mathf.Abs(r.soFatos.povo), 25, $"{caso.name}: um panfleto não pode encher meia barra");
+            Assert.LessOrEqual(Mathf.Abs(r.soFatos.estado), 25, caso.name);
+            Assert.AreEqual(r.soFatos.ouro, caso.moneyReward, $"{caso.name}: a Mesa mostra a versão Fatos");
+            Assert.AreEqual(r.soFatos.povo, caso.publicOpinionReward, caso.name);
+            Assert.AreEqual(r.soFatos.estado, caso.stateOpinionReward, caso.name);
+            int fatos = Mathf.Abs(Desnivel(r.soFatos, false));
+            foreach (ReceitaDeCaso.Versao mentira in new[] { r.comBoato, r.calunia })
             {
-                ResultadoDoPanfleto atalhoComTom = CalculadoraDePanfleto.Calcular(r, fato, caso.alegacoesIniciais[0], null, linha);
-                Assert.AreEqual(NivelDoPanfleto.Alegacoes, atalhoComTom.nivel, $"{caso.name} {linha}: o tom não muda a versão");
-                Assert.Less(atalhoComTom.ouro, r.soFatos.ouro + atalhoComTom.editorialOuro, $"{caso.name} {linha}");
+                Assert.Greater(mentira.ouro, r.soFatos.ouro, $"{caso.name}: mentir rende mais ouro na hora");
+                Assert.LessOrEqual(Mathf.Abs(Desnivel(mentira, true)), fatos,
+                    $"{caso.name}: depois de desmentida, a mentira não pode empurrar a rota mais que os fatos");
             }
         }
     }
 
     [Test]
-    public void Receitas_SoAlegacoesRendemMenosQueFatos_ETemConsequenciaPropria()
+    public void Balanceamento_NenhumParDeCasosTravaARota_EOHonestoNaoTerminaAFase3Endividado()
     {
-        foreach (CaseData caso in CasosDaMesa())
+        GameManager padrao = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/GameManager.prefab").GetComponent<GameManager>();
+        Recipe tutorial = AssetDatabase.LoadAssetAtPath<Recipe>("Assets/ScriptableObjects/Items/ReceitaFase1.asset");
+        List<CaseData> casos = CasosDaMesa();
+        List<CaseData> fase2 = casos.FindAll(c => c.fase == 2), fase3 = casos.FindAll(c => c.fase == 3);
+        NivelDoPanfleto[] niveis = { NivelDoPanfleto.Fatos, NivelDoPanfleto.ComBoato, NivelDoPanfleto.Calunia };
+
+        // Mesma ordem do jogo: panfleto (com o tom) → limite 0–100 → revelação no fim da fase → despesas.
+        void Publicar(ReceitaDeCaso r, NivelDoPanfleto n, LinhaEditorial t, ref int povo, ref int estado, ref int ouro, int despesa)
         {
-            ReceitaDeCaso r = caso.receitaDoPanfleto;
-            Assert.IsNotNull(r, caso.name);
-            Assert.Less(r.soAlegacoes.ouro, r.soFatos.ouro, $"{caso.name}: a saída não pode render mais ouro que a investigação");
-            Assert.LessOrEqual(Mathf.Abs(r.soAlegacoes.povo) + Mathf.Abs(r.soAlegacoes.estado),
-                               Mathf.Abs(r.soFatos.povo) + Mathf.Abs(r.soFatos.estado), $"{caso.name}: impacto político menor");
-            Assert.IsTrue(r.soAlegacoes.TemRevelacao, $"{caso.name}: a saída tem consequência própria");
+            ReceitaDeCaso.Versao v = r.VersaoDe(n);
+            ReceitaDeCaso.ModificadorEditorial m = r.linhaEditorial.De(t);
+            int pp = v.penalidadePovo, pe = v.penalidadeEstado;
+            if (t == LinhaEditorial.Sensacionalista && n != NivelDoPanfleto.Fatos)
+            {
+                pp += CalculadoraDePanfleto.Agravamento(pp, r.linhaEditorial.agravamentoPercentual);
+                pe += CalculadoraDePanfleto.Agravamento(pe, r.linhaEditorial.agravamentoPercentual);
+            }
+            povo = Mathf.Clamp(Mathf.Clamp(povo + v.povo + m.povo, 0, 100) + pp, 0, 100);
+            estado = Mathf.Clamp(Mathf.Clamp(estado + v.estado + m.estado, 0, 100) + pe, 0, 100);
+            ouro += v.ouro + m.ouro - despesa;
         }
+
+        foreach (CaseData c2 in fase2)
+            foreach (CaseData c3 in fase3)
+            {
+                var rotas = new HashSet<RotaFinal>();
+                foreach (NivelDoPanfleto n2 in niveis) foreach (LinhaEditorial t2 in LinhasEditoriais.Opcoes)
+                foreach (NivelDoPanfleto n3 in niveis) foreach (LinhaEditorial t3 in LinhasEditoriais.Opcoes)
+                {
+                    int povo = Mathf.Clamp(50 + tutorial.publicOpinionImpact, 0, 100);
+                    int estado = Mathf.Clamp(50 + tutorial.stateOpinionImpact, 0, 100);
+                    int ouro = tutorial.moneyReward;
+                    Publicar(c2.receitaDoPanfleto, n2, t2, ref povo, ref estado, ref ouro, padrao.despesasPorFase[1]);
+                    Publicar(c3.receitaDoPanfleto, n3, t3, ref povo, ref estado, ref ouro, padrao.despesasPorFase[2]);
+                    int desnivel = povo - estado;
+                    rotas.Add(desnivel >= padrao.margemDaRota ? RotaFinal.A_Guilhotina
+                            : desnivel <= -padrao.margemDaRota ? RotaFinal.B_Tirano : RotaFinal.C_Equilibrio);
+                    if (n2 == NivelDoPanfleto.Fatos && n3 == NivelDoPanfleto.Fatos)
+                        Assert.GreaterOrEqual(ouro, 0, $"{c2.name} → {c3.name} ({t2}, {t3}): só com fatos e sem biblioteca, sem dívida");
+                }
+                Assert.GreaterOrEqual(rotas.Count, 2, $"{c2.name} → {c3.name}: a investigação e o tom precisam poder mudar a rota");
+            }
     }
 
     [Test]

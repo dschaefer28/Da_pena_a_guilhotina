@@ -16,32 +16,32 @@ MonoBehaviour:
   panfletoPadrao: {fileID: 11400000, guid: 06b48926dec2d274c85d680647181a0d, type: 2}
   soFatos:
     panfleto: {fileID: 0}
-    povo: -15
-    estado: 30
+    povo: -10
+    estado: 25
     ouro: 60
     textoRevelacao: 
     penalidadePovo: 0
     penalidadeEstado: 0
   comBoato:
     panfleto: {fileID: 0}
-    povo: -25
-    estado: 40
-    ouro: 80
+    povo: -15
+    estado: 35
+    ouro: 75
     textoRevelacao: "As faturas e o contrato de aluguel mostraram que a farinha era
       do atravessador, e n\xE3o do mercador. O boato da se\xE7\xE3o ruiu, e o panfleto
       que o repetiu perdeu o cr\xE9dito."
-    penalidadePovo: -5
-    penalidadeEstado: -10
+    penalidadePovo: 0
+    penalidadeEstado: -30
   calunia:
     panfleto: {fileID: 0}
-    povo: -35
-    estado: 50
-    ouro: 100
+    povo: -20
+    estado: 45
+    ouro: 90
     textoRevelacao: "Os pr\xF3prios avisos da se\xE7\xE3o admitiam a falta de farinha
       nas padarias desde o M\xE1ximo. A den\xFAncia que culpava s\xF3 o mercador
       era cal\xFAnia, e voltou-se contra a tipografia."
-    penalidadePovo: -10
-    penalidadeEstado: -20
+    penalidadePovo: 0
+    penalidadeEstado: -50
   soAlegacoes:
     panfleto: {fileID: 0}
     povo: -6
@@ -60,7 +60,7 @@ MonoBehaviour:
     qualidadeMinima: 1
     niveis: 
     povo: 0
-    estado: 10
+    estado: 5
     ouro: 25
   linhaEditorial:
     ativa: 1

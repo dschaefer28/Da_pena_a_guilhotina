@@ -19,9 +19,9 @@ MonoBehaviour:
     a Guarda Francesa atirou para matar. Ele pede ajuda para escapar da condena\xE7\xE3o."
   objectiveText: "Descobrir como a Guarda agiu contra a multid\xE3o e o que sustenta
     a acusa\xE7\xE3o contra o oper\xE1rio."
-  moneyReward: 10
-  publicOpinionReward: 60
-  stateOpinionReward: -20
+  moneyReward: 30
+  publicOpinionReward: 20
+  stateOpinionReward: -10
   fase: 2
   rota: 0
   horasDeInvestigacao: 0

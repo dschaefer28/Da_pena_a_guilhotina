@@ -106,12 +106,12 @@ public class TutorialEUiTests
         MethodInfo aoReceber = typeof(TutorialManager).GetMethod("HandleItemAdicionado", BindingFlags.NonPublic | BindingFlags.Instance);
 
         aoReceber.Invoke(tm, new object[] { caso.alegacoesIniciais[0] }); // a carta do cliente, ao aceitar o caso
-        Assert.AreEqual(tm.dicaFatoBoato, tm.DicaPendente);
-        tm.ConcluirDica();
-        Assert.IsNull(tm.DicaPendente, "a alegação fica fora do quadro: ainda sem a dica da dedução");
+        Assert.IsNull(tm.DicaPendente, "a carta do cliente é só leitura: nem fato/boato nem quadro");
 
         aoReceber.Invoke(tm, new object[] { caso.deducao.pares[0].a });
-        Assert.AreEqual(tm.dicaDeducao, tm.DicaPendente, "primeira pista de um par: a dica do Quadro de pistas");
+        Assert.AreEqual(tm.dicaFatoBoato, tm.DicaPendente, "a primeira pista de verdade traz a dica de fato/boato");
+        tm.ConcluirDica();
+        Assert.AreEqual(tm.dicaDeducao, tm.DicaPendente, "e logo depois a do Quadro de pistas");
         StringAssert.Contains("Quadro de pistas", tm.dicaFatoBoato, "a dica de fato/boato aponta o quadro");
         StringAssert.DoesNotContain("outra fonte que confirme", tm.dicaFatoBoato);
     }

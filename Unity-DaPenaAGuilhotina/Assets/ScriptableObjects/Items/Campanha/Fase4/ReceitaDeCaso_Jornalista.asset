@@ -17,7 +17,7 @@ MonoBehaviour:
   soFatos:
     panfleto: {fileID: 0}
     povo: 20
-    estado: -20
+    estado: -10
     ouro: 15
     textoRevelacao: 
     penalidadePovo: 0
@@ -25,23 +25,23 @@ MonoBehaviour:
   comBoato:
     panfleto: {fileID: 0}
     povo: 30
-    estado: -30
-    ouro: 25
+    estado: -15
+    ouro: 30
     textoRevelacao: "Os registros de pris\xE3o confirmaram os nomes da lista: artes\xE3os,
       vi\xFAvas e lojistas, n\xE3o aristocratas. O boato de que Camille inventou
       tudo ruiu, e enfraqueceu o panfleto que o repetiu."
-    penalidadePovo: -10
-    penalidadeEstado: -5
+    penalidadePovo: -25
+    penalidadeEstado: 0
   calunia:
     panfleto: {fileID: 0}
     povo: 40
-    estado: -40
-    ouro: 35
+    estado: -20
+    ouro: 45
     textoRevelacao: "As anota\xE7\xF5es eram mesmo de Robespierre: a letra conferia
       com a dos pap\xE9is do Comit\xEA. A den\xFAncia de falsifica\xE7\xE3o era cal\xFAnia,
       usada depois contra a pr\xF3pria tipografia."
-    penalidadePovo: -20
-    penalidadeEstado: -10
+    penalidadePovo: -45
+    penalidadeEstado: 0
   soAlegacoes:
     panfleto: {fileID: 0}
     povo: 8
@@ -59,7 +59,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: eaf0e050bb571094788eaba8877adfc4, type: 2}
     qualidadeMinima: 1
     niveis: 
-    povo: 10
+    povo: 5
     estado: 0
     ouro: 10
   linhaEditorial:

@@ -34,7 +34,7 @@ public class BibliotecaTests
     }
 
     [Test]
-    public void ExemploNumerico_ChampDeMars_ApoioMudaDe20_10_30Para40_5_50()
+    public void ExemploNumerico_ChampDeMars_ApoioMudaDe20_10_30Para25_10_50()
     {
         CaseData champ = Carregar<CaseData>("Assets/ScriptableObjects/Cases/Caso_ChampDeMars.asset");
         ReceitaDeCaso receita = champ.receitaDoPanfleto;
@@ -49,11 +49,11 @@ public class BibliotecaTests
         AssertValores(sem, 20, -10, 30, "sem apoio");
 
         ResultadoDoPanfleto com = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, new[] { ata });
-        AssertValores(com, 40, -5, 50, "com o apoio exigido");
+        AssertValores(com, 25, -10, 50, "com o apoio exigido (balanceamento de 17/10: apoio +5/0/+20)");
         CollectionAssert.AreEqual(new[] { "apoio_champdemars" }, com.qualificadores);
 
         ResultadoDoPanfleto repetido = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, new[] { ata, ata, ata });
-        AssertValores(repetido, 40, -5, 50, "o mesmo bônus não empilha");
+        AssertValores(repetido, 25, -10, 50, "o mesmo bônus não empilha");
 
         ResultadoDoPanfleto outro = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, new[] { deOutroCaso });
         AssertValores(outro, 20, -10, 30, "documento de outro caso não vale");

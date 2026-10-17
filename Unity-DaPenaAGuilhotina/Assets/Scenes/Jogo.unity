@@ -938,8 +938,8 @@ MonoBehaviour:
     ouviu n\xE3o custa nada. Escolha bem: n\xE3o d\xE1 tempo de investigar tudo."
   dicaDeducao: "Esta pista entrou no Quadro de pistas (bot\xE3o no alto, \xE0 direita).
     Cada afirma\xE7\xE3o do caso tem uma contr\xE1ria, e s\xF3 uma das duas \xE9
-    verdadeira. Marque o que parece confi\xE1vel ou duvidoso e confira: o quadro
-    s\xF3 diz se est\xE1 tudo certo. D\xE1 para imprimir sem conferir."
+    verdadeira. Quando achar as duas, escolha no quadro em qual voc\xEA acredita:
+    a outra sai do invent\xE1rio de vez. O quadro nunca diz qual \xE9 a verdadeira."
   dicaDespesas: "Todo fim de per\xEDodo a tipografia paga aluguel, papel e tinta
     com o seu ouro. Se n\xE3o bastar, voc\xEA fica devendo: enquanto houver d\xEDvida,
     cada caso novo come\xE7a com menos horas de investiga\xE7\xE3o."
@@ -3818,7 +3818,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7374019664807440416, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.3387954
+      value: -2.4422565
       objectReference: {fileID: 0}
     - target: {fileID: 7374019664807440416, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4059,7 +4059,7 @@ PrefabInstance:
       objectReference: {fileID: 1778687600}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.3387954
+      value: -2.4422565
       objectReference: {fileID: 0}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.y

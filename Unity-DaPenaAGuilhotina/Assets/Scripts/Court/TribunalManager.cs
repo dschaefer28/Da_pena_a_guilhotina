@@ -253,7 +253,8 @@ public class TribunalManager : MonoBehaviour
     /// <summary>
     /// Documento (Fase 4, "Fase de Argumentação"): as provas coletadas, os documentos comprados e o panfleto gerado
     /// DO CASO julgado. Vem do histórico (GameManager.evidenciasObtidas), porque a prensa consome as duas pistas
-    /// impressas; panfletos de casos anteriores não entram. Vazio se não houver caso ou catálogo.
+    /// impressas; panfletos de casos anteriores não entram. Pistas descartadas no quadro de dedução também não (o jogador
+    /// abriu mão delas), nem as cartas do cliente (só leitura). Vazio se não houver caso ou catálogo.
     /// </summary>
     public static List<Item> ProvasDoCaso(GameManager gm, CaseData caso, CatalogoDeSave catalogo)
     {
@@ -263,7 +264,7 @@ public class TribunalManager : MonoBehaviour
         foreach (string id in gm.evidenciasObtidas)
         {
             Item item = catalogo.BuscarItem(id);
-            if (item != null && item.caso == caso && !itens.Contains(item)) itens.Add(item);
+            if (item != null && item.caso == caso && !itens.Contains(item) && !item.EhLeitura && !Deducao.Descartada(gm, item)) itens.Add(item);
         }
 
         GameManager.PanfletoPublicado publicado = gm.panfletosPublicados.Find(p => p != null && p.caso == caso);

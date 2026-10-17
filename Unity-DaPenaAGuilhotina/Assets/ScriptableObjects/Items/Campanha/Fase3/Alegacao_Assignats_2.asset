@@ -20,7 +20,7 @@ MonoBehaviour:
     os bens da fam\xEDlia, e n\xE3o para fazer justi\xE7a."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: b99399b53452a104cb61b79679b4143a, type: 2}
-  confiabilidade: 2
+  confiabilidade: 0
   verificadaPor: []
   documentoDeSuporte: 0
   qualidade: 0

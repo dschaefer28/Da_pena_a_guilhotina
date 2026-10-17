@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Confere se a campanha é jogável do jeito que está nos assets e cenas (sem alterar nada):
-/// quantidade de casos por fase, exatamente um caso por rota na Fase 4, receitas/panfletos/alegações completos,
+/// quantidade de casos por fase, exatamente um caso por rota na Fase 4, receitas/panfletos/cartas do cliente (só leitura) completas,
 /// registro na Mesa de Casos e no CatalogoDeSave, a dedução ativa das Fases 2, 3 e 4 (pares coerentes), o orçamento de
 /// horas (8h nas Fases 2 a 4) e — por caso, na cena dele — as oportunidades de investigação, o caminho mínimo até duas
 /// pistas Fato dentro do orçamento com dívida e quantas horas custa descobrir o quadro de dedução inteiro.
@@ -319,7 +319,7 @@ public static class ValidadorDaCampanha
             else ids.Add(item.itemID, item);
             if (item.EhPista && (string.IsNullOrWhiteSpace(item.descricao) || string.IsNullOrWhiteSpace(item.fonte)))
                 r.avisos.Add($"Pista '{item.name}' sem descrição ou fonte (a ficha do inventário fica vazia).");
-            if (item.EhPista && !item.caso.EhAlegacao(item))
+            if (item.EhPista)
                 foreach (string prefixo in PrefixosQueRevelam)
                     if (item.NomeExibicao.StartsWith(prefixo, System.StringComparison.OrdinalIgnoreCase))
                         r.problemas.Add($"Pista '{item.name}': o nome '{item.NomeExibicao}' denuncia a confiabilidade (prefixo '{prefixo}').");
@@ -336,6 +336,7 @@ public static class ValidadorDaCampanha
         ReceitaDeCaso receita = caso.receitaDoPanfleto;
         if (receita == null) { r.problemas.Add($"'{n}' sem Receita Do Panfleto: nada pode ser impresso."); return; }
         if (receita.caso != caso) r.problemas.Add($"A receita '{receita.name}' aponta para outro caso ('{(receita.caso != null ? receita.caso.name : "-")}').");
+        // Só Alegações é legado (cartas impressas em saves antigos), mas continua precisando de panfleto para o tribunal.
         foreach (NivelDoPanfleto nivel in new[] { NivelDoPanfleto.Fatos, NivelDoPanfleto.ComBoato, NivelDoPanfleto.Calunia, NivelDoPanfleto.Alegacoes })
         {
             Item panfleto = receita.PanfletoDe(receita.VersaoDe(nivel));
@@ -343,23 +344,22 @@ public static class ValidadorDaCampanha
             else if (catalogo != null && catalogo.BuscarItem(panfleto.itemID) == null) r.problemas.Add($"Panfleto '{panfleto.name}' fora do CatalogoDeSave.");
         }
 
-        // Saída sem bloqueio: duas alegações do próprio caso, distintas, que a prensa aceita juntas.
-        if (caso.alegacoesIniciais == null || caso.alegacoesIniciais.Count < 2)
+        // Cartas do cliente: só leitura (Item.EhLeitura), do próprio caso, sem confiabilidade.
+        if (caso.alegacoesIniciais == null || caso.alegacoesIniciais.Count == 0)
         {
-            r.problemas.Add($"'{n}' sem as duas alegações iniciais: sem pistas, o caso não teria saída.");
+            r.avisos.Add($"'{n}' sem carta do cliente: o jogador não lê a versão dele ao aceitar o caso.");
             return;
         }
         var ids = new HashSet<string>();
-        foreach (Item alegacao in caso.alegacoesIniciais)
+        foreach (Item carta in caso.alegacoesIniciais)
         {
-            if (alegacao == null) { r.problemas.Add($"'{n}': alegação vazia."); continue; }
-            if (alegacao.caso != caso || !alegacao.EhPista) r.problemas.Add($"'{n}': a alegação '{alegacao.name}' precisa ser pista do próprio caso.");
-            if (!ids.Add(alegacao.itemID)) r.problemas.Add($"'{n}': alegações com o mesmo itemID.");
-            if (catalogo != null && catalogo.BuscarItem(alegacao.itemID) == null) r.problemas.Add($"Alegação '{alegacao.name}' fora do CatalogoDeSave.");
+            if (carta == null) { r.problemas.Add($"'{n}': carta do cliente vazia."); continue; }
+            if (carta.caso != caso) r.problemas.Add($"'{n}': a carta '{carta.name}' precisa ser do próprio caso.");
+            if (carta.confiabilidade != Confiabilidade.NaoEPista || carta.documentoDeSuporte)
+                r.problemas.Add($"'{n}': a carta '{carta.name}' é só leitura: confiabilidade NaoEPista e sem Documento De Suporte.");
+            if (!ids.Add(carta.itemID)) r.problemas.Add($"'{n}': cartas do cliente com o mesmo itemID.");
+            if (catalogo != null && catalogo.BuscarItem(carta.itemID) == null) r.problemas.Add($"Carta '{carta.name}' fora do CatalogoDeSave.");
         }
-        if (caso.alegacoesIniciais.Count >= 2 && caso.alegacoesIniciais[0] != null && caso.alegacoesIniciais[1] != null &&
-            ReceitaDeCaso.Classificar(caso.alegacoesIniciais[0], caso.alegacoesIniciais[1]) != NivelDoPanfleto.Alegacoes)
-            r.problemas.Add($"'{n}': as duas alegações não são reconhecidas pela prensa como 'Só Alegações'.");
     }
 
     private static void ValidarInvestigacao(CaseData caso, List<KeyValuePair<Component, string>> interacoes, int orcamento, int orcamentoComDivida, Resultado r)
@@ -414,7 +414,7 @@ public static class ValidadorDaCampanha
             int horas = CustoDoQuadroInteiro(fontes, caso, r);
             deducao = "; quadro de dedução inteiro: " + (horas == int.MaxValue ? "impossível" : horas + "h");
             if (horas == int.MaxValue) r.problemas.Add($"'{caso.name}': alguma pista do quadro de dedução não é entregue por ninguém na cena.");
-            else if (horas > orcamento) r.problemas.Add($"'{caso.name}': descobrir o quadro de dedução inteiro custa {horas}h, acima do orçamento de {orcamento}h (a conferência seria impossível).");
+            else if (horas > orcamento) r.problemas.Add($"'{caso.name}': descobrir o quadro de dedução inteiro custa {horas}h, acima do orçamento de {orcamento}h (não daria para decidir todas as contradições).");
             else if (horas > orcamentoComDivida) r.avisos.Add($"'{caso.name}': descobrir o quadro de dedução inteiro custa {horas}h, acima do orçamento com dívida ({orcamentoComDivida}h).");
         }
         r.resumo.Add($"{caso.name} ({caso.nextSceneName}): {oportunidades} oportunidades, {fontes.Count} com pista ({fatos} fato(s), " +
@@ -439,7 +439,7 @@ public static class ValidadorDaCampanha
         foreach (Item pista in caso.deducao.Conjunto()) conjunto.Add(pista.itemID);
         foreach (Fonte f in fontes)
             foreach (Item item in f.itens)
-                if (item.caso == caso && item.EhPista && !caso.EhAlegacao(item) && !conjunto.Contains(item.itemID))
+                if (item.caso == caso && item.EhPista && !conjunto.Contains(item.itemID))
                     r.avisos.Add($"'{caso.name}': '{item.name}' ({f.nome}) é pista do caso mas não está em nenhum par do quadro.");
 
         int melhor = int.MaxValue;

@@ -21,7 +21,7 @@ MonoBehaviour:
     das cr\xEDticas. Para ele, o retrato prova que a Rainha \xE9 leviana."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
-  confiabilidade: 2
+  confiabilidade: 0
   verificadaPor: []
   documentoDeSuporte: 0
   qualidade: 0

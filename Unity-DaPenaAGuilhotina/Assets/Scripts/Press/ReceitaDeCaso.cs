@@ -8,7 +8,7 @@ public enum NivelDoPanfleto
     Fatos,    // Fato + Fato
     ComBoato, // Fato + Boato
     Calunia,  // Boato + Boato, ou qualquer pista Calúnia
-    Alegacoes // alguma alegação inicial do cliente, não verificada (CaseData.alegacoesIniciais)
+    Alegacoes // legado: publicações de saves em que as cartas do cliente ainda iam para a prensa (hoje são só leitura)
 }
 
 /// <summary>
@@ -85,8 +85,8 @@ public class ReceitaDeCaso : ScriptableObject
     public Versao comBoato = new Versao();
     [Tooltip("Boato + Boato ou qualquer Calúnia: o maior ganho imediato e a maior penalidade depois.")]
     public Versao calunia = new Versao();
-    [Tooltip("Qualquer alegação inicial do cliente entre as duas pistas (sem Calúnia): saída para quem ficou sem tempo. " +
-             "Ganho menor que o de Fato + Fato e uma consequência própria.")]
+    [Tooltip("Legado: versão das impressões com carta do cliente, de antes de as cartas virarem só leitura. A prensa não " +
+             "a gera mais; fica para os panfletos já publicados em saves antigos (tribunal e histórico).")]
     public Versao soAlegacoes = new Versao();
 
     [Serializable]
@@ -159,24 +159,18 @@ public class ReceitaDeCaso : ScriptableObject
     /// <summary>
     /// Versão do panfleto pela verdade REAL das duas pistas:
     ///   qualquer Calúnia → Calúnia;
-    ///   qualquer alegação do cliente (não verificada) → Só Alegações (ganho menor, consequência própria) —
-    ///   assim "1 pista + 1 alegação" nunca rende mais que a investigação completa;
     ///   senão, pelo número de boatos (0 = Fatos, 1 = Com Boato, 2 = Calúnia).
+    /// As cartas do cliente não chegam aqui: são só leitura (Item.EhLeitura) e a prensa as recusa antes.
     /// </summary>
     public static NivelDoPanfleto Classificar(Item a, Item b)
     {
         if (a.confiabilidade == Confiabilidade.Calunia || b.confiabilidade == Confiabilidade.Calunia)
             return NivelDoPanfleto.Calunia;
 
-        if (EhAlegacao(a) || EhAlegacao(b))
-            return NivelDoPanfleto.Alegacoes;
-
         int boatos = (a.confiabilidade == Confiabilidade.Boato ? 1 : 0) + (b.confiabilidade == Confiabilidade.Boato ? 1 : 0);
         if (boatos == 0) return NivelDoPanfleto.Fatos;
         return boatos == 1 ? NivelDoPanfleto.ComBoato : NivelDoPanfleto.Calunia;
     }
-
-    private static bool EhAlegacao(Item item) => item.caso != null && item.caso.EhAlegacao(item);
 
     public Versao VersaoDe(NivelDoPanfleto nivel)
     {

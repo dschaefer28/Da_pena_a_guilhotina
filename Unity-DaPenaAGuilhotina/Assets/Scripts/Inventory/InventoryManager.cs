@@ -204,12 +204,13 @@ public class InventoryManager : MonoBehaviour
     {
         if (item == null) return string.Empty;
         if (item.EhSuporte) return $"{item.NomeExibicao} <size=75%>({item.RotuloDeApoio})</size>";
+        if (item.EhLeitura) return $"{item.NomeExibicao} <size=75%>(<color=#9E9E9E>só leitura</color>)</size>";
         if (!item.EhPista) return item.NomeExibicao;
         return $"{item.NomeExibicao} <size=75%>({RotuloDaPista(item)})</size>";
     }
 
-    /// <summary>Situação da pista para a lista e a ficha. Casos com dedução ativa (Prompt 4) mostram a hipótese do
-    /// jogador até o quadro ser confirmado; os outros seguem a regra antiga (Verificada Por).</summary>
+    /// <summary>Situação da pista para a lista e a ficha. Casos com dedução ativa mostram só a escolha do jogador no
+    /// quadro, nunca a verdade; os outros seguem a regra antiga (Verificada Por).</summary>
     public string RotuloDaPista(Item pista)
     {
         if (pista == null || !pista.EhPista) return string.Empty;
@@ -217,14 +218,14 @@ public class InventoryManager : MonoBehaviour
         return pista.RotuloSituacao(PistaVerificada(pista));
     }
 
-    /// <summary>Verdadeiro se o jogador já descobriu a verdade desta pista. Caso com dedução ativa: só depois de o quadro
-    /// ser confirmado (adquirir um item de "Verificada Por" não revela nada, e verificações antigas do save não contam).
-    /// Os outros casos: tem ou já teve um item de "Verificada Por".</summary>
+    /// <summary>Verdadeiro se o jogador já descobriu a verdade desta pista. Caso com dedução ativa: nunca (o jogador
+    /// escolhe no quadro em que acreditar, e adquirir um item de "Verificada Por" ou verificações antigas do save não
+    /// revelam nada). Os outros casos: tem ou já teve um item de "Verificada Por".</summary>
     public bool PistaVerificada(Item pista)
     {
         if (pista == null || !pista.EhPista) return false;
         var gm = GameManager.Instance;
-        if (Deducao.Aderente(pista.caso)) return Deducao.PistaConfirmada(gm, pista);
+        if (Deducao.Aderente(pista.caso)) return false;
         if (gm != null && gm.pistasVerificadas.Contains(pista.itemID)) return true;
         if (pista.verificadaPor == null) return false;
         foreach (Item prova in pista.verificadaPor)

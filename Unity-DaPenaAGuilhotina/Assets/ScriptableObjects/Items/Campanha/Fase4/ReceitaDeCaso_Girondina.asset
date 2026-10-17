@@ -40,8 +40,8 @@ MonoBehaviour:
     textoRevelacao: "A pressa vinha da acusa\xE7\xE3o, e n\xE3o dos r\xE9us: a nota
       de Robespierre pedia que os debates fossem abreviados. O cartaz era cal\xFAnia,
       e a tipografia foi acusada de mentir."
-    penalidadePovo: -15
-    penalidadeEstado: -15
+    penalidadePovo: -20
+    penalidadeEstado: -20
   soAlegacoes:
     panfleto: {fileID: 0}
     povo: 4

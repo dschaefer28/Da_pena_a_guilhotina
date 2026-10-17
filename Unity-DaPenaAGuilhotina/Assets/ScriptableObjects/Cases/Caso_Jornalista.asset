@@ -21,7 +21,7 @@ MonoBehaviour:
   objectiveText: "Reunir provas para o pedido de clem\xEAncia de Camille Desmoulins."
   moneyReward: 15
   publicOpinionReward: 20
-  stateOpinionReward: -20
+  stateOpinionReward: -10
   fase: 4
   rota: 1
   horasDeInvestigacao: 0

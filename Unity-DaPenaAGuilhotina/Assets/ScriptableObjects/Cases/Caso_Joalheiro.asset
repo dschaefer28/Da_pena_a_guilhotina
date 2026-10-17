@@ -20,8 +20,8 @@ MonoBehaviour:
     e o que a encomenda prova."
   objectiveText: Descobrir quem negociou o colar em nome da Rainha e o que a encomenda
     realmente prova.
-  moneyReward: 20
-  publicOpinionReward: 50
+  moneyReward: 30
+  publicOpinionReward: 20
   stateOpinionReward: -10
   fase: 2
   rota: 0

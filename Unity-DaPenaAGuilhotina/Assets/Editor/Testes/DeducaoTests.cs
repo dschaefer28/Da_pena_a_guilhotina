@@ -7,8 +7,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Prompt 4: dedução ativa. Regras do quadro (Deducao) sobre um caso montado aqui, o inventário real para a revelação
-/// automática, o save v7 e os seis casos reais das Fases 3 e 4.
+/// Dedução ativa (Prompt 4; escolha por par desde 17/10). Regras do quadro (Deducao) sobre um caso montado aqui: cada par
+/// decidido à parte, qualquer combinação aceita, a pista não escolhida descartada do inventário e do tribunal, nenhuma
+/// etiqueta que revele a verdade; o inventário real, o save v9 e os casos reais das Fases 2 a 4.
 /// </summary>
 public class DeducaoTests
 {
@@ -87,14 +88,17 @@ public class DeducaoTests
         foreach (Item p in pistas) gm.RegistrarEvidencia(p);
     }
 
-    private void Marcar(Item pista, MarcacaoDaPista marca) => Assert.IsTrue(Deducao.Marcar(gm, caso, pista, marca), pista.name);
-
-    private void MarcarTudoCerto()
+    private Item Escolher(Item pista)
     {
-        Marcar(f1, MarcacaoDaPista.Confiavel);
-        Marcar(boato, MarcacaoDaPista.Duvidosa);
-        Marcar(f2, MarcacaoDaPista.Confiavel);
-        Marcar(calunia, MarcacaoDaPista.Duvidosa);
+        Assert.IsTrue(Deducao.Escolher(gm, caso, pista, out Item descartada), pista.name);
+        return descartada;
+    }
+
+    // Etiquetas que denunciariam a verdade: nenhuma pode aparecer antes nem depois da escolha.
+    private static void SemVerdade(string rotulo, string onde)
+    {
+        foreach (string revela in new[] { "confirmada", "desmentida", "boato", "calúnia", "fato" })
+            StringAssert.DoesNotContain(revela, rotulo.ToLowerInvariant(), onde);
     }
 
     private InventoryManager InventarioReal()
@@ -129,7 +133,7 @@ public class DeducaoTests
         List<string> problemas = Deducao.Problemas(caso);
         Assert.IsTrue(problemas.Exists(p => p.Contains("exatamente um Fato")), string.Join("\n", problemas));
         Assert.IsTrue(problemas.Exists(p => p.Contains("mais de um par")), string.Join("\n", problemas));
-        Assert.IsTrue(problemas.Exists(p => p.Contains("alegação")), string.Join("\n", problemas));
+        Assert.IsTrue(problemas.Exists(p => p.Contains("carta do cliente")), string.Join("\n", problemas));
         Assert.IsTrue(problemas.Exists(p => p.Contains("outro caso")), string.Join("\n", problemas));
         Assert.IsTrue(problemas.Exists(p => p.Contains("incompleto")), string.Join("\n", problemas));
         Assert.IsNotNull(outro);
@@ -168,80 +172,82 @@ public class DeducaoTests
         StringAssert.Contains("boato", inv.RotuloDaPista(boatoAntigo));
     }
 
-    // ===== Conferência =====
+    // ===== Escolha por par =====
 
     [Test]
-    public void Conferir_Incompleta_Parcial_OuErrada_RecebemAMesmaRespostaGenerica()
-    {
-        Assert.IsTrue(gm.ConfirmarCaso(caso));
-        Descobrir(f1, boato, f2);
-        Marcar(f1, MarcacaoDaPista.Confiavel);
-        Marcar(boato, MarcacaoDaPista.Duvidosa);
-        Marcar(f2, MarcacaoDaPista.Confiavel);
-        Assert.AreEqual(Deducao.Resultado.NaoSeSustenta, Deducao.Conferir(gm, caso), "falta descobrir uma pista");
-
-        Descobrir(calunia);
-        Assert.AreEqual(Deducao.Resultado.NaoSeSustenta, Deducao.Conferir(gm, caso), "falta uma marcação");
-
-        Marcar(calunia, MarcacaoDaPista.Confiavel);
-        Assert.AreEqual(Deducao.Resultado.NaoSeSustenta, Deducao.Conferir(gm, caso), "uma marcação errada");
-
-        Marcar(calunia, MarcacaoDaPista.Duvidosa);
-        Marcar(f1, MarcacaoDaPista.Duvidosa);
-        Assert.AreEqual(Deducao.Resultado.NaoSeSustenta, Deducao.Conferir(gm, caso), "outra marcação errada: mesma resposta");
-        Assert.IsFalse(Deducao.Confirmada(gm, caso));
-        CollectionAssert.IsEmpty(gm.deducoesConfirmadas);
-    }
-
-    [Test]
-    public void Conferir_ConjuntoCorreto_Confirma_MostraAVerdade_ETravaAsMarcacoes()
+    public void Escolher_CadaParEIndependente_QualquerCombinacaoEAceita_SemRevelarAVerdade()
     {
         Assert.IsTrue(gm.ConfirmarCaso(caso));
         Descobrir(f1, boato, f2, calunia);
-        MarcarTudoCerto();
-        StringAssert.Contains("hipótese: confiável", Deducao.Rotulo(gm, f1), "antes de conferir, só a hipótese");
 
-        Assert.AreEqual(Deducao.Resultado.Confirmada, Deducao.Conferir(gm, caso));
-        Assert.IsTrue(Deducao.Confirmada(gm, caso));
-        StringAssert.Contains("confirmada", Deducao.Rotulo(gm, f1));
-        StringAssert.Contains("desmentida", Deducao.Rotulo(gm, boato));
-        StringAssert.Contains("desmentida", Deducao.Rotulo(gm, calunia));
-        Assert.IsFalse(Deducao.Marcar(gm, caso, f1, MarcacaoDaPista.Duvidosa), "confirmada, o quadro não muda mais");
-        Assert.AreEqual(Deducao.Resultado.JaConfirmada, Deducao.Conferir(gm, caso));
+        // As quatro combinações (fato ou boato no par 1; fato ou calúnia no par 2) são aceitas do mesmo jeito.
+        foreach (Item primeiro in new[] { f1, boato })
+            foreach (Item segundo in new[] { f2, calunia })
+            {
+                gm.escolhasDeDeducao.Clear();
+                string combinacao = $"{primeiro.name} + {segundo.name}";
+                Assert.AreSame(Deducao.Contradicao(gm, primeiro), Escolher(primeiro), combinacao);
+                Assert.IsTrue(Deducao.PodeEscolher(gm, caso, segundo), $"{combinacao}: o par 2 continua aberto");
+                Assert.AreSame(Deducao.Contradicao(gm, segundo), Escolher(segundo), combinacao);
+                Assert.AreEqual(2, Deducao.ParesDecididos(gm, caso), combinacao);
+
+                foreach (Item pista in caso.deducao.Conjunto())
+                {
+                    bool ficou = pista == primeiro || pista == segundo;
+                    Assert.AreEqual(ficou, Deducao.Escolhida(gm, pista), $"{combinacao}: {pista.name}");
+                    Assert.AreEqual(!ficou, Deducao.Descartada(gm, pista), $"{combinacao}: {pista.name}");
+                    StringAssert.Contains(ficou ? "sua escolha" : "descartada", Deducao.Rotulo(gm, pista));
+                    SemVerdade(Deducao.Rotulo(gm, pista), $"{combinacao}: {pista.name}");
+                }
+            }
+        Assert.AreEqual(Confiabilidade.Boato, boato.confiabilidade, "escolher não muda a verdade");
+        Assert.AreEqual(Confiabilidade.Fato, f2.confiabilidade);
     }
 
     [Test]
-    public void Marcar_NaoMudaAVerdade_NemAVersaoImpressa()
+    public void Escolher_DescartaAContrariaDoInventario_ENaoTemVolta()
     {
+        InventoryManager inv = InventarioReal();
         Assert.IsTrue(gm.ConfirmarCaso(caso));
-        Descobrir(f1, boato, f2, calunia);
-        Marcar(f1, MarcacaoDaPista.Duvidosa);
-        Marcar(boato, MarcacaoDaPista.Confiavel);
+        inv.AddItem(f1);
+        inv.AddItem(boato);
+        inv.AddItem(f2);
+        Assert.IsTrue(Deducao.AguardandoEscolha(gm, f1));
+        Assert.IsFalse(Deducao.AguardandoEscolha(gm, f2), "a calúnia ainda não apareceu: nada a escolher no par 2");
+        Assert.IsFalse(Deducao.PodeEscolher(gm, caso, f2));
+        StringAssert.Contains("não verificada", inv.RotuloDaPista(boato));
 
-        Assert.AreEqual(Confiabilidade.Fato, f1.confiabilidade);
-        Assert.AreEqual(Confiabilidade.Boato, boato.confiabilidade);
-        Assert.AreEqual(NivelDoPanfleto.Fatos, ReceitaDeCaso.Classificar(f1, f2), "a versão sai da verdade, não da hipótese");
-        Assert.AreEqual(NivelDoPanfleto.ComBoato, ReceitaDeCaso.Classificar(boato, f2));
+        Assert.AreSame(f1, Escolher(boato), "o jogador pode ficar com o boato");
+        Assert.IsTrue(inv.HasItem(boato.itemID));
+        Assert.IsFalse(inv.HasItem(f1.itemID), "a pista descartada sai do inventário");
+        Assert.IsFalse(inv.PossuiEmQualquerLugar(f1.itemID));
+        Assert.IsTrue(inv.HasItem(f2.itemID), "o outro par não é tocado");
+        Assert.IsTrue(Deducao.Descoberta(gm, f1), "o histórico continua sabendo que ela foi achada");
+        Assert.IsFalse(Deducao.AguardandoEscolha(gm, boato));
+        StringAssert.Contains("sua escolha", inv.RotuloDaPista(boato));
+        Assert.IsFalse(inv.PistaVerificada(boato), "a escolha não revela a verdade");
+
+        Assert.IsFalse(Deducao.Escolher(gm, caso, f1, out _), "par decidido: não dá para trocar");
+        Assert.IsFalse(Deducao.Escolher(gm, caso, boato, out _));
+        Assert.AreEqual(1, gm.escolhasDeDeducao.Count);
     }
 
     [Test]
-    public void Marcar_SoNoCasoEmAndamento_ESoPistasDescobertasDoConjunto()
+    public void Escolher_SoComAsDuasAfirmacoes_SoNoCasoEmAndamento_ESoPistasDoConjunto()
     {
-        Descobrir(f1);
-        Assert.IsFalse(Deducao.Marcar(gm, caso, f1, MarcacaoDaPista.Confiavel), "sem caso em andamento");
-        Assert.AreEqual(Deducao.Resultado.Indisponivel, Deducao.Conferir(gm, caso));
+        Descobrir(f1, boato);
+        Assert.IsFalse(Deducao.Escolher(gm, caso, f1, out _), "sem caso em andamento");
 
         Assert.IsTrue(gm.ConfirmarCaso(caso));
-        Assert.IsFalse(Deducao.Marcar(gm, caso, boato, MarcacaoDaPista.Duvidosa), "pista ainda não descoberta");
-        Descobrir(alegacao1);
-        Assert.IsFalse(Deducao.Marcar(gm, caso, alegacao1, MarcacaoDaPista.Duvidosa), "alegação fica fora do quadro");
-        Assert.IsTrue(Deducao.Marcar(gm, caso, f1, MarcacaoDaPista.Confiavel));
-        Assert.IsTrue(Deducao.Marcar(gm, caso, f1, MarcacaoDaPista.NaoMarcada), "tirar a marca");
-        Assert.AreEqual(MarcacaoDaPista.NaoMarcada, Deducao.MarcacaoDe(gm, caso, f1));
+        Descobrir(f2);
+        Assert.IsFalse(Deducao.Escolher(gm, caso, f2, out _), "a contrária ainda não foi descoberta");
+        Descobrir(alegacao1, alegacao2);
+        Assert.IsFalse(Deducao.Escolher(gm, caso, alegacao1, out _), "alegação fica fora do quadro");
+        Assert.IsFalse(Deducao.AguardandoEscolha(gm, alegacao1), "e não trava a prensa");
 
         gm.ConcluirCaso(caso);
-        Assert.IsFalse(Deducao.Marcar(gm, caso, f1, MarcacaoDaPista.Confiavel), "caso concluído");
-        Assert.AreEqual(Deducao.Resultado.Indisponivel, Deducao.Conferir(gm, caso));
+        Assert.IsFalse(Deducao.Escolher(gm, caso, f1, out _), "caso concluído");
+        CollectionAssert.IsEmpty(gm.escolhasDeDeducao);
     }
 
     [Test]
@@ -262,30 +268,48 @@ public class DeducaoTests
         // No par, f1 é "a" e o boato é "b"; o quadro segue a ordem em que o jogador achou as pistas.
         CollectionAssert.AreEqual(new[] { boato, f1, calunia }, Deducao.PistasConhecidas(gm, caso),
             "agrupadas por par, na ordem de descoberta, nunca pela posição no par");
+        List<List<Item>> pares = Deducao.ParesConhecidos(gm, caso);
+        Assert.AreEqual(2, pares.Count);
+        CollectionAssert.AreEqual(new[] { boato, f1 }, pares[0]);
+        CollectionAssert.AreEqual(new[] { calunia }, pares[1]);
     }
 
     [Test]
-    public void NovoCaso_NaoHerdaMarcacoes()
+    public void NovoCaso_NaoHerdaEscolhas()
     {
         Assert.IsTrue(gm.ConfirmarCaso(caso));
         Descobrir(f1, boato, f2, calunia);
-        MarcarTudoCerto();
-        Assert.AreEqual(Deducao.Resultado.Confirmada, Deducao.Conferir(gm, caso));
+        Escolher(f1);
+        Escolher(calunia);
         gm.ConcluirCaso(caso);
 
         CaseData outro = CasoComDeducao("Outro", out Item of1, out Item ob, out _, out _);
         Assert.IsTrue(gm.ConfirmarCaso(outro));
         Descobrir(of1, ob);
-        Assert.AreEqual(MarcacaoDaPista.NaoMarcada, Deducao.MarcacaoDe(gm, outro, of1));
-        Assert.IsFalse(Deducao.Confirmada(gm, outro));
+        Assert.IsFalse(Deducao.ParDecidido(gm, of1));
+        Assert.IsTrue(Deducao.PodeEscolher(gm, outro, ob));
         StringAssert.Contains("não verificada", Deducao.Rotulo(gm, of1));
-        Assert.IsTrue(gm.marcacoesDeDeducao.TrueForAll(m => m.caso == caso.name), "as hipóteses ficam no caso em que foram feitas");
+        Assert.IsTrue(gm.escolhasDeDeducao.TrueForAll(e => e.caso == caso.name), "as escolhas ficam no caso em que foram feitas");
+    }
+
+    [Test]
+    public void Tribunal_PistaDescartadaNaoViraProva()
+    {
+        CatalogoDeSave catalogo = Criar<CatalogoDeSave>("Catalogo_Teste");
+        catalogo.itens.AddRange(new[] { f1, boato, f2, calunia });
+        Assert.IsTrue(gm.ConfirmarCaso(caso));
+        Descobrir(f1, boato, f2, calunia);
+        Escolher(boato);
+
+        List<Item> provas = TribunalManager.ProvasDoCaso(gm, caso, catalogo);
+        CollectionAssert.DoesNotContain(provas, f1, "descartada no quadro");
+        CollectionAssert.IsSubsetOf(new[] { boato, f2, calunia }, provas, "o par 2 ainda não decidido continua inteiro");
     }
 
     // ===== Save =====
 
     [Test]
-    public void Save_V7_PreservaQuadro_ESaveAntigoNaoInventaHipoteses()
+    public void Save_V9_PreservaEscolhas_DescartadaNaoVolta_ESaveAntigoNaoInventaEscolhas()
     {
         CatalogoDeSave catalogo = Criar<CatalogoDeSave>("Catalogo_Teste");
         catalogo.casos.Add(caso);
@@ -293,27 +317,36 @@ public class DeducaoTests
 
         Assert.IsTrue(gm.ConfirmarCaso(caso));
         Descobrir(f1, boato, f2, calunia);
-        MarcarTudoCerto();
-        Assert.AreEqual(Deducao.Resultado.Confirmada, Deducao.Conferir(gm, caso));
+        Escolher(boato);
 
         string json = JsonUtility.ToJson(SistemaDeSave.CapturarDados(gm, "Fase3", 14));
         GameManager lido = Go("GM_Lido").AddComponent<GameManager>();
         SistemaDeSave.AplicarDados(SistemaDeSave.DesserializarDados(json), lido, catalogo);
-        Assert.IsTrue(Deducao.Confirmada(lido, caso), "confirmação preservada");
-        Assert.AreEqual(MarcacaoDaPista.Duvidosa, Deducao.MarcacaoDe(lido, caso, boato), "hipóteses preservadas");
-        Assert.AreEqual(4, lido.marcacoesDeDeducao.Count);
+        Assert.IsTrue(Deducao.Escolhida(lido, boato), "escolha preservada");
+        Assert.IsTrue(Deducao.Descartada(lido, f1));
+        Assert.IsFalse(Deducao.ParDecidido(lido, f2), "o par 2 continua aberto");
+        Assert.AreEqual(1, lido.escolhasDeDeducao.Count);
 
-        // Save v6 (antes da dedução), mesmo que o JSON traga os campos: nada é inventado.
-        const string jsonV6 = @"{ ""versao"": 6, ""faseAtual"": 3, ""casoEscolhido"": ""CasoDeducao"", ""casosJaSelecionados"": [""CasoDeducao""],
+        // Um save que traga a descartada no inventário (editado à mão, por exemplo): ela não volta.
+        const string jsonComDescartada = @"{ ""versao"": 9, ""faseAtual"": 3, ""casoEscolhido"": ""CasoDeducao"", ""casosJaSelecionados"": [""CasoDeducao""],
+            ""inventario"": [{ ""itemID"": ""CasoDeducao_f1"", ""quantidade"": 1 }, { ""itemID"": ""CasoDeducao_boato"", ""quantidade"": 1 }],
+            ""escolhasDeDeducao"": [{ ""caso"": ""CasoDeducao"", ""escolhida"": ""CasoDeducao_boato"", ""descartada"": ""CasoDeducao_f1"" }] }";
+        GameManager editado = Go("GM_Editado").AddComponent<GameManager>();
+        SistemaDeSave.AplicarDados(SistemaDeSave.DesserializarDados(jsonComDescartada), editado, catalogo);
+        Assert.IsFalse(editado.inventarioSalvo.Exists(i => i.itemID == f1.itemID), "a descartada não volta ao inventário");
+        Assert.IsTrue(editado.inventarioSalvo.Exists(i => i.itemID == boato.itemID));
+
+        // Save v8 (hipóteses e quadro confirmado da regra antiga): nenhuma escolha é inventada.
+        const string jsonV8 = @"{ ""versao"": 8, ""faseAtual"": 3, ""casoEscolhido"": ""CasoDeducao"", ""casosJaSelecionados"": [""CasoDeducao""],
             ""pistasVerificadas"": [""CasoDeducao_f1""],
             ""marcacoesDeDeducao"": [{ ""caso"": ""CasoDeducao"", ""pista"": ""CasoDeducao_f1"", ""marca"": 1 }],
-            ""deducoesConfirmadas"": [""CasoDeducao""] }";
+            ""deducoesConfirmadas"": [""CasoDeducao""],
+            ""escolhasDeDeducao"": [{ ""caso"": ""CasoDeducao"", ""escolhida"": ""CasoDeducao_f1"", ""descartada"": ""CasoDeducao_boato"" }] }";
         GameManager antigo = Go("GM_Antigo").AddComponent<GameManager>();
-        SistemaDeSave.AplicarDados(SistemaDeSave.DesserializarDados(jsonV6), antigo, catalogo);
-        CollectionAssert.IsEmpty(antigo.marcacoesDeDeducao);
-        CollectionAssert.IsEmpty(antigo.deducoesConfirmadas);
+        SistemaDeSave.AplicarDados(SistemaDeSave.DesserializarDados(jsonV8), antigo, catalogo);
+        CollectionAssert.IsEmpty(antigo.escolhasDeDeducao);
         CollectionAssert.Contains(antigo.pistasVerificadas, "CasoDeducao_f1", "a verificação antiga fica para os casos sem dedução");
-        Assert.IsFalse(Deducao.PistaConfirmada(antigo, f1), "e não conta como dedução confirmada");
+        Assert.IsFalse(Deducao.ParDecidido(antigo, f1));
     }
 
     // ===== Conteúdo real =====
@@ -330,7 +363,7 @@ public class DeducaoTests
             if (real.fase == 2) daFase2++;
             Assert.IsTrue(Deducao.Aderente(real), real.name);
             CollectionAssert.IsEmpty(Deducao.Problemas(real), real.name);
-            Assert.AreEqual(2, real.deducao.pares.Count, real.name);
+            Assert.GreaterOrEqual(real.deducao.pares.Count, 2, real.name); // as regras valem para qualquer número de pares
             foreach (Item pista in real.deducao.Conjunto())
                 Assert.IsFalse(real.EhAlegacao(pista), $"{real.name}: {pista.name}");
         }

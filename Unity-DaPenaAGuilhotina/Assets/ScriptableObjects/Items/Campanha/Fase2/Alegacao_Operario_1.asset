@@ -19,5 +19,7 @@ MonoBehaviour:
   descricao: "O oper\xE1rio jura que a multid\xE3o s\xF3 pedia comida e sal\xE1rio."
   fonte: Carta do cliente
   caso: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
-  confiabilidade: 2
+  confiabilidade: 0
   verificadaPor: []
+  documentoDeSuporte: 0
+  qualidade: 0

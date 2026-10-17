@@ -40,11 +40,11 @@ public class CaseData : ScriptableObject
     [Tooltip("Define o que a prensa imprime com as pistas deste caso, conforme sejam fatos ou boatos.")]
     public ReceitaDeCaso receitaDoPanfleto;
 
-    [Header("Alegações iniciais do cliente (saída sem bloqueio)")]
-    [Tooltip("Proposta de design (não literal dos PDFs): duas afirmações do cliente, entregues ao aceitar o caso e " +
-             "explicitamente NÃO verificadas. Garantem que o caso sempre pode ser publicado mesmo se o tempo acabar sem " +
-             "pistas: as duas juntas usam a versão 'Só Alegações' da receita (ganho menor, consequência própria). " +
-             "Use itens do próprio caso com confiabilidade Boato e fonte 'Carta do cliente'. Arquivadas ao concluir o caso.")]
+    [Header("Cartas do cliente (só leitura)")]
+    [Tooltip("A versão do cliente, entregue ao aceitar o caso para o jogador ler no inventário (e, às vezes, saber por " +
+             "onde começar). Não são pistas: não vão para a prensa, para o quadro de dedução nem para o tribunal " +
+             "(Item.EhLeitura). Use itens do próprio caso com confiabilidade NaoEPista e fonte 'Carta do cliente'. " +
+             "Arquivadas ao concluir o caso.")]
     public List<Item> alegacoesIniciais = new List<Item>();
 
     [Header("Dedução ativa (Prompt 4; Fases 2, 3 e 4)")]
@@ -52,7 +52,7 @@ public class CaseData : ScriptableObject
              "5 - Aplicar dedução ativa. Desligada = comportamento antigo (a verdade aparece com Verificada Por).")]
     public ConfiguracaoDeDeducao deducao = new ConfiguracaoDeDeducao();
 
-    /// <summary>Verdadeiro se o item é uma das alegações iniciais deste caso (compara itemID).</summary>
+    /// <summary>Verdadeiro se o item é uma das cartas do cliente deste caso (compara itemID).</summary>
     public bool EhAlegacao(Item item)
     {
         if (item == null || string.IsNullOrEmpty(item.itemID) || alegacoesIniciais == null) return false;

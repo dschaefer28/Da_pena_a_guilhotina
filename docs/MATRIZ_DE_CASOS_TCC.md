@@ -12,12 +12,12 @@ Do GDD vêm os casos, os clientes e as testemunhas, as falas-base de cada NPC, a
 - **Oportunidades:** Fases 2 e 4, **7** por caso (4 NPCs + 3 objetos); Fase 3, **8** (5 NPCs do GDD + 3 objetos). Por caso: 2 fatos, 1 boato (de um NPC), 1 calúnia (de um objeto; na Fase 2, no caso de Réveillon, de um NPC) e as demais oportunidades sem pista. Todo NPC tem uma fala própria para cada caso da fase, mesmo quando não entrega nada: ela dá contexto ou outra perspectiva, nunca uma pista.
 - **Quem entrega os fatos:** o GDD define. Na Fase 2 e nos casos de Kornmann, Desmoulins e do mercador, o próprio cliente entrega o fato 1. No caso de Danton, o fato 1 vem da Sobrevivente; no de Sirven, do Médico; no dos girondinos, de Brissot (os clientes Danton, Sirven e Vergniaud só conversam e apontam as testemunhas). O fato 2 vem de um objeto, exceto no colar da rainha, em que o joalheiro entrega os dois.
 - **Caminho mínimo até dois fatos:** **2h** (colar da rainha: **1h**), dentro do orçamento com dívida.
-- **Dedução ativa (Fases 2, 3 e 4):** dois pares contraditórios por caso, exatamente uma afirmação verdadeira em cada: **par 1** = fato 1 × boato; **par 2** = fato 2 × calúnia. As alegações ficam fora. O quadro inteiro custa **4h** (colar: 3h), dentro das 6h e das 5h com dívida. As pistas levam de uma fonte à outra: **o cliente aponta quem espalha o boato** (e a testemunha, quando o fato 1 não vem dele) e **quem espalha o boato cita os dois objetos**. No colar, a carta do duque aponta o gazeteiro. Conferir o quadro não custa nada e não é exigido para publicar.
+- **Dedução ativa (Fases 2, 3 e 4):** dois pares contraditórios por caso, exatamente uma afirmação verdadeira em cada: **par 1** = fato 1 × boato; **par 2** = fato 2 × calúnia. As alegações ficam fora. O quadro inteiro custa **4h** (colar: 3h), dentro das 6h e das 5h com dívida. As pistas levam de uma fonte à outra: **o cliente aponta quem espalha o boato** (e a testemunha, quando o fato 1 não vem dele) e **quem espalha o boato cita os dois objetos**. No colar, a carta do duque aponta o gazeteiro. Escolher não custa horas: com as duas afirmações de um par achadas, o jogador escolhe em qual acredita (cada par à parte, qualquer combinação), a outra sai do inventário e a prensa só imprime a escolhida (STATUS §22).
 - **Conversas:** a primeira fala de cada NPC traz as pistas de caminho; as escolhas (2 ou 3, quando fazem sentido) acrescentam contexto, outra perspectiva ou um indício de confiabilidade (ex.: quem espalha o boato admite que não viu nada). O item é entregue no fim da conversa, qualquer que seja o ramo. Depois da entrega, o NPC diz uma fala curta (`dialogoDepoisDaEntrega`); uma etapa complementar pendente tem prioridade sobre ela.
 - **Pré-requisitos:** nenhum na fala normal. Etapas complementares (Prompt 3) exigem uma evidência já obtida.
 - **Nomes neutros:** o nome da pista é só o assunto. O validador recusa prefixos que denunciem a verdade ("Conversa sobre", "Libelo", "Folha:", "Cartaz:", "Denúncia:", "Bilhete", "Boato", "Calúnia", "Rumor").
-- **Saída sem bloqueio (proposta de design, não literal dos PDFs):** ao aceitar o caso, o jogador recebe 2 **alegações do cliente** (fonte "Carta do cliente"). Qualquer impressão com uma alegação (e sem calúnia) usa a versão **Só Alegações**.
-- **Versões de receita:** Calúnia (qualquer calúnia ou dois boatos), Só Alegações (alguma alegação), Fatos (fato + fato), ComBoato (fato + boato). Valores no formato Povo / Estado / Ouro; as penalidades (Povo / Estado) são cobradas quando o boato é exposto, no fim da fase (`GameManager.EncerrarFase`). **Os valores não mudaram com o conteúdo do GDD.**
+- **Cartas do cliente (só leitura desde 17/10, STATUS §23):** ao aceitar o caso, o jogador recebe 2 **cartas do cliente** (fonte "Carta do cliente", confiabilidade NaoEPista) para ler no inventário. Não são pistas: a prensa as recusa, ficam fora do quadro e do tribunal. Com 8h por caso (7h endividado) o jogador sempre alcança as pistas, então a antiga "saída sem bloqueio" não é mais necessária.
+- **Versões de receita:** Calúnia (qualquer calúnia ou dois boatos), Fatos (fato + fato), ComBoato (fato + boato). Só Alegações ficou só para panfletos de saves antigos (a prensa não a gera mais). Valores no formato Povo / Estado / Ouro; as penalidades (Povo / Estado) são cobradas quando o boato é exposto, no fim da fase (`GameManager.EncerrarFase`). **Os valores não mudaram com o conteúdo do GDD.**
 - **Arquivamento:** ao concluir um caso antes da Fase 4, alegações, sobras de pistas e documentos de apoio saem do inventário, mas ficam no histórico. No caso da Fase 4 só as alegações saem; o resto vai ao tribunal. Panfletos sempre ficam.
 
 ## Correspondência de arquivos
@@ -42,11 +42,11 @@ Os arquivos de pista também guardam o nome antigo do assunto (ex.: `Pista_Varen
 
 NPCs: Joalheiro (x 12,9), Operário (29,2), Jean-Baptiste Réveillon (52,1), Gazeteiro (0). Objetos: Banca de Panfletos (−12), Muro de Cartazes (40), Mesa da Taverna (68). O caso de Réveillon e o do operário são as **duas perspectivas do motim de abril de 1789**: a do dono da manufatura, acusado de querer matar o povo de fome, e a do operário sobrevivente, acusado de participar do saque.
 
-| Caso | Fonte → item (verdade) | Vazias | Receita Fatos / ComBoato / Calúnia / Só Alegações |
+| Caso | Fonte → item (verdade) | Vazias | Receita Fatos / ComBoato / Calúnia / Só Alegações (legado) |
 |---|---|---|---|
-| **O Colar da Rainha** (`Caso_Joalheiro`; cliente: duque de Orléans, por carta) | Joalheiro → Registro de compra (Fato) + Assinatura da encomenda (Fato) · Gazeteiro → O segredo da Rainha (Boato) · Muro → A Rainha e o Cardeal (Calúnia) | Réveillon, Operário, Banca, Mesa da Taverna | 50/−10/20 · 70/−20/35 (pen −30/−5) · 90/−30/50 (pen −50/−15) · 20/−5/8 (pen −5/0) |
-| **Os Trabalhadores de Réveillon** (`Caso_Reveillon`) | Réveillon → O preço do pão (Fato) · Banca → Os salários da manufatura (Fato) · Operário → Os quinze soldos (Boato) · Gazeteiro → O dinheiro inglês (Calúnia) | Joalheiro, Muro, Mesa | −20/50/50 · −25/60/70 (pen −10/−25) · −35/75/90 (pen −15/−45) · −8/20/20 (pen 0/−5) |
-| **O Operário Acusado** (`Caso_Operario`) | Operário → Desejo de morte (Fato) · Muro → A ordem do comandante (Fato) · Réveillon → Os agitadores do duque (Boato) · Mesa → O fogo na fábrica (Calúnia) | Joalheiro, Gazeteiro, Banca | 60/−20/10 · 75/−25/25 (pen −30/−5) · 90/−35/40 (pen −50/−15) · 25/−8/5 (pen −5/0) |
+| **O Colar da Rainha** (`Caso_Joalheiro`; cliente: duque de Orléans, por carta) | Joalheiro → Registro de compra (Fato) + Assinatura da encomenda (Fato) · Gazeteiro → O segredo da Rainha (Boato) · Muro → A Rainha e o Cardeal (Calúnia) | Réveillon, Operário, Banca, Mesa da Taverna | 20/−10/30 · 30/−15/45 (pen −25/0) · 40/−20/60 (pen −45/0) · 20/−5/8 (pen −5/0) |
+| **Os Trabalhadores de Réveillon** (`Caso_Reveillon`) | Réveillon → O preço do pão (Fato) · Banca → Os salários da manufatura (Fato) · Operário → Os quinze soldos (Boato) · Gazeteiro → O dinheiro inglês (Calúnia) | Joalheiro, Muro, Mesa | −10/25/50 · −15/35/65 (pen 0/−30) · −20/45/80 (pen 0/−50) · −8/20/20 (pen 0/−5) |
+| **O Operário Acusado** (`Caso_Operario`) | Operário → Desejo de morte (Fato) · Muro → A ordem do comandante (Fato) · Réveillon → Os agitadores do duque (Boato) · Mesa → O fogo na fábrica (Calúnia) | Joalheiro, Gazeteiro, Banca | 20/−10/30 · 30/−15/45 (pen −25/0) · 40/−20/60 (pen −45/0) · 25/−8/5 (pen −5/0) |
 
 | Caso | Par 1 | Par 2 | Pistas de caminho |
 |---|---|---|---|
@@ -56,17 +56,17 @@ NPCs: Joalheiro (x 12,9), Operário (29,2), Jean-Baptiste Réveillon (52,1), Gaz
 
 Conversas: Réveillon (sequências 1 a 3 do GDD, com dois ramos em cada escolha: "nervoso" cita o refúgio na Bastilha; "revoltar" traz a versão mais dura dele); Operário (sequências 1 e 2 do GDD, com um ramo sobre a acusação); gazeteiro, operário e Réveillon como fontes de boato, com dois ramos cada (indício de que é boato ouvido e contexto: "Madame Déficit", voto censitário, preço do pão, Palais-Royal). O roteiro do joalheiro (grupo, 27/09) não mudou.
 
-Estimativas da mesa (Ouro / Povo / Estado): Colar 20 / +50 / −10; Réveillon 50 / −20 / +50; Operário 10 / +60 / −20.
+Estimativas da mesa (Ouro / Povo / Estado, iguais à versão Fatos): Colar 30 / +20 / −10; Réveillon 50 / −10 / +25; Operário 30 / +20 / −10.
 
 ## Fase 3 — cena `Fase3` (1791–1792, concluir 1 de 3)
 
 NPCs: Médico (−8), Guillaume Kornmann (14), Sobrevivente (34), **Georges Danton (46, novo, do `NPCBasic.prefab`)**, Pierre-Paul Sirven (58). Objetos: Mesa do Café (−16), Mural dos Cordeliers (24), Caixa de Tipos (70). O GDD situa a fase num "local público da cidade" e num "Café Popular": o antigo balcão da padaria virou a mesa do café. Escolhido um caso, os outros dois ficam bloqueados; concluído, a volta ao escritório abre a Fase 4.
 
-| Caso | Fonte → item (verdade) | Vazias | Receita Fatos / ComBoato / Calúnia / Só Alegações |
+| Caso | Fonte → item (verdade) | Vazias | Receita Fatos / ComBoato / Calúnia / Só Alegações (legado) |
 |---|---|---|---|
-| **O Julgamento de Georges Danton** (`Caso_ChampDeMars`) | Sobrevivente → A petição manchada de sangue (Fato) · Mural → A Constituição de 1791: direito de reunião (Fato) · Médico → As armas do altar (Boato) · Mesa do Café → A lei das petições (Calúnia) | Danton (cliente, só conversa), Kornmann, Sirven, Caixa | 20/−10/30 · 30/−15/40 (pen −10/−5) · 40/−20/55 (pen −20/−10) · 8/−4/10 (pen −5/0) (exemplo do Prompt 3) |
-| **Adultério e Poder Ministerial** (`Caso_Varennes`) | Kornmann → O diário da esposa (Fato) · Mesa do Café → A colaboração de Beaumarchais (Fato) · Danton → A letra do diário (Boato) · Caixa → O nome de Beaumarchais (Calúnia) | Sobrevivente, Médico, Sirven, Mural | −20/30/45 · −30/40/60 (pen −10/−10) · −40/50/75 (pen −20/−15) · −8/12/18 (pen 0/−5) |
-| **Morte no Poço e Intolerância** (`Caso_Assignats`) | Médico → O testemunho do médico local (Fato) · Caixa → O Tratado sobre a Tolerância (Fato) · Kornmann → A conversão de Élisabeth (Boato) · Mural → A confissão de Calas (Calúnia) | Sirven (cliente, só conversa), Danton, Sobrevivente, Mesa | 15/10/35 · 20/15/50 (pen −10/−10) · 25/20/65 (pen −15/−15) · 5/4/14 (pen −5/0) |
+| **O Julgamento de Georges Danton** (`Caso_ChampDeMars`) | Sobrevivente → A petição manchada de sangue (Fato) · Mural → A Constituição de 1791: direito de reunião (Fato) · Médico → As armas do altar (Boato) · Mesa do Café → A lei das petições (Calúnia) | Danton (cliente, só conversa), Kornmann, Sirven, Caixa | 20/−10/30 · 30/−15/45 (pen −25/0) · 40/−20/60 (pen −45/0) · 8/−4/10 (pen −5/0) |
+| **Adultério e Poder Ministerial** (`Caso_Varennes`) | Kornmann → O diário da esposa (Fato) · Mesa do Café → A colaboração de Beaumarchais (Fato) · Danton → A letra do diário (Boato) · Caixa → O nome de Beaumarchais (Calúnia) | Sobrevivente, Médico, Sirven, Mural | −10/25/45 · −15/35/60 (pen 0/−30) · −20/45/75 (pen 0/−50) · −8/12/18 (pen 0/−5) |
+| **Morte no Poço e Intolerância** (`Caso_Assignats`) | Médico → O testemunho do médico local (Fato) · Caixa → O Tratado sobre a Tolerância (Fato) · Kornmann → A conversão de Élisabeth (Boato) · Mural → A confissão de Calas (Calúnia) | Sirven (cliente, só conversa), Danton, Sobrevivente, Mesa | 10/10/35 · 15/15/50 (pen −10/−10) · 20/20/65 (pen −20/−20) · 5/4/14 (pen −5/0) |
 
 | Caso | Par 1 | Par 2 | Pistas de caminho |
 |---|---|---|---|
@@ -80,11 +80,11 @@ Etapa complementar: **Kornmann**, etapa `recibo_da_estalagem` (ID mantido), depo
 
 NPCs: Camille Desmoulins (−6), Mercador (18), Pierre Vergniaud (40), Jacques-Pierre Brissot (62). Objetos: Arquivo do Comitê (−15), Parede de Editais (30), Caixa de Denúncias (74). A mesa mostra só o caso da rota travada; depois de publicado, a ida ao tribunal é pelo Dupaty, no escritório. As rotas e os valores das receitas são os de antes (ver "Adaptações e divergências").
 
-| Caso (rota) | Fonte → item (verdade) | Vazias | Receita Fatos / ComBoato / Calúnia / Só Alegações |
+| Caso (rota) | Fonte → item (verdade) | Vazias | Receita Fatos / ComBoato / Calúnia / Só Alegações (legado) |
 |---|---|---|---|
-| **O Manifesto da Clemência** (`Caso_Jornalista`, A) | Desmoulins → A lista de 'suspeitos' inocentes (Fato) · Arquivo → O manuscrito de Robespierre (Fato) · Brissot → Os nomes da lista (Boato) · Caixa → As anotações do rascunho (Calúnia) | Mercador, Vergniaud, Parede | 20/−20/15 · 30/−30/25 (pen −10/−5) · 40/−40/35 (pen −20/−10) · 8/−8/6 (pen −5/0) |
-| **O Caso do Pequeno Mercador de Grãos** (`Caso_Negociante`, B) | Mercador → As faturas do atravessador (Fato) · Parede → A insuficiência do Máximo (Fato) · Desmoulins → A farinha do porão (Boato) · Caixa → As prateleiras vazias (Calúnia) | Vergniaud, Brissot, Arquivo | −15/30/60 · −25/40/80 (pen −5/−10) · −35/50/100 (pen −10/−20) · −6/12/24 (pen 0/−5) |
-| **O Extermínio da Oposição** (`Caso_Girondina`, C) | Brissot → Provas de federalismo (Fato) · Arquivo → O testemunho de Robespierre (Fato) · Desmoulins → O plano das províncias (Boato) · Parede → O fim dos debates (Calúnia) | Vergniaud (cliente, só conversa), Mercador, Caixa | 10/10/30 · 15/15/45 (pen −10/−10) · 20/20/60 (pen −15/−15) · 4/4/12 (pen −5/−5) |
+| **O Manifesto da Clemência** (`Caso_Jornalista`, A) | Desmoulins → A lista de 'suspeitos' inocentes (Fato) · Arquivo → O manuscrito de Robespierre (Fato) · Brissot → Os nomes da lista (Boato) · Caixa → As anotações do rascunho (Calúnia) | Mercador, Vergniaud, Parede | 20/−10/15 · 30/−15/30 (pen −25/0) · 40/−20/45 (pen −45/0) · 8/−8/6 (pen −5/0) |
+| **O Caso do Pequeno Mercador de Grãos** (`Caso_Negociante`, B) | Mercador → As faturas do atravessador (Fato) · Parede → A insuficiência do Máximo (Fato) · Desmoulins → A farinha do porão (Boato) · Caixa → As prateleiras vazias (Calúnia) | Vergniaud, Brissot, Arquivo | −10/25/60 · −15/35/75 (pen 0/−30) · −20/45/90 (pen 0/−50) · −6/12/24 (pen 0/−5) |
+| **O Extermínio da Oposição** (`Caso_Girondina`, C) | Brissot → Provas de federalismo (Fato) · Arquivo → O testemunho de Robespierre (Fato) · Desmoulins → O plano das províncias (Boato) · Parede → O fim dos debates (Calúnia) | Vergniaud (cliente, só conversa), Mercador, Caixa | 10/10/30 · 15/15/45 (pen −10/−10) · 20/20/60 (pen −20/−20) · 4/4/12 (pen −5/−5) |
 
 | Caso | Par 1 | Par 2 | Pistas de caminho |
 |---|---|---|---|
@@ -100,11 +100,11 @@ Documentos de apoio: confiabilidade `NaoEPista`, qualidade **Superior**, não v�
 
 | Caso | Oferta (preço) | Contexto | Outra fonte do apoio | Reforço Povo / Estado / Ouro |
 |---|---|---|---|---|
-| Danton | Folhas da petição do Champ de Mars (20) | par 1: milhares de assinaturas no altar em 17/07/1791, muitas com uma cruz | — | **+20 / +5 / +20** → Fatos passa de 20/−10/30 para **40/−5/50** (exemplo do Prompt 3) |
-| Kornmann | O mémoire de Bergasse (1787) (25) | par 2: Bergasse acusou a esposa, o amante, Beaumarchais e Lenoir de livrá-la do marido | **Kornmann**, etapa `recibo_da_estalagem`, depois de "A colaboração de Beaumarchais" → A ordem de reclusão de 1781 | 0 / +10 / +20 |
-| Sirven | Registro do convento de Castres (20) | par 1: Élisabeth internada por ordem do bispo e devolvida porque já não estava em seu juízo | — | +5 / +10 / +15 |
-| Desmoulins (A) | A Lei dos Suspeitos (17 de setembro de 1793) (25) | par 1: critérios vagos de suspeição e listas dos comitês de vigilância | — | +10 / 0 / +10 |
-| Mercador (B) | Decreto contra o açambarcamento (26 de julho de 1793) (30) | par 1: o crime é guardar gêneros sem vendê-los; estoques declarados e inspecionados | — | 0 / +10 / +25 |
+| Danton | Folhas da petição do Champ de Mars (20) | par 1: milhares de assinaturas no altar em 17/07/1791, muitas com uma cruz | — | +5 / 0 / +20 → Fatos passa de 20/−10/30 para 25/−10/50 |
+| Kornmann | O mémoire de Bergasse (1787) (25) | par 2: Bergasse acusou a esposa, o amante, Beaumarchais e Lenoir de livrá-la do marido | **Kornmann**, etapa `recibo_da_estalagem`, depois de "A colaboração de Beaumarchais" → A ordem de reclusão de 1781 | 0 / +5 / +20 |
+| Sirven | Registro do convento de Castres (20) | par 1: Élisabeth internada por ordem do bispo e devolvida porque já não estava em seu juízo | — | +5 / +5 / +15 |
+| Desmoulins (A) | A Lei dos Suspeitos (17 de setembro de 1793) (25) | par 1: critérios vagos de suspeição e listas dos comitês de vigilância | — | +5 / 0 / +10 |
+| Mercador (B) | Decreto contra o açambarcamento (26 de julho de 1793) (30) | par 1: o crime é guardar gêneros sem vendê-los; estoques declarados e inspecionados | — | 0 / +5 / +25 |
 | Girondinos (C) | Decreto de 8 de brumário do ano II (25) | par 2: em 29/10/1793 a Convenção permitiu encerrar o julgamento depois de três dias | **Vergniaud**, etapa `carta_da_secao`, depois de "O testemunho de Robespierre" → As notas da defesa de Vergniaud | +5 / +5 / +15 |
 
 ## Adaptações e divergências (conteúdo do GDD)
@@ -137,18 +137,20 @@ A partir da Fase 2, depois de escolher as duas pistas, o jogador escolhe a linha
 | 3 (Kornmann, Danton, Sirven) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar a Coroa") | 0 / 0 / +20; perda +50% |
 | 4 (Desmoulins, Mercador, Girondinos) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar o Comitê") | 0 / 0 / +20; perda +50% |
 
-- **Agravamento:** só no sensacionalista e só se a versão impressa tiver revelação (Com Boato, Calúnia ou Só Alegações). Só as perdas crescem, arredondadas para longe de zero. Ex.: Colar da Rainha Com Boato (pen −30/−5) sensacionalista → −45/−8. A versão Fatos nunca recebe penalidade.
+- **Agravamento:** só no sensacionalista e só se a versão impressa tiver revelação (Com Boato, Calúnia ou Só Alegações). Só as perdas crescem, arredondadas para longe de zero. Ex.: Colar da Rainha Com Boato (pen −25/0) sensacionalista → −38/0. A versão Fatos nunca recebe penalidade.
 - **Exemplo do Prompt 3:** Danton (`Caso_ChampDeMars`) Fatos + Folhas da petição = 40/−5/50 **antes** da linha; com Defesa do povo = 50/−10/50.
 - **Rota:** Defesa e Agradar deslocam o desnível Povo × Estado em 15 pontos por publicação (margem da rota: 20).
 
 ## Exemplos de percurso até cada rota (só versões Fatos, sem revelações, sem apoio e sem linha editorial)
 
-Início 50/50; tutorial (+15/−10) → 65/40. Com um caso só na Fase 3 (27/09), a rota é decidida por três publicações. Margem da rota: 20. Valores limitados a 0..100.
+Início 50/50; tutorial (+5/+5) → 55/55, sem pender para nenhuma rota. Com um caso só na Fase 3 (27/09), a rota é decidida por três publicações. Margem da rota: 20. Valores limitados a 0..100. Valores do balanceamento de 17/10 (STATUS §24).
 
 | Rota | Fase 2 | Fase 3 | Resultado |
 |---|---|---|---|
-| A | Colar da Rainha → 100/30 | Danton → 100/20 | +80 → **A** |
-| B | Réveillon → 45/90 | Kornmann → 25/100 | −75 → **B** |
-| C | Réveillon → 45/90 | Danton → 65/80 | −15 → **C** |
+| A | Colar da Rainha → 75/45 | Danton → 95/35 | +60 → **A** |
+| B | Réveillon → 45/80 | Kornmann → 35/100 | −65 → **B** |
+| C | Réveillon → 45/80 | Danton → 65/70 | −5 → **C** |
 
-Com a linha editorial também dá para chegar à C por outros caminhos (ex.: Colar da Rainha com "Agradar a Coroa" → 100/40; Kornmann com "Agradar a Coroa" → 75/80 → −5 → **C**). A validação de balanceamento com decisões reais (boatos, revelações, despesas) fica para o Prompt 8.
+A linha editorial também muda a rota: Colar da Rainha com "Agradar a Coroa" → 70/55; Sirven com "Agradar a Coroa" → 75/75 → 0 → **C**. O mesmo caminho com "Defesa do povo" nas duas → 100/45 → **A**.
+
+**Regras do balanceamento (17/10):** cada caso tem um lado. Pró-povo (Colar, Operário, Danton, Desmoulins): fatos +20/−10. Pró-Estado (Réveillon, Kornmann, mercador): fatos −10/+25. Misto (Sirven, girondinos): fatos +10/+10. Mentir rende mais na hora (cerca de 1,5× com boato e quase 2× com calúnia, ouro +15 e +30), mas a revelação no fim da fase cai sobre o lado que o panfleto favoreceu (pró-povo −25 e −45 no Povo; pró-Estado −30 e −50 no Estado; mistos −10/−10 e −20/−20). Depois de desmentida, a mentira empurra a rota menos que os fatos; com o sensacionalista, a calúnia pode virar contra o próprio lado. Simulando todos os 729 caminhos das Fases 2 e 3 (caso, versão e tom): rota A 34%, B 23%, C 41%; nenhum par de casos fica preso a uma rota só, e 6 dos 9 pares alcançam A, B e C; só com fatos, ninguém termina a Fase 3 endividado (sem comprar na biblioteca). `CampanhaTests` confere essas regras nos assets.
