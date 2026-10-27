@@ -148,7 +148,7 @@ public static class TutorialPopupBuilder
         Transform antigo = popup.Find("Titulo");
         if (antigo != null) Object.DestroyImmediate(antigo.gameObject);
 
-        TextMeshProUGUI titulo = InventarioListaBuilder.CriarTexto("Titulo", popup, "Tutorial", 28f, TextAlignmentOptions.MidlineLeft, fonte);
+        TextMeshProUGUI titulo = InventarioListaBuilder.CriarTexto("Titulo", popup, "Tutorial", 30f, TextAlignmentOptions.MidlineLeft, fonte);
         titulo.fontStyle = FontStyles.Bold;
         titulo.color = new Color(0.98f, 0.85f, 0.55f, 1f);
         RectTransform r = titulo.rectTransform;
@@ -218,10 +218,11 @@ public static class TutorialPopupBuilder
         le.flexibleWidth = 1f;
         le.minWidth = 300f;
 
-        texto.fontSize = 24f;
+        // Tamanhos da EB Garamond (27/10/2026); o popup cresce para o texto caber (TutorialStepUI.CrescerParaOTexto).
+        texto.fontSize = 27f;
         texto.enableAutoSizing = true;
-        texto.fontSizeMin = 17f;
-        texto.fontSizeMax = 25f;
+        texto.fontSizeMin = 22f;
+        texto.fontSizeMax = 28f;
         texto.alignment = TextAlignmentOptions.MidlineLeft;
         texto.textWrappingMode = TextWrappingModes.Normal;
         texto.overflowMode = TextOverflowModes.Overflow;
@@ -265,9 +266,9 @@ public static class TutorialPopupBuilder
         botao.targetGraphic = fundo;
 
         TextMeshProUGUI rotulo = botao.GetComponentInChildren<TextMeshProUGUI>(true);
-        if (rotulo == null) rotulo = InventarioListaBuilder.CriarTexto("Texto", botao.transform, "Continuar", 24f, TextAlignmentOptions.Center, fonte);
+        if (rotulo == null) rotulo = InventarioListaBuilder.CriarTexto("Texto", botao.transform, "Continuar", 26f, TextAlignmentOptions.Center, fonte);
         rotulo.text = "Continuar";
-        InventarioListaBuilder.ConfigurarTexto(rotulo, 24f, TextAlignmentOptions.Center, fonte);
+        InventarioListaBuilder.ConfigurarTexto(rotulo, 26f, TextAlignmentOptions.Center, fonte);
         rotulo.enableAutoSizing = false;
         InventarioListaBuilder.Esticar(rotulo.rectTransform, Vector2.zero, Vector2.zero);
     }
@@ -443,9 +444,9 @@ public static class TutorialPopupBuilder
         botao.transition = Selectable.Transition.None;
 
         TextMeshProUGUI rotulo = r.GetComponentInChildren<TextMeshProUGUI>(true);
-        if (rotulo == null) rotulo = InventarioListaBuilder.CriarTexto("Texto", r, "Pular tutorial", 20f, TextAlignmentOptions.MidlineLeft, fonte);
+        if (rotulo == null) rotulo = InventarioListaBuilder.CriarTexto("Texto", r, "Pular tutorial", 22f, TextAlignmentOptions.MidlineLeft, fonte);
         rotulo.text = "<u>Pular tutorial</u>";
-        InventarioListaBuilder.ConfigurarTexto(rotulo, 20f, TextAlignmentOptions.MidlineLeft, fonte);
+        InventarioListaBuilder.ConfigurarTexto(rotulo, 22f, TextAlignmentOptions.MidlineLeft, fonte);
         rotulo.color = InventarioListaBuilder.CorTextoVazio;
         InventarioListaBuilder.Esticar(rotulo.rectTransform, Vector2.zero, Vector2.zero);
         return botao;

@@ -492,7 +492,7 @@ MonoBehaviour:
         nome."
       duracao: 5
   cenaDoMenu: menu principal
-  fonte: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  fonte: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   fundo: {fileID: 0}
 --- !u!4 &1916742306
 Transform:

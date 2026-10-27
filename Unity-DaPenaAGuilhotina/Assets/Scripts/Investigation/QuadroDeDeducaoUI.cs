@@ -187,7 +187,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         List<List<Item>> pares = Deducao.ParesConhecidos(gm, caso);
         for (int i = 0; i < pares.Count; i++) CriarPar(i + 1, pares[i], gm, caso);
         if (pares.Count == 0)
-            Texto("Vazio", lista, 28f, $"<color=#9E9E9E>{semPistas}</color>", TextAlignmentOptions.Center).GetComponent<LayoutElement>().minHeight = 120f;
+            Texto("Vazio", lista, 30f, $"<color=#9E9E9E>{semPistas}</color>", TextAlignmentOptions.Center).GetComponent<LayoutElement>().minHeight = 120f;
     }
 
     private void CriarPar(int numero, List<Item> pistas, GameManager gm, CaseData caso)
@@ -202,7 +202,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         string situacao = Deducao.ParDecidido(gm, pistas[0]) ? "decidida"
                         : pistas.Count < 2 ? "falta encontrar a afirmação contrária"
                         : "escolha em qual das duas você acredita";
-        Texto("Titulo", bloco.transform, 24f, $"<b>Contradição {numero}</b>  <size=80%><color=#B0A48C>({situacao})</color></size>",
+        Texto("Titulo", bloco.transform, 28f, $"<b>Contradição {numero}</b>  <size=85%><color=#B0A48C>({situacao})</color></size>",
               TextAlignmentOptions.MidlineLeft);
         foreach (Item pista in pistas) CriarLinha(pista, bloco.transform, gm, caso);
     }
@@ -221,8 +221,9 @@ public class QuadroDeDeducaoUI : MonoBehaviour
 
         string nome = descartada ? $"<s>{pista.NomeExibicao}</s>" : $"<b>{pista.NomeExibicao}</b>";
         string fonteDaPista = string.IsNullOrWhiteSpace(pista.fonte) ? string.Empty : $"<size=80%><color=#C8B89A>Fonte: {pista.fonte}</color></size>\n";
-        var textos = Texto("Textos", linha.transform, 24f,
-            $"{nome}  <size=78%>({Deducao.Rotulo(gm, pista)})</size>\n{fonteDaPista}<size=85%>{pista.descricao}</size>",
+        // Tamanhos revistos com a EB Garamond (27/10/2026): nada abaixo de ~22 na referência de 1080 (15 px em 720).
+        var textos = Texto("Textos", linha.transform, 28f,
+            $"{nome}  <size=80%>({Deducao.Rotulo(gm, pista)})</size>\n{fonteDaPista}<size=90%>{pista.descricao}</size>",
             TextAlignmentOptions.MidlineLeft);
         textos.GetComponent<LayoutElement>().flexibleWidth = 1f;
         if (descartada) textos.alpha = 0.55f;
@@ -250,7 +251,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
     // Texto fixo na coluna do botão (mesma largura), para as linhas não mudarem de tamanho depois da escolha.
     private void Selo(Transform pai, string texto)
     {
-        LayoutElement le = Texto("Situacao", pai, 24f, texto, TextAlignmentOptions.Center).GetComponent<LayoutElement>();
+        LayoutElement le = Texto("Situacao", pai, 26f, texto, TextAlignmentOptions.Center).GetComponent<LayoutElement>();
         le.minWidth = le.preferredWidth = LarguraDaColuna;
     }
 
@@ -347,9 +348,9 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         botaoFechar.GetComponent<LayoutElement>().preferredWidth = 200f;
         botaoFechar.onClick.AddListener(Fechar);
 
-        textoCaso = Texto("Caso", painel.transform, 30f, string.Empty, TextAlignmentOptions.MidlineLeft);
-        Texto("Regras", painel.transform, 22f, $"<color=#B0A48C>{regras}</color>", TextAlignmentOptions.MidlineLeft);
-        textoContador = Texto("Contador", painel.transform, 24f, string.Empty, TextAlignmentOptions.MidlineLeft);
+        textoCaso = Texto("Caso", painel.transform, 32f, string.Empty, TextAlignmentOptions.MidlineLeft);
+        Texto("Regras", painel.transform, 25f, $"<color=#B0A48C>{regras}</color>", TextAlignmentOptions.MidlineLeft);
+        textoContador = Texto("Contador", painel.transform, 26f, string.Empty, TextAlignmentOptions.MidlineLeft);
 
         // Lista com rolagem (mouse, arrasto e toque).
         var area = new GameObject("Lista", typeof(RectTransform), typeof(Image), typeof(RectMask2D), typeof(ScrollRect), typeof(LayoutElement));
@@ -375,10 +376,10 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         var hr = rodape.GetComponent<HorizontalLayoutGroup>();
         hr.childControlWidth = hr.childControlHeight = true; hr.childForceExpandWidth = hr.childForceExpandHeight = false; hr.spacing = 16f;
         hr.childAlignment = TextAnchor.MiddleLeft;
-        textoMensagem = Texto("Mensagem", rodape.transform, 24f, string.Empty, TextAlignmentOptions.MidlineLeft);
+        textoMensagem = Texto("Mensagem", rodape.transform, 26f, string.Empty, TextAlignmentOptions.MidlineLeft);
         textoMensagem.GetComponent<LayoutElement>().flexibleWidth = 1f;
 
-        Texto("Lembrete", painel.transform, 20f, $"<color=#9E9E9E>{lembreteDaPrensa}</color>", TextAlignmentOptions.MidlineLeft);
+        Texto("Lembrete", painel.transform, 23f, $"<color=#9E9E9E>{lembreteDaPrensa}</color>", TextAlignmentOptions.MidlineLeft);
 
         janela.SetActive(false);
     }
@@ -452,7 +453,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
             cores.disabledColor = new Color(0.55f, 0.55f, 0.55f, 0.6f);
             botao.colors = cores;
         }
-        var texto = Texto("Rotulo", go.transform, 26f, rotulo, TextAlignmentOptions.Center);
+        var texto = Texto("Rotulo", go.transform, 28f, rotulo, TextAlignmentOptions.Center);
         var rt = (RectTransform)texto.transform;
         rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero;
         if (comSprite)

@@ -1,0 +1,33 @@
+EB Garamond — origem dos arquivos
+=================================
+
+Família: EB Garamond (Copyright 2017 The EB Garamond Project Authors,
+https://github.com/octaviopardo/EBGaramond12). Licença: SIL Open Font License 1.1
+(OFL.txt nesta pasta; deve acompanhar os arquivos da fonte).
+
+Baixado em 27/10/2026 do Google Fonts, fonte oficial da família:
+  - Página: https://fonts.google.com/specimen/EB+Garamond
+  - Repositório: https://github.com/google/fonts/tree/main/ofl/ebgaramond
+  - Lista de arquivos do download oficial: https://fonts.google.com/download/list?family=EB%20Garamond
+    (é o mesmo pacote do botão "Get font"; manifesto "EB_Garamond.zip", revisão v33).
+
+O repositório google/fonts guarda só as fontes variáveis (eixo wght). O TextMesh Pro
+da Unity 6000.3 lê uma fonte variável apenas na instância padrão (peso 400), então
+foram usadas as instâncias ESTÁTICAS que o próprio Google Fonts gera e distribui na
+pasta "static/" do download oficial. Nenhum arquivo foi renomeado, convertido ou
+gerado localmente.
+
+Arquivos (Sources/), com o SHA-256 conferido depois do download:
+  EBGaramond-Regular.ttf   d5baed6e48bf4c99a770e6edc86ddaf67942bb1850491ed54f94d5c2c213531e
+      https://fonts.gstatic.com/s/ebgaramond/v33/SlGDmQSNjdsmc35JDF1K5E55YMjF_7DPuGi-6_RUA4V-e6yHgQ.ttf
+  EBGaramond-SemiBold.ttf  32638f825bcb55d6940914fa0c3facdc81ce50d7761463efc46f3b7d1baf619d
+      https://fonts.gstatic.com/s/ebgaramond/v33/SlGDmQSNjdsmc35JDF1K5E55YMjF_7DPuGi-NfNUA4V-e6yHgQ.ttf
+  EBGaramond-Italic.ttf    228da33df456ec4e0a149f33cfc2264d5bd500bdfcf55ee36710ca8df923cbd6
+      https://fonts.gstatic.com/s/ebgaramond/v33/SlGFmQSNjdsmc35JDF1K5GRwUjcdlttVFm-rI7e8QI96WamXgXFI.ttf
+
+Os três são TrueType estáticos: não têm as tabelas fvar/gvar de fonte variável e
+trazem GPOS (kerning), GSUB e gasp.
+
+Os TMP Font Assets (FontAssets/) são gerados por Ferramentas > Fontes > EB Garamond
+(Assets/Editor/EBGaramondSetupTool.cs). As configurações e a lista de caracteres
+estão descritas no cabeçalho dessa ferramenta.

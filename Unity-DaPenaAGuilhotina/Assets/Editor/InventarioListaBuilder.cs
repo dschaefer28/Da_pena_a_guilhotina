@@ -187,10 +187,9 @@ public static class InventarioListaBuilder
         c is RectTransform || c is Image || c is TextMeshProUGUI || c is GridLayoutGroup ||
         c is ContentSizeFitter || c is ScrollRect || c is RectMask2D || c is LayoutElement || c is CanvasGroup;
 
-    // O atlas "Cinzel-VariableFont_wght SDF" (512px, 97 caracteres) não tem á/é/ç etc., e o TMP cai na
-    // LiberationSans para esses glifos ("Inventário" saía com o "á" em outra fonte). O Cinzel-Regular
-    // tem a tabela Latin-1 completa.
-    private const string CaminhoFonte = "Assets/Art/Fonts/Cinzel-Regular SDF.asset";
+    // Fonte única do jogo desde 27/10/2026 (ver EBGaramondSetupTool): EB Garamond com Latin-1 completo. Um atlas
+    // sem á/é/ç faria o TMP desenhar esses glifos em outra fonte, no meio das palavras.
+    private const string CaminhoFonte = EBGaramondSetupTool.CaminhoRegular;
 
     internal static TMP_FontAsset ObterFonte(RectTransform conteudo)
     {

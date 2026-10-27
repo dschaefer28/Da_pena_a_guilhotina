@@ -1655,7 +1655,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68d40a4112cd1940b92a6ccfcf0e822, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PromptDeInteracao
-  fonte: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  fonte: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   alturaAcimaDoAlvo: 0.35
   escala: 0.012
 --- !u!114 &1416445691 stripped
@@ -2433,7 +2433,7 @@ PrefabInstance:
     - target: {fileID: 655509477188732652, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+      objectReference: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
     - target: {fileID: 707271121286583824, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -2604,7 +2604,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1589325444282527361, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1808680645023636998, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_fontSize
@@ -2768,7 +2768,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3046842053107045678, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3077149667287215838, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_fontColor32.rgba
@@ -3374,14 +3374,6 @@ PrefabInstance:
       propertyPath: m_TextStyleHashCode
       value: -1183493901
       objectReference: {fileID: 0}
-    - target: {fileID: 7985160564614867762, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4287420922
-      objectReference: {fileID: 0}
-    - target: {fileID: 7985160564614867762, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
-      propertyPath: m_TextStyleHashCode
-      value: -1183493901
-      objectReference: {fileID: 0}
     - target: {fileID: 8007332722565632697, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.429
@@ -3745,6 +3737,14 @@ PrefabInstance:
     - target: {fileID: 9220419503546340369, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_fontColor32.rgba
+      value: 4287420922
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

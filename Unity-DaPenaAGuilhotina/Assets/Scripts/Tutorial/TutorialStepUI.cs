@@ -265,8 +265,27 @@ public class TutorialStepUI : MonoBehaviour
         if (containerGlifos != null) containerGlifos.gameObject.SetActive(glifosDaEtapa);
         if (imagemIcone != null) imagemIcone.gameObject.SetActive(iconeDaEtapa);
 
+        CrescerParaOTexto(popup);
         AfastarDoInventario(popup);
         EvitarControlesDeToque();
+    }
+
+    // No rodapé, o popup cresce para cima (pivô embaixo) até o texto caber no tamanho normal da fonte, em vez de o auto
+    // size encolher as etapas longas (fonte maior desde 27/10/2026). O topo não passa da HUD; acima disso, o auto size
+    // volta a encolher.
+    private void CrescerParaOTexto(RectTransform popup)
+    {
+        if (textoMensagem == null || popup.pivot.y != 0f || !(popup.parent is RectTransform pai)) return;
+        RectTransform corpo = CorpoDoPopup(popup);
+        if (corpo == popup) return;
+        float margensDoCorpo = tamanhoOriginal.y - corpo.rect.height; // título em cima, botões embaixo
+        float larguraDoTexto = corpo.rect.width - LarguraDaColunaEsquerda(corpo);
+        float alturaDoConteudo = textoMensagem.GetPreferredValues(textoMensagem.text, larguraDoTexto, 0f).y;
+        if (containerGlifos != null && containerGlifos.gameObject.activeSelf)
+            alturaDoConteudo = Mathf.Max(alturaDoConteudo, LayoutUtility.GetPreferredHeight((RectTransform)containerGlifos));
+        float maxima = pai.rect.height - AlturaDaHudDoTopo - 2f * MargemTela - popup.anchoredPosition.y;
+        float altura = Mathf.Clamp(alturaDoConteudo + margensDoCorpo + 12f, tamanhoOriginal.y, Mathf.Max(tamanhoOriginal.y, maxima));
+        popup.sizeDelta = new Vector2(popup.sizeDelta.x, altura);
     }
 
     // O que a etapa na tela mostra na coluna da esquerda (MontarGlifos / MostrarPopup / dica).

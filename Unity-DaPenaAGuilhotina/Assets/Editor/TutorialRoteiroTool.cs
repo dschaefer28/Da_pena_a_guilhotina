@@ -18,7 +18,7 @@ using UnityEngine.UI;
 public static class TutorialRoteiroTool
 {
     private const string CaminhoPrefabUI = "Assets/Prefabs/UI.prefab";
-    private const string CaminhoFonte = "Assets/Art/Fonts/Cinzel-Regular SDF.asset";
+    private const string CaminhoFonte = EBGaramondSetupTool.CaminhoRegular;
     private static readonly string[] Cenas = { "Assets/Scenes/Jogo.unity", "Assets/Scenes/Porao.unity" };
 
     [MenuItem("Ferramentas/Tutorial/2 - Aplicar roteiro padrão e sincronizar cenas (Jogo, Porao)")]

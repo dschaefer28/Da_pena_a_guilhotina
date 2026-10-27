@@ -355,8 +355,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Interagir
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: beadbe1cb597dec4bb8b306609637efe, type: 2}
-  m_sharedMaterial: {fileID: 5253401038481566315, guid: beadbe1cb597dec4bb8b306609637efe, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -380,8 +380,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -492,8 +492,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Pause
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: beadbe1cb597dec4bb8b306609637efe, type: 2}
-  m_sharedMaterial: {fileID: 5253401038481566315, guid: beadbe1cb597dec4bb8b306609637efe, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -517,8 +517,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 54
-  m_fontSizeBase: 54
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -629,8 +629,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Inventario
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: beadbe1cb597dec4bb8b306609637efe, type: 2}
-  m_sharedMaterial: {fileID: 5253401038481566315, guid: beadbe1cb597dec4bb8b306609637efe, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -654,8 +654,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 44.98
-  m_fontSizeBase: 44.98
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1210,7 +1210,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c03f9b90b78ad40a505f6c03f55988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MobileUIManager
-  showInEditorForTesting: 1
   joystickUI: {fileID: 5121872778904621356}
 --- !u!225 &1331548819087024541
 CanvasGroup:

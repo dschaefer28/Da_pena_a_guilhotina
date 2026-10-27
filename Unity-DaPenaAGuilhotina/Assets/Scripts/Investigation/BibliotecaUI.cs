@@ -174,9 +174,10 @@ public class BibliotecaUI : MonoBehaviour
 
         string titulo = string.IsNullOrWhiteSpace(oferta.titulo) ? oferta.item.NomeExibicao : oferta.titulo;
         string casoTitulo = string.IsNullOrWhiteSpace(oferta.caso.caseTitle) ? oferta.caso.name : oferta.caso.caseTitle.Trim();
-        var textos = Texto("Textos", linha.transform, 26f,
+        // Tamanhos revistos com a EB Garamond (27/10/2026): nada abaixo de ~22 na referência de 1080 (15 px em 720).
+        var textos = Texto("Textos", linha.transform, 28f,
             $"<b>{titulo}</b>  <size=80%><color=#C9A94E>qualidade superior</color></size>\n" +
-            $"<size=85%>{oferta.descricao}</size>\n<size=75%><color=#B0A48C>Serve ao caso: {casoTitulo}</color></size>",
+            $"<size=90%>{oferta.descricao}</size>\n<size=80%><color=#B0A48C>Serve ao caso: {casoTitulo}</color></size>",
             TextAlignmentOptions.MidlineLeft);
         textos.GetComponent<LayoutElement>().flexibleWidth = 1f;
 
@@ -193,7 +194,7 @@ public class BibliotecaUI : MonoBehaviour
                 situacao = podeComprar ? "Disponível" : "<color=#E57373>Ouro insuficiente</color>"; break;
             default: situacao = "<color=#9E9E9E>Indisponível</color>"; break;
         }
-        var preco = Texto("Preco", linha.transform, 26f, $"<b>{oferta.preco} de ouro</b>\n<size=80%>{situacao}</size>", TextAlignmentOptions.Center);
+        var preco = Texto("Preco", linha.transform, 28f, $"<b>{oferta.preco} de ouro</b>\n<size=80%>{situacao}</size>", TextAlignmentOptions.Center);
         // Sem largura mínima, a descrição (largura preferida enorme) espremia o preço e o botão até quebrar as palavras
         // no meio ("COM/PRAR", "OUR/O"). A descrição é que encolhe e quebra em mais linhas.
         preco.GetComponent<LayoutElement>().minWidth = 240f;
@@ -290,8 +291,8 @@ public class BibliotecaUI : MonoBehaviour
         botaoFechar.GetComponent<LayoutElement>().preferredWidth = 200f;
         botaoFechar.onClick.AddListener(Fechar);
 
-        textoOuro = Texto("Ouro", painel.transform, 28f, string.Empty, TextAlignmentOptions.MidlineLeft);
-        Texto("Aviso", painel.transform, 22f,
+        textoOuro = Texto("Ouro", painel.transform, 30f, string.Empty, TextAlignmentOptions.MidlineLeft);
+        Texto("Aviso", painel.transform, 25f,
             "<color=#B0A48C>Documentos de apoio não substituem as duas pistas: vão no campo Suporte da prensa, não são gastos e só " +
             "reforçam o panfleto do caso a que servem. Um documento caro não garante que as suas pistas sejam verdadeiras.</color>",
             TextAlignmentOptions.MidlineLeft);
@@ -314,7 +315,7 @@ public class BibliotecaUI : MonoBehaviour
         rolagem.content = lista; rolagem.horizontal = false; rolagem.movementType = ScrollRect.MovementType.Clamped;
         rolagem.scrollSensitivity = 30f;
 
-        textoMensagem = Texto("Mensagem", painel.transform, 26f, string.Empty, TextAlignmentOptions.Center);
+        textoMensagem = Texto("Mensagem", painel.transform, 28f, string.Empty, TextAlignmentOptions.Center);
         textoMensagem.GetComponent<LayoutElement>().minHeight = 44f;
 
         janela.SetActive(false);

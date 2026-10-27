@@ -78,10 +78,11 @@ public class GlifoDeControle : MonoBehaviour
         hlMiolo.childControlWidth = hlMiolo.childControlHeight = true;
         hlMiolo.childForceExpandWidth = hlMiolo.childForceExpandHeight = true;
 
-        var tecla = CriarTexto("Texto", miolo.transform, fonte, altura * 0.5f, TextAlignmentOptions.Center, Color.white);
+        // Tamanhos revistos com a EB Garamond (27/10/2026): o rótulo não fica abaixo de 22 nem nas teclas menores (36).
+        var tecla = CriarTexto("Texto", miolo.transform, fonte, altura * 0.55f, TextAlignmentOptions.Center, Color.white);
         tecla.fontStyle = FontStyles.Bold;
 
-        var rotulo = CriarTexto("Rotulo", linha.transform, fonte, altura * 0.5f, TextAlignmentOptions.MidlineLeft, CorRotulo);
+        var rotulo = CriarTexto("Rotulo", linha.transform, fonte, Mathf.Max(22f, altura * 0.55f), TextAlignmentOptions.MidlineLeft, CorRotulo);
 
         var glifo = linha.AddComponent<GlifoDeControle>();
         glifo.controle = controle;

@@ -1416,3 +1416,104 @@ Pedido: o sensacionalista mexia demais. Com as perdas do balanceamento (até −
 Arquivos: as 9 `ReceitaDeCaso_*.asset` (`linhaEditorial.sensacionalista.ouro` e `agravamentoPercentual`); `Editor/LinhaEditorialSetupTool.cs` (padrões +10 e 25%, só para receitas novas). O teste `CampanhaTests.Balanceamento_MentiraRendeMaisOuroMasEmpurraMenosARota_EFatosCabemNaBarra` agora também exige ouro ≤ +10, desmentido ≤ 25% e nenhuma mentira sensacionalista virando contra o próprio lado. A janela da prensa lê os valores da receita: passa a mostrar "▲ +10 Ouro" e "desmentido +25%".
 
 Verificação: EditMode **105/105**; validador "Campanha válida", 0 avisos; simulação refeita lendo os assets.
+
+---
+
+## 25. Tipografia: EB Garamond em todo o jogo (27/10/2026)
+
+Pedido: trocar Cinzel, LiberationSans e VT323 por EB Garamond (fonte oficial do Google Fonts, licença OFL) em todos os textos editáveis, com renderização nítida, sem mudar texto, regras ou mecânicas. **Validado no Editor** (Play Mode em 1920×1080 e 1280×720); falta aparelho real (§25.7).
+
+### 25.1 Análise
+
+- Unity 6000.3.9f1, uGUI 2.0 com TextMesh Pro. Sem Text legado, TextMesh 3D, UI Toolkit, campo de entrada ou dropdown; sem Addressables (o `Resources.Load` do projeto só carrega o `CatalogoDeSave`); sem vídeo nem RenderTexture.
+- 807 textos TMP em 16 prefabs e 7 cenas (os do `UI.prefab` repetidos em cada cena), mais os criados por código (Biblioteca, Quadro, Linha editorial, Suporte, Tribunal, legendas, relógio, "E", glifos do tutorial, ficha da pista). Todos recebem a fonte de campos serializados (`fonte`, `fonteGlifos`) ou copiam a de outro texto.
+- Antes: Cinzel-Regular (2048, sem kerning) na maioria; uma Cinzel variável "aaa" (atlas 4096 com padding 0 e underlay borrado) em títulos e botões; LiberationSans (fonte padrão do TMP) nos créditos e no texto do tutorial; VT323 nos botões de toque. O campo `SuportesDaPrensaUI.fonte` estava vazio, e o painel Suporte saía em LiberationSans. ▲ ▼ ● vinham da LiberationSans pelo fallback padrão.
+- Nenhuma tag `<font>`, `<material>` ou `<style>`, nenhum estilo All Caps/Small Caps. Os textos em maiúsculas (botões do menu e da pausa, títulos) estão assim no próprio conteúdo e foram mantidos; o resto passou a ter caixa normal (a Cinzel desenhava as minúsculas como versaletes).
+
+### 25.2 Fonte importada
+
+`Assets/Art/Fonts/EBGaramond/` (o projeto já guardava fontes em `Art/Fonts`):
+- `Sources/EBGaramond-Regular.ttf`, `-SemiBold.ttf`, `-Italic.ttf`: instâncias **estáticas** do pacote oficial do Google Fonts (revisão v33; o repositório `google/fonts` só tem as variáveis, e o TMP lê só a instância padrão de uma fonte variável). Sem `fvar`/`gvar`, com GPOS/GSUB. URLs e SHA-256 em `License/ORIGEM.txt`; licença em `License/OFL.txt`. Nada foi renomeado nem gerado localmente.
+- Bold não foi importada: o negrito do jogo passou a ser a SemiBold (§25.3).
+
+### 25.3 Font Assets e configuração
+
+Gerados por **Ferramentas > Fontes > EB Garamond > 1 - Gerar ou atualizar Font Assets** (`Editor/EBGaramondSetupTool.cs`; regenera no lugar, mantendo o GUID).
+
+| Asset | Atlas | Amostragem | Padding | Caracteres | Kerning (pares GPOS) |
+|---|---|---|---|---|---|
+| `EBGaramond-Regular SDF` | 2048, Alpha8 | 180 pt (automática) | 16 | 218 | 21 044 |
+| `EBGaramond-SemiBold SDF` | 2048, Alpha8 | 174 pt | 16 | 218 | 40 582 |
+| `EBGaramond-Italic SDF` | 1024, Alpha8 | 84 pt | 8 | 215 (sem ¹ ² ³, que a fonte não tem) | 19 208 |
+| `LiberationSans SDF - Simbolos de apoio` | 256 | 90 pt | 8 | só ● | — |
+
+- Render **SDF8** (distância calculada com 8× de resolução); estáticos (o TTF não vai para o build); atlas sem cópia na CPU, sem compressão, sem mipmap, filtro Bilinear; shader `TextMeshPro/Mobile/Distance Field` sem dilate, softness, outline ou underlay. Padding de 9% da amostragem.
+- Caracteres: ASCII, Latin-1 (português completo), Œ œ Ÿ, – — ‘ ’ ‚ “ ” „ † ‡ • … ‰ ‹ › € ™ −, ← → ▲ ▼, ﬁ ﬂ e os 121 caracteres distintos do conteúdo (prefabs, cenas, ScriptableObjects e literais de `Assets/Scripts`). Lista em `FontAssets/EBGaramond - caracteres.txt`.
+- **Pesos pela tabela de pesos do TMP**: no Regular, Negrito (estilo B ou tag `<b>`) e peso 600 desenham a SemiBold, e Itálico desenha a Italic. Não há negrito nem inclinação sintéticos (conferido em Play: os caracteres saem com `isUsingAlternateTypeface`). Na SemiBold, o B continua SemiBold.
+- **●**: a EB Garamond não tem. Vem do asset de apoio (único fallback dos três), que só tem esse glifo, então nenhuma letra cai em outra família.
+- TMP Settings: fonte padrão = `EBGaramond-Regular SDF`; recursos padrão com `kern` explícito (o valor antigo `[0]` só virava kerning em runtime; textos criados por ferramentas de Editor ficavam sem).
+- Memória de atlas: cerca de 9 MB (antes: Cinzel 2048 + Cinzel variável 4096 ≈ 20 MB). Os `.asset` ocupam 10 a 26 MB em YAML por causa das tabelas de kerning.
+
+### 25.4 Aplicação e ajustes de layout
+
+**Ferramentas > Fontes > EB Garamond > 2 - Aplicar em todo o jogo** (idempotente; rodando de novo, nada muda):
+- Prefabs: `UI`, `UI_Inventory`, `CartaoPrefab`, `ButtonChoise`, `MobileControlsUI` (fonte, material e kerning).
+- Cenas: `menu principal` (textos próprios), as 5 cenas de jogo (`PromptDeInteracao.fonte` no Player e duas sobrescritas antigas que deixavam dois textos do tutorial sem kerning) e `Tribunal` (`TribunalManager.fonte`). Na `Jogo`, uma sobrescrita da instância ainda apontava o texto do diálogo para o material da Cinzel. O TMP troca esse material em memória ao carregar, então ela não aparecia no Inspector, mas levaria o atlas da Cinzel para o build. Foi corrigida na lista de sobrescritas.
+- Campos: `fonte` de `BibliotecaUI`, `QuadroDeDeducaoUI`, `LinhaEditorialDaPrensaUI`, `SuportesDaPrensaUI` (estava vazio), `CutsceneLegendas`, `HudDoRelogio`, `PromptDeInteracao` e `TribunalManager`; `TutorialStepUI.fonteGlifos`.
+- Pesos: fala do diálogo sem negrito (texto corrido em Regular); títulos dos painéis do menu e da pausa ("CONFIGURAÇÕES", "CRÉDITOS", confirmações) e título do cartão de caso em SemiBold. Os textos que já eram B (nomes, botões, rótulos da HUD, título do inventário e da prensa) viraram SemiBold real.
+- Escala: nome e fala do diálogo tinham escala 0,287 × 0,327, o que achatava as letras em 12%. Passaram a 0,327 × 0,327, com a largura do retângulo compensada (3000 → 2632,58; 5555,39 → 4875), ocupando no Canvas o mesmo espaço de antes. O código só anima a escala da arte de fundo.
+- Tamanhos: a altura-x da EB Garamond (~0,40 em) é bem menor que a das versaletes da Cinzel (~0,60 em). Nos cartões da Mesa: objetivo, recompensa e opiniões 20 → 22, cabeçalho 22 → 24 (mantém a hierarquia), aviso 16 → 19, "Aceitar Caso" 20 → 22. Nos botões de toque (antes VT323, que desenha menor no mesmo tamanho), Pause 54, Interagir 50 e Inventario 45 → 36: em EB Garamond o rótulo passava das bordas e o "g" saía da base.
+- Ferramentas de Editor que gravavam a Cinzel por caminho (`InventarioListaBuilder`, `TutorialRoteiroTool`) passaram a usar `EBGaramondSetupTool.CaminhoRegular`; `MesaDeCasosLayoutTool` usa a fonte do cartão (só comentário e log mudaram). `TrocaFonteUI` (Cinzel variável → Cinzel-Regular) ficou sem efeito: nada mais usa a fonte de origem dela.
+- Fontes antigas **não foram apagadas**. Depois da troca, só `_Recovery/0.unity` (fora do jogo) ainda as referencia.
+
+### 25.5 Testes executados
+
+- **Auditoria** (**Ferramentas > Fontes > EB Garamond > 3 - Auditar textos e caracteres**): 807 textos TMP, 0 fora do padrão (fonte, material do atlas, kerning, campos de fonte, referências gravadas em arquivo); os 121 caracteres do conteúdo têm glifo nos três pesos, menos o ●, que vem do asset de apoio. Varredura de GUID: nenhuma fonte antiga referenciada fora de `_Recovery`.
+- **EditMode: 105/105**. **Validador:** "Campanha válida".
+- **Play Mode** (Editor via MCP, janelas abertas pelo código do jogo, estado preparado em memória): capturas e `ConferenciaDeTextosDaUI` em menu, opções, créditos, confirmações, HUD, relógio, diálogo com escolhas (fala mais longa do jogo e frase de teste "Julien Valois, a população exige justiça!… 1789–1794." em Regular, Italic e SemiBold), inventário (nome de 64 caracteres em 31,9 de 32), ficha da pista, Mesa das Fases 2, 3 e 4, pausa e opções da pausa, tutorial (passo com glifos e o passo mais longo, com Auto Size em 21,75, acima do mínimo de 17), "Você recebeu", "E", Prensa, Suporte (Fase 3), Linha editorial, Quadro de dedução (Fases 2 e 3), Biblioteca, legendas do Tribunal, Tribunal e controles de toque simulados. **0 problema** em 1280×720 e 1920×1080, exceto os três casos anteriores à troca listados em §25.6. Recortes a 100% sem serrilhado nem borrão, com serifas, acentos e til separados. Console sem aviso de caractere ausente nem exceção.
+
+### 25.6 Limitações e pendências
+
+- ~~**UI montada por código** (Quadro, Linha editorial, Suporte, Biblioteca): as anotações em `<size=78–80%>` e a nota do Suporte ficam em cerca de 12 px a 1280×720.~~ Resolvido a pedido do grupo, junto com os cartões da Mesa e o tutorial (§25.10). O título do Tribunal e os nomes dos juízes continuam em Regular, como já eram.
+- **Anteriores à troca, sem corte visível:** o título do menu ("DA PENA À GUILHOTINA") e "VELOCIDADE DO TEXTO" estão em caixas de 200 px menores que o texto (transbordam de propósito; com a Cinzel, mais larga, já era assim), e os nomes dos créditos têm margem direita negativa (−186). A conferência aponta "texto maior que a caixa" nos três.
+- **Auto Size** dos rótulos "Povo"/"Estado" com mínimo 14: hoje ficam no máximo (26), porque o texto é curto.
+- **Texto em imagem** (não muda com a fonte): selo oficial de classificação indicativa "16" e a pintura "Journée des Tuiles" (cartazes pintados) no menu. Não foram editados.
+- **Botões de toque:** o rótulo "Inventario" está sem acento no prefab (conteúdo; não foi alterado).
+
+### 25.7 O que ainda exige teste manual
+
+1. Build Windows e Android: abrir menu, diálogo, Mesa e inventário e conferir a nitidez em tela física (DPI real), sobretudo em 4K e num celular.
+2. Uma partida inteira até o tribunal com a EB Garamond (as janelas foram vistas com estados montados em memória).
+
+### 25.8 Efeitos no ambiente de quem testou
+
+- `save.json` somente leitura nas sessões de Play; no fim, **md5 idêntico** (`becc52a2…`), sem `save.json.tmp`, atributo normal.
+- PlayerPrefs: as 9 chaves da partida continuaram em 1; `opt_volume` e `opt_textspeed` continuam ausentes.
+- Editor: Game View de volta a Free Aspect, `playModeStartScene` nulo, simulação de celular desligada, `menu principal` aberta e limpa. `LiberationSans SDF - Fallback.asset` (atlas dinâmico regravado pelo Editor) restaurado com `git restore`.
+- Nada foi commitado.
+
+### 25.9 Como revalidar
+
+1. **Ferramentas > Fontes > EB Garamond > 2 - Aplicar em todo o jogo** → só o cabeçalho do relatório (nada a mudar).
+2. **… > 3 - Auditar textos e caracteres** → "0 fora do padrão".
+3. Test Runner > EditMode → 105/105.
+4. Em Play Mode, abrir as janelas de §25.5 e rodar **Ferramentas > UI > Conferir textos na tela (Play Mode)** em 1920×1080 e 1280×720.
+5. Conteúdo novo com caractere fora do Latin-1: rodar o passo 1 de novo. A ferramenta acrescenta o caractere e avisa se a fonte não tiver o glifo.
+
+### 25.10 Letras maiores no Quadro, Linha editorial, Suporte, Biblioteca, Mesa e tutorial (27/10/2026)
+
+Pedido do grupo, depois da §25.6. Critério: nada abaixo de ~22 na referência de 1080 (≈15 px a 1280×720), texto corrido entre 25 e 28, títulos como estavam, hierarquia mantida. Nenhum texto foi alterado.
+
+| Onde | Antes → depois (referência 1080; `%` = tamanho relativo dentro do texto) |
+|---|---|
+| Quadro de dedução (`QuadroDeDeducaoUI`) | pista 24 → 28 (rótulo 78 → 80%, fonte 80%, descrição 85 → 90%); "Contradição N" 24 → 28 (situação 80 → 85%); caso 30 → 32; regras 22 → 25; contador e mensagem 24 → 26; lembrete 20 → 23; selo 24 → 26; botões 26 → 28 |
+| Linha editorial (`LinhaEditorialDaPrensaUI`) | título 32 → 34 (pergunta 75 → 80%); opções 24 → 27 (descrição e efeitos 78 → 85%); nota 20 → 23 |
+| Suporte (`SuportesDaPrensaUI`) | título 32 → 34; dica 22 → 25; documentos 24 → 26 (2ª linha 75 → 85%); prévia 24 → 26 (linhas 85 → 90%, nota final 75 → 85%); "Nenhum documento" 24 → 26 |
+| Biblioteca (`BibliotecaUI`) | ofertas 26 → 28 (descrição 85 → 90%, "Serve ao caso" 75 → 80%); preço 26 → 28; ouro 28 → 30; aviso 22 → 25; mensagem 26 → 28 |
+| Cartões da Mesa (`CartaoPrefab`) | título 30 → 32; objetivo 22 → 24; descrição 24 → 26; cabeçalho 24 → 26; recompensa e opiniões 22 → 24; aviso 19 → 22; "Aceitar Caso" 22 → 24 |
+| Tutorial (`UI.prefab`, `GlifoDeControle`, `TutorialStepUI`) | título 28 → 30; texto 24 com auto size 17–25 → 27 com 22–28; "Continuar" 24 → 26; "Pular tutorial" 20 → 22; rótulo ao lado da tecla no mínimo 22 (era 18 nas teclas de 36); letra da tecla 50 → 55% da altura |
+
+- **Tutorial:** no rodapé, o popup agora cresce para cima até o texto caber no tamanho cheio (`TutorialStepUI.CrescerParaOTexto`, mesma conta que o modo compacto já fazia), sem passar da HUD do topo. Antes, o auto size encolhia as etapas longas. Na etapa mais longa (332 caracteres), o popup vai de 260 a 357 de altura com o texto em 28.
+- **Prefabs** pela tabela de tamanhos da ferramenta (passo 2), que só troca valores antigos conhecidos; `TutorialPopupBuilder` passou a gravar os mesmos tamanhos.
+- **Efeitos de layout:** os cartões crescem (707 de altura na Fase 3, ainda sem rolagem: área de 959). Quadro e Biblioteca mostram um pouco menos sem rolar (a lista já rolava). A Linha editorial pede 696 de 720 de altura, inclusive com o rótulo "Agradar o Comitê" da Fase 4.
+- **Verificação:** `ConferenciaDeTextosDaUI` com 0 problema em 1920×1080 e 1280×720 (tutorial com glifos e etapa mais longa, inclusive "Clique de novo para pular"; Mesa das Fases 2, 3 e 4; Quadro da Fase 2 com pistas; Biblioteca; Prensa com Suporte e Linha editorial das Fases 3 e 4). Itens "parcialmente fora de lista rolável" só onde a lista rola. EditMode **105/105**; validador "Campanha válida"; auditoria da fonte com 0 fora do padrão. Save com md5 idêntico, PlayerPrefs iguais, Editor restaurado.

@@ -11,8 +11,8 @@ using UnityEngine.UI;
 ///   botões dos cartões da mesma linha ficarem alinhados embaixo, e a descrição alinhada à esquerda (justificada, abria
 ///   buracos na coluna). Os cartões ficam em colunas (CaseSelectionUI).
 /// - UI.prefab, Painel_MesaDeCasos: barra de rolagem (aparece só quando os cartões não cabem, indicando que há mais
-///   para ver; fora da navegação do teclado), margem direita para ela e o "Fechar" na fonte Cinzel dos outros textos da
-///   mesa (estava em LiberationSans).
+///   para ver; fora da navegação do teclado), margem direita para ela e o "Fechar" na mesma fonte dos cartões (estava
+///   em LiberationSans).
 /// Idempotente: só troca o que ainda está com o valor antigo; o resto fica como está.
 /// Menu: Ferramentas > UI > Aplicar layout da Mesa de Casos
 /// </summary>
@@ -95,14 +95,14 @@ public static class MesaDeCasosLayoutTool
             if (mesa == null) return $"'{CaminhoDaMesa}' não existe no UI.prefab; nada alterado.";
             var feito = new StringBuilder();
 
-            // Fechar na fonte dos cartões (Cinzel-Regular SDF).
+            // Fechar na fonte dos cartões (EB Garamond desde 27/10/2026).
             TextMeshProUGUI rotuloFechar = mesa.Find("BotaoFechar")?.GetComponentInChildren<TextMeshProUGUI>(true);
-            TMP_FontAsset cinzel = FonteDosCartoes();
-            if (rotuloFechar != null && cinzel != null && rotuloFechar.font != cinzel)
+            TMP_FontAsset fonteDosCartoes = FonteDosCartoes();
+            if (rotuloFechar != null && fonteDosCartoes != null && rotuloFechar.font != fonteDosCartoes)
             {
-                rotuloFechar.font = cinzel;
+                rotuloFechar.font = fonteDosCartoes;
                 rotuloFechar.text = rotuloFechar.text.Trim();
-                feito.Append("Fechar em Cinzel; ");
+                feito.Append("Fechar na fonte dos cartões; ");
             }
 
             var area = mesa.Find("AreaDosCartoes") as RectTransform;

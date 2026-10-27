@@ -87,7 +87,7 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         if (receita == null) return;
         if (janela == null) Montar();
 
-        textoTitulo.text = $"<b>{titulo}</b>\n<size=75%><color=#B0A48C>{pergunta}</color></size>";
+        textoTitulo.text = $"<b>{titulo}</b>\n<size=80%><color=#B0A48C>{pergunta}</color></size>";
         for (int i = 0; i < LinhasEditoriais.Opcoes.Length; i++)
             rotulos[i].text = TextoDaOpcao(i + 1, LinhasEditoriais.Opcoes[i], receita);
 
@@ -119,10 +119,10 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
     {
         ReceitaDeCaso.ConfiguracaoEditorial config = receita.linhaEditorial;
         ReceitaDeCaso.ModificadorEditorial mod = config != null ? config.De(linha) : null;
-        var sb = new StringBuilder($"<b>{numero}. {LinhasEditoriais.Rotulo(linha, receita)}</b>\n<size=78%>");
+        var sb = new StringBuilder($"<b>{numero}. {LinhasEditoriais.Rotulo(linha, receita)}</b>\n<size=85%>");
         sb.Append(linha == LinhaEditorial.DefesaDoPovo ? descricaoDefesaDoPovo
                 : linha == LinhaEditorial.AgradarOPoder ? descricaoAgradarOPoder : descricaoSensacionalista);
-        sb.Append("</size>\n<size=78%>");
+        sb.Append("</size>\n<size=85%>");
         if (mod != null)
         {
             Efeito(sb, mod.povo, "Povo");
@@ -163,14 +163,15 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         v.padding = new RectOffset(22, 22, 16, 16); v.spacing = 8f;
         v.childControlWidth = v.childControlHeight = true; v.childForceExpandWidth = true; v.childForceExpandHeight = false;
 
-        textoTitulo = Texto("Titulo", janela.transform, 32f);
+        // Tamanhos revistos com a EB Garamond (27/10/2026): nada abaixo de ~22 na referência de 1080 (15 px em 720).
+        textoTitulo = Texto("Titulo", janela.transform, 34f);
         for (int i = 0; i < opcoes.Length; i++)
         {
             LinhaEditorial linha = LinhasEditoriais.Opcoes[i];
             opcoes[i] = Botao(janela.transform, "Opcao_" + linha, 108f, out rotulos[i]);
             opcoes[i].onClick.AddListener(() => Escolher(linha));
         }
-        Texto("Nota", janela.transform, 20f).text = $"<color=#B0A48C>{nota}</color>";
+        Texto("Nota", janela.transform, 23f).text = $"<color=#B0A48C>{nota}</color>";
         botaoCancelar = Botao(janela.transform, "Cancelar", 72f, out TextMeshProUGUI rotuloCancelar);
         rotuloCancelar.text = "<b>Cancelar</b>";
         rotuloCancelar.alignment = TextAlignmentOptions.Center;
@@ -203,7 +204,7 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         v.padding = new RectOffset(16, 16, 10, 10);
         v.childControlWidth = v.childControlHeight = true; v.childForceExpandWidth = true; v.childForceExpandHeight = true;
         v.childAlignment = TextAnchor.MiddleLeft;
-        rotulo = Texto("Rotulo", go.transform, 24f);
+        rotulo = Texto("Rotulo", go.transform, 27f);
         rotulo.alignment = TextAlignmentOptions.MidlineLeft;
         return go.GetComponent<Button>();
     }

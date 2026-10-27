@@ -877,7 +877,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1589325444282527361, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2152126652485104815, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchorMax.y
@@ -973,7 +973,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3046842053107045678, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3148388792179646529, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_TextStyleHashCode
@@ -3993,7 +3993,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68d40a4112cd1940b92a6ccfcf0e822, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PromptDeInteracao
-  fonte: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  fonte: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   alturaAcimaDoAlvo: 0.35
   escala: 0.012
 --- !u!1001 &826867628453559706

@@ -74,13 +74,13 @@ public class SuportesDaPrensaUI : MonoBehaviour
                 if (item.EhSuporte && item.caso == caso && !documentos.Exists(d => d.itemID == item.itemID)) documentos.Add(item);
 
         if (documentos.Count == 0)
-            Texto("Nenhum", lista, 24f, "<color=#9E9E9E>Nenhum documento de apoio deste caso no inventário.</color>");
+            Texto("Nenhum", lista, 26f, "<color=#9E9E9E>Nenhum documento de apoio deste caso no inventário.</color>");
         foreach (Item doc in documentos)
         {
             Item d = doc;
             bool marcado = prensa.SuporteSelecionado(d);
             bool aceito = receita != null && receita.AceitaComoSuporte(d);
-            Button b = Botao(lista, $"{(marcado ? "[x]" : "[  ]")} {d.NomeExibicao}\n<size=75%>{(aceito ? "aceito como apoio neste caso" : "<color=#9E9E9E>sem efeito neste caso</color>")}</size>");
+            Button b = Botao(lista, $"{(marcado ? "[x]" : "[  ]")} {d.NomeExibicao}\n<size=85%>{(aceito ? "aceito como apoio neste caso" : "<color=#9E9E9E>sem efeito neste caso</color>")}</size>");
             b.onClick.AddListener(() => prensa.AlternarSuporte(d));
         }
 
@@ -95,18 +95,18 @@ public class SuportesDaPrensaUI : MonoBehaviour
         Item a = prensa.slotInput1 != null ? prensa.slotInput1.item : null;
         Item b = prensa.slotInput2 != null ? prensa.slotInput2.item : null;
         sb.Append(a != null && b != null ? $"Entradas: {a.NomeExibicao} + {b.NomeExibicao}\n" : "Coloque duas pistas nas entradas.\n");
-        sb.Append($"<size=85%>Tendência estimada do caso: {Seta(caso.publicOpinionReward)} Povo  {Seta(caso.stateOpinionReward)} Estado</size>\n");
+        sb.Append($"<size=90%>Tendência estimada do caso: {Seta(caso.publicOpinionReward)} Povo  {Seta(caso.stateOpinionReward)} Estado</size>\n");
 
         // Reforços contados por regra da receita, não por documento (documentos equivalentes não somam), e sem
         // olhar a versão (verdade das pistas).
         List<Item> selecionados = prensa.SuportesSelecionadosNoInventario();
         int reforcos = CalculadoraDePanfleto.ReforcosPossiveis(receita, selecionados);
-        if (selecionados.Count == 0) sb.Append("<size=85%>Sem apoio selecionado.</size>\n");
-        else if (reforcos == 0) sb.Append("<size=85%>Os documentos marcados não reforçam este caso.</size>\n");
+        if (selecionados.Count == 0) sb.Append("<size=90%>Sem apoio selecionado.</size>\n");
+        else if (reforcos == 0) sb.Append("<size=90%>Os documentos marcados não reforçam este caso.</size>\n");
         else
-            sb.Append($"<size=85%>Apoio: {reforcos} reforço(s) possível(is)" +
+            sb.Append($"<size=90%>Apoio: {reforcos} reforço(s) possível(is)" +
                       (selecionados.Count > reforcos ? " (documentos equivalentes não somam)" : string.Empty) + ".</size>\n");
-        sb.Append("<size=75%><color=#B0A48C>O resultado real depende da verdade das pistas, que a prensa não revela.</color></size>");
+        sb.Append("<size=85%><color=#B0A48C>O resultado real depende da verdade das pistas, que a prensa não revela.</color></size>");
         return sb.ToString();
     }
 
@@ -132,8 +132,9 @@ public class SuportesDaPrensaUI : MonoBehaviour
         v.padding = new RectOffset(20, 20, 20, 20); v.spacing = 12f;
         v.childControlWidth = v.childControlHeight = true; v.childForceExpandWidth = true; v.childForceExpandHeight = false;
 
-        Texto("Titulo", painel, 32f, "<b>Suporte (opcional)</b>");
-        Texto("Dica", painel, 22f, "<color=#B0A48C>Documentos de apoio do caso. Não são gastos na impressão.</color>");
+        // Tamanhos revistos com a EB Garamond (27/10/2026): nada abaixo de ~22 na referência de 1080 (15 px em 720).
+        Texto("Titulo", painel, 34f, "<b>Suporte (opcional)</b>");
+        Texto("Dica", painel, 25f, "<color=#B0A48C>Documentos de apoio do caso. Não são gastos na impressão.</color>");
 
         var area = new GameObject("Lista", typeof(RectTransform), typeof(RectMask2D), typeof(ScrollRect), typeof(LayoutElement), typeof(Image));
         area.transform.SetParent(painel, false);
@@ -151,7 +152,7 @@ public class SuportesDaPrensaUI : MonoBehaviour
         var rolagem = area.GetComponent<ScrollRect>();
         rolagem.content = lista; rolagem.horizontal = false; rolagem.movementType = ScrollRect.MovementType.Clamped;
 
-        previa = Texto("Previa", painel, 24f, string.Empty);
+        previa = Texto("Previa", painel, 26f, string.Empty);
         previa.GetComponent<LayoutElement>().minHeight = 190f;
         AjustarLargura();
     }
@@ -201,7 +202,7 @@ public class SuportesDaPrensaUI : MonoBehaviour
         go.transform.SetParent(pai, false);
         go.GetComponent<Image>().color = new Color(0.25f, 0.18f, 0.13f);
         go.GetComponent<LayoutElement>().minHeight = 84f;
-        var texto = Texto("Rotulo", go.transform, 24f, rotulo);
+        var texto = Texto("Rotulo", go.transform, 26f, rotulo);
         texto.alignment = TextAlignmentOptions.MidlineLeft;
         var rt = (RectTransform)texto.transform;
         rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = new Vector2(14f, 4f); rt.offsetMax = new Vector2(-14f, -4f);

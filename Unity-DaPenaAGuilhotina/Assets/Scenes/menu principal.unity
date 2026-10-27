@@ -343,8 +343,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "OP\xC7\xD5ES"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
-  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -556,8 +556,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: SAIR
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
-  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -964,8 +964,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Daniel Schaefer - Sonoriza\xE7\xE3o"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1310,8 +1310,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: SIM
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
-  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1447,8 +1447,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Allan Rafael - Design
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1584,8 +1584,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "COME\xC7AR UM NOVO JOGO?"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
-  m_sharedMaterial: {fileID: 4674454212167143234, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1615,7 +1615,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1941,8 +1941,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: VOLTAR
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
-  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2078,8 +2078,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "VOC\xCA DESEJA REALMENTE SAIR?"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
-  m_sharedMaterial: {fileID: 4674454212167143234, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2109,7 +2109,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -2405,8 +2405,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Nataniel - Design
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2614,8 +2614,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: VOLTAR
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
-  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2751,8 +2751,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "N\xC3O"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
-  m_sharedMaterial: {fileID: 4674454212167143234, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3093,8 +3093,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "N\xC3O"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
-  m_sharedMaterial: {fileID: 4674454212167143234, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3305,8 +3305,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "CONFIGURA\xC7\xD5ES"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
-  m_sharedMaterial: {fileID: 4674454212167143234, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3336,7 +3336,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -3478,8 +3478,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "DA PENA \xC0 GUILHOTINA "
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
-  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3689,8 +3689,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Alisson Machado - Professor orientador
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3902,8 +3902,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Gabriel Kamphorst - Programa\xE7\xE3o"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4039,8 +4039,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "CR\xC9DITOS"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
-  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4583,8 +4583,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: SIM
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
-  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4720,8 +4720,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "O progresso salvo ser\xE1 substitu\xEDdo."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
-  m_sharedMaterial: {fileID: 4674454212167143234, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5007,8 +5007,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: VOLUME
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
-  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5278,8 +5278,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: JOGAR
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
-  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6353,8 +6353,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Enzo Scarpin - Programa\xE7\xE3o"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6490,8 +6490,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: CONTINUAR
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
-  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6627,8 +6627,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: VELOCIDADE DO TEXTO
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
-  m_sharedMaterial: {fileID: 8984071369596191924, guid: ee04d5259065b2044842c83f67f097c3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7492,8 +7492,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "CR\xC9DITOS"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
-  m_sharedMaterial: {fileID: 4674454212167143234, guid: 4c4300ee113bc7e4bad0530f1fa78bbc, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
+  m_sharedMaterial: {fileID: 1422664792322532498, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7523,7 +7523,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
