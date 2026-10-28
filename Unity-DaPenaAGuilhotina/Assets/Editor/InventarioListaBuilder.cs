@@ -269,9 +269,11 @@ public static class InventarioListaBuilder
         Button button = botao.gameObject.AddComponent<Button>();
         button.targetGraphic = fundoBotao;
         botao.gameObject.AddComponent<BotaoFecharInventario>();
+        bool comSprite = EstiloDeBotao.Aplicar(fundoBotao, button);
 
         TextMeshProUGUI rotulo = CriarTexto("Texto", botao, "Fechar", 32f, TextAlignmentOptions.Center, fonte);
         Esticar(rotulo.rectTransform, Vector2.zero, Vector2.zero);
+        if (comSprite) EstiloDeBotao.AjustarRotulo(rotulo);
     }
 
     private static void ConfigurarViewport(RectTransform viewport)

@@ -200,12 +200,14 @@ public class SuportesDaPrensaUI : MonoBehaviour
     {
         var go = new GameObject("Documento", typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
         go.transform.SetParent(pai, false);
-        go.GetComponent<Image>().color = new Color(0.25f, 0.18f, 0.13f);
+        bool comSprite = EstiloDeBotao.Aplicar(go.GetComponent<Image>(), go.GetComponent<Button>());
+        if (!comSprite) go.GetComponent<Image>().color = new Color(0.25f, 0.18f, 0.13f);
         go.GetComponent<LayoutElement>().minHeight = 84f;
         var texto = Texto("Rotulo", go.transform, 26f, rotulo);
         texto.alignment = TextAlignmentOptions.MidlineLeft;
         var rt = (RectTransform)texto.transform;
         rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = new Vector2(14f, 4f); rt.offsetMax = new Vector2(-14f, -4f);
+        if (comSprite) EstiloDeBotao.AjustarRotulo(texto);
         return go.GetComponent<Button>();
     }
 }

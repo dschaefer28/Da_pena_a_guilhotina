@@ -179,6 +179,7 @@ public class TribunalManager : MonoBehaviour
     private static readonly Color CorMoldura = new Color(0.98f, 0.85f, 0.55f);
     // Prova já apresentada: fundo esverdeado e opaco, com a etiqueta "Apresentada" (antes só ficava um pouco mais escura).
     private static readonly Color CorApresentada = new Color(0.20f, 0.27f, 0.15f);
+    private static readonly Color CorTintaApresentada = new Color(0.55f, 0.85f, 0.5f);
     private static readonly Color CorCalma = new Color(0.42f, 0.56f, 0.31f);
     private static readonly Color CorFuria = new Color(0.70f, 0.15f, 0.12f);
     private const float Limite = 100f;
@@ -323,9 +324,11 @@ public class TribunalManager : MonoBehaviour
             // O "interactable = false" já começou a animar o tom de desativado (cinza, alpha 0,45), e trocar a transição
             // para None não para essa animação: sem isto o fundo verde ficava escuro e translúcido.
             fundo.CrossFadeColor(Color.white, 0f, true, true);
-            fundo.color = CorApresentada;
+            // Sobre o sprite laranja a cor é tinta (multiplica): um verde claro deixa a prova esverdeada sem perder a moldura.
+            bool comSprite = fundo.sprite != null && fundo.sprite == EstiloDeBotao.Sprite;
+            fundo.color = comSprite ? CorTintaApresentada : CorApresentada;
         }
-        var rotulo = prova.botao.transform.Find("Rotulo")?.GetComponent<TextMeshProUGUI>();
+        var rotulo = prova.botao.transform.Find("Face/Rotulo")?.GetComponent<TextMeshProUGUI>();
         if (rotulo != null) rotulo.text = $"{prova.nome}\n<size=70%><color=#A5D6A7><b>Apresentada</b></color></size>";
     }
 
@@ -476,7 +479,7 @@ public class TribunalManager : MonoBehaviour
             botaoEncerrar.interactable = pode;
             // Desativado, o botão diz por quê (antes só ficava apagado e parecia um texto qualquer).
             int faltam = Mathf.Clamp(minimoParaEncerrar, 1, Mathf.Max(1, totalDeArgumentos)) - apresentados;
-            var rotulo = botaoEncerrar.transform.Find("Rotulo")?.GetComponent<TextMeshProUGUI>();
+            var rotulo = botaoEncerrar.transform.Find("Face/Rotulo")?.GetComponent<TextMeshProUGUI>();
             if (rotulo != null)
                 rotulo.text = pode || faltam <= 0 ? "<b>Encerrar a defesa</b>"
                     : $"<b>Encerrar a defesa</b>\n<size=65%>apresente mais {faltam} prova{(faltam > 1 ? "s" : string.Empty)}</size>";
@@ -647,35 +650,48 @@ public class TribunalManager : MonoBehaviour
     {
         RectTransform rt = Painel(nome, pai, min, max, CorBotao);
         var botao = rt.gameObject.AddComponent<Button>();
+        bool comSprite = EstiloDeBotao.Aplicar(rt.GetComponent<Image>(), botao);
         ColorBlock cores = botao.colors;
-        cores.highlightedColor = new Color(1.25f, 1.2f, 1.1f);
+        if (!comSprite) cores.highlightedColor = new Color(1.25f, 1.2f, 1.1f);
         cores.disabledColor = new Color(0.5f, 0.5f, 0.5f, 0.45f);
         botao.colors = cores;
 
+        // Dentro da face do sprite: a moldura e a sombra ficam fora do ícone e do texto.
+        RectTransform face = Vazio("Face", rt, Vector2.zero, Vector2.one);
+        if (comSprite)
+        {
+            Vector2 respiro = new Vector2(EstiloDeBotao.RespiroHorizontal, EstiloDeBotao.RespiroVertical);
+            face.offsetMin = EstiloDeBotao.RecuoEsquerdaBaixo + respiro;
+            face.offsetMax = -(EstiloDeBotao.RecuoDireitaCima + respiro);
+        }
         float inicioTexto = 0.05f;
         if (icone != null)
         {
-            RectTransform img = Vazio("Icone", rt, new Vector2(0.02f, 0.1f), new Vector2(0.2f, 0.9f));
+            RectTransform img = Vazio("Icone", face, new Vector2(0.02f, 0.1f), new Vector2(0.2f, 0.9f));
             var imagem = img.gameObject.AddComponent<Image>();
             imagem.sprite = icone; imagem.preserveAspect = true; imagem.raycastTarget = false;
             inicioTexto = 0.22f;
         }
-        Texto("Rotulo", rt, new Vector2(inicioTexto, 0.05f), new Vector2(0.97f, 0.95f), 28f, rotulo);
+        var texto = Texto("Rotulo", face, new Vector2(inicioTexto, 0.05f), new Vector2(0.97f, 0.95f), 28f, rotulo);
+        if (comSprite) { texto.color = Color.white; EstiloDeBotao.ConfigurarTexto(texto); }
         return botao;
     }
 
-    // Fundo de botão de ação, moldura dourada e, desativado, cinza opaco (não some no fundo escuro do salão).
+    // Desativado, cinza opaco (não some no fundo escuro do salão). Sem o sprite padrão, fundo de ação e moldura dourada.
     private static void EstiloDeBotaoDeAcao(Button botao)
     {
         var fundo = botao.GetComponent<Image>();
-        fundo.color = CorBotaoDeAcao;
-        var moldura = botao.gameObject.AddComponent<Outline>();
-        moldura.effectColor = CorMoldura;
-        moldura.effectDistance = new Vector2(3f, -3f);
+        if (fundo.sprite == null || fundo.sprite != EstiloDeBotao.Sprite)
+        {
+            fundo.color = CorBotaoDeAcao;
+            var moldura = botao.gameObject.AddComponent<Outline>();
+            moldura.effectColor = CorMoldura;
+            moldura.effectDistance = new Vector2(3f, -3f);
+        }
         ColorBlock cores = botao.colors;
         cores.disabledColor = new Color(0.55f, 0.55f, 0.55f, 1f);
         botao.colors = cores;
-        var rotulo = botao.transform.Find("Rotulo")?.GetComponent<TextMeshProUGUI>();
+        var rotulo = botao.transform.Find("Face/Rotulo")?.GetComponent<TextMeshProUGUI>();
         if (rotulo != null) rotulo.color = Color.white;
     }
 }

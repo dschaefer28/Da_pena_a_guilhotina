@@ -352,10 +352,6 @@ public class BibliotecaUI : MonoBehaviour
     // Com o sprite "button": 1 pixel da arte = 1/EscalaDaMoldura unidades do canvas (a moldura fica com a espessura dos
     // botões de Pause/Inventário/Interagir, de 60 de altura para 43 px de arte).
     private const float EscalaDaMoldura = 0.7f;
-    // Recuos do rótulo para ele ficar na face do sprite, que não é centrada: a moldura tem 7 px de cada lado (mais 4
-    // unidades de respiro), 9 px de sombra embaixo e 3 px de brilho em cima.
-    private static readonly Vector2 RecuoEsquerdaBaixo = new Vector2(7f / EscalaDaMoldura + 4f, 9f / EscalaDaMoldura);
-    private static readonly Vector2 RecuoDireitaCima = new Vector2(7f / EscalaDaMoldura + 4f, 3f / EscalaDaMoldura);
 
     private Button Botao(string nome, Transform pai, string rotulo)
     {
@@ -392,13 +388,8 @@ public class BibliotecaUI : MonoBehaviour
         if (comSprite)
         {
             // Uma linha só, dentro da face: se o texto não couber, encolhe um pouco em vez de encostar na moldura.
-            texto.color = Color.white;
             texto.textWrappingMode = TextWrappingModes.NoWrap;
-            texto.enableAutoSizing = true;
-            texto.fontSizeMax = texto.fontSize;
-            texto.fontSizeMin = texto.fontSize * 0.7f;
-            rt.offsetMin = RecuoEsquerdaBaixo;
-            rt.offsetMax = -RecuoDireitaCima;
+            EstiloDeBotao.AjustarRotulo(texto); // recuos e respiro padrão de todos os botões
         }
         return botao;
     }

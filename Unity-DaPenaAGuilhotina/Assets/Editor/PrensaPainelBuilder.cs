@@ -228,6 +228,7 @@ public static class PrensaPainelBuilder
 
         Button button = botao.GetComponent<Button>();
         button.targetGraphic = fundo;
+        bool comSprite = EstiloDeBotao.Aplicar(fundo, button);
 
         if (botao.GetComponent<CanvasGroup>() == null) botao.gameObject.AddComponent<CanvasGroup>();
         if (botao.GetComponent<BotaoMisturarEstado>() == null) botao.gameObject.AddComponent<BotaoMisturarEstado>();
@@ -238,5 +239,6 @@ public static class PrensaPainelBuilder
         InventarioListaBuilder.ConfigurarTexto(rotulo, 34f, TextAlignmentOptions.Center, fonte);
         rotulo.enableAutoSizing = false;
         InventarioListaBuilder.Esticar(rotulo.rectTransform, Vector2.zero, Vector2.zero);
+        if (comSprite) EstiloDeBotao.AjustarRotulo(rotulo);
     }
 }

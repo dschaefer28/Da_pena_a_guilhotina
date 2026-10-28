@@ -156,13 +156,15 @@ public class PromptDeInteracao : MonoBehaviour
         imgBorda.type = Image.Type.Sliced;
         imgBorda.color = CorBorda;
         imgBorda.raycastTarget = false;
+        // Com o sprite padrão dos botões, a própria tecla tem moldura e face: o miolo vira só layout (sem imagem).
+        bool comSprite = EstiloDeBotao.Aplicar(imgBorda);
         larguraTecla = borda.GetComponent<LayoutElement>();
         larguraTecla.preferredHeight = 48f;
         larguraTecla.minWidth = 48f;
         larguraTecla.flexibleWidth = 0f;
         larguraTecla.flexibleHeight = 0f;
         var hl = borda.GetComponent<HorizontalLayoutGroup>();
-        hl.padding = new RectOffset(3, 3, 3, 3);
+        hl.padding = comSprite ? EstiloDeBotao.Recuos() : new RectOffset(3, 3, 3, 3);
         hl.childControlWidth = hl.childControlHeight = true;
         hl.childForceExpandWidth = hl.childForceExpandHeight = true;
         var fitter = borda.AddComponent<ContentSizeFitter>();
@@ -177,8 +179,9 @@ public class PromptDeInteracao : MonoBehaviour
         imgMiolo.type = Image.Type.Sliced;
         imgMiolo.color = CorFundo;
         imgMiolo.raycastTarget = false;
+        imgMiolo.enabled = !comSprite;
         var hlMiolo = miolo.GetComponent<HorizontalLayoutGroup>();
-        hlMiolo.padding = new RectOffset(12, 12, 4, 4);
+        hlMiolo.padding = comSprite ? new RectOffset(0, 0, 0, 0) : new RectOffset(12, 12, 4, 4);
         hlMiolo.childAlignment = TextAnchor.MiddleCenter;
         hlMiolo.childControlWidth = hlMiolo.childControlHeight = true;
         hlMiolo.childForceExpandWidth = hlMiolo.childForceExpandHeight = true;

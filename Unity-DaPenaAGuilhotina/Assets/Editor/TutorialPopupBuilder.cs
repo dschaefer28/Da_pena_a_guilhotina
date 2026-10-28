@@ -20,7 +20,7 @@ public static class TutorialPopupBuilder
     private const float MargemInferior = 16f;
     private const float Margem = 28f;
     private const float LarguraGlifos = 230f;
-    private static readonly Vector2 TamanhoBotao = new Vector2(200f, 46f);
+    private static readonly Vector2 TamanhoBotao = new Vector2(200f, 56f); // 56: o texto respira dentro da face do sprite
 
     [MenuItem("Ferramentas/Tutorial/1 - Aplicar layout do popup do tutorial (UI.prefab)")]
     public static void Aplicar()
@@ -264,6 +264,7 @@ public static class TutorialPopupBuilder
         fundo.type = Image.Type.Sliced;
         fundo.color = InventarioListaBuilder.CorBotaoFechar;
         botao.targetGraphic = fundo;
+        bool comSprite = EstiloDeBotao.Aplicar(fundo, botao);
 
         TextMeshProUGUI rotulo = botao.GetComponentInChildren<TextMeshProUGUI>(true);
         if (rotulo == null) rotulo = InventarioListaBuilder.CriarTexto("Texto", botao.transform, "Continuar", 26f, TextAlignmentOptions.Center, fonte);
@@ -271,6 +272,7 @@ public static class TutorialPopupBuilder
         InventarioListaBuilder.ConfigurarTexto(rotulo, 26f, TextAlignmentOptions.Center, fonte);
         rotulo.enableAutoSizing = false;
         InventarioListaBuilder.Esticar(rotulo.rectTransform, Vector2.zero, Vector2.zero);
+        if (comSprite) EstiloDeBotao.AjustarRotulo(rotulo);
     }
 
     /// <summary>Só o botão "Pular tutorial", sem refazer o resto do popup.</summary>

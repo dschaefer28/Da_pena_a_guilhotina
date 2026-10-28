@@ -198,10 +198,12 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         var go = new GameObject(nome, typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement), typeof(VerticalLayoutGroup));
         go.layer = gameObject.layer;
         go.transform.SetParent(pai, false);
-        go.GetComponent<Image>().color = CorBotao;
+        bool comSprite = EstiloDeBotao.Aplicar(go.GetComponent<Image>(), go.GetComponent<Button>());
+        if (!comSprite) go.GetComponent<Image>().color = CorBotao;
         go.GetComponent<LayoutElement>().minHeight = alturaMinima;
         var v = go.GetComponent<VerticalLayoutGroup>();
-        v.padding = new RectOffset(16, 16, 10, 10);
+        // Com o sprite, o texto fica na face (fora da moldura e da sombra).
+        v.padding = comSprite ? EstiloDeBotao.RecuosDoRotulo() : new RectOffset(16, 16, 10, 10);
         v.childControlWidth = v.childControlHeight = true; v.childForceExpandWidth = true; v.childForceExpandHeight = true;
         v.childAlignment = TextAnchor.MiddleLeft;
         rotulo = Texto("Rotulo", go.transform, 27f);

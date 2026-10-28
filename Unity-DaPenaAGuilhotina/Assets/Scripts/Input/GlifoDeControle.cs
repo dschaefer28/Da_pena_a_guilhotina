@@ -53,8 +53,10 @@ public class GlifoDeControle : MonoBehaviour
         imgBorda.type = Image.Type.Sliced;
         imgBorda.color = CorBorda;
         imgBorda.raycastTarget = false;
+        // Com o sprite padrão dos botões, a própria tecla tem moldura e face: o miolo vira só layout (sem imagem).
+        bool comSprite = EstiloDeBotao.Aplicar(imgBorda);
         var hlBorda = borda.GetComponent<HorizontalLayoutGroup>();
-        hlBorda.padding = new RectOffset(3, 3, 3, 3);
+        hlBorda.padding = comSprite ? EstiloDeBotao.Recuos() : new RectOffset(3, 3, 3, 3);
         hlBorda.childControlWidth = hlBorda.childControlHeight = true;
         hlBorda.childForceExpandWidth = hlBorda.childForceExpandHeight = true;
         var leBorda = borda.GetComponent<LayoutElement>();
@@ -72,8 +74,9 @@ public class GlifoDeControle : MonoBehaviour
         imgMiolo.type = Image.Type.Sliced;
         imgMiolo.color = CorTecla;
         imgMiolo.raycastTarget = false;
+        imgMiolo.enabled = !comSprite;
         var hlMiolo = miolo.GetComponent<HorizontalLayoutGroup>();
-        hlMiolo.padding = new RectOffset(10, 10, 0, 0);
+        hlMiolo.padding = comSprite ? new RectOffset(0, 0, 0, 0) : new RectOffset(10, 10, 0, 0);
         hlMiolo.childAlignment = TextAnchor.MiddleCenter;
         hlMiolo.childControlWidth = hlMiolo.childControlHeight = true;
         hlMiolo.childForceExpandWidth = hlMiolo.childForceExpandHeight = true;
