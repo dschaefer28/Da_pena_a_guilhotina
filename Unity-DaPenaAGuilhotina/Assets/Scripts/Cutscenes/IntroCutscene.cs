@@ -4,9 +4,10 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Cutscene introdutória (documento de tarefas): toca uma vez, antes de qualquer outra coisa na
-/// primeira vez que a cena Jogo carrega, situando o jogador no tempo e espaço da história. Mesmo
-/// padrão do Fase1Desfecho (tela preta com legendas, PlayerPrefs para tocar uma vez só); fica ao lado
-/// dele no prefab UI. O texto das legendas é editável no Inspector.
+/// primeira vez que a cena Jogo carrega, situando o jogador no tempo e espaço da história; ao terminar,
+/// começa a Fase 1 (o tutorial). Mesmo padrão do Fase1Desfecho (legendas de transição sobre tela preta,
+/// PlayerPrefs para tocar uma vez só); fica ao lado dele no prefab UI. O texto das legendas é editável no
+/// Inspector; os tempos ficam no CutsceneLegendas.
 /// </summary>
 public class IntroCutscene : MonoBehaviour
 {
@@ -16,11 +17,11 @@ public class IntroCutscene : MonoBehaviour
     [Tooltip("Marque para a cutscene tocar de novo a cada teste (ignora o PlayerPrefs).")]
     public bool forcarRepetir = false;
 
+    [Tooltip("Um bloco por item. Duração 0 = tempo calculado pelas palavras (CutsceneLegendas).")]
     public List<CutsceneLegendas.Linha> legendas = new List<CutsceneLegendas.Linha>
     {
-        new CutsceneLegendas.Linha { texto = "Paris, 1780. Nove anos antes da Queda da Bastilha.", duracao = 4f },
-        new CutsceneLegendas.Linha { texto = "Nas ruas, o descontentamento cresce em silêncio — e a palavra impressa já circula mais rápido que os editos do rei.", duracao = 5f },
-        new CutsceneLegendas.Linha { texto = "Numa pequena tipografia, um novo aprendiz está prestes a descobrir o poder de uma página bem escrita.", duracao = 5f },
+        new CutsceneLegendas.Linha { texto = "Paris, 1786. Sob o poder da Coroa, a justiça pesa de forma diferente sobre ricos e pobres.", duracao = 0f },
+        new CutsceneLegendas.Linha { texto = "Você é Julien Valois, um jovem advogado que trabalha sob a orientação de Charles Dupaty.", duracao = 0f },
     };
 
     private void Start()
@@ -34,6 +35,6 @@ public class IntroCutscene : MonoBehaviour
         PlayerPrefs.Save();
         // Sem fade de entrada: é a primeira coisa da cena, não há cenário pra esmaecer (evita o
         // escritório "piscar" por trás do fade antes de escurecer).
-        CutsceneLegendas.Instance.Tocar(legendas, fadeDeEntradaInstantaneo: true);
+        CutsceneLegendas.Instance.TocarTransicao(legendas, fadeDeEntradaInstantaneo: true);
     }
 }

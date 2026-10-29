@@ -15,6 +15,7 @@ Regras que mudaram nas verificações e prevalecem sobre o texto das seções 4�
 - **Biblioteca:** tem estados por situação.
 - **Pistas:** os nomes são neutros.
 - **Revelações (26/09):** aplicadas no fim da fase por `GameManager.EncerrarFase`, na ordem revelações → despesas → avanço de fase/rota, e mostradas na cutscene do `FimDeFase`. `RevelacaoDeBoatos` foi removido.
+- **Cutscenes de transição (29/10, §26):** abertura e passagens entre fases em `CutsceneLegendas.TocarTransicao` (um bloco por vez, fade do texto, tempo pelas palavras). Na cutscene do `FimDeFase`, as revelações e as despesas vêm **antes** da passagem histórica, que fecha a sequência. Finais e abertura do julgamento continuam no `Tocar`.
 - **Tribunal (26/09):** as provas são os itens do caso da Fase 4 obtidos (histórico, inclusive os gastos na prensa) mais o panfleto dele. O réu é absolvido só se esse panfleto saiu na versão Fatos; o destino do jogador continua vindo só da rota.
 - **Final C (26/09):** "O Esquecido", definido pelo grupo: barras equilibradas, ninguém condena nem defende o jogador, que é apagado da história.
 - **Tutorial (26/09):** a explicação do status aparece ao abrir a prensa, antes de imprimir.
@@ -1517,3 +1518,66 @@ Pedido do grupo, depois da §25.6. Critério: nada abaixo de ~22 na referência 
 - **Prefabs** pela tabela de tamanhos da ferramenta (passo 2), que só troca valores antigos conhecidos; `TutorialPopupBuilder` passou a gravar os mesmos tamanhos.
 - **Efeitos de layout:** os cartões crescem (707 de altura na Fase 3, ainda sem rolagem: área de 959). Quadro e Biblioteca mostram um pouco menos sem rolar (a lista já rolava). A Linha editorial pede 696 de 720 de altura, inclusive com o rótulo "Agradar o Comitê" da Fase 4.
 - **Verificação:** `ConferenciaDeTextosDaUI` com 0 problema em 1920×1080 e 1280×720 (tutorial com glifos e etapa mais longa, inclusive "Clique de novo para pular"; Mesa das Fases 2, 3 e 4; Quadro da Fase 2 com pistas; Biblioteca; Prensa com Suporte e Linha editorial das Fases 3 e 4). Itens "parcialmente fora de lista rolável" só onde a lista rola. EditMode **105/105**; validador "Campanha válida"; auditoria da fonte com 0 fora do padrão. Save com md5 idêntico, PlayerPrefs iguais, Editor restaurado.
+
+## 26. Legendas das cutscenes de transição (29/10/2026)
+
+Pedido: legendas das quatro cutscenes de transição (abertura, pós-Fase 1, pós-Fase 2 e pós-Fase 3) com os textos fornecidos, só tela preta e texto claro, um bloco por vez, texto inteiro sem digitação, fade entre blocos, tempo de leitura pelo número de palavras e avanço automático para a fase seguinte; finais A, B e C sem mudança. **Validado no Editor** (Play Mode com trocas de cena reais); falta aparelho real (§26.6).
+
+### 26.1 Estrutura reaproveitada
+
+- As quatro sequências já existiam e já passavam pela `CutsceneLegendas` do `UI.prefab` (objeto `Cutscenes`): abertura = `IntroCutscene` (Start da cena Jogo, uma vez, chave `intro_cutscene_vista`); pós-Fase 1 = `Fase1Desfecho` (volta do porão com o panfleto do tutorial, chave `fase1_cutscene_vista`); pós-Fase 2 e pós-Fase 3 = `FimDeFase` (`cutscenes` com `fase` 2 e 3, a fase que terminou). Gatilhos, chaves, `EncerrarFase` e save não mudaram.
+- "Prosseguir para a fase" continua como antes: ninguém carrega cena ao fim da cutscene. Depois da abertura começa o tutorial (Fase 1); depois das outras três, o escritório volta já na fase nova (o `FimDeFase` avança a fase antes da cutscene, e a Mesa mostra os casos dela).
+- Finais A, B e C e a abertura do julgamento usam outra `CutsceneLegendas`, montada pelo `TribunalManager`, pelo `Tocar`. Esse caminho continua igual (§26.4).
+
+### 26.2 O que mudou
+
+- **`CutsceneLegendas.TocarTransicao`** (novo; usado por `IntroCutscene`, `Fase1Desfecho` e `FimDeFase`): o fundo fica preto do começo ao fim; cada bloco entra em fade, fica legível, sai em fade, e há um intervalo vazio antes do próximo. Tempo de leitura = `margemDeLeitura` + palavras ÷ `palavrasPorSegundo`, no mínimo `duracaoMinima` (1 s + 1 s a cada 3 palavras, mínimo 5 s), contado **só depois** de o texto estar inteiro na tela. A `Duracao` de um bloco, se maior que o cálculo, prevalece (os blocos novos estão com 0 = só o cálculo). Contagem de palavras sem tags de rich text nem sinais soltos. Uma cutscene que nasce sob o preto da troca de cena espera esse preto sair antes do primeiro bloco (até 3 s).
+- **Layout da transição:** EB Garamond Regular (o campo `fonte` de sempre), branco, tamanho fixo 44 na referência 1080 (≈ 29 px em 720p), sem auto size, coluna centrada de no máximo 1300 de largura (80% da tela quando ela é mais estreita), bloco centrado na vertical com uma, duas ou três linhas.
+- **Controles:** toque, clique, Enter e Espaço (os que já existiam). Na entrada do bloco, completam o fade; na leitura, passam ao bloco seguinte; na saída e no intervalo, são ignorados, então um toque nunca faz pular um bloco que ainda não apareceu. Não existe, nem antes existia, comando para pular a cutscene inteira; o `PauseMenu` continua sem abrir durante a cutscene.
+- **`Tocar`** (tribunal) ficou igual: troca instantânea, `Duracao` fixa por linha, auto size 24–44. O layout de cada modo é aplicado no início de cada cutscene, só no texto montado por código.
+- **`FimDeFase`:** a cutscene agora conta primeiro o que fecha a fase (boatos expostos e despesas) e termina na passagem histórica, que prepara a fase nova. Antes, a história vinha primeiro e o "Alguns dias depois…" aparecia depois de anos de história. Revelações e despesas também usam o tempo pelas palavras.
+- **Textos** (exatamente os do pedido, só o conteúdo entre aspas): gravados no `UI.prefab` pela API do Editor e repetidos nos valores padrão dos scripts. Abertura: 2 blocos; pós-Fase 1: 4; pós-Fase 2 ("A Queda e a Ordem"): 4; pós-Fase 3 ("O Sangue da República"): 5. Os textos antigos ("Paris, 1780…", tipografia, aprendiz) saíram. Nenhum caractere fora do Latin-1 (a fonte não precisou ser regenerada).
+
+### 26.3 Onde ajustar
+
+- **Tempos e aparência:** `Prefabs/UI.prefab` > `Cutscenes` > `CutsceneLegendas`, cabeçalho "Legendas de transição": `Margem De Leitura` (1), `Palavras Por Segundo` (3), `Duracao Minima` (5), `Fade Do Texto` (0,6, entrada e saída), `Intervalo Entre Blocos` (0,4), `Tamanho Do Texto` (44), `Largura Maxima` (1300). O fade do fundo no começo e no fim continua em `Duracao Fade` (0,6). Um bloco pode ficar mais tempo pela própria `Duracao`.
+- **Textos:** mesmo objeto: `IntroCutscene` > `Legendas`, `Fase1Desfecho` > `Legendas`, `FimDeFase` > `Cutscenes` (Fase 2 e Fase 3).
+- Duração total com os valores atuais: abertura ≈ 15,5 s; pós-Fase 1 ≈ 28,7 s; pós-Fase 2 ≈ 31,7 s; pós-Fase 3 ≈ 38,6 s (sem as linhas de boato e despesa, que entram antes quando houver).
+
+### 26.4 Testes executados
+
+- **EditMode: 110/110** (4 novos em `Editor/Testes/CutscenesDeTransicaoTests.cs`: contagem de palavras, fórmula, mínimo e `Duracao` maior).
+- **Textos:** os quatro conjuntos lidos do `UI.prefab` comparados por código com o pedido: iguais (texto e quantidade de blocos).
+- **Play Mode** (Editor via MCP, cenas trocadas pela `SceneTransitionManager` como no jogo, amostragem quadro a quadro de texto, alpha do texto, alpha do fundo e `timeScale`; estado preparado em memória). Leitura medida do texto inteiro até o início da saída:
+
+| Sequência (gatilho real) | Tela | Blocos e leitura medida (esperada) | Resultado |
+|---|---|---|---|
+| Abertura: menu → Jogo com a chave da intro apagada | 1920×1080 | 6,67 (6,67); 6,01 (6,00) | primeiro bloco só depois do preto da troca de cena; tutorial começa na etapa 0 ao fim |
+| Pós-Fase 1: volta ao escritório com o `Panfleto_MemoireJustificatif` e o tutorial em `mesa_de_casos`; Fase 1 concluída | 1920×1080 | 5,34 (5,33); 5,68 (5,67); 5,67 (5,67); 6,01 (6,00) | `FimDeFase` encerra a Fase 1 sem legendas e o `Fase1Desfecho` toca; Fase 2 ao fim |
+| Pós-Fase 2: caso da Fase 2 concluído, um boato sensacionalista pendente, 10 de ouro | 1280×720 | 5,00 (5,00); 1,0 (toque na leitura); 10,00 (10,00, com toque na entrada); 6,01; 7,01; 7,01; 5,68 | ordem boato → desmentido → despesas com dívida → 4 blocos históricos; toque na saída do bloco 2 ignorado; Fase 3 ao fim |
+| Pós-Fase 3: caso da Fase 3 concluído | 2960×1440 | 10,00 (10,00); 1,53 (Enter real do Input System aos 1,5 s); 5,68; 6,35; 6,01; 7,02 | despesas → 5 blocos históricos; Fase 4 com rota travada ao fim |
+
+- Em todas: fades do texto de 0,59–0,60 s, intervalos de 0,40–0,41 s, fundo preto do primeiro ao último bloco, um texto por vez (o texto é esvaziado antes do próximo), `EmExibicao` e `timeScale` 0 durante a cutscene e de volta a 1 no fim, nenhum carregamento de cena além do que o teste pediu. Ouro, Povo, Estado, fase e rota iguais do início ao fim de cada cutscene (os valores mudam só no `EncerrarFase`, antes dela, como já era). Uma pausa de 1,4 s entre dois blocos coincidiu com uma leitura minha no meio da sequência (compilar o `execute_code` trava o Editor); sem leituras no meio, nenhuma se repetiu.
+- **Legibilidade:** capturas de todos os blocos em 1920×1080, 1280×720 e 2960×1440: EB Garamond 44, coluna de 1300, duas linhas no máximo nos textos históricos (a revelação longa tem três), centrado, sem corte.
+- **Finais e abertura do julgamento:** cena Tribunal pela troca de cena, rota de teste A: a abertura do julgamento troca o texto na hora, com auto size 24–44 e caixa de 80% × 70%, e as linhas 2 e 3 duram 5,0 e 4,0 s como configurado. Veredito real (`Veredito`) do Final A: linha do réu + 3 linhas, 5,0 s cada, troca instantânea, depois a tela "FIM / Final A: A Guilhotina / O réu foi absolvido". Textos e durações dos três desfechos na cena sem mudança (A 3 linhas, B 2, C 3, todas de 5 s); `Tribunal.unity` sem diff.
+- **Validador:** "Campanha válida" (0 problemas, 0 avisos). Console sem erro de código nem caractere ausente.
+
+### 26.5 Limitações e observações
+
+- A **linha 1 da abertura do julgamento** (fora do escopo, no `Tocar`) fica ≈ 2,7 s legível em vez de 4 s: ela começa sob o preto da troca de cena e o modo antigo conta esse tempo. Já era assim; não foi mudado para preservar o tribunal. Se o grupo quiser, basta tocar a abertura do julgamento pelo `TocarTransicao`.
+- **Texto padrão de revelação** (`FimDeFase.textoPadraoRevelacao`, "O panfleto sobre o {0}…") fica "sobre o O Colar da Rainha" com títulos que começam por artigo. É conteúdo anterior; não foi mudado.
+- Os textos de despesa, revelação e dívida ainda falam em "tipografia" (o novo texto apresenta Julien Valois como advogado). Conteúdo anterior, fora do pedido.
+- O ritmo de 3 palavras/s é a referência pedida; só um teste com jogadores dirá se precisa de ajuste (§26.3).
+
+### 26.6 O que ainda exige teste manual
+
+1. Novo Jogo de verdade até o tribunal, vendo as quatro cutscenes na ordem, inclusive com Continuar no meio de uma fase.
+2. Build Windows e Android: legibilidade em tela física e toque real para avançar.
+
+### 26.7 Efeitos no ambiente de quem testou
+
+- `save.json` somente leitura durante o Play; as quatro gravações automáticas falharam como esperado. No fim, **md5 idêntico** (`CF31FB8E…`), atributo normal, `save.json.tmp` apagado. `TestResults.xml` (relatório do Test Runner, na mesma pasta) regravado pelos testes EditMode.
+- PlayerPrefs: `intro_cutscene_vista`, `tutorial_concluido` e `fase1_cutscene_vista` foram apagadas durante o teste e voltaram a 1; as 9 chaves da partida estão em 1, como antes; `opt_volume` e `opt_textspeed` continuam ausentes.
+- Editor: Game View em Free Aspect, `runInBackground` desligado, `playModeStartScene` nulo, `menu principal` aberta e limpa. Capturas em `Unity-DaPenaAGuilhotina/Temp/CapturasCutscenes` (pasta temporária da Unity, fora do Git).
+- `UI.prefab`: ao salvar, a Unity serializou também 8 campos novos da `LinhaEditorialDaPrensaUI` (do commit anterior); esse trecho foi tirado do diff para ficar só o desta tarefa. Os campos continuam com os valores do código.
+- Nada foi commitado.

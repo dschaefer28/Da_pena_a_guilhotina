@@ -7,8 +7,9 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Fecha a fase quando o jogador volta ao escritório com os casos exigidos concluídos (GameManager.casosPorFase):
 /// expõe os boatos publicados na fase (penalidades), cobra as despesas, passa o GameManager para a fase seguinte
-/// (GameManager.EncerrarFase), toca a cutscene final da fase (tela preta com legendas) e salva.
-/// A partir daí a Mesa de Casos mostra os casos da nova fase e a porta leva à cena do caso aceito.
+/// (GameManager.EncerrarFase), toca a cutscene de fim de fase (legendas de transição sobre tela preta) e salva.
+/// A cutscene conta primeiro o que fecha a fase (boatos expostos, despesas) e termina na passagem histórica que
+/// prepara a fase nova. A partir daí a Mesa de Casos mostra os casos da nova fase e a porta leva à cena do caso aceito.
 ///
 /// Fica no prefab UI, ao lado do Fase1Desfecho, e só age na cena do escritório. A Fase 1 não tem legendas aqui
 /// porque o Fase1Desfecho já toca a cutscene dela; a Fase 4 termina no tribunal, não no escritório.
@@ -18,7 +19,9 @@ public class FimDeFase : MonoBehaviour
     [Serializable]
     public class CutsceneDaFase
     {
+        [Tooltip("Fase que acabou de terminar: 2 = passagem da Fase 2 para a 3.")]
         [Range(1, GameManager.UltimaFase)] public int fase;
+        [Tooltip("Um bloco por item. Duração 0 = tempo calculado pelas palavras (CutsceneLegendas).")]
         public List<CutsceneLegendas.Linha> legendas = new List<CutsceneLegendas.Linha>();
     }
 
@@ -45,20 +48,25 @@ public class FimDeFase : MonoBehaviour
     {
         new CutsceneDaFase
         {
-            fase = 2,
+            fase = 2, // A Queda e a Ordem
             legendas = new List<CutsceneLegendas.Linha>
             {
-                new CutsceneLegendas.Linha { texto = "Paris, 1789. A Bastilha caiu, e os panfletos da tipografia correm de mão em mão.", duracao = 5f },
-                new CutsceneLegendas.Linha { texto = "O nome da casa já é conhecido nas ruas. E nos gabinetes.", duracao = 4f },
+                new CutsceneLegendas.Linha { texto = "Em julho de 1789, a Bastilha cai. As ruas desafiam o poder absoluto do rei.", duracao = 0f },
+                new CutsceneLegendas.Linha { texto = "A Declaração dos Direitos do Homem e do Cidadão proclama a liberdade e a igualdade perante a lei.", duracao = 0f },
+                new CutsceneLegendas.Linha { texto = "Em 1791, uma Constituição limita o poder de Luís XVI. A monarquia passa a obedecer a novas regras.", duracao = 0f },
+                new CutsceneLegendas.Linha { texto = "Mas a crise continua. Às portas de 1792, o futuro da monarquia permanece incerto.", duracao = 0f },
             }
         },
         new CutsceneDaFase
         {
-            fase = 3,
+            fase = 3, // O Sangue da República
             legendas = new List<CutsceneLegendas.Linha>
             {
-                new CutsceneLegendas.Linha { texto = "1793. O Terror governa a França, e o Tribunal Revolucionário não descansa.", duracao = 5f },
-                new CutsceneLegendas.Linha { texto = "Tudo o que foi impresso até aqui será lembrado. Por uns, como coragem. Por outros, como traição.", duracao = 5f },
+                new CutsceneLegendas.Linha { texto = "A República nasce em 1792, mas a França permanece dividida. A revolução enfrenta novos inimigos.", duracao = 0f },
+                new CutsceneLegendas.Linha { texto = "Em 1793, a revolta na Vendeia mergulha parte do país em uma guerra sangrenta.", duracao = 0f },
+                new CutsceneLegendas.Linha { texto = "Em Paris, os jacobinos ampliam seu poder. A defesa da República passa a justificar a repressão.", duracao = 0f },
+                new CutsceneLegendas.Linha { texto = "A suspeita invade as ruas. Uma denúncia pode transformar qualquer cidadão em inimigo da Revolução.", duracao = 0f },
+                new CutsceneLegendas.Linha { texto = "O poder da Coroa caiu. Sob o Terror, sua próxima defesa pode colocar sua própria vida em risco.", duracao = 0f },
             }
         },
     };
@@ -73,28 +81,30 @@ public class FimDeFase : MonoBehaviour
         // Aplica tudo já, antes da cutscene: se a cena trocar no meio dela, nada fica pendente.
         GameManager.EncerramentoDeFase fim = gm.EncerrarFase();
 
+        // Primeiro o que fecha a fase que terminou; por último a passagem histórica, que leva à fase nova.
+        // Duração 0 = tempo de leitura pelas palavras (CutsceneLegendas.TocarTransicao).
         var legendas = new List<CutsceneLegendas.Linha>();
-        List<CutsceneLegendas.Linha> daFase = LegendasDa(fim.fase);
-        if (daFase != null) legendas.AddRange(daFase);
-
         if (fim.revelacoes.Count > 0)
         {
             if (!string.IsNullOrWhiteSpace(introducaoRevelacoes))
-                legendas.Add(new CutsceneLegendas.Linha { texto = introducaoRevelacoes, duracao = 4f });
+                legendas.Add(new CutsceneLegendas.Linha { texto = introducaoRevelacoes, duracao = 0f });
             foreach (GameManager.RevelacaoPendente revelacao in fim.revelacoes)
-                legendas.Add(new CutsceneLegendas.Linha { texto = TextoDa(revelacao), duracao = 5f });
+                legendas.Add(new CutsceneLegendas.Linha { texto = TextoDa(revelacao), duracao = 0f });
         }
 
         if (fim.despesa > 0)
         {
             string texto = string.Format(textoDespesas, fim.despesa);
             if (gm.Endividado) texto += " " + textoDivida;
-            legendas.Add(new CutsceneLegendas.Linha { texto = texto, duracao = 5f });
+            legendas.Add(new CutsceneLegendas.Linha { texto = texto, duracao = 0f });
         }
+
+        List<CutsceneLegendas.Linha> daFase = LegendasDa(fim.fase);
+        if (daFase != null) legendas.AddRange(daFase);
 
         if (legendas.Count > 0)
         {
-            if (CutsceneLegendas.Instance != null) CutsceneLegendas.Instance.Tocar(legendas);
+            if (CutsceneLegendas.Instance != null) CutsceneLegendas.Instance.TocarTransicao(legendas);
             else foreach (CutsceneLegendas.Linha linha in legendas) AvisoNaTela.Mostrar(linha.texto);
         }
 

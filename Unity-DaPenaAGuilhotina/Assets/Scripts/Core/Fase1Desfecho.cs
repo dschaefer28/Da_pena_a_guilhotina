@@ -3,8 +3,9 @@ using UnityEngine;
 
 /// <summary>
 /// Desfecho da Fase 1 (documento de tarefas): depois que o jogador imprime o primeiro panfleto e volta
-/// ao escritório, toca a cutscene (tela preta com legendas) explicando as consequências da publicação.
-/// Roda uma vez só (PlayerPrefs). Fica no prefab UI; o texto das legendas é editável no Inspector.
+/// ao escritório, toca a cutscene de passagem para a Fase 2 (legendas de transição sobre tela preta; o
+/// FimDeFase já avançou a fase). Roda uma vez só (PlayerPrefs). Fica no prefab UI; o texto das legendas
+/// é editável no Inspector e os tempos ficam no CutsceneLegendas.
 /// O gatilho é o tutorial chegar à etapa "Etapa Gatilho" (mesa_de_casos), que acontece ao carregar a
 /// cena Jogo vindo do porão com o panfleto.
 /// </summary>
@@ -19,11 +20,13 @@ public class Fase1Desfecho : MonoBehaviour
              "o tutorial chega nela (ou já terminou).")]
     public string etapaGatilho = "mesa_de_casos";
 
+    [Tooltip("Um bloco por item. Duração 0 = tempo calculado pelas palavras (CutsceneLegendas).")]
     public List<CutsceneLegendas.Linha> legendas = new List<CutsceneLegendas.Linha>
     {
-        new CutsceneLegendas.Linha { texto = "Paris, 1780. O panfleto sobre o caso Bradier circula pelas ruas antes do amanhecer.", duracao = 5f },
-        new CutsceneLegendas.Linha { texto = "Nas tavernas, o povo lê em voz alta. Nos salões, o Estado toma nota do nome da tipografia.", duracao = 5f },
-        new CutsceneLegendas.Linha { texto = "Cada página impressa agora tem um preço. E alguém sempre paga.", duracao = 4f },
+        new CutsceneLegendas.Linha { texto = "Nos anos seguintes, colheitas ruins e invernos rigorosos agravam a miséria na França.", duracao = 0f },
+        new CutsceneLegendas.Linha { texto = "O pão fica mais caro. Para muitas famílias, sobreviver se torna uma luta diária.", duracao = 0f },
+        new CutsceneLegendas.Linha { texto = "Enquanto a corte preserva seu luxo, a fome e os impostos alimentam a revolta.", duracao = 0f },
+        new CutsceneLegendas.Linha { texto = "Em 1789, a crise força a convocação dos Estados Gerais. A população exige ser ouvida.", duracao = 0f },
     };
 
     private void Start()
@@ -56,6 +59,6 @@ public class Fase1Desfecho : MonoBehaviour
 
         PlayerPrefs.SetInt(Chave, 1);
         PlayerPrefs.Save();
-        CutsceneLegendas.Instance.Tocar(legendas);
+        CutsceneLegendas.Instance.TocarTransicao(legendas);
     }
 }

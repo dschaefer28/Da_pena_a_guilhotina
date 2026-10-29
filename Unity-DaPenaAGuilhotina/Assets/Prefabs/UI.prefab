@@ -5065,6 +5065,13 @@ MonoBehaviour:
   legenda: {fileID: 0}
   fonte: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   duracaoFade: 0.6
+  margemDeLeitura: 1
+  palavrasPorSegundo: 3
+  duracaoMinima: 5
+  fadeDoTexto: 0.6
+  intervaloEntreBlocos: 0.4
+  tamanhoDoTexto: 44
+  larguraMaxima: 1300
 --- !u!114 &7657567633651206077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5080,14 +5087,17 @@ MonoBehaviour:
   forcarRepetir: 0
   etapaGatilho: mesa_de_casos
   legendas:
-  - texto: Paris, 1780. O panfleto sobre o caso Bradier circula pelas ruas antes
-      do amanhecer.
-    duracao: 5
-  - texto: "Nas tavernas, o povo l\xEA em voz alta. Nos sal\xF5es, o Estado toma
-      nota do nome da tipografia."
-    duracao: 5
-  - texto: "Cada p\xE1gina impressa agora tem um pre\xE7o. E algu\xE9m sempre paga."
-    duracao: 4
+  - texto: "Nos anos seguintes, colheitas ruins e invernos rigorosos agravam a mis\xE9ria
+      na Fran\xE7a."
+    duracao: 0
+  - texto: "O p\xE3o fica mais caro. Para muitas fam\xEDlias, sobreviver se torna
+      uma luta di\xE1ria."
+    duracao: 0
+  - texto: Enquanto a corte preserva seu luxo, a fome e os impostos alimentam a revolta.
+    duracao: 0
+  - texto: "Em 1789, a crise for\xE7a a convoca\xE7\xE3o dos Estados Gerais. A popula\xE7\xE3o
+      exige ser ouvida."
+    duracao: 0
 --- !u!114 &2026820043679994935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5102,14 +5112,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IntroCutscene
   forcarRepetir: 0
   legendas:
-  - texto: Paris, 1780. Nove anos antes da Queda da Bastilha.
-    duracao: 4
-  - texto: "Nas ruas, o descontentamento cresce em sil\xEAncio \u2014 e a palavra
-      impressa j\xE1 circula mais r\xE1pido que os editos do rei."
-    duracao: 5
-  - texto: "Numa pequena tipografia, um novo aprendiz est\xE1 prestes a descobrir
-      o poder de uma p\xE1gina bem escrita."
-    duracao: 5
+  - texto: "Paris, 1786. Sob o poder da Coroa, a justi\xE7a pesa de forma diferente
+      sobre ricos e pobres."
+    duracao: 0
+  - texto: "Voc\xEA \xE9 Julien Valois, um jovem advogado que trabalha sob a orienta\xE7\xE3o
+      de Charles Dupaty."
+    duracao: 0
 --- !u!114 &6134696014951055631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5135,19 +5143,35 @@ MonoBehaviour:
   cutscenes:
   - fase: 2
     legendas:
-    - texto: "Paris, 1789. A Bastilha caiu, e os panfletos da tipografia correm de
-        m\xE3o em m\xE3o."
-      duracao: 5
-    - texto: "O nome da casa j\xE1 \xE9 conhecido nas ruas. E nos gabinetes."
-      duracao: 4
+    - texto: Em julho de 1789, a Bastilha cai. As ruas desafiam o poder absoluto
+        do rei.
+      duracao: 0
+    - texto: "A Declara\xE7\xE3o dos Direitos do Homem e do Cidad\xE3o proclama a
+        liberdade e a igualdade perante a lei."
+      duracao: 0
+    - texto: "Em 1791, uma Constitui\xE7\xE3o limita o poder de Lu\xEDs XVI. A monarquia
+        passa a obedecer a novas regras."
+      duracao: 0
+    - texto: "Mas a crise continua. \xC0s portas de 1792, o futuro da monarquia permanece
+        incerto."
+      duracao: 0
   - fase: 3
     legendas:
-    - texto: "1793. O Terror governa a Fran\xE7a, e o Tribunal Revolucion\xE1rio
-        n\xE3o descansa."
-      duracao: 5
-    - texto: "Tudo o que foi impresso at\xE9 aqui ser\xE1 lembrado. Por uns, como
-        coragem. Por outros, como trai\xE7\xE3o."
-      duracao: 5
+    - texto: "A Rep\xFAblica nasce em 1792, mas a Fran\xE7a permanece dividida. A
+        revolu\xE7\xE3o enfrenta novos inimigos."
+      duracao: 0
+    - texto: "Em 1793, a revolta na Vendeia mergulha parte do pa\xEDs em uma guerra
+        sangrenta."
+      duracao: 0
+    - texto: "Em Paris, os jacobinos ampliam seu poder. A defesa da Rep\xFAblica
+        passa a justificar a repress\xE3o."
+      duracao: 0
+    - texto: "A suspeita invade as ruas. Uma den\xFAncia pode transformar qualquer
+        cidad\xE3o em inimigo da Revolu\xE7\xE3o."
+      duracao: 0
+    - texto: "O poder da Coroa caiu. Sob o Terror, sua pr\xF3xima defesa pode colocar
+        sua pr\xF3pria vida em risco."
+      duracao: 0
 --- !u!114 &6892228440637199434
 MonoBehaviour:
   m_ObjectHideFlags: 0
