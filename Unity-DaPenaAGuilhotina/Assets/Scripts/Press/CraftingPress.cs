@@ -70,6 +70,13 @@ public class CraftingPress : MonoBehaviour
     /// </summary>
     public event Action<ReceitaDeCaso> OnLinhaEditorialPedida;
 
+    /// <summary>
+    /// Panfleto de caso publicado (depois de aplicado, registrado e de o caso ser concluído): a receita, o resultado do
+    /// cálculo e o que mudou de fato nas barras (x = Povo, y = Estado, z = Ouro, já com o limite 0–100). A janela da
+    /// linha editorial usa para mostrar as parcelas — pistas, apoio e linha — que formam o total.
+    /// </summary>
+    public event Action<ReceitaDeCaso, ResultadoDoPanfleto, Vector3Int> OnPanfletoDeCasoPublicado;
+
     /// <summary>Botão Misturar (onClick no UI_Inventory.prefab). Casos com linha editorial pedem a escolha antes.</summary>
     public void CombineItems() => Tentar(LinhaEditorial.Neutra);
 
@@ -221,6 +228,7 @@ public class CraftingPress : MonoBehaviour
             GameManager.Instance.RegistrarPanfletoDeCaso(a.caso, resultado, aplicado);
             GameManager.Instance.ConcluirCaso(a.caso);
             LimparSuportes(); // os documentos continuam no inventário: só a seleção é desfeita
+            OnPanfletoDeCasoPublicado?.Invoke(receita, resultado, aplicado);
         }
         return true;
     }

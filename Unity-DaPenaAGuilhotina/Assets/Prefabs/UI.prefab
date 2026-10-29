@@ -9713,7 +9713,8 @@ MonoBehaviour:
   descricaoAgradarOPoder: Escreve o que quem governa quer ler.
   descricaoSensacionalista: 'Manchete escandalosa: vende mais. Se algo for falso,
     o desmentido pesa mais.'
-  nota: "O tom muda o panfleto, n\xE3o a verdade das pistas."
+  nota: "Valores somados ao efeito das pistas e do apoio. O tom n\xE3o muda a verdade
+    das pistas."
 --- !u!1 &6336305602381615018 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4655771969782011697, guid: 60fc7d7288f4653439b29fda33ba8400, type: 3}

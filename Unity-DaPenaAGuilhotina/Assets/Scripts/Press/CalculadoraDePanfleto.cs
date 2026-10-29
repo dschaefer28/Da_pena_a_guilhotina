@@ -22,6 +22,14 @@ public class ResultadoDoPanfleto
     public int editorialPovo, editorialEstado, editorialOuro;   // modificador da linha somado a povo/estado/ouro
     public int agravamentoPovo, agravamentoEstado;              // parte da penalidade que veio do sensacionalista
 
+    // Soma dos qualificadores aplicados (documentos de apoio), também já incluída em povo/estado/ouro.
+    public int apoioPovo, apoioEstado, apoioOuro;
+
+    // O que sobra é a parte da versão (as duas pistas): a janela de resultado da prensa mostra as três parcelas.
+    public int VersaoPovo => povo - apoioPovo - editorialPovo;
+    public int VersaoEstado => estado - apoioEstado - editorialEstado;
+    public int VersaoOuro => ouro - apoioOuro - editorialOuro;
+
     public bool TemRevelacao => penalidadePovo != 0 || penalidadeEstado != 0 || !string.IsNullOrWhiteSpace(textoRevelacao);
 }
 
@@ -81,6 +89,9 @@ public static class CalculadoraDePanfleto
             resultado.povo += q.povo;
             resultado.estado += q.estado;
             resultado.ouro += q.ouro;
+            resultado.apoioPovo += q.povo;
+            resultado.apoioEstado += q.estado;
+            resultado.apoioOuro += q.ouro;
             resultado.suportes.Add(par.Value.itemID);
             resultado.qualificadores.Add(q.id);
         }

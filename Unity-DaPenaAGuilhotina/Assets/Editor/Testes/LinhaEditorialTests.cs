@@ -187,6 +187,35 @@ public class LinhaEditorialTests
         }
     }
 
+    [Test]
+    public void Parcelas_VersaoApoioELinha_SomamOTotal()
+    {
+        Item doc = Criar<Item>("doc_linha");
+        doc.itemID = "doc_linha"; doc.caso = caso; doc.documentoDeSuporte = true; doc.qualidade = QualidadeDaEvidencia.Superior; doc.itemAmt = 1;
+        receita.qualificadores = new List<ReceitaDeCaso.Qualificador>
+        {
+            new ReceitaDeCaso.Qualificador { id = "apoio_linha", suportesAceitos = new List<Item> { doc }, povo = 5, estado = 2, ouro = 20 }
+        };
+
+        foreach (LinhaEditorial linha in LinhasEditoriais.Opcoes)
+        {
+            ReceitaDeCaso.ModificadorEditorial mod = receita.linhaEditorial.De(linha);
+            ResultadoDoPanfleto r = CalculadoraDePanfleto.Calcular(receita, fato1, boato, new[] { doc }, linha);
+            string msg = linha.ToString();
+            Assert.AreEqual(5, r.apoioPovo, msg); Assert.AreEqual(2, r.apoioEstado, msg); Assert.AreEqual(20, r.apoioOuro, msg);
+            Assert.AreEqual(receita.comBoato.povo, r.VersaoPovo, msg + ": o resto é a versão");
+            Assert.AreEqual(receita.comBoato.estado, r.VersaoEstado, msg);
+            Assert.AreEqual(receita.comBoato.ouro, r.VersaoOuro, msg);
+            Assert.AreEqual(receita.comBoato.povo + 5 + mod.povo, r.povo, msg + ": as parcelas não mudam o total");
+            Assert.AreEqual(receita.comBoato.estado + 2 + mod.estado, r.estado, msg);
+            Assert.AreEqual(receita.comBoato.ouro + 20 + mod.ouro, r.ouro, msg);
+        }
+
+        ResultadoDoPanfleto semApoio = Calcular(fato1, fato2, LinhaEditorial.DefesaDoPovo);
+        Assert.AreEqual(0, semApoio.apoioPovo); Assert.AreEqual(0, semApoio.apoioOuro);
+        Assert.AreEqual(receita.soFatos.povo, semApoio.VersaoPovo, "sem apoio, só versão + linha");
+    }
+
     // ===== Histórico, revelação e fim de fase =====
 
     private GameManager CriarGameManager(int fase)
