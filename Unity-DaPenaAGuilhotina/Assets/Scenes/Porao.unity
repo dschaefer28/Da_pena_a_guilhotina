@@ -1484,6 +1484,37 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+--- !u!114 &1226067495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226067479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1015075971
+      Data2: 1320596295
+      Data3: 428922537
+      Data4: 324856034
+    Path: event:/carimbo
+  Event: 
+  EventPlayTrigger: 12
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1366750338
 GameObject:
   m_ObjectHideFlags: 0
@@ -2320,7 +2351,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2131395740889706660, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_fontSize
-      value: 30.9
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 2152126652485104815, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3079,6 +3110,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3495474965941123319, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1226067487}
+    - targetCorrespondingSourceObject: {fileID: 3495474965941123319, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1226067495}
     - targetCorrespondingSourceObject: {fileID: 5894247192549361535, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1660926220}
@@ -3144,7 +3178,7 @@ PrefabInstance:
       objectReference: {fileID: 1366750339}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.340292
+      value: -2.318296
       objectReference: {fileID: 0}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.y

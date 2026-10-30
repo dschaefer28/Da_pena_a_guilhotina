@@ -507,6 +507,11 @@ public class TribunalManager : MonoBehaviour
     private void VoltarAoMenu()
     {
         Time.timeScale = 1f;
+        var emitter = FindFirstObjectByType<FMODUnity.StudioEventEmitter>();
+            if (emitter != null)
+        {
+            emitter.Stop();
+        }
         if (SceneTransitionManager.Instance != null) SceneTransitionManager.Instance.LoadScene(cenaDoMenu);
         else SceneManager.LoadScene(cenaDoMenu);
     }
