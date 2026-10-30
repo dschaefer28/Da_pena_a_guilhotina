@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: b27b1274e8d10a643b1b3d633ac85ca7
+guid: d46c4a523e3c93e448657f87731850d8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7834935843665246088
-    second: marie-Sheet_0
+      213: -9207738976537360531
+    second: kornmann-Sheet_0
   - first:
-      213: -7537228255246494838
-    second: marie-Sheet_1
+      213: -7346555160060287952
+    second: kornmann-Sheet_1
   - first:
-      213: -4972574641806230196
-    second: marie-Sheet_2
+      213: 8456318744803272336
+    second: kornmann-Sheet_2
   - first:
-      213: -9024301654555867351
-    second: marie-Sheet_3
+      213: -4511746283680921797
+    second: kornmann-Sheet_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -122,89 +122,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: marie-Sheet_0
+      name: kornmann-Sheet_0
       rect:
         serializedVersion: 2
-        x: 40
-        y: 48
-        width: 160
-        height: 616
+        x: 63
+        y: 23
+        width: 154
+        height: 666
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 88774a773a84bbc60800000000000000
-      internalID: 7834935843665246088
+      spriteID: d67c8fe7f2a873080800000000000000
+      internalID: -9207738976537360531
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: marie-Sheet_1
+      name: kornmann-Sheet_1
       rect:
         serializedVersion: 2
-        x: 328
-        y: 48
-        width: 160
-        height: 624
-      alignment: 9
-      pivot: {x: 0.5, y: 0.49358976}
+        x: 352
+        y: 23
+        width: 154
+        height: 666
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a83def6f5d2666790800000000000000
-      internalID: -7537228255246494838
+      spriteID: 0342bc1710bcb0a90800000000000000
+      internalID: -7346555160060287952
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: marie-Sheet_2
+      name: kornmann-Sheet_2
       rect:
         serializedVersion: 2
-        x: 616
-        y: 48
-        width: 160
-        height: 624
-      alignment: 9
-      pivot: {x: 0.5, y: 0.49358976}
+        x: 639
+        y: 23
+        width: 154
+        height: 666
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c4d360885bdddfab0800000000000000
-      internalID: -4972574641806230196
+      spriteID: 096e97b4811ea5570800000000000000
+      internalID: 8456318744803272336
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: marie-Sheet_3
+      name: kornmann-Sheet_3
       rect:
         serializedVersion: 2
-        x: 904
-        y: 48
-        width: 160
-        height: 624
-      alignment: 9
-      pivot: {x: 0.5, y: 0.4919872}
+        x: 927
+        y: 23
+        width: 154
+        height: 666
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9274a3e357d33c280800000000000000
-      internalID: -9024301654555867351
+      spriteID: b378284c8ae0361c0800000000000000
+      internalID: -4511746283680921797
       vertices: []
       indices: 
       edges: []
@@ -213,7 +213,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5a928b95c4e6cbf43b5ae36c8b39e3f5
+    spriteID: b2b162f715da8864e9855e0e0b4ec3f5
     internalID: 0
     vertices: []
     indices: 
@@ -221,14 +221,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":1,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      marie-Sheet_0: 7834935843665246088
-      marie-Sheet_1: -7537228255246494838
-      marie-Sheet_2: -4972574641806230196
-      marie-Sheet_3: -9024301654555867351
+      kornmann-Sheet_0: -9207738976537360531
+      kornmann-Sheet_1: -7346555160060287952
+      kornmann-Sheet_2: 8456318744803272336
+      kornmann-Sheet_3: -4511746283680921797
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

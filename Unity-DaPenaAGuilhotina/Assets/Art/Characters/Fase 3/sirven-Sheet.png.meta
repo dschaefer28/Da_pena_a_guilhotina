@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: ac0ee27fde92cb64fb78b06019a11e82
+guid: a0ac18459873006499cc51f829e589cf
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1008200766313907273
-    second: dupaty-Sheet_0
+      213: -9204610211916991789
+    second: sirven-Sheet_0
   - first:
-      213: -6612276436810049597
-    second: dupaty-Sheet_1
+      213: -1251185797833373856
+    second: sirven-Sheet_1
   - first:
-      213: -540413660370325194
-    second: dupaty-Sheet_2
+      213: 2641267234673202189
+    second: sirven-Sheet_2
   - first:
-      213: 6063536690921306883
-    second: dupaty-Sheet_3
+      213: -2103376319590227845
+    second: sirven-Sheet_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -122,13 +122,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: dupaty-Sheet_0
+      name: sirven-Sheet_0
       rect:
         serializedVersion: 2
-        x: 47
-        y: 23
+        x: 63
+        y: 39
         width: 154
-        height: 658
+        height: 674
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,74 +137,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 944ca6a5149ddfd00800000000000000
-      internalID: 1008200766313907273
+      spriteID: 3d231c6c7c7a24080800000000000000
+      internalID: -9204610211916991789
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dupaty-Sheet_1
+      name: sirven-Sheet_1
       rect:
         serializedVersion: 2
-        x: 287
-        y: 23
+        x: 351
+        y: 39
         width: 154
-        height: 666
-      alignment: 9
-      pivot: {x: 0.5, y: 0.490991}
+        height: 674
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3c750433d997c34a0800000000000000
-      internalID: -6612276436810049597
+      spriteID: 067c02c5525e2aee0800000000000000
+      internalID: -1251185797833373856
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dupaty-Sheet_2
+      name: sirven-Sheet_2
       rect:
         serializedVersion: 2
-        x: 527
-        y: 23
+        x: 639
+        y: 39
         width: 154
-        height: 666
-      alignment: 9
-      pivot: {x: 0.5, y: 0.493994}
+        height: 674
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 631bbdd93a01088f0800000000000000
-      internalID: -540413660370325194
+      spriteID: d04139f4e8aa7a420800000000000000
+      internalID: 2641267234673202189
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dupaty-Sheet_3
+      name: sirven-Sheet_3
       rect:
         serializedVersion: 2
-        x: 767
-        y: 23
+        x: 927
+        y: 39
         width: 154
-        height: 666
-      alignment: 9
-      pivot: {x: 0.5, y: 0.493994}
+        height: 674
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 30b79e09e72062450800000000000000
-      internalID: 6063536690921306883
+      spriteID: b702bd9a16e4fc2e0800000000000000
+      internalID: -2103376319590227845
       vertices: []
       indices: 
       edges: []
@@ -213,7 +213,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: d4749ccda7ee47d43ad69dd3eb3398b5
+    spriteID: d9f679dea8453d44bbb60c96721b37a7
     internalID: 0
     vertices: []
     indices: 
@@ -221,14 +221,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":1,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      dupaty-Sheet_0: 1008200766313907273
-      dupaty-Sheet_1: -6612276436810049597
-      dupaty-Sheet_2: -540413660370325194
-      dupaty-Sheet_3: 6063536690921306883
+      sirven-Sheet_0: -9204610211916991789
+      sirven-Sheet_1: -1251185797833373856
+      sirven-Sheet_2: 2641267234673202189
+      sirven-Sheet_3: -2103376319590227845
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
