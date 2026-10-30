@@ -9,7 +9,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Prompt 7: dicas de primeira vez (fila, persistência e Novo Jogo), Marie ausente pelo progresso (também depois de
 /// carregar um save), 8h de investigação nas Fases 2 a 4, pause que não abre sob uma cutscene, Mesa de Casos como janela
-/// modal e o Quadro de pistas desde a Fase 2.
+/// modal, o Quadro de pistas desde a Fase 2 e a coluna de botões do canto superior direito (Pause, Biblioteca e Quadro).
 /// As PlayerPrefs de progresso de quem está testando são guardadas no SetUp e devolvidas no TearDown.
 /// </summary>
 public class TutorialEUiTests
@@ -388,5 +388,69 @@ public class TutorialEUiTests
         Assert.IsTrue(quadro.Disponivel);
         gm.ConcluirCaso(operario);
         Assert.IsFalse(quadro.Disponivel, "depois de publicar, some");
+    }
+
+    // ===== Coluna do canto superior direito (Pause, Biblioteca e Quadro de pistas) =====
+
+    // Retângulo do botão em pixels de tela (y para cima), pela conta do componente num canvas com a escala dada.
+    private static Rect NaTela(int vaga, float escalaDoCanvas, Vector2 tela, Rect areaSegura)
+    {
+        BotaoDoCantoDaHud.Calcular(vaga, escalaDoCanvas, tela, areaSegura, out float escalaLocal, out Vector2 posicao);
+        float direita = tela.x + posicao.x * escalaDoCanvas;
+        float topo = tela.y + posicao.y * escalaDoCanvas;
+        float largura = BotaoDoCantoDaHud.Largura * escalaLocal * escalaDoCanvas;
+        float altura = BotaoDoCantoDaHud.Altura * escalaLocal * escalaDoCanvas;
+        return Rect.MinMaxRect(direita - largura, topo - altura, direita, topo);
+    }
+
+    [Test]
+    public void CantoDaHud_MesmaColunaETamanho_NosDoisCanvas_EmQualquerProporcao()
+    {
+        var telas = new[]
+        {
+            (nome: "16:9", tela: new Vector2(1920f, 1080f), area: new Rect(0f, 0f, 1920f, 1080f)),
+            (nome: "20:9 com notch à direita e barra no topo", tela: new Vector2(2400f, 1080f), area: new Rect(0f, 0f, 2320f, 1050f)),
+            (nome: "4:3", tela: new Vector2(1440f, 1080f), area: new Rect(0f, 0f, 1440f, 1080f)),
+        };
+        foreach (var t in telas)
+        {
+            float hud = Mathf.Min(t.tela.x / 1920f, t.tela.y / 1080f); // canvas do prefab UI (Expand): Biblioteca e Quadro
+            float toque = t.tela.x / 1920f;                            // canvas dos controles de toque (largura): Pause
+            Assert.AreEqual(hud, BotaoDoCantoDaHud.EscalaDaHud(t.tela), 0.0001f, t.nome);
+            for (int vaga = 0; vaga < 3; vaga++)
+            {
+                Rect naHud = NaTela(vaga, hud, t.tela, t.area);
+                Rect noToque = NaTela(vaga, toque, t.tela, t.area);
+                Assert.AreEqual(naHud.xMin, noToque.xMin, 0.01f, $"{t.nome}, vaga {vaga}: mesma coluna nos dois canvas");
+                Assert.AreEqual(naHud.yMin, noToque.yMin, 0.01f, $"{t.nome}, vaga {vaga}");
+                Assert.AreEqual(naHud.width, noToque.width, 0.01f, $"{t.nome}, vaga {vaga}: mesmo tamanho");
+                Assert.AreEqual(naHud.height, noToque.height, 0.01f, $"{t.nome}, vaga {vaga}");
+            }
+
+            Rect primeiro = NaTela(0, hud, t.tela, t.area);
+            Rect segundo = NaTela(1, hud, t.tela, t.area);
+            Assert.AreEqual(t.area.xMax - BotaoDoCantoDaHud.Margem * hud, primeiro.xMax, 0.01f, $"{t.nome}: margem à direita, dentro da área segura");
+            Assert.AreEqual(t.area.yMax - BotaoDoCantoDaHud.Margem * hud, primeiro.yMax, 0.01f, $"{t.nome}: margem no topo, dentro da área segura");
+            Assert.AreEqual(BotaoDoCantoDaHud.Largura * hud, primeiro.width, 0.01f, t.nome);
+            Assert.AreEqual(BotaoDoCantoDaHud.Espacamento * hud, primeiro.yMin - segundo.yMax, 0.01f, $"{t.nome}: espaçamento regular");
+            Assert.AreEqual(primeiro.xMax, segundo.xMax, 0.01f, $"{t.nome}: alinhados à direita");
+        }
+    }
+
+    [Test]
+    public void CantoDaHud_PauseDoCelularNoTopoDaColuna_ComOCanvasDaHudEmExpand()
+    {
+        Transform pause = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/MobileControlsUI.prefab").transform.Find("TouchZone/PauseButton");
+        Assert.IsNotNull(pause);
+        var canto = pause.GetComponent<BotaoDoCantoDaHud>();
+        Assert.IsNotNull(canto, "o Pause usa a mesma coluna da Biblioteca e do Quadro de pistas");
+        Assert.AreEqual(0, canto.Vaga);
+        Assert.AreEqual(new Vector2(BotaoDoCantoDaHud.Largura, BotaoDoCantoDaHud.Altura), ((RectTransform)pause).sizeDelta, "o prefab já mostra o tamanho final");
+
+        // A conta do componente (BotaoDoCantoDaHud.EscalaDaHud) repete a do CanvasScaler do prefab UI.
+        var escala = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI.prefab").GetComponent<CanvasScaler>();
+        Assert.AreEqual(CanvasScaler.ScaleMode.ScaleWithScreenSize, escala.uiScaleMode);
+        Assert.AreEqual(CanvasScaler.ScreenMatchMode.Expand, escala.screenMatchMode);
+        Assert.AreEqual(BotaoDoCantoDaHud.ReferenciaDaHud, escala.referenceResolution);
     }
 }

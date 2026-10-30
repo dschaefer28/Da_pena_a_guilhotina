@@ -59,16 +59,14 @@ public class QuadroDeDeducaoUI : MonoBehaviour
     private static readonly Color CorMarcaInativa = new Color(0.62f, 0.62f, 0.62f, 1f); // tinta do sprite na opção que recua
 
     private RectTransform botaoAbrir;
+    private BotaoDoCantoDaHud cantoDaHud;
     private BibliotecaUI biblioteca;
-    private bool noLugarDaBiblioteca;
     private GameObject janela;
     private RectTransform lista;
     private TextMeshProUGUI textoCaso;
     private TextMeshProUGUI textoContador;
     private TextMeshProUGUI textoMensagem;
     private Button botaoFechar;
-    private Vector2 posicaoBaseBotao;
-    private Rect ultimaArea;
     private float timeScaleAoAbrir = 1f;
     private CaseData casoAberto;
     // Primeiro toque em "Escolher esta": a escolha só vale no segundo (o descarte não tem volta).
@@ -110,14 +108,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         bool visivel = Disponivel && !outroModal;
         if (botaoAbrir != null && botaoAbrir.gameObject.activeSelf != (visivel && !Aberto))
             botaoAbrir.gameObject.SetActive(visivel && !Aberto);
-        // Na fase sem Biblioteca (Fase 2) o botão sobe para o lugar dela: nada de buraco no canto da tela. A troca segue a
-        // fase, não a visibilidade do botão da Biblioteca, para ele não pular de lugar quando um painel abre.
-        bool semBiblioteca = gm != null && (biblioteca == null || gm.faseAtual < biblioteca.faseMinima);
-        if (botaoAbrir != null && (Screen.safeArea != ultimaArea || semBiblioteca != noLugarDaBiblioteca))
-        {
-            noLugarDaBiblioteca = semBiblioteca;
-            AplicarAreaSegura();
-        }
+        if (cantoDaHud != null) cantoDaHud.Vaga = VagaNaColuna();
 
         if (Aberto && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) Fechar();
     }
@@ -298,8 +289,8 @@ public class QuadroDeDeducaoUI : MonoBehaviour
             if (modelo != null) fonte = modelo.font;
         }
 
-        // Botão fixo no canto superior direito, logo abaixo do botão da Biblioteca (ou no lugar dela, na fase em que ela
-        // ainda não existe), dentro da área segura.
+        // Botão no canto superior direito, logo abaixo do botão da Biblioteca (ou no lugar dela, na fase em que ela ainda
+        // não existe): mesma coluna, tamanho e fonte do Pause e da Biblioteca, dentro da área segura.
         biblioteca = raiz.GetComponentInChildren<BibliotecaUI>(true);
         Button abrir = Botao("BotaoQuadroDeDeducao", raiz, rotuloDoBotao);
         var canvasBotao = abrir.gameObject.AddComponent<Canvas>(); // acima do canvas dos controles de toque
@@ -307,12 +298,9 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         canvasBotao.sortingOrder = 30;
         abrir.gameObject.AddComponent<GraphicRaycaster>();
         botaoAbrir = (RectTransform)abrir.transform;
-        botaoAbrir.anchorMin = botaoAbrir.anchorMax = botaoAbrir.pivot = new Vector2(1f, 1f);
-        botaoAbrir.sizeDelta = new Vector2(260f, 64f);
+        cantoDaHud = abrir.gameObject.AddComponent<BotaoDoCantoDaHud>();
+        cantoDaHud.Vaga = VagaNaColuna();
         abrir.onClick.AddListener(Abrir);
-        GameManager gm = GameManager.Instance;
-        noLugarDaBiblioteca = gm != null && (biblioteca == null || gm.faseAtual < biblioteca.faseMinima);
-        AplicarAreaSegura();
         botaoAbrir.gameObject.SetActive(false);
 
         // Janela modal: fundo escurecido que bloqueia cliques no jogo + painel central.
@@ -384,21 +372,13 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         janela.SetActive(false);
     }
 
-    // Posições no canto superior direito: a da Biblioteca (y -150) e a de baixo dela (y -230).
-    private static readonly Vector2 PosicaoDaBiblioteca = new Vector2(-24f, -150f);
-    private static readonly Vector2 PosicaoAbaixoDaBiblioteca = new Vector2(-24f, -230f);
-
-    // Recuo do notch/barras (celular) somado à margem base, como a Biblioteca.
-    private void AplicarAreaSegura()
+    // Na fase sem Biblioteca (Fase 2) o botão sobe para o lugar dela: nada de buraco no canto da tela. A vaga segue a
+    // fase, não a visibilidade do botão da Biblioteca, para ele não pular de lugar quando um painel abre.
+    private int VagaNaColuna()
     {
-        posicaoBaseBotao = noLugarDaBiblioteca ? PosicaoDaBiblioteca : PosicaoAbaixoDaBiblioteca;
-        ultimaArea = Screen.safeArea;
-        Canvas canvas = botaoAbrir.GetComponentInParent<Canvas>();
-        float escala = canvas != null ? canvas.rootCanvas.scaleFactor : 1f;
-        if (escala <= 0f) return;
-        float direita = (Screen.width - ultimaArea.xMax) / escala;
-        float topo = (Screen.height - ultimaArea.yMax) / escala;
-        botaoAbrir.anchoredPosition = posicaoBaseBotao + new Vector2(-direita, -topo);
+        GameManager gm = GameManager.Instance;
+        bool semBiblioteca = gm != null && (biblioteca == null || gm.faseAtual < biblioteca.faseMinima);
+        return BotaoDoCantoDaHud.VagaAbaixoDoPause + (semBiblioteca ? 0 : 1);
     }
 
     private TextMeshProUGUI Texto(string nome, Transform pai, float tamanho, string conteudo, TextAlignmentOptions alinhamento)

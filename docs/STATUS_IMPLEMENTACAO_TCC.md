@@ -1581,3 +1581,68 @@ Pedido: legendas das quatro cutscenes de transição (abertura, pós-Fase 1, pó
 - Editor: Game View em Free Aspect, `runInBackground` desligado, `playModeStartScene` nulo, `menu principal` aberta e limpa. Capturas em `Unity-DaPenaAGuilhotina/Temp/CapturasCutscenes` (pasta temporária da Unity, fora do Git).
 - `UI.prefab`: ao salvar, a Unity serializou também 8 campos novos da `LinhaEditorialDaPrensaUI` (do commit anterior); esse trecho foi tirado do diff para ficar só o desta tarefa. Os campos continuam com os valores do código.
 - Nada foi commitado.
+
+## 27. Botões do canto superior direito: Pause, Biblioteca e Quadro de pistas (29/10/2026)
+
+Pedido: alinhar os três botões do canto superior direito da HUD no Android (mesmo tamanho, mesma fonte, empilhados na mesma coluna com espaçamento regular), bem posicionados, sem cobrir a HUD nem poluir a tela, mas visíveis. **Validado no Editor** (Device Simulator em 16:9, 18:9, 20:9 com recorte e 4:3, mais o PC); falta aparelho real (§27.6).
+
+### 27.1 De onde vinha cada botão (antes)
+
+| Botão | Origem | Canvas | Tamanho | Fonte na tela | Posição |
+|---|---|---|---|---|---|
+| Pause | `MobileControlsUI.prefab` > `TouchZone/PauseButton` (só com controles de toque; o tutorial o revela na etapa `PauseButton`) | `MobileControlsUI`, escala pela largura (match 0) | 200×60 | 28 pedido, ≈ 25 pelo auto size (face de 32,9 para uma linha de 36,6) | pivô no centro, (-200, -100), sem área segura |
+| Biblioteca | `BibliotecaUI` (montado por código, Fase 3+) | `UI` (prefab UI) | 240×64 | 28 | (-24, -150) + área segura |
+| Quadro de pistas | `QuadroDeDeducaoUI` (montado por código, Fase 2+ com caso de dedução) | `UI` | 260×64 | 28 | (-24, -230), ou (-24, -150) na Fase 2 |
+
+Resultado: o Pause ficava a 100 da borda (os outros a 24), três larguras, espaços de 20 e 16 entre eles e, em telas 20:9, o Pause saía ≈ 24% maior que os outros, porque o canvas dele escala pela largura. Observação: o `CanvasScaler` do `UI.prefab` está em **Expand** (o campo "match" é ignorado). A escala é min(largura/1920, altura/1080): pela altura em telas mais largas que 16:9 e pela largura nas mais quadradas (4:3).
+
+### 27.2 O que mudou
+
+- **`Scripts/UI/BotaoDoCantoDaHud.cs`** (novo, uma referência só para os três): largura 240, altura 64, rótulo 28 pelo `EstiloDeBotao.AjustarRotulo` (o mesmo de todos os botões), margem 24 da direita e do topo, espaçamento 12, âncora e pivô no canto superior direito, recuo da área segura como no `HudAreaSegura`. Medidas em unidades da HUD; num canvas com outra escala (o do Pause), a escala local compensa a diferença, e o botão sai com o mesmo tamanho em pixels que os outros. A propriedade `Vaga` diz a posição na coluna (0 = topo).
+- **Coluna** (unidades da referência 1080): Pause 24–88, Biblioteca 100–164, Quadro 176–240. Ela termina a 240 do topo, dentro do limite de 270 que o popup do tutorial já reserva para a HUD (`TutorialStepUI.AlturaDaHudDoTopo`; antes, o Quadro descia até 294). A HUD de status ocupa 18–251 no canto oposto: as duas faixas ficam na mesma altura.
+- **PC/teclado:** sem botão de pause, a Biblioteca sobe para o topo e o Quadro fica logo abaixo (`BotaoDoCantoDaHud.VagaAbaixoDoPause`). Na Fase 2, sem Biblioteca, o Quadro ocupa o lugar dela, como antes. A vaga continua seguindo a fase, não a visibilidade: nada pula de lugar quando um painel abre.
+- **`BibliotecaUI` e `QuadroDeDeducaoUI`:** saíram as posições e o `AplicarAreaSegura` próprios de cada um; os dois acrescentam o componente ao botão que já montavam. O canvas próprio do botão (ordem 30, acima dos controles de toque), a visibilidade e as janelas não mudaram.
+- **`MobileControlsUI.prefab`:** o `PauseButton` ganhou o componente (vaga 0) e o retângulo final (240×64, pivô no canto, (-24, -24)), para o Editor já mostrar a posição certa. As cenas só sobrescrevem o `m_IsActive` desse botão: nenhuma cena mudou.
+- **Por que 240×64 e 28:** "Quadro de pistas", o rótulo mais longo, mede 180 em 28 e cabe na face de 192. 64 é a menor altura em que o 28 não encolhe (face de 36,9 para uma linha de 36,6), e 28 já era a fonte dos botões montados por código. Menor que isso perde leitura e área de toque; maior cobre mais cenário.
+
+### 27.3 Onde ajustar
+
+- Constantes no topo do `BotaoDoCantoDaHud` (`Largura`, `Altura`, `TamanhoDaFonte`, `Margem`, `Espacamento`). `ReferenciaDaHud` e `EscalaDaHud` repetem o `CanvasScaler` do `UI.prefab` (Expand, 1920×1080); um teste avisa se o prefab mudar.
+- Rótulo do Quadro: `QuadroDeDeducaoUI.rotuloDoBotao`. Um texto mais longo que 192 de largura encolhe pelo auto size (mínimo 20) e deixa de ter a mesma fonte dos outros.
+
+### 27.4 Testes executados
+
+- **EditMode: 112/112** (2 novos em `Editor/Testes/TutorialEUiTests.cs`): mesma coluna e mesmo tamanho em pixels nos dois canvas em 16:9, 20:9 com recorte e barra no topo, e 4:3, com margem, espaçamento e área segura; `PauseButton` do prefab com o componente na vaga 0 e `UI.prefab` em Expand 1920×1080.
+- **Play Mode** (cena Jogo pelo `playModeStartScene`, Device Simulator do Editor, estado em memória: Fase 3, Champ de Mars em andamento):
+
+| Aparelho (Simulator) | Tela | Área segura | Cada botão | Escala local do Pause | Resultado |
+|---|---|---|---|---|---|
+| Xiaomi Mi Note Pro (16:9, o do grupo) | 2560×1440 | inteira | 320×85 px, x 2208–2528, espaço 16 | 1,000 | alinhados |
+| Google Pixel 3 (18:9) | 2160×1080 | inteira | 240×64 px, x 1896–2136, espaço 12 | 0,889 | alinhados |
+| Huawei P40 Pro (20:9) | 2640×1200 | 141 px de recorte à direita | 266×71 px, x 2206–2472 (27 px dentro da área segura) | 0,808 | alinhados |
+| iPad 5ª geração (4:3) | 2048×1536 | inteira | 256×68 px, x 1766–2022 | 1,000 | alinhados, na proporção da HUD |
+| PC/teclado (Game View) | 1920×1080 | — | Biblioteca no topo, Quadro abaixo, sem Pause | — | sem buraco |
+
+- Rótulos com 28,00 nos três botões, em todos os aparelhos (o auto size não reduziu). `ConferenciaDeTextosDaUI.Conferir()` no P40 Pro: 9 textos, 0 problemas.
+- **Toque:** o `EventSystem.RaycastAll` no centro e nos cantos de cada botão acerta o próprio botão. Um clique real no Pause escalado (0,808) abre o menu de pausa (`timeScale` 0), que depois fecha.
+- **Fase 2 (PC):** a Biblioteca some e o Quadro sobe para a vaga 0.
+- Capturas em `Unity-DaPenaAGuilhotina/Temp/CapturasHud` (pasta temporária da Unity, fora do Git), de `1_16x9_MiNotePro` a `5_PC_teclado`.
+
+### 27.5 Limitações e observações
+
+- **Inventário e Interagir** (embaixo, no `MobileControlsUI`) continuam 200×60, com o rótulo ≈ 25 pelo auto size, no canvas que escala pela largura e sem área segura. Ficaram fora do pedido; dá para aplicar a mesma referência se o grupo quiser.
+- O canvas dos controles de toque continua escalando pela largura (joystick e botões de baixo iguais). Só o Pause é compensado pela escala local.
+- Em telas com recorte, a coluna recua com a área segura, como a HUD de status no outro canto.
+- **Editor:** com o Device Simulator e uma Game View abertos ao mesmo tempo, o `Screen.safeArea` vem do aparelho simulado e o `Screen.width` da Game View. A HUD de status e a coluna saem da tela. É coisa do Editor (basta usar uma janela só) e não afeta o jogo.
+
+### 27.6 O que ainda exige teste manual
+
+1. Celular Android real, 16:9 e 20:9 com recorte: tocar os três botões e girar a tela para os dois lados da paisagem.
+2. Tablet real, se houver um à mão.
+
+### 27.7 Efeitos no ambiente de quem testou
+
+- `save.json` somente leitura durante o Play (nenhuma gravação foi tentada). No fim, **md5 idêntico** (`D2AB5DC2…`), atributo normal, sem `save.json.tmp`. `TestResults.xml` (relatório do Test Runner, na mesma pasta) regravado pelos testes EditMode.
+- PlayerPrefs: as 9 chaves da partida continuam em 1, como antes; `opt_volume` e `opt_textspeed` continuam ausentes.
+- Editor: no começo, uma Game View flutuante foi aberta por engano (`EditorWindow.GetWindow`) e depois fechada. O Simulator virou Game View só para o teste de PC e depois voltou ao mesmo lugar, com o Xiaomi Mi Note Pro. Os tamanhos temporários 2400×1080 e 1440×1080 da Game View foram removidos. `DaPena_SimularCelularNoEditor` voltou a falso, `runInBackground` está desligado, `playModeStartScene` está nulo e `menu principal` está aberta e limpa.
+- Nada foi commitado.

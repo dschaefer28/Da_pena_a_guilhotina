@@ -43,8 +43,6 @@ public class BibliotecaUI : MonoBehaviour
     private TextMeshProUGUI textoOuro;
     private TextMeshProUGUI textoMensagem;
     private Button botaoFechar;
-    private Vector2 posicaoBaseBotao;
-    private Rect ultimaArea;
     private float timeScaleAoAbrir = 1f;
     private bool dicaPedida;
 
@@ -79,7 +77,6 @@ public class BibliotecaUI : MonoBehaviour
         bool visivel = gm != null && gm.faseAtual >= faseMinima && !outroModal;
         if (botaoAbrir != null && botaoAbrir.gameObject.activeSelf != (visivel && !Aberta))
             botaoAbrir.gameObject.SetActive(visivel && !Aberta);
-        if (botaoAbrir != null && Screen.safeArea != ultimaArea) AplicarAreaSegura();
 
         // Primeira vez que o botão aparece (Prompt 7): a dica explica a Biblioteca antes de o jogador abri-la.
         if (visivel && !dicaPedida && TutorialManager.Instance != null)
@@ -237,7 +234,8 @@ public class BibliotecaUI : MonoBehaviour
             if (modelo != null) fonte = modelo.font;
         }
 
-        // Botão fixo no canto superior direito, abaixo do botão de pause do celular, dentro da área segura.
+        // Botão no canto superior direito, logo abaixo do botão de pause do celular (no PC, no topo): mesma coluna,
+        // tamanho e fonte do Pause e do Quadro de pistas, dentro da área segura.
         Button abrir = Botao("BotaoBiblioteca", raiz, "Biblioteca");
         // Canvas próprio acima do canvas dos controles de toque, para o toque chegar ao botão.
         var canvasBotao = abrir.gameObject.AddComponent<Canvas>();
@@ -245,11 +243,8 @@ public class BibliotecaUI : MonoBehaviour
         canvasBotao.sortingOrder = 30;
         abrir.gameObject.AddComponent<GraphicRaycaster>();
         botaoAbrir = (RectTransform)abrir.transform;
-        botaoAbrir.anchorMin = botaoAbrir.anchorMax = botaoAbrir.pivot = new Vector2(1f, 1f);
-        botaoAbrir.sizeDelta = new Vector2(240f, 64f);
-        posicaoBaseBotao = new Vector2(-24f, -150f);
+        abrir.gameObject.AddComponent<BotaoDoCantoDaHud>().Vaga = BotaoDoCantoDaHud.VagaAbaixoDoPause;
         abrir.onClick.AddListener(Abrir);
-        AplicarAreaSegura();
         botaoAbrir.gameObject.SetActive(false);
 
         // Janela modal: fundo escurecido que bloqueia cliques no jogo + painel central.
@@ -319,18 +314,6 @@ public class BibliotecaUI : MonoBehaviour
         textoMensagem.GetComponent<LayoutElement>().minHeight = 44f;
 
         janela.SetActive(false);
-    }
-
-    // Recuo do notch/barras (celular) somado à margem base, como o HudAreaSegura faz no canto oposto.
-    private void AplicarAreaSegura()
-    {
-        ultimaArea = Screen.safeArea;
-        Canvas canvas = botaoAbrir.GetComponentInParent<Canvas>();
-        float escala = canvas != null ? canvas.rootCanvas.scaleFactor : 1f;
-        if (escala <= 0f) return;
-        float direita = (Screen.width - ultimaArea.xMax) / escala;
-        float topo = (Screen.height - ultimaArea.yMax) / escala;
-        botaoAbrir.anchoredPosition = posicaoBaseBotao + new Vector2(-direita, -topo);
     }
 
     private TextMeshProUGUI Texto(string nome, Transform pai, float tamanho, string conteudo, TextAlignmentOptions alinhamento)
