@@ -59,6 +59,7 @@ public class TribunalManager : MonoBehaviour
         public string nome;
         public Sprite icone;
         public Confiabilidade confiabilidade;
+        public string ficha; // texto ao passar o mouse (FichaDaProva); vazio nos argumentos de reserva
         public Button botao;
     }
 
@@ -230,7 +231,8 @@ public class TribunalManager : MonoBehaviour
 
     private void ColetarProvas(GameManager gm)
     {
-        List<Item> itens = ProvasDoCaso(gm, caso, CatalogoDeSave.Instancia);
+        CatalogoDeSave catalogo = CatalogoDeSave.Instancia;
+        List<Item> itens = ProvasDoCaso(gm, caso, catalogo);
         // Sem caso (cena aberta direto no Editor): usa o que está no inventário. Com um caso, nunca: um item de outro
         // caso não vira argumento — sem provas registradas, ficam os argumentos de reserva.
         if (itens.Count == 0 && caso == null && gm != null && gm.inventarioSalvo != null)
@@ -242,7 +244,11 @@ public class TribunalManager : MonoBehaviour
         {
             string id = string.IsNullOrEmpty(item.itemID) ? item.name : item.itemID;
             if (!vistos.Add(id)) continue;
-            provas.Add(new Prova { nome = item.NomeExibicao, icone = item.itemImg, confiabilidade = item.confiabilidade });
+            provas.Add(new Prova
+            {
+                nome = item.NomeExibicao, icone = item.itemImg, confiabilidade = item.confiabilidade,
+                ficha = FichaDaProva(item, caso, gm, catalogo),
+            });
         }
 
         if (provas.Count == 0)
@@ -288,9 +294,93 @@ public class TribunalManager : MonoBehaviour
         return publicado.nivel == NivelDoPanfleto.Fatos;
     }
 
+    // ===== Ficha da prova (passar o mouse) =====
+
+    /// <summary>
+    /// Texto da ficha que aparece ao passar o mouse numa prova: o que ela é, de onde veio, o que diz e para que lado pesa
+    /// (Item.pesoNoJulgamento, lido do conteúdo, nunca da verdade da pista). O panfleto publicado do caso mostra as
+    /// afirmações das pistas que o jogador imprimiu, e o lado vem delas. Nulo sem item.
+    /// </summary>
+    public static string FichaDaProva(Item item, CaseData caso, GameManager gm, CatalogoDeSave catalogo)
+    {
+        if (item == null) return null;
+        List<Item> impressas = PistasDoPanfletoPublicado(item, caso, gm, catalogo);
+
+        var sb = new System.Text.StringBuilder();
+        sb.Append("<b>").Append(item.NomeExibicao).Append("</b>");
+
+        string tipo = impressas != null ? "O seu panfleto" : item.EhSuporte ? "Documento de apoio" : item.EhPista ? "Pista do caso" : null;
+        string origem = string.IsNullOrWhiteSpace(item.fonte) ? null : "Fonte: " + item.fonte.Trim();
+        string linha = tipo != null && origem != null ? tipo + " · " + origem : tipo ?? origem;
+        if (linha != null) sb.Append("\n<size=85%><color=#C8B89A>").Append(linha).Append("</color></size>");
+
+        if (!string.IsNullOrWhiteSpace(item.descricao)) sb.Append("\n\n").Append(item.descricao.Trim());
+
+        if (impressas != null && impressas.Count > 0)
+        {
+            sb.Append("\n\n<size=85%><color=#C8B89A>O panfleto afirma:</color>");
+            foreach (Item pista in impressas)
+                sb.Append("\n• ").Append(string.IsNullOrWhiteSpace(pista.afirmacaoNoPanfleto) ? pista.NomeExibicao : pista.afirmacaoNoPanfleto.Trim());
+            sb.Append("</size>");
+        }
+
+        string peso = RotuloDoPeso(impressas != null ? PesoDoPanfleto(impressas) : item.pesoNoJulgamento);
+        if (peso != null) sb.Append("\n\n<size=85%><color=#C8B89A>Pesa:</color> <b>").Append(peso).Append("</b></size>");
+        return sb.ToString();
+    }
+
+    /// <summary>As pistas que o jogador imprimiu, se o item é o panfleto publicado do caso; nulo se não é.</summary>
+    private static List<Item> PistasDoPanfletoPublicado(Item item, CaseData caso, GameManager gm, CatalogoDeSave catalogo)
+    {
+        if (gm == null || caso == null || caso.receitaDoPanfleto == null) return null;
+        GameManager.PanfletoPublicado publicado = gm.panfletosPublicados.Find(p => p != null && p.caso == caso);
+        if (publicado == null) return null;
+        ReceitaDeCaso receita = caso.receitaDoPanfleto;
+        Item panfleto = receita.PanfletoDe(receita.VersaoDe(publicado.nivel));
+        if (panfleto == null || (panfleto != item && !panfleto.Matches(item))) return null;
+
+        var pistas = new List<Item>();
+        if (catalogo != null && publicado.pistas != null)
+            foreach (string id in publicado.pistas)
+            {
+                Item pista = catalogo.BuscarItem(id);
+                if (pista != null && !pistas.Contains(pista)) pistas.Add(pista);
+            }
+        return pistas;
+    }
+
+    /// <summary>O lado do panfleto é o das pistas impressas: todas a favor, todas contra, ou dos dois lados.</summary>
+    private static PesoNoJulgamento PesoDoPanfleto(List<Item> impressas)
+    {
+        bool aFavor = false, contra = false;
+        foreach (Item pista in impressas)
+        {
+            if (pista.pesoNoJulgamento == PesoNoJulgamento.AFavorDoAcusado) aFavor = true;
+            else if (pista.pesoNoJulgamento == PesoNoJulgamento.ContraOAcusado) contra = true;
+            else if (pista.pesoNoJulgamento == PesoNoJulgamento.DosDoisLados) aFavor = contra = true;
+        }
+        return aFavor && contra ? PesoNoJulgamento.DosDoisLados
+             : aFavor ? PesoNoJulgamento.AFavorDoAcusado
+             : contra ? PesoNoJulgamento.ContraOAcusado
+             : PesoNoJulgamento.NaoDefinido;
+    }
+
+    private static string RotuloDoPeso(PesoNoJulgamento peso)
+    {
+        switch (peso)
+        {
+            case PesoNoJulgamento.AFavorDoAcusado: return "a favor do acusado";
+            case PesoNoJulgamento.ContraOAcusado: return "contra o acusado";
+            case PesoNoJulgamento.DosDoisLados: return "dos dois lados: uma parte ajuda o acusado, outra o prejudica";
+            case PesoNoJulgamento.Contexto: return "nenhum lado: é contexto, não acusa nem defende";
+            default: return null;
+        }
+    }
+
     private void Apresentar(Prova prova)
     {
         if (ocupado || vereditoIniciado || prova.botao == null || !prova.botao.interactable) return;
+        FichaDaPista.Esconder(null); // a reação da bancada é o que importa agora (a ficha volta ao passar o mouse de novo)
         prova.botao.interactable = false;
         MarcarComoApresentada(prova);
         apresentados++;
@@ -403,7 +493,15 @@ public class TribunalManager : MonoBehaviour
         if (vereditoIniciado) yield break; // última prova e "Encerrar" no mesmo instante: um veredito só
         vereditoIniciado = true;
         ocupado = true;
-        foreach (Prova p in provas) if (p.botao != null) p.botao.interactable = false;
+        foreach (Prova p in provas)
+        {
+            if (p.botao == null) continue;
+            p.botao.interactable = false;
+            // Sem ficha durante o veredito: ela fica acima da HUD e cobriria a tela final.
+            var ficha = p.botao.GetComponent<FichaAoPassar>();
+            if (ficha != null) ficha.enabled = false;
+        }
+        FichaDaPista.Esconder(null);
         botaoEncerrar.interactable = false;
 
         textoReacao.text = cabecalho + "A bancada se reúne em silêncio.";
@@ -604,6 +702,7 @@ public class TribunalManager : MonoBehaviour
             Prova p = prova;
             p.botao = Botao("Prova", conteudo, Vector2.zero, Vector2.one, p.nome, p.icone);
             p.botao.onClick.AddListener(() => Apresentar(p));
+            if (!string.IsNullOrWhiteSpace(p.ficha)) p.botao.gameObject.AddComponent<FichaAoPassar>().texto = p.ficha;
         }
 
         textoContador = Texto("Contador", raiz, new Vector2(0.78f, 0.22f), new Vector2(0.95f, 0.28f), 26f, string.Empty);

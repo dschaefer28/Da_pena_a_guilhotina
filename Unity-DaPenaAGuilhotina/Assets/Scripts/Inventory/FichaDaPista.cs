@@ -37,6 +37,21 @@ public class FichaDaPista : MonoBehaviour
         instancia.Exibir(item, ancora);
     }
 
+    /// <summary>Mostra um texto pronto ao lado de qualquer elemento de UI que não é slot (ex.: as provas do tribunal).
+    /// Fica até o Esconder ou até o elemento sumir.</summary>
+    public static void MostrarTexto(string texto, RectTransform ancora)
+    {
+        if (string.IsNullOrWhiteSpace(texto) || ancora == null) return;
+        Canvas raiz = ancora.GetComponentInParent<Canvas>();
+        if (raiz == null) return;
+        raiz = raiz.rootCanvas;
+
+        if (instancia == null || instancia.areaDoCanvas != (RectTransform)raiz.transform)
+            instancia = Montar(raiz, ancora.GetComponentInChildren<TextMeshProUGUI>(true));
+
+        instancia.Exibir(null, ancora, texto);
+    }
+
     /// <summary>Esconde a ficha. Com uma âncora, só esconde se a ficha estiver mostrando aquele slot.</summary>
     public static void Esconder(RectTransform ancora)
     {
@@ -50,6 +65,7 @@ public class FichaDaPista : MonoBehaviour
     {
         // Inventário fechado (ou slot escondido) com o ponteiro ainda "em cima": não sobra ficha solta na tela.
         if (ancoraAtual == null || !ancoraAtual.gameObject.activeInHierarchy) { Esconder(null); return; }
+        if (itemAtual == null) return; // texto pronto (MostrarTexto): quem chamou esconde
 
         // A ficha vale enquanto o item ainda estiver no slot OU na mão do jogador. No celular não existe
         // "passar o mouse": o toque pega o item, e é segurando a pista que o jogador lê a ficha.
@@ -64,11 +80,11 @@ public class FichaDaPista : MonoBehaviour
         if (instancia == this) instancia = null;
     }
 
-    private void Exibir(Item item, RectTransform ancora)
+    private void Exibir(Item item, RectTransform ancora, string textoPronto = null)
     {
         ancoraAtual = ancora;
         itemAtual = item;
-        texto.text = MontarTexto(item);
+        texto.text = textoPronto ?? MontarTexto(item);
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
         LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
@@ -158,7 +174,9 @@ public class FichaDaPista : MonoBehaviour
         grupo.interactable = false;
 
         var fundo = go.GetComponent<Image>();
-        fundo.color = new Color(0.12f, 0.1f, 0.086f, 0.96f);
+        // Opaca: o projeto usa espaço de cor Linear, e com alpha 0,96 o texto de baixo (a fala da bancada, os botões
+        // vizinhos no tribunal) ainda aparecia através da ficha.
+        fundo.color = new Color(0.12f, 0.1f, 0.086f, 1f);
         fundo.raycastTarget = false;
 
         var layout = go.GetComponent<VerticalLayoutGroup>();

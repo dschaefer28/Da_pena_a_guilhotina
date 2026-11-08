@@ -27,3 +27,4 @@ MonoBehaviour:
   qualidade: 0
   afirmacaoNoPanfleto: "A farinha do por\xE3o \xE9 de um fornecedor dos ex\xE9rcitos,
     que aluga o por\xE3o; o mercador s\xF3 recebe o aluguel."
+  pesoNoJulgamento: 1

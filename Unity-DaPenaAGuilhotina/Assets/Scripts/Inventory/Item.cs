@@ -13,6 +13,17 @@ public enum Confiabilidade
     Calunia
 }
 
+/// <summary>Para que lado uma prova pesa no julgamento da Fase 4, pelo que ela DIZ (o conteúdo), nunca pela verdade
+/// escondida (Confiabilidade). Aparece na ficha das provas do tribunal e não muda a barra nem o veredito.</summary>
+public enum PesoNoJulgamento
+{
+    NaoDefinido, // a ficha do tribunal não mostra a linha "Pesa"
+    AFavorDoAcusado,
+    ContraOAcusado,
+    DosDoisLados,
+    Contexto     // explica a lei ou a situação, sem acusar nem defender
+}
+
 /// <summary>Qualidade da evidência (Prompt 3). INDEPENDENTE da Confiabilidade: um documento caro pode ser boato, e o
 /// preço nunca muda a verdade. Só entra no cálculo por regras explícitas da receita (ReceitaDeCaso.qualificadores).</summary>
 public enum QualidadeDaEvidencia
@@ -61,6 +72,11 @@ public class Item : ScriptableObject
     [Tooltip("O que o panfleto afirma quando esta pista é impressa (uma frase). Aparece em \"O seu panfleto\". " +
              "Vazio = mostra só o nome da pista.")]
     public string afirmacaoNoPanfleto;
+
+    [Header("Julgamento (Fase 4)")]
+    [Tooltip("Para que lado a prova pesa no tribunal, pelo que ela diz (não pela verdade). Aparece na ficha ao passar o " +
+             "mouse na prova; não muda a barra nem o veredito. Panfletos não precisam: o lado vem das pistas impressas.")]
+    public PesoNoJulgamento pesoNoJulgamento = PesoNoJulgamento.NaoDefinido;
 
     /// <summary>Nome pronto para exibição em UI (usa itemName se configurado, senão cai no nome do asset).</summary>
     public string NomeExibicao => string.IsNullOrWhiteSpace(itemName) ? name : itemName;

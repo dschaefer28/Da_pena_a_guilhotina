@@ -281,4 +281,67 @@ public class ProgressaoETribunalTests
         Assert.IsTrue(TribunalManager.PodeEncerrar(1, 1, 2), "com uma prova só, o mínimo acompanha o total");
         Assert.IsFalse(TribunalManager.PodeEncerrar(0, 3, 0), "nunca sem nenhuma prova");
     }
+
+    [Test]
+    public void Tribunal_FichaDaProva_MostraDescricaoFonteELado_SemRevelarAVerdade()
+    {
+        CaseData julgado = Caso("Julgado", 4, RotaFinal.A_Guilhotina);
+        Item contra = ItemDe("p_contra", julgado, Confiabilidade.Calunia);
+        contra.itemName = "O cartaz"; contra.fonte = "Parede de editais"; contra.descricao = "Os réus confessaram.";
+        contra.pesoNoJulgamento = PesoNoJulgamento.ContraOAcusado;
+
+        string ficha = TribunalManager.FichaDaProva(contra, julgado, gm, null);
+        StringAssert.Contains("O cartaz", ficha);
+        StringAssert.Contains("Parede de editais", ficha);
+        StringAssert.Contains("Os réus confessaram.", ficha);
+        StringAssert.Contains("contra o acusado", ficha);
+        foreach (string verdade in new[] { "calúnia", "Calúnia", "boato", "confirmada", "Fato" })
+            StringAssert.DoesNotContain(verdade, ficha, "a ficha nunca diz a verdade escondida da pista");
+
+        Item semLado = ItemDe("p_sem_lado", julgado, Confiabilidade.Fato);
+        StringAssert.DoesNotContain("Pesa:", TribunalManager.FichaDaProva(semLado, julgado, gm, null), "sem lado definido, sem a linha");
+        Assert.IsNull(TribunalManager.FichaDaProva(null, julgado, gm, null));
+    }
+
+    [Test]
+    public void Tribunal_FichaDoPanfleto_MostraAsAfirmacoesImpressas_EOLadoVemDelas()
+    {
+        CaseData julgado = Caso("Julgado", 4, RotaFinal.A_Guilhotina);
+        ReceitaDeCaso receita = Criar<ReceitaDeCaso>("Receita");
+        receita.caso = julgado;
+        receita.panfletoPadrao = ItemDe("panfleto_julgado");
+        julgado.receitaDoPanfleto = receita;
+        Item aFavor = ItemDe("p1", julgado, Confiabilidade.Fato), contra = ItemDe("p2", julgado, Confiabilidade.Boato);
+        aFavor.afirmacaoNoPanfleto = "As cartas defendem a Convenção."; aFavor.pesoNoJulgamento = PesoNoJulgamento.AFavorDoAcusado;
+        contra.afirmacaoNoPanfleto = "As cartas entregam os portos."; contra.pesoNoJulgamento = PesoNoJulgamento.ContraOAcusado;
+        CatalogoDeSave catalogo = Criar<CatalogoDeSave>("Catalogo");
+        catalogo.itens.AddRange(new[] { aFavor, contra });
+
+        var publicado = new GameManager.PanfletoPublicado { caso = julgado, nivel = NivelDoPanfleto.ComBoato, pistas = new List<string> { "p1", "p2" } };
+        gm.panfletosPublicados.Add(publicado);
+        string ficha = TribunalManager.FichaDaProva(receita.panfletoPadrao, julgado, gm, catalogo);
+        StringAssert.Contains("O seu panfleto", ficha);
+        StringAssert.Contains("As cartas defendem a Convenção.", ficha);
+        StringAssert.Contains("As cartas entregam os portos.", ficha);
+        StringAssert.Contains("dos dois lados", ficha);
+
+        publicado.pistas = new List<string> { "p1" };
+        StringAssert.Contains("a favor do acusado", TribunalManager.FichaDaProva(receita.panfletoPadrao, julgado, gm, catalogo));
+        StringAssert.DoesNotContain("O seu panfleto", TribunalManager.FichaDaProva(aFavor, julgado, gm, catalogo), "uma pista não é o panfleto");
+    }
+
+    /// <summary>As provas que vão ao tribunal (pistas e documentos de apoio da Fase 4) precisam do lado preenchido, senão
+    /// a ficha não diz para que lado pesam. Panfletos e cartas do cliente não: o lado do panfleto vem das pistas.</summary>
+    [Test]
+    public void Campanha_ProvasDaFase4_TemOLadoNoJulgamento()
+    {
+        var semLado = new List<string>();
+        foreach (string guid in UnityEditor.AssetDatabase.FindAssets("t:Item"))
+        {
+            Item item = UnityEditor.AssetDatabase.LoadAssetAtPath<Item>(UnityEditor.AssetDatabase.GUIDToAssetPath(guid));
+            if (item == null || item.caso == null || item.caso.fase != 4 || !(item.EhPista || item.EhSuporte)) continue;
+            if (item.pesoNoJulgamento == PesoNoJulgamento.NaoDefinido) semLado.Add(item.name);
+        }
+        CollectionAssert.IsEmpty(semLado, "preencha 'Peso No Julgamento' (Item > Julgamento) nestas provas da Fase 4");
+    }
 }
