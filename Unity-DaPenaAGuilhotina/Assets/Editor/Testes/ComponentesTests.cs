@@ -265,6 +265,107 @@ public class ComponentesTests
         Assert.AreEqual(3, gm.horasRestantes, "conversas seguintes não cobram");
     }
 
+    // Mesmo arranjo do Kornmann (Varennes): a fala normal entrega o contrato; a etapa "recibo" exige o depoimento.
+    private NPCMovement CocheiroComEtapa(out Item depoimento, out DialogueData falaNormal, out DialogueData falaEtapa)
+    {
+        Item contrato = Pista("contrato", casoA);
+        depoimento = Pista("depoimento", casoA);
+        Item recibo = Pista("recibo", casoA, Confiabilidade.NaoEPista);
+        recibo.documentoDeSuporte = true;
+        falaNormal = Fala("contrato");
+        falaEtapa = Fala("recibo");
+        NPCMovement npc = Npc("Cocheiro", casoA, falaNormal, contrato);
+        CasoReacao r = npc.reacoesDeCaso[0];
+        r.etapasComplementares = new List<EtapaComplementar>
+        {
+            new EtapaComplementar { id = "recibo", requisitos = new List<Item> { depoimento }, dialogo = falaEtapa, recompensas = new List<Item> { recibo } }
+        };
+        npc.reacoesDeCaso[0] = r;
+        return npc;
+    }
+
+    // Start não roda em Edit Mode; chamá-lo simula a cena abrindo (ou reabrindo) com o NPC.
+    private static void IniciarNpc(NPCMovement npc) =>
+        typeof(NPCMovement).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(npc, null);
+
+    [Test]
+    public void Npc_EtapaComplementar_RequisitoJaObtido_SegueNaMesmaConversa_SemCobrarDeNovo()
+    {
+        // Playtest: quem achava o depoimento antes de falar com o Kornmann falava uma vez e nunca recebia o recibo.
+        NPCMovement npc = CocheiroComEtapa(out Item depoimento, out DialogueData falaNormal, out DialogueData falaEtapa);
+        var avisos = new List<string>();
+        System.Action<string, Sprite> ouvir = (texto, icone) => { if (texto.Contains("Cocheiro")) avisos.Add(texto); };
+        AvisoNaTela.OnAviso += ouvir;
+        try
+        {
+            gm.ConfirmarCaso(casoA);
+            IniciarNpc(npc);
+            inv.AddItem(depoimento);
+            Assert.AreEqual(0, avisos.Count, "ainda não conversou com ele: não há para onde 'voltar'");
+
+            npc.Interact();
+            Assert.AreSame(falaNormal, ds.dialogueData, "primeiro a fala normal");
+            TerminarDialogo();
+            Assert.IsTrue(inv.HasItem("contrato"));
+            Assert.IsTrue(ds.IsDialogueActive, "a conversa continua na etapa já liberada");
+            Assert.AreSame(falaEtapa, ds.dialogueData);
+            TerminarDialogo();
+            Assert.IsTrue(inv.HasItem("recibo"), "tudo numa conversa só");
+            Assert.IsFalse(ds.IsDialogueActive);
+            Assert.AreEqual(3, gm.horasRestantes, "uma conversa, uma cobrança");
+            Assert.AreEqual(0, avisos.Count);
+        }
+        finally { AvisoNaTela.OnAviso -= ouvir; }
+    }
+
+    [Test]
+    public void Npc_EtapaComplementar_RequisitoAchadoDepoisDaConversa_AvisaParaVoltar()
+    {
+        NPCMovement npc = CocheiroComEtapa(out Item depoimento, out _, out _);
+        var avisos = new List<string>();
+        System.Action<string, Sprite> ouvir = (texto, icone) => { if (texto.Contains("Cocheiro")) avisos.Add(texto); };
+        AvisoNaTela.OnAviso += ouvir;
+        try
+        {
+            gm.ConfirmarCaso(casoA);
+            IniciarNpc(npc);
+            npc.Interact(); TerminarDialogo();
+            Assert.IsFalse(inv.HasItem("recibo"), "sem o requisito, a conversa termina na fala normal");
+
+            inv.AddItem(Pista("nada_a_ver", casoA));
+            Assert.AreEqual(0, avisos.Count, "item que não é requisito não avisa");
+            inv.AddItem(depoimento);
+            Assert.AreEqual(1, avisos.Count, "achou o requisito depois de conversar: avisa para voltar");
+
+            IniciarNpc(npc); // voltou à cena sem ter falado de novo
+            Assert.AreEqual(2, avisos.Count, "o lembrete reaparece enquanto a etapa não for recebida");
+
+            npc.Interact(); TerminarDialogo();
+            Assert.IsTrue(inv.HasItem("recibo"));
+            Assert.AreEqual(3, gm.horasRestantes, "voltar não cobra");
+            IniciarNpc(npc);
+            Assert.AreEqual(2, avisos.Count, "etapa recebida: sem lembrete");
+        }
+        finally { AvisoNaTela.OnAviso -= ouvir; }
+    }
+
+    [Test]
+    public void Npc_OuvinteDoFimDoDialogoComErro_NaoImpedeAEntrega()
+    {
+        NPCMovement npc = Npc("Testemunha", casoA, Fala("fala"), Pista("p1", casoA));
+        System.Action quebrado = () => throw new System.InvalidOperationException("ouvinte quebrado");
+        ds.OnDialogueEnded += quebrado;
+        try
+        {
+            gm.ConfirmarCaso(casoA);
+            npc.Interact();
+            UnityEngine.TestTools.LogAssert.Expect(LogType.Exception, new System.Text.RegularExpressions.Regex("ouvinte quebrado"));
+            TerminarDialogo();
+            Assert.IsTrue(inv.HasItem("p1"), "o erro de outro ouvinte não engole a pista");
+        }
+        finally { ds.OnDialogueEnded -= quebrado; }
+    }
+
     [Test]
     public void Npc_DepoisDaEntrega_TocaFalaCurta_SemEntregarDeNovo_CampoVazioRepeteAConversa()
     {
@@ -475,9 +576,7 @@ public class ComponentesTests
         r.linhaEditorial = new ReceitaDeCaso.ConfiguracaoEditorial
         {
             ativa = true,
-            defesaDoPovo = new ReceitaDeCaso.ModificadorEditorial { povo = 10, estado = -5 },
-            agradarOPoder = new ReceitaDeCaso.ModificadorEditorial { povo = -5, estado = 10 },
-            sensacionalista = new ReceitaDeCaso.ModificadorEditorial { ouro = 15 },
+            sensacionalista = new ReceitaDeCaso.ModificadorEditorial { povo = -10, ouro = 15 },
             agravamentoPercentual = 50
         };
         return r;
@@ -541,17 +640,22 @@ public class ComponentesTests
         inv.PlaceInInventory(prensa.slotOutput, Pista("panfleto_antigo", null, Confiabilidade.NaoEPista));
         prensa.CombineItems();
         Assert.AreEqual(0, pedidos, "com a saída ocupada a prensa recusa antes de pedir o tom");
-        prensa.ImprimirComLinhaEditorial(LinhaEditorial.DefesaDoPovo);
+        prensa.ImprimirComLinhaEditorial(LinhaEditorial.Neutro);
         Assert.IsNotNull(prensa.slotInput1.item, "nada consumido");
         Assert.IsEmpty(gm.panfletosPublicados);
         Assert.AreEqual(50, gm.opiniaoPublicaAtual);
 
         inv.ClearItemSlot(prensa.slotOutput);
-        prensa.ImprimirComLinhaEditorial(LinhaEditorial.DefesaDoPovo);
+        prensa.ImprimirComLinhaEditorial(LinhaEditorial.DefesaDoPovo); // linha legada: não imprime, pede a escolha de novo
+        Assert.AreEqual(1, pedidos);
+        Assert.IsEmpty(gm.panfletosPublicados);
+
+        prensa.ImprimirComLinhaEditorial(LinhaEditorial.Neutro);
         Assert.AreEqual(1, gm.panfletosPublicados.Count);
-        Assert.AreEqual(LinhaEditorial.DefesaDoPovo, gm.panfletosPublicados[0].linha);
-        Assert.AreEqual(80, gm.opiniaoPublicaAtual, "50 + 20 (Fatos) + 10 (Defesa)");
-        Assert.AreEqual(35, gm.opiniaoEstadoAtual, "50 - 10 - 5");
+        Assert.AreEqual(LinhaEditorial.Neutro, gm.panfletosPublicados[0].linha);
+        Assert.AreEqual(70, gm.opiniaoPublicaAtual, "50 + 20 (Fatos), Neutro sem ajuste");
+        Assert.AreEqual(40, gm.opiniaoEstadoAtual, "50 - 10");
+        Assert.AreEqual(30, gm.capitalAtual, "só o ouro da versão");
         Assert.IsEmpty(gm.revelacoesPendentes);
     }
 
@@ -716,7 +820,7 @@ public class ComponentesTests
 
         gm.ConfirmarCaso(casoA);
         NasEntradas(fato, mentira);
-        prensa.ImprimirComLinhaEditorial(LinhaEditorial.DefesaDoPovo);
+        prensa.ImprimirComLinhaEditorial(LinhaEditorial.Neutro);
         Assert.AreEqual(1, gm.panfletosPublicados.Count);
         Item impresso = prensa.slotOutput.item;
         Assert.IsTrue(impresso.EhPanfleto);
@@ -727,7 +831,7 @@ public class ComponentesTests
         StringAssert.Contains("Uma defesa do acusado A.", ficha);
         StringAssert.Contains("A estava em casa naquela noite.", ficha);
         StringAssert.Contains("O vizinho mentiu ao juiz.", ficha);
-        StringAssert.Contains("Tom: defesa do povo", ficha);
+        StringAssert.Contains("Tom: neutro", ficha);
         StringAssert.Contains("Efeito da publicação: Povo +", ficha);
         foreach (string verdade in new[] { "boato", "Boato", "calúnia", "Calúnia", "ComBoato", "verdadeir", "confirmada" })
             StringAssert.DoesNotContain(verdade, ficha, "a ficha nunca diz qual afirmação era verdadeira");

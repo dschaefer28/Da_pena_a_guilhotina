@@ -125,7 +125,11 @@ public class FimDeFase : MonoBehaviour
                 : (string.IsNullOrWhiteSpace(revelacao.caso.caseTitle) ? revelacao.caso.name : revelacao.caso.caseTitle).Trim();
             texto = string.Format(textoPadraoRevelacao, titulo);
         }
-        if (revelacao.linha == LinhaEditorial.Sensacionalista && !string.IsNullOrWhiteSpace(textoAgravamentoSensacionalista))
+        // Só quando o agravamento está ligado no caso: desde 08/11/2026 ele vem desligado (0%) e o sensacionalista paga
+        // na hora, com menos para o lado do caso.
+        ReceitaDeCaso receita = revelacao.caso != null ? revelacao.caso.receitaDoPanfleto : null;
+        bool agravada = receita != null && receita.linhaEditorial != null && receita.linhaEditorial.agravamentoPercentual > 0;
+        if (revelacao.linha == LinhaEditorial.Sensacionalista && agravada && !string.IsNullOrWhiteSpace(textoAgravamentoSensacionalista))
             texto = texto.TrimEnd() + " " + textoAgravamentoSensacionalista.Trim();
         return texto;
     }

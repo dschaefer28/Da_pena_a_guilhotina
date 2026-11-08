@@ -37,16 +37,17 @@ public class ResultadoDoPanfleto
 /// Cálculo único do panfleto de caso, em etapas que podem ser compostas:
 ///   1. versão pela confiabilidade REAL das duas pistas (ReceitaDeCaso.Classificar);
 ///   2. qualificação por documentos de apoio válidos (ReceitaDeCaso.qualificadores);
-///   3. linha editorial (ReceitaDeCaso.linhaEditorial): o mesmo modificador em qualquer versão e, no sensacionalista,
-///      a perda da revelação agravada — só se a versão tiver revelação, nunca na versão Fatos;
+///   3. linha editorial (ReceitaDeCaso.linhaEditorial): Neutro não soma nada; Sensacionalista soma o mesmo modificador
+///      em qualquer versão (mais ouro, menos para o lado do caso) e, se o agravamento estiver ligado, a perda da revelação
+///      agravada — só se a versão tiver revelação, nunca na versão Fatos;
 ///   4. o impacto global é o resultado; o clamp de Povo/Estado fica no ponto de aplicação (GameManager.AplicarImpactoPanfleto).
 /// A linha editorial não muda a versão: tom, apoio e preço nunca transformam boato em fato.
 /// </summary>
 public static class CalculadoraDePanfleto
 {
     /// <summary>Etapas 1 a 3. Nulo se faltar receita/pista, ou se a receita exige linha editorial e <paramref name="linha"/>
-    /// não é uma das três opções (a prensa pergunta antes; publicar "sem tom" um caso novo é recusado). Receita sem linha
-    /// editorial configurada: publicação neutra, a linha informada é ignorada.</summary>
+    /// não é uma das opções (Neutro ou Sensacionalista: a prensa pergunta antes; publicar "sem tom" um caso novo é
+    /// recusado). Receita sem linha editorial configurada: publicação sem linha (Nenhuma), a linha informada é ignorada.</summary>
     public static ResultadoDoPanfleto Calcular(ReceitaDeCaso receita, Item a, Item b, IEnumerable<Item> suportesSelecionados, LinhaEditorial linha)
     {
         if (receita == null || a == null || b == null) return null;

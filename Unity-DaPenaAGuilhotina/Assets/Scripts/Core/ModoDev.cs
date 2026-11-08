@@ -281,8 +281,8 @@ public static class ModoDev
     // A linha editorial que mais puxa para a rota (receitas sem linha: neutra).
     private static LinhaEditorial LinhaParaARota(ReceitaDeCaso receita, Item a, Item b, RotaFinal rota)
     {
-        if (!receita.ExigeLinhaEditorial) return LinhaEditorial.Neutra;
-        LinhaEditorial melhor = LinhaEditorial.DefesaDoPovo;
+        if (!receita.ExigeLinhaEditorial) return LinhaEditorial.Nenhuma;
+        LinhaEditorial melhor = LinhasEditoriais.Opcoes[0];
         int melhorNota = int.MinValue;
         foreach (LinhaEditorial linha in LinhasEditoriais.Opcoes)
         {

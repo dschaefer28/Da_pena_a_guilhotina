@@ -100,46 +100,38 @@ public class ReceitaDeCaso : ScriptableObject
     }
 
     /// <summary>
-    /// Linha editorial (Prompt 5): somada DEPOIS da versão e do apoio, igual em todas as versões — assim a escolha
-    /// nunca depende nem revela a verdade das pistas. Desligada = publicação neutra (compatibilidade com receitas
-    /// antigas); ligada = a prensa exige uma das três opções antes de publicar.
+    /// Linha editorial (teor da publicação): somada DEPOIS da versão e do apoio, igual em todas as versões — assim a
+    /// escolha nunca depende nem revela a verdade das pistas. Duas opções (08/11/2026): Neutro, sem modificador (o efeito
+    /// normal do caso), e Sensacionalista, com o modificador abaixo. Desligada = publicação sem linha (compatibilidade
+    /// com receitas antigas); ligada = a prensa exige uma das duas opções antes de publicar.
     /// </summary>
     [Serializable]
     public class ConfiguracaoEditorial
     {
         [Tooltip("Liga a escolha obrigatória da linha editorial neste caso (Fase 2 em diante). Desligada, o panfleto sai " +
-                 "neutro, sem modificador — só para dados antigos; o validador da campanha acusa casos novos sem ela.")]
+                 "sem linha, sem modificador — só para dados antigos; o validador da campanha acusa casos novos sem ela.")]
         public bool ativa;
 
-        [Tooltip("Defesa do povo: Povo positivo e Estado negativo.")]
-        public ModificadorEditorial defesaDoPovo = new ModificadorEditorial();
-
-        [Tooltip("Agradar a Coroa / o Comitê: Estado positivo e Povo negativo.")]
-        public ModificadorEditorial agradarOPoder = new ModificadorEditorial();
-        [Tooltip("Rótulo da opção neste caso. Vazio = padrão da fase (\"Agradar a Coroa\" até a Fase 3, \"Agradar o Comitê\" na 4).")]
-        public string rotuloAgradarOPoder;
-
-        [Tooltip("Sensacionalista: ouro adicional agora.")]
+        [Tooltip("Sensacionalista, somado ao efeito do Neutro: ouro positivo; o lado que o caso favorece negativo (ganha " +
+                 "menos); o outro lado zero ou negativo (perde o mesmo ou mais). Ferramentas > Campanha > 4b preenche pelo lado do caso.")]
         public ModificadorEditorial sensacionalista = new ModificadorEditorial();
-        [Tooltip("Sensacionalista: quanto a PERDA da revelação cresce, em %, quando a versão impressa tem boato, calúnia ou " +
-                 "alegação não verificada. Determinístico (sem sorteio). Na versão Fatos nada é cobrado.")]
+        [Tooltip("Sensacionalista: quanto a PERDA da revelação cresce, em %, quando a versão impressa tem boato ou calúnia. " +
+                 "Determinístico (sem sorteio). Na versão Fatos nada é cobrado. 0 = desligado (padrão desde 08/11/2026).")]
         [Min(0)] public int agravamentoPercentual;
 
+        /// <summary>Modificador da linha: Neutro = zero; Sensacionalista = o configurado; linhas legadas ou nenhuma = nulo.</summary>
         public ModificadorEditorial De(LinhaEditorial linha)
         {
             switch (linha)
             {
-                case LinhaEditorial.DefesaDoPovo: return defesaDoPovo;
-                case LinhaEditorial.AgradarOPoder: return agradarOPoder;
+                case LinhaEditorial.Neutro: return new ModificadorEditorial();
                 case LinhaEditorial.Sensacionalista: return sensacionalista;
                 default: return null;
             }
         }
 
         /// <summary>Nunca foi preenchida (asset anterior ao Prompt 5): a ferramenta de setup só configura estas.</summary>
-        public bool Vazia =>
-            !ativa && (defesaDoPovo == null || defesaDoPovo.Zerado) && (agradarOPoder == null || agradarOPoder.Zerado) &&
-            (sensacionalista == null || sensacionalista.Zerado) && agravamentoPercentual == 0 && string.IsNullOrWhiteSpace(rotuloAgradarOPoder);
+        public bool Vazia => !ativa && (sensacionalista == null || sensacionalista.Zerado) && agravamentoPercentual == 0;
     }
 
     [Header("Reforço por documentos de apoio (biblioteca / pistas complementares)")]
@@ -148,7 +140,7 @@ public class ReceitaDeCaso : ScriptableObject
     [Header("Linha editorial (Fase 2 em diante)")]
     public ConfiguracaoEditorial linhaEditorial = new ConfiguracaoEditorial();
 
-    /// <summary>A prensa só publica este caso com uma das três linhas editoriais escolhida pelo jogador.</summary>
+    /// <summary>A prensa só publica este caso com uma das linhas editoriais escolhida pelo jogador (Neutro ou Sensacionalista).</summary>
     public bool ExigeLinhaEditorial => linhaEditorial != null && linhaEditorial.ativa;
 
     /// <summary>Verdadeiro se algum qualificador desta receita aceita o documento (informação conhecida: não

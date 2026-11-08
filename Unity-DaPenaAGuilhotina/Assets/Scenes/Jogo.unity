@@ -948,9 +948,9 @@ MonoBehaviour:
     da prensa e refor\xE7am o panfleto. N\xE3o substituem as duas pistas, n\xE3o
     dizem qual \xE9 verdadeira e n\xE3o s\xE3o vendidos fiado."
   dicaLinhaEditorial: "Agora a prensa pede uma linha editorial: ao apertar Misturar,
-    voc\xEA escolhe o tom do panfleto. O tom muda o quanto ele move o Povo, o Estado
-    e o ouro, nunca a verdade das pistas. O sensacionalista vende mais, mas, se algo
-    for falso, o desmentido pesa mais."
+    voc\xEA escolhe o tom do panfleto. Neutro d\xE1 o efeito normal do caso. Sensacionalista
+    rende mais ouro, mas o lado que o caso defende ganha menos. O tom nunca muda a
+    verdade das pistas."
   etapas:
   - etapaId: boas_vindas
     mensagem: "Bem-vindo ao seu primeiro dia na tipografia! Estes s\xE3o os controles

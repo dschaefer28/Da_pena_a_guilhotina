@@ -100,21 +100,37 @@ public class CampanhaTests
             int fatos = Mathf.Abs(Desnivel(r.soFatos, false));
             int lado = System.Math.Sign(Desnivel(r.soFatos, false));
             int agravamento = r.linhaEditorial.agravamentoPercentual;
+            ReceitaDeCaso.ModificadorEditorial sens = r.linhaEditorial.sensacionalista;
+
+            // Teor (08/11/2026): Neutro = efeito normal do caso; Sensacionalista = mais ouro, o lado do caso ganha menos
+            // e o outro cai o mesmo (ou mais). Mesmos parâmetros para casos pró-povo e pró-Estado.
+            Assert.Greater(sens.ouro, 0, $"{caso.name}: o sensacionalista rende mais ouro");
+            Assert.LessOrEqual(sens.ouro, 15, $"{caso.name}: mas pouco a mais");
+            Assert.LessOrEqual(sens.povo, 0, $"{caso.name}: o sensacionalista nunca sobe o Povo além do Neutro");
+            Assert.LessOrEqual(sens.estado, 0, $"{caso.name}: nem o Estado");
+            if (r.soFatos.povo > 0) Assert.Less(sens.povo, 0, $"{caso.name}: caso do povo, o Povo sobe menos no sensacionalista");
+            if (r.soFatos.estado > 0) Assert.Less(sens.estado, 0, $"{caso.name}: caso do Estado, o Estado sobe menos no sensacionalista");
+            if (lado != 0)
+            {
+                int comSens = (r.soFatos.povo + sens.povo) - (r.soFatos.estado + sens.estado);
+                Assert.AreEqual(lado, System.Math.Sign(comSens), $"{caso.name}: com fatos, o sensacionalista ainda puxa para o lado do caso");
+                Assert.Less(Mathf.Abs(comSens), fatos, $"{caso.name}: mas puxa menos que o Neutro");
+            }
+
             foreach (ReceitaDeCaso.Versao mentira in new[] { r.comBoato, r.calunia })
             {
                 Assert.Greater(mentira.ouro, r.soFatos.ouro, $"{caso.name}: mentir rende mais ouro na hora");
                 Assert.LessOrEqual(Mathf.Abs(Desnivel(mentira, true)), fatos,
                     $"{caso.name}: depois de desmentida, a mentira não pode empurrar a rota mais que os fatos");
 
-                // Sensacionalista (17/10): agrava a perda, mas não a ponto de virar a mentira contra o próprio lado.
+                // Sensacionalista: com o ajuste e o agravamento (se ligado), a mentira desmentida não vira contra o próprio lado.
                 int pp = mentira.penalidadePovo + CalculadoraDePanfleto.Agravamento(mentira.penalidadePovo, agravamento);
                 int pe = mentira.penalidadeEstado + CalculadoraDePanfleto.Agravamento(mentira.penalidadeEstado, agravamento);
-                int saldo = (mentira.povo + pp) - (mentira.estado + pe);
+                int saldo = (mentira.povo + sens.povo + pp) - (mentira.estado + sens.estado + pe);
                 if (lado != 0)
                     Assert.AreNotEqual(-lado, System.Math.Sign(saldo),
                         $"{caso.name}: com o sensacionalista, a mentira desmentida não pode virar contra o próprio lado (saldo {saldo})");
             }
-            Assert.LessOrEqual(r.linhaEditorial.sensacionalista.ouro, 10, $"{caso.name}: o sensacionalista paga pouco a mais");
             Assert.LessOrEqual(agravamento, 25, $"{caso.name}: o desmentido sensacionalista pesa no máximo +25%");
         }
     }

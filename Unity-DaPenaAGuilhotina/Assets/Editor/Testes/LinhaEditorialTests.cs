@@ -4,9 +4,9 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Prompt 5: linha editorial. Cálculo único versão → apoio → linha, sensacionalista agravando só a consequência que
-/// já existe, compatibilidade neutra, histórico/revelação e save v6. A prensa com a janela de escolha está em
-/// ComponentesTests.
+/// Linha editorial (teor). Duas opções desde 08/11/2026: Neutro (efeito normal do caso) e Sensacionalista (mais ouro,
+/// o lado do caso ganha menos). Cálculo único versão → apoio → linha, agravamento opcional só da consequência que já
+/// existe, compatibilidade sem linha, histórico/revelação e save v6. A prensa com a janela de escolha está em ComponentesTests.
 /// </summary>
 public class LinhaEditorialTests
 {
@@ -54,9 +54,9 @@ public class LinhaEditorialTests
         receita.linhaEditorial = new ReceitaDeCaso.ConfiguracaoEditorial
         {
             ativa = true,
-            defesaDoPovo = new ReceitaDeCaso.ModificadorEditorial { povo = 10, estado = -5 },
-            agradarOPoder = new ReceitaDeCaso.ModificadorEditorial { povo = -5, estado = 10 },
-            sensacionalista = new ReceitaDeCaso.ModificadorEditorial { ouro = 15 },
+            // Caso pró-povo: o sensacionalista tira do Povo (o lado do caso), não mexe no Estado e paga mais ouro.
+            // Agravamento ligado aqui só para testar o mecanismo (nos casos reais ele está em 0).
+            sensacionalista = new ReceitaDeCaso.ModificadorEditorial { povo = -10, ouro = 15 },
             agravamentoPercentual = 50
         };
         caso.receitaDoPanfleto = receita;
@@ -73,7 +73,7 @@ public class LinhaEditorialTests
     // ===== Cálculo =====
 
     [Test]
-    public void TresTons_NasTresVersoes_SomamOModificador_ENaoMudamAVersao()
+    public void DoisTons_NasTresVersoes_SomamOModificador_ENaoMudamAVersao()
     {
         var pares = new[]
         {
@@ -99,6 +99,16 @@ public class LinhaEditorialTests
                 Assert.AreEqual(mod.ouro, r.editorialOuro, msg);
                 Assert.AreSame(receita.PanfletoDe(versao), r.panfleto, msg);
             }
+
+            // Neutro = o efeito normal do caso; Sensacionalista = mais ouro, Povo (lado do caso) menor, Estado igual.
+            ResultadoDoPanfleto neutro = Calcular(par.a, par.b, LinhaEditorial.Neutro);
+            ResultadoDoPanfleto sens = Calcular(par.a, par.b, LinhaEditorial.Sensacionalista);
+            Assert.AreEqual(versao.povo, neutro.povo, par.nivel + ": Neutro não muda o Povo");
+            Assert.AreEqual(versao.estado, neutro.estado, par.nivel + ": Neutro não muda o Estado");
+            Assert.AreEqual(versao.ouro, neutro.ouro, par.nivel + ": Neutro não muda o ouro");
+            Assert.Less(sens.povo, neutro.povo, par.nivel + ": no sensacionalista o lado do caso ganha menos");
+            Assert.AreEqual(neutro.estado, sens.estado, par.nivel + ": e o outro lado cai o mesmo");
+            Assert.Greater(sens.ouro, neutro.ouro, par.nivel + ": mas rende mais ouro");
         }
     }
 
@@ -122,13 +132,16 @@ public class LinhaEditorialTests
         Assert.AreEqual(-15, cal.penalidadeEstado);
 
 
-        foreach (LinhaEditorial outra in new[] { LinhaEditorial.DefesaDoPovo, LinhaEditorial.AgradarOPoder })
-        {
-            ResultadoDoPanfleto r = Calcular(fato1, boato, outra);
-            Assert.AreEqual(-10, r.penalidadePovo, outra + ": só o sensacionalista agrava");
-            Assert.AreEqual(-5, r.penalidadeEstado, outra.ToString());
-            Assert.AreEqual(0, r.agravamentoPovo, outra.ToString());
-        }
+        ResultadoDoPanfleto neutro = Calcular(fato1, boato, LinhaEditorial.Neutro);
+        Assert.AreEqual(-10, neutro.penalidadePovo, "só o sensacionalista agrava");
+        Assert.AreEqual(-5, neutro.penalidadeEstado);
+        Assert.AreEqual(0, neutro.agravamentoPovo);
+
+        receita.linhaEditorial.agravamentoPercentual = 0; // padrão dos casos reais desde 08/11/2026
+        ResultadoDoPanfleto semAgravamento = Calcular(fato1, boato, LinhaEditorial.Sensacionalista);
+        Assert.AreEqual(-10, semAgravamento.penalidadePovo, "com 0% o desmentido do sensacionalista pesa o mesmo");
+        Assert.AreEqual(0, semAgravamento.agravamentoPovo);
+        Assert.AreEqual(0, semAgravamento.agravamentoEstado);
 
         Assert.AreEqual(-10, receita.comBoato.penalidadePovo, "o asset Versao compartilhado não é alterado");
         Assert.AreEqual(40, receita.comBoato.ouro);
@@ -137,28 +150,55 @@ public class LinhaEditorialTests
     [Test]
     public void CasoNovoExigeEscolha_ReceitaAntigaPublicaNeutra()
     {
-        Assert.IsNull(Calcular(fato1, fato2, LinhaEditorial.Neutra), "caso com linha editorial não publica sem a escolha");
+        Assert.IsNull(Calcular(fato1, fato2, LinhaEditorial.Nenhuma), "caso com linha editorial não publica sem a escolha");
+        Assert.IsNull(Calcular(fato1, fato2, LinhaEditorial.DefesaDoPovo), "linha legada não é mais opção");
+        Assert.IsNull(Calcular(fato1, fato2, LinhaEditorial.AgradarOPoder), "linha legada não é mais opção");
 
         receita.linhaEditorial = new ReceitaDeCaso.ConfiguracaoEditorial(); // como um asset anterior ao Prompt 5
         Assert.IsTrue(receita.linhaEditorial.Vazia);
         ResultadoDoPanfleto neutro = Calcular(fato1, boato, LinhaEditorial.Sensacionalista);
-        Assert.AreEqual(LinhaEditorial.Neutra, neutro.linha, "sem linha configurada a escolha é ignorada");
+        Assert.AreEqual(LinhaEditorial.Nenhuma, neutro.linha, "sem linha configurada a escolha é ignorada");
         Assert.AreEqual(30, neutro.povo);
         Assert.AreEqual(40, neutro.ouro);
         Assert.AreEqual(-10, neutro.penalidadePovo);
-        Assert.IsNotNull(Calcular(fato1, fato2, LinhaEditorial.Neutra));
+        Assert.IsNotNull(Calcular(fato1, fato2, LinhaEditorial.Nenhuma));
     }
 
     [Test]
-    public void RotuloDaOpcao2_AcompanhaAFase_EARegraNaoMuda()
+    public void SoDuasOpcoes_NeutroESensacionalista_LegadasSoComRotuloParaOHistorico()
     {
+        CollectionAssert.AreEqual(new[] { LinhaEditorial.Neutro, LinhaEditorial.Sensacionalista }, LinhasEditoriais.Opcoes);
+        Assert.AreEqual("Neutro", LinhasEditoriais.Rotulo(LinhaEditorial.Neutro, receita));
+        Assert.AreEqual("Sensacionalista", LinhasEditoriais.Rotulo(LinhaEditorial.Sensacionalista, receita));
+        foreach (LinhaEditorial legada in new[] { LinhaEditorial.Nenhuma, LinhaEditorial.DefesaDoPovo, LinhaEditorial.AgradarOPoder })
+            Assert.IsFalse(LinhasEditoriais.Escolhivel(legada), legada.ToString());
+
+        // Saves antigos ainda podem ter publicações com as linhas legadas: o histórico mostra o rótulo da época.
         caso.fase = 2;
         Assert.AreEqual("Agradar a Coroa", LinhasEditoriais.Rotulo(LinhaEditorial.AgradarOPoder, receita));
         caso.fase = 4;
         Assert.AreEqual("Agradar o Comitê", LinhasEditoriais.Rotulo(LinhaEditorial.AgradarOPoder, receita));
-        receita.linhaEditorial.rotuloAgradarOPoder = "Agradar a Assembleia";
-        Assert.AreEqual("Agradar a Assembleia", LinhasEditoriais.Rotulo(LinhaEditorial.AgradarOPoder, receita));
-        Assert.AreEqual(-5, Calcular(fato1, fato2, LinhaEditorial.AgradarOPoder).editorialPovo, "o rótulo não muda o modificador");
+        Assert.AreEqual("Defesa do povo", LinhasEditoriais.Rotulo(LinhaEditorial.DefesaDoPovo, receita));
+        Assert.AreEqual(4, (int)LinhaEditorial.Neutro, "o número vai para o save: não renumerar");
+        Assert.AreEqual(3, (int)LinhaEditorial.Sensacionalista);
+    }
+
+    [Test]
+    public void SensacionalistaDosCasosReais_SaiDoLadoDoCaso_MesmosParametrosParaPovoEEstado()
+    {
+        ReceitaDeCaso proPovo = Criar<ReceitaDeCaso>("ProPovo");
+        proPovo.soFatos = new ReceitaDeCaso.Versao { povo = 20, estado = -10 };
+        ReceitaDeCaso proEstado = Criar<ReceitaDeCaso>("ProEstado");
+        proEstado.soFatos = new ReceitaDeCaso.Versao { povo = -10, estado = 25 };
+        ReceitaDeCaso misto = Criar<ReceitaDeCaso>("Misto");
+        misto.soFatos = new ReceitaDeCaso.Versao { povo = 10, estado = 10 };
+
+        ReceitaDeCaso.ModificadorEditorial p = LinhaEditorialSetupTool.ModificadorSensacionalista(proPovo);
+        ReceitaDeCaso.ModificadorEditorial e = LinhaEditorialSetupTool.ModificadorSensacionalista(proEstado);
+        ReceitaDeCaso.ModificadorEditorial m = LinhaEditorialSetupTool.ModificadorSensacionalista(misto);
+        Assert.AreEqual((-10, 0, 15), (p.povo, p.estado, p.ouro), "pró-povo: Povo sobe menos, Estado cai o mesmo");
+        Assert.AreEqual((0, -10, 15), (e.povo, e.estado, e.ouro), "pró-Estado: o espelho");
+        Assert.AreEqual((-5, -5, 15), (m.povo, m.estado, m.ouro), "misto: não sobe tanto nem um nem outro");
     }
 
     [Test]
@@ -211,7 +251,7 @@ public class LinhaEditorialTests
             Assert.AreEqual(receita.comBoato.ouro + 20 + mod.ouro, r.ouro, msg);
         }
 
-        ResultadoDoPanfleto semApoio = Calcular(fato1, fato2, LinhaEditorial.DefesaDoPovo);
+        ResultadoDoPanfleto semApoio = Calcular(fato1, fato2, LinhaEditorial.Neutro);
         Assert.AreEqual(0, semApoio.apoioPovo); Assert.AreEqual(0, semApoio.apoioOuro);
         Assert.AreEqual(receita.soFatos.povo, semApoio.VersaoPovo, "sem apoio, só versão + linha");
     }
@@ -240,9 +280,10 @@ public class LinhaEditorialTests
         Assert.AreEqual(NivelDoPanfleto.ComBoato, p.nivel);
         CollectionAssert.AreEqual(new[] { "fato1", "boato" }, p.pistas);
         Assert.AreEqual(55, p.ouro); Assert.AreEqual(15, p.editorialOuro);
+        Assert.AreEqual(20, p.povo); Assert.AreEqual(-10, p.editorialPovo, "30 do boato - 10 do sensacionalista");
         Assert.AreEqual(-15, p.penalidadePovo); Assert.AreEqual(-5, p.agravamentoPovo);
         Assert.AreEqual(-8, p.penalidadeEstado); Assert.AreEqual(-3, p.agravamentoEstado);
-        Assert.AreEqual(30, p.povoAplicado, "50 → 80");
+        Assert.AreEqual(20, p.povoAplicado, "50 → 70");
         Assert.AreEqual(95, gm.capitalAtual);
 
         Assert.AreEqual(1, gm.revelacoesPendentes.Count);
@@ -256,10 +297,10 @@ public class LinhaEditorialTests
 
         GameManager.EncerramentoDeFase fim = gm.EncerrarFase();
         Assert.AreEqual(1, fim.revelacoes.Count);
-        Assert.AreEqual(65, gm.opiniaoPublicaAtual, "80 - 15 (penalidade agravada)");
+        Assert.AreEqual(55, gm.opiniaoPublicaAtual, "70 - 15 (penalidade agravada)");
         Assert.AreEqual(27, gm.opiniaoEstadoAtual, "35 - 8");
         Assert.AreEqual(0, gm.EncerrarFase().revelacoes.Count, "a revelação não se repete");
-        Assert.AreEqual(65, gm.opiniaoPublicaAtual);
+        Assert.AreEqual(55, gm.opiniaoPublicaAtual);
     }
 
     // ===== Save v6 =====
@@ -305,11 +346,11 @@ public class LinhaEditorialTests
 
         GameManager.PanfletoPublicado p = gm.panfletosPublicados[0];
         Assert.IsFalse(p.legado, "v5 tem os valores da publicação");
-        Assert.AreEqual(LinhaEditorial.Neutra, p.linha, "sem tom: publicação neutra");
+        Assert.AreEqual(LinhaEditorial.Nenhuma, p.linha, "sem tom: publicação neutra");
         Assert.AreEqual(0, p.agravamentoPovo);
         Assert.AreEqual(-30, p.penalidadePovo, "nada recalculado");
         Assert.IsTrue(p.aplicadoConhecido);
-        Assert.AreEqual(LinhaEditorial.Neutra, gm.revelacoesPendentes[0].linha);
+        Assert.AreEqual(LinhaEditorial.Nenhuma, gm.revelacoesPendentes[0].linha);
         Assert.AreEqual(-30, gm.revelacoesPendentes[0].povo);
         Assert.AreEqual(70, gm.opiniaoPublicaAtual);
     }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
-using FMODUnity;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -11,10 +11,10 @@ public class PauseMenu : MonoBehaviour
     public GameObject opções;
 
     [Header("Sliders de Opções (Áudio e Texto)")]
-    public Slider sliderVolume;
+    [FormerlySerializedAs("sliderVolume")] public Slider sliderMusica;
+    public Slider sliderEfeitos;
     public Slider sliderVelocidadeTexto;
 
-    private const string VolumeKey = "opt_volume";
     private const string TextSpeedKey = "opt_textspeed";
     // Mesmos valores usados em TypeTextAnimation.Awake() pra converter o slider (0-1) em delay (segundos).
     private const float TypeDelayLento = 0.12f;
@@ -31,10 +31,6 @@ public class PauseMenu : MonoBehaviour
             return;
         }
         Instance = this;
-
-        // Aplica o volume salvo assim que a cena carrega (o FMOD mantém o volume do bus
-        // entre cenas, então isso garante que uma cena nova comece com o valor certo).
-        AudioSeguro.DefinirVolumeDoBus("bus:/", PlayerPrefs.GetFloat(VolumeKey, 1f));
     }
 
     void OnDestroy()
@@ -102,18 +98,15 @@ public class PauseMenu : MonoBehaviour
         // Removi o Time.timeScale = 1 daqui.
 
         // Mostra os sliders já na posição salva (senão sempre reabriam no valor padrão 0.429).
-        if (sliderVolume != null)
-            sliderVolume.SetValueWithoutNotify(PlayerPrefs.GetFloat(VolumeKey, 1f));
+        if (sliderMusica != null) sliderMusica.SetValueWithoutNotify(VolumeDoAudio.Musica);
+        if (sliderEfeitos != null) sliderEfeitos.SetValueWithoutNotify(VolumeDoAudio.Efeitos);
         if (sliderVelocidadeTexto != null)
             sliderVelocidadeTexto.SetValueWithoutNotify(PlayerPrefs.GetFloat(TextSpeedKey, 0.5f));
     }
 
-    // Ligado no OnValueChanged do slider de Volume da tela de Opções.
-    public void OnVolumeSliderChanged(float valor01)
-    {
-        PlayerPrefs.SetFloat(VolumeKey, valor01);
-        AudioSeguro.DefinirVolumeDoBus("bus:/", valor01);
-    }
+    // Ligados no OnValueChanged dos sliders de Música e de Efeitos da tela de Opções (o VolumeDoAudio aplica na hora).
+    public void OnMusicaSliderChanged(float valor01) => VolumeDoAudio.DefinirMusica(valor01);
+    public void OnEfeitosSliderChanged(float valor01) => VolumeDoAudio.DefinirEfeitos(valor01);
 
     // Ligado no OnValueChanged do slider de Velocidade de Texto da tela de Opções.
     public void OnTextSpeedSliderChanged(float valor01)

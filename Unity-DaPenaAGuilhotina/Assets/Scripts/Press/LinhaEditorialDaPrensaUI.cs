@@ -8,8 +8,8 @@ using UnityEngine.UI;
 /// <summary>
 /// Escolha da linha editorial na prensa (Prompt 5). Quando o jogador aperta Misturar com duas pistas de um caso que
 /// exige linha editorial, a CraftingPress valida tudo, não consome nada e pede a escolha (OnLinhaEditorialPedida).
-/// Esta janela cobre o painel da prensa — as barras de Povo/Estado continuam visíveis — com as três opções e
-/// "Cancelar". Escolher chama CraftingPress.ImprimirComLinhaEditorial, que valida de novo antes de consumir.
+/// Esta janela cobre o painel da prensa — as barras de Povo/Estado continuam visíveis — com as duas opções (Neutro e
+/// Sensacionalista, desde 08/11/2026) e "Cancelar". Escolher chama CraftingPress.ImprimirComLinhaEditorial, que valida de novo antes de consumir.
 ///
 /// Cancelar, Esc, fechar o inventário ou trocar de cena só fecham a janela: nada foi gasto e nenhuma escolha fica
 /// guardada para outra impressão ou outro caso. Os textos mostram só a regra de cada linha (valores da receita, iguais
@@ -17,7 +17,7 @@ using UnityEngine.UI;
 /// revelar a verdade das pistas.
 /// Depois da impressão (CraftingPress.OnPanfletoDeCasoPublicado), a mesma janela mostra as parcelas do total — pistas,
 /// apoio e linha — e o que entrou nas barras. Não nomeia a versão nem mostra a penalidade de um desmentido futuro.
-/// Mouse/toque nos botões; teclado: 1, 2, 3 escolhem, Esc cancela, setas + Enter navegam.
+/// Mouse/toque nos botões; teclado: 1 e 2 escolhem, Esc cancela, setas + Enter navegam.
 /// Vai no PainelPrensa (UI.prefab), ao lado do SuportesDaPrensaUI, e se monta por código na primeira vez.
 /// </summary>
 [RequireComponent(typeof(CraftingPress))]
@@ -28,13 +28,19 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
     [Header("Textos (provisórios, editáveis)")]
     public string titulo = "Linha editorial";
     [TextArea(1, 3)] public string pergunta = "Como o panfleto vai contar este caso?";
-    [TextArea(1, 3)] public string descricaoDefesaDoPovo = "Toma o partido das ruas contra os poderosos.";
-    [TextArea(1, 3)] public string descricaoAgradarOPoder = "Escreve o que quem governa quer ler.";
-    [TextArea(1, 3)] public string descricaoSensacionalista = "Manchete escandalosa: vende mais. Se algo for falso, o desmentido pesa mais.";
+    [TextArea(1, 3)] public string descricaoNeutro = DescricaoNeutroPadrao;
+    [TextArea(1, 3)] public string descricaoSensacionalista = DescricaoSensacionalistaPadrao;
     [TextArea(1, 3)] public string nota = "Valores somados ao efeito das pistas e do apoio. O tom não muda a verdade das pistas.";
     [Tooltip("Antes dos valores de cada opção: eles são somados ao efeito das pistas e do apoio, não são o total. Curto: " +
-             "a janela está no limite de altura, e um rótulo que quebre a linha empurra o conteúdo para fora do painel.")]
-    public string rotuloDoAjuste = "Extra:";
+             "um rótulo que quebre a linha empurra o conteúdo para fora do painel.")]
+    public string rotuloDoAjuste = RotuloDoAjustePadrao;
+    [Tooltip("No lugar dos valores, na opção sem ajuste (Neutro).")]
+    public string textoSemAjuste = "sem ajuste";
+
+    // Textos padrão também usados pela ferramenta de setup (Ferramentas > Campanha > 4b) para atualizar o UI.prefab.
+    public const string DescricaoNeutroPadrao = "Conta o caso sem exagero: o panfleto tem o efeito normal do caso.";
+    public const string DescricaoSensacionalistaPadrao = "Manchete escandalosa: vende mais, mas convence menos o lado que o caso defende.";
+    public const string RotuloDoAjustePadrao = "Ajuste:";
 
     [Header("Resultado da impressão")]
     public string tituloDoResultado = "Panfleto impresso";
@@ -55,8 +61,8 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
     private CraftingPress prensa;
     private GameObject janela;
     private TextMeshProUGUI textoTitulo;
-    private readonly Button[] opcoes = new Button[3];
-    private readonly TextMeshProUGUI[] rotulos = new TextMeshProUGUI[3];
+    private readonly Button[] opcoes = new Button[LinhasEditoriais.Opcoes.Length];
+    private readonly TextMeshProUGUI[] rotulos = new TextMeshProUGUI[LinhasEditoriais.Opcoes.Length];
     private Button botaoCancelar;
     private TextMeshProUGUI rotuloCancelar;
     private TextMeshProUGUI textoNota;
@@ -109,7 +115,6 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         else if (mostrandoResultado) return; // o resultado só fecha (Esc, Enter ou Continuar)
         else if (k.digit1Key.wasPressedThisFrame || k.numpad1Key.wasPressedThisFrame) Escolher(LinhasEditoriais.Opcoes[0]);
         else if (k.digit2Key.wasPressedThisFrame || k.numpad2Key.wasPressedThisFrame) Escolher(LinhasEditoriais.Opcoes[1]);
-        else if (k.digit3Key.wasPressedThisFrame || k.numpad3Key.wasPressedThisFrame) Escolher(LinhasEditoriais.Opcoes[2]);
     }
 
     private void Abrir(ReceitaDeCaso receita)
@@ -176,13 +181,16 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         ReceitaDeCaso.ConfiguracaoEditorial config = receita.linhaEditorial;
         ReceitaDeCaso.ModificadorEditorial mod = config != null ? config.De(linha) : null;
         var sb = new StringBuilder($"<b>{numero}. {LinhasEditoriais.Rotulo(linha, receita)}</b>\n<size=85%>");
-        sb.Append(linha == LinhaEditorial.DefesaDoPovo ? descricaoDefesaDoPovo
-                : linha == LinhaEditorial.AgradarOPoder ? descricaoAgradarOPoder : descricaoSensacionalista);
+        sb.Append(linha == LinhaEditorial.Sensacionalista ? descricaoSensacionalista : descricaoNeutro);
         sb.Append("</size>\n<size=85%>");
-        if (mod != null)
+        if (mod == null || mod.Zerado)
+        {
+            if (!string.IsNullOrWhiteSpace(textoSemAjuste)) sb.Append($"<color=#9E9E9E>{textoSemAjuste.Trim()}</color>   ");
+        }
+        else
         {
             // Os valores da linha não são o efeito do panfleto: são somados ao das pistas e do apoio.
-            if (!mod.Zerado && !string.IsNullOrWhiteSpace(rotuloDoAjuste))
+            if (!string.IsNullOrWhiteSpace(rotuloDoAjuste))
                 sb.Append($"<color=#B0A48C>{rotuloDoAjuste.Trim()}</color> ");
             Efeito(sb, mod.povo, "Povo");
             Efeito(sb, mod.estado, "Estado");

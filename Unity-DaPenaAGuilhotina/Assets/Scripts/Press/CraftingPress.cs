@@ -64,7 +64,7 @@ public class CraftingPress : MonoBehaviour
 
     /// <summary>
     /// Linha editorial (Prompt 5): o par é de um caso que exige escolha e ele passou em todas as validações, mas nada
-    /// foi consumido. A UI da prensa (LinhaEditorialDaPrensaUI) mostra as três opções e responde com
+    /// foi consumido. A UI da prensa (LinhaEditorialDaPrensaUI) mostra as duas opções e responde com
     /// ImprimirComLinhaEditorial; cancelar é só não responder. Recebe apenas a receita: a escolha não pode depender
     /// da verdade das pistas.
     /// </summary>
@@ -78,7 +78,7 @@ public class CraftingPress : MonoBehaviour
     public event Action<ReceitaDeCaso, ResultadoDoPanfleto, Vector3Int> OnPanfletoDeCasoPublicado;
 
     /// <summary>Botão Misturar (onClick no UI_Inventory.prefab). Casos com linha editorial pedem a escolha antes.</summary>
-    public void CombineItems() => Tentar(LinhaEditorial.Neutra);
+    public void CombineItems() => Tentar(LinhaEditorial.Nenhuma);
 
     /// <summary>Imprime com a linha editorial escolhida. Valida tudo de novo a partir do estado atual dos slots.</summary>
     public void ImprimirComLinhaEditorial(LinhaEditorial linha) => Tentar(linha);

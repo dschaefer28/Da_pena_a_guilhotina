@@ -333,9 +333,11 @@ public static class ArquivoDeCasos
     {
         switch (linha)
         {
-            case LinhaEditorial.DefesaDoPovo:
+            case LinhaEditorial.Neutro:
+                return "Tom: neutro. O texto contava o caso sem exagero, sem manchetes carregadas.";
+            case LinhaEditorial.DefesaDoPovo: // legado: publicações de saves de antes de 08/11/2026
                 return "Tom: defesa do povo. O texto falava aos pobres e aos trabalhadores de Paris e apontava o dedo para os poderosos.";
-            case LinhaEditorial.AgradarOPoder:
+            case LinhaEditorial.AgradarOPoder: // legado
                 string rotulo = LinhasEditoriais.Rotulo(linha, caso != null ? caso.receitaDoPanfleto : null);
                 rotulo = rotulo.Length > 0 ? char.ToLowerInvariant(rotulo[0]) + rotulo.Substring(1) : rotulo; // "agradar a Coroa"
                 return $"Tom: {rotulo}. O texto pedia ordem, poupava as autoridades e evitava acusar quem estava no poder.";

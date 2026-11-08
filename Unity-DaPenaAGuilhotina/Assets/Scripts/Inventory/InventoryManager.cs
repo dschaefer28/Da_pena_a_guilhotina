@@ -91,6 +91,7 @@ public class InventoryManager : MonoBehaviour
             // Sempre abre nas pistas (é o que a prensa e a investigação usam); antes do SetActive para as abas já
             // nascerem certas no OnEnable.
             if (vaiAbrir) DefinirAba(AbaDoInventario.Pistas);
+            else DevolverItemDaMao();
 
             inventoryUI.SetActive(vaiAbrir);
             if (vaiAbrir) ConfigureInventory();
@@ -109,6 +110,24 @@ public class InventoryManager : MonoBehaviour
             Time.timeScale = vaiAbrir ? 0f : 1f;
         }
     }
+
+    /// <summary>
+    /// O item "na mão" (tocado e ainda não solto) volta para a lista ao fechar o inventário. O ícone dele vive dentro do
+    /// painel e sumia junto: a pista ficava invisível fora da grade, o NPC não a reconhecia (HasItem) e o alçapão dizia
+    /// "faltam pistas" — o tutorial travava em "volte até Dupaty". No celular basta tocar na pista para ler a ficha (o que
+    /// a dica de Fato x Boato pede) para ela ir para a mão. Não é item novo: sem popup nem "item recebido" no tutorial.
+    /// </summary>
+    private void DevolverItemDaMao()
+    {
+        MouseManager mao = MouseManager.instance;
+        if (mao == null || mao.heldItem == null || mao.heldItem.itemAmt <= 0) return;
+
+        restaurandoInventario = true;
+        bool guardou = AddItem(mao.heldItem);
+        restaurandoInventario = false;
+        if (guardou) mao.heldItem = null; // grade cheia (só com item vindo da prensa): continua na mão, como antes
+    }
+
     public void PlaceInInventory(UISlotHandler activeSlot, Item item)
     {
         if (activeSlot == null || item == null) return;

@@ -1724,3 +1724,59 @@ Pedido: um "modo God" para mostrar os três finais na banca (cerca de 20 minutos
 - Play Mode a partir do menu: F1 abre o painel; Final A jogado até a tela FIM (barra explode, réu absolvido); Final B (réu condenado) e Final C conferidos na abertura do Tribunal (rota e destino do réu certos), sem jogar até o veredito; Fase 2 → "Concluir caso" → "Voltar ao escritório" → cutscene e Fase 3 → "Receber pistas" → "Concluir caso: com boato" → barras puxadas para A → Fase 4 com a rota A travada e a revelação do boato aplicada → "Concluir caso" → "Ir ao Tribunal". Sem erros no console.
 - Os arquivos de save e o arquivo de casos ficaram idênticos (md5) depois de todos os testes: o jogo tentou gravar e a trava da demonstração bloqueou. O PlayerPrefs foi restaurado ao estado anterior.
 - Não testado: F1 num build (só no Editor) e o gesto de toque num celular.
+
+## 30. Teor do panfleto com duas opções: Neutro e Sensacionalista (08/11/2026)
+
+Pedido do Gabriel: a linha editorial (o teor da publicação) passa a ter só duas opções. O caso já tem um lado (o panfleto de um caso do povo sobe o Povo e desce o Estado); o teor só decide entre opinião e dinheiro.
+
+### 30.1 Regra
+
+- **Neutro:** o efeito normal do caso, sem ajuste. É a opção que mais puxa para o lado do caso.
+- **Sensacionalista:** +15 de ouro, mas o lado que o caso favorece sobe 10 a menos que no Neutro e o outro lado cai o mesmo. Mesmos parâmetros para casos do povo e do Estado: pró-povo −10 Povo / 0 Estado; pró-Estado 0 Povo / −10 Estado; mistos (Sirven, Girondinos) −5 / −5. O lado é lido da versão Fatos da receita.
+- O ajuste é igual em todas as versões (não revela a verdade das pistas) e é somado depois da versão e do apoio, como antes.
+- **Agravamento do desmentido:** desligado (0%) em todos os casos (era +25%). O código continua aceitando um valor na receita; a frase "O exagero da manchete…" da cutscene só aparece se ele estiver ligado.
+- As três opções antigas (Defesa do povo, Agradar a Coroa/o Comitê, Sensacionalista) saíram. Publicações de saves antigos com "Defesa do povo" ou "Agradar…" continuam com o rótulo e o texto da época no histórico (os valores já estavam gravados; nada é recalculado). Não houve mudança de versão do save.
+
+### 30.2 Onde mudou
+
+- `LinhaEditorial.cs`: novo valor `Neutro = 4`; `Neutra` virou `Nenhuma` (tutorial/receita sem linha/save < 6, nunca oferecida); `Opcoes` = Neutro, Sensacionalista. Os números não mudaram (vão para o save).
+- `ReceitaDeCaso.ConfiguracaoEditorial`: só `ativa`, `sensacionalista` e `agravamentoPercentual` (saíram `defesaDoPovo`, `agradarOPoder`, `rotuloAgradarOPoder`).
+- `LinhaEditorialDaPrensaUI`: janela com dois botões (teclas 1 e 2), Neutro mostra "sem ajuste", Sensacionalista mostra "Ajuste: ▼ −10 Povo ▲ +15 Ouro" (ou Estado, conforme o caso). Textos novos aplicados no `UI.prefab`.
+- `ArquivoDeCasos` (histórico/ficha do panfleto): "Tom: neutro…". `TutorialManager.dicaLinhaEditorial` (código e cena Jogo): texto novo. `FimDeFase`: frase do agravamento só com agravamento ligado.
+- `LinhaEditorialSetupTool`: novo menu **Ferramentas > Campanha > 4b - Teor com duas opções (redefinir valores)**, que recalcula o sensacionalista das 9 receitas das Fases 2–4 pelo lado do caso, zera o agravamento e atualiza os textos da janela. Já foi rodado; as 9 receitas estão com os valores novos. O menu 4 continua só preenchendo receitas nunca configuradas.
+- `ValidadorDaCampanha`: confere que o sensacionalista dá ouro, não sobe nenhuma barra e tira do lado do caso.
+- `ModoDev`: escolhe entre as duas opções a que mais puxa para a rota (as barras dos finais continuam definidas direto).
+
+### 30.3 Verificação
+
+- 125/125 EditMode. Novos/ajustados: as duas opções e o legado (`LinhaEditorialTests`), os valores por lado do caso (pró-povo, pró-Estado, misto), a prensa imprimindo com Neutro e recusando uma linha legada (`ComponentesTests`), e o balanceamento nos assets reais (`CampanhaTests`: com fatos o sensacionalista ainda puxa para o lado do caso, só que menos; a mentira desmentida nunca vira contra o próprio lado; nenhum par de casos trava a rota).
+- Simulação dos 324 caminhos das Fases 2 e 3 (caso, versão e tom): rota A 33%, B 19%, C 47%; 3 dos 9 pares de casos alcançam as três rotas, os outros 6 duas; trocar o teor muda a rota em 30 das 81 combinações de caso + versão.
+- Os arquivos de save e o arquivo de casos ficaram idênticos (md5) depois dos testes.
+- Play Mode (a partir do menu, Modo dev > Fase 2, Colar da Rainha, uma pista de cada par): a dica nova do tom aparece na fila de dicas; Misturar abre a janela com "1. Neutro" (sem ajuste) e "2. Sensacionalista" (Ajuste: ▼ −10 Povo ▲ +15 Ouro), que cabe no painel da prensa; escolhido o Sensacionalista, o resultado mostra Pistas +20/−10/+30, Sensacionalista −10 Povo/+15 Ouro e Total +10/−10/+45, e as barras vão de 50/50 a 60/40 (ouro 100 → 145). Sem erros no console; saves e PlayerPrefs iguais ao backup no fim.
+
+## 31. Pistas que não chegavam mesmo interagindo com tudo (08/11/2026)
+
+Relato do playtest: em algumas fases o jogador falou com todos os NPCs e vasculhou todos os objetos, mas ficou sem pistas.
+
+### 31.1 Causa
+
+As etapas complementares (§6) só abriam numa **segunda** conversa com o NPC, e nada avisava que valia voltar. São duas na campanha:
+
+- **Fase 3, Varennes:** Kornmann (`recibo_da_estalagem`) entrega "A ordem de reclusão de 1781" depois de "A colaboração de Beaumarchais" (Mesa do Café). Mesmo quem já tinha o requisito ao falar com ele recebia só o contrato; o documento ficava para uma segunda conversa.
+- **Fase 4, Girondina:** Vergniaud (`carta_da_secao`) entrega "As notas da defesa de Vergniaud" depois de "O testemunho de Robespierre" (Arquivo do Comitê). Quem falava com ele antes de ir ao Arquivo não recebia nada e não sabia que precisava voltar.
+
+### 31.2 O que mudou
+
+- **Na mesma conversa:** se, ao fim da fala normal, uma etapa complementar já está liberada, a conversa continua direto nela e entrega o documento (`NPCMovement.ContinuarNaEtapaLiberada`). Não cobra horas de novo. Eventos de fim de conversa e o aviso ao tutorial só disparam no fim da conversa inteira.
+- **Aviso para voltar:** quem já conversou com o NPC neste caso e depois acha o requisito vê "Talvez {NPC} queira ver o que você encontrou." O mesmo aviso aparece ao entrar na cena enquanto a etapa liberada não for recebida. Antes da primeira conversa não há aviso, para não entregar quais NPCs têm pistas (a primeira conversa já entrega tudo).
+- **Fim do diálogo mais seguro:** `DialogueSystem.EndDialogue` chama cada ouvinte de `OnDialogueEnded` separado, com o erro registrado no console. Antes, um erro em qualquer ouvinte (HUD, tutorial…) impedia o NPC, que se inscreve por último, de entregar a pista.
+- Nenhuma cena, prefab ou asset foi alterado. Os textos das falas das etapas continuam os mesmos.
+
+### 31.3 Descartado na investigação
+
+Configuração conferida no Editor (Jogo, Porão, Fases 2–4): todos os NPCs e objetos são alcançáveis pelo jogador, nenhum NPC das Fases 2–4 se desliga depois da conversa nem exige pista para falar, nada nasce em posição aleatória, e o inventário (24 espaços) arquiva as sobras a cada caso. Continuam valendo, por design: o relógio (a Fase 3 tem 8 interações para 8h; endividado, 7h) e imprimir o panfleto antes de terminar a investigação (o caso concluído não entrega mais nada).
+
+### 31.4 Verificação
+
+- 3 testes novos em `ComponentesTests`: requisito já obtido → a conversa segue para a etapa e entrega tudo com uma só cobrança; requisito achado depois de conversar → aviso, lembrete ao reabrir a cena, nenhum aviso depois de receber; ouvinte do fim do diálogo com erro → a pista é entregue mesmo assim. Os 23 de `ComponentesTests` passam; no total, 131/133 EditMode (as 2 falhas são de `VolumeDoAudioTests`, trabalho em andamento de outra sessão).
+- Não testado em Play Mode nas cenas reais.

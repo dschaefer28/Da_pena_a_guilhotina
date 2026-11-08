@@ -61,6 +61,7 @@ public class TutorialEUiTests
         DefinirEstatico(typeof(TutorialManager), "Instance", null);
         DefinirEstatico(typeof(CutsceneLegendas), "EmExibicao", false);
         DefinirEstatico(typeof(CaseSelectionUI), "Aberta", false);
+        MouseManager.instance = null;
         Time.timeScale = 1f;
         foreach (Object o in criados) if (o != null) Object.DestroyImmediate(o);
         criados.Clear();
@@ -258,6 +259,110 @@ public class TutorialEUiTests
         Assert.AreEqual("voltar_escritorio", tm.EtapaAtualId);
         EntrarNaCena("Jogo");
         Assert.AreEqual("mesa_de_casos", tm.EtapaAtualId);
+    }
+
+    [Test]
+    public void PistaNaMao_VoltaParaOInventarioAoFechar_SemContarComoPistaNova()
+    {
+        GameObject grade = Go("Grade");
+        InventoryManager inv = Go("Inventario").AddComponent<InventoryManager>();
+        UISlotHandler Linha(string nome)
+        {
+            var s = Go(nome, grade.transform).AddComponent<UISlotHandler>();
+            s.slotImg = Go("Img", s.transform).AddComponent<Image>();
+            s.itemCount = Go("Qtd", s.transform).AddComponent<TextMeshProUGUI>();
+            s.inventoryManager = inv;
+            return s;
+        }
+        UISlotHandler linha = Linha("Linha1");
+        Linha("Linha2");
+        inv.inventoryGrid = grade;
+        inv.inventoryUI = Go("InventarioUI");
+        inv.inventoryUI.SetActive(false);
+        gm.inventoryManager = inv;
+        MouseManager mao = Go("Mouse").AddComponent<MouseManager>();
+        MouseManager.instance = mao;
+
+        Item relato = Criar<Item>("Relato");
+        relato.itemID = "Relato";
+        relato.itemAmt = 1;
+        inv.PlaceInInventory(linha, relato);
+
+        tm.etapas = new List<TutorialStep>
+        {
+            Evento("segunda_pista", TutorialManager.EVENTO_ITEM_RECEBIDO),
+            new TutorialStep { etapaId = "depois", tipoDeAvanco = TipoDeAvanco.CliqueDoJogador },
+        };
+        IrParaEtapa("segunda_pista");
+        typeof(TutorialManager).GetMethod("VincularDependenciasLocais", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(tm, null);
+
+        // "Pista recebida! Abra o inventário": o jogador toca na pista para ler a ficha (no celular, é o que a dica de
+        // Fato x Boato pede) e ela vai para a mão. Fecha o inventário com ela ainda na mão.
+        inv.ToggleInventory();
+        mao.UpdateHeldItem(linha);
+        Assert.IsFalse(inv.HasItem("Relato"), "pré-condição: a pista saiu da lista para a mão");
+        inv.ToggleInventory();
+
+        Assert.IsFalse(inv.inventoryUI.activeSelf);
+        Assert.IsNull(mao.heldItem, "o ícone da mão some com o painel: a pista não pode ficar invisível fora da lista");
+        Assert.IsTrue(inv.HasItem("Relato"), "Dupaty e o alçapão só enxergam a lista (HasItem)");
+        Assert.AreEqual("segunda_pista", tm.EtapaAtualId, "devolver a pista à lista não é receber a segunda pista");
+        criados.Add(inv.ItemNaGrade("Relato")); // a cópia que voltou para a lista
+    }
+
+    [Test]
+    public void EtapaDeAndar_SoContaOQueSeAndaComElaNaTela()
+    {
+        tm.etapas = new List<TutorialStep>
+        {
+            new TutorialStep { etapaId = "boas_vindas", tipoDeAvanco = TipoDeAvanco.CliqueDoJogador },
+            Evento("Joystick", TutorialManager.EVENTO_JOGADOR_ANDOU),
+            new TutorialStep { etapaId = "PauseButton", tipoDeAvanco = TipoDeAvanco.CliqueDoJogador },
+        };
+        IrParaEtapa("boas_vindas");
+        Transform jogador = Go("Jogador").transform;
+        typeof(TutorialManager).GetField("jogador", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(tm, jogador);
+        MethodInfo quadro = typeof(TutorialManager).GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        // No PC dá para andar enquanto as boas-vindas estão na tela.
+        jogador.position = new Vector3(5f, 0f, 0f);
+        quadro.Invoke(tm, null);
+        tm.CompletarEtapaAtual();
+        quadro.Invoke(tm, null);
+        Assert.AreEqual("Joystick", tm.EtapaAtualId, "o que se andou antes não faz a etapa sumir sem ser lida");
+
+        jogador.position += new Vector3(1f, 0f, 0f);
+        quadro.Invoke(tm, null);
+        Assert.AreEqual("Joystick", tm.EtapaAtualId, "1 de " + tm.distanciaParaAndou);
+        jogador.position += new Vector3(1f, 0f, 0f);
+        quadro.Invoke(tm, null);
+        Assert.AreEqual("PauseButton", tm.EtapaAtualId);
+    }
+
+    [Test]
+    public void PopupDeEtapaDeAcao_BotaoDizOcultar_NaDeLeituraContinuar()
+    {
+        tm.etapas = new List<TutorialStep>
+        {
+            new TutorialStep { etapaId = "ler", mensagem = "Leia.", tipoDeAvanco = TipoDeAvanco.CliqueDoJogador },
+            new TutorialStep { etapaId = "falar", mensagem = "Fale com ele.", tipoDeAvanco = TipoDeAvanco.EventoDeJogo, nomeDoEvento = TutorialManager.EVENTO_DIALOGO_FINALIZADO },
+        };
+        IrParaEtapa("ler");
+        TutorialStepUI ui = Go("TutorialUI").AddComponent<TutorialStepUI>();
+        ui.painelPopup = Go("Popup", ui.transform);
+        ui.textoMensagem = Go("Texto", ui.painelPopup.transform).AddComponent<TextMeshProUGUI>();
+        ui.botaoContinuar = Go("Continuar", ui.painelPopup.transform).AddComponent<Button>();
+        TextMeshProUGUI rotulo = Go("Rotulo", ui.botaoContinuar.transform).AddComponent<TextMeshProUGUI>();
+        MethodInfo trocar = typeof(TutorialStepUI).GetMethod("HandleEtapaAlterada", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        trocar.Invoke(ui, new object[] { "ler" });
+        Assert.IsTrue(ui.painelPopup.activeSelf);
+        Assert.AreEqual("Continuar", rotulo.text, "etapa de leitura: o botão avança");
+
+        // Na etapa de ação o botão só esconde a mensagem: "Continuar" fazia o jogador achar que tinha avançado.
+        IrParaEtapa("falar");
+        trocar.Invoke(ui, new object[] { "falar" });
+        Assert.AreEqual("Ocultar", rotulo.text);
     }
 
     // ===== Marie depois do tutorial =====

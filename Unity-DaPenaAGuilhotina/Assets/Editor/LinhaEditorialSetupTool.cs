@@ -5,37 +5,51 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Prompt 5: linha editorial na prensa a partir da Fase 2.
-/// - liga a linha editorial nas receitas dos casos da mesa das Fases 2 a 4, com os modificadores PROVISÓRIOS abaixo;
-/// - põe o LinhaEditorialDaPrensaUI no painel da prensa (UI.prefab), ao lado do SuportesDaPrensaUI.
+/// Linha editorial (teor) na prensa a partir da Fase 2. Desde 08/11/2026 são duas opções:
+///   Neutro — sem modificador: o efeito normal do caso (o lado do caso sobe, o outro cai);
+///   Sensacionalista — mais ouro, mas o lado que o caso favorece ganha menos que no Neutro e o outro cai o mesmo.
+/// O modificador do sensacionalista sai do lado do caso (versão Fatos da receita), com os mesmos parâmetros para os
+/// casos pró-povo e pró-Estado; nos mistos a perda é dividida entre as duas barras.
+/// - "4": liga a linha nas receitas das Fases 2 a 4 que nunca foram configuradas (valores editados ficam);
+/// - "4b": REDEFINE o sensacionalista de todas essas receitas com os valores abaixo, desliga o agravamento do desmentido
+///   e atualiza os textos da janela no UI.prefab.
+/// Ambas põem o LinhaEditorialDaPrensaUI no painel da prensa (UI.prefab), ao lado do SuportesDaPrensaUI.
 /// O tutorial não é tocado (usa receita exata, sem linha editorial).
-/// Idempotente: só preenche receitas cuja linha editorial nunca foi configurada; valores editados no Inspector ficam.
-/// Menu: Ferramentas > Campanha > 4 - Aplicar linha editorial
 /// </summary>
 public static class LinhaEditorialSetupTool
 {
     private const string PrefabUI = "Assets/Prefabs/UI.prefab";
 
-    // Valores provisórios (Povo / Estado / Ouro). Iguais em todas as versões da receita, para a escolha não depender
-    // da verdade das pistas. Defesa e Agradar deslocam o desnível Povo × Estado em 15 pontos por publicação (a margem
-    // da rota é 20); o sensacionalista paga um pouco mais de ouro e agrava em 25% a perda de uma revelação (era +15/+20
-    // de ouro e 50% até 17/10: com as perdas do balanceamento, 42% das mentiras sensacionalistas viravam contra o próprio lado).
-    private class Valores
+    /// <summary>Quanto o lado favorecido ganha a menos no sensacionalista (nos mistos, metade em cada barra).</summary>
+    public const int PerdaDoLadoFavorecido = 10;
+    /// <summary>Ouro a mais do sensacionalista.</summary>
+    public const int OuroDoSensacionalista = 15;
+
+    /// <summary>
+    /// Modificador do sensacionalista para a receita, pelo lado do caso na versão Fatos: barra que sobe = lado favorecido.
+    /// Pró-povo (+Povo/−Estado): Povo −10, Estado 0. Pró-Estado: Estado −10, Povo 0. Misto (as duas sobem) ou sem lado:
+    /// −5 em cada. Sempre +15 de ouro. Igual em todas as versões, para não depender da verdade das pistas.
+    /// </summary>
+    public static ReceitaDeCaso.ModificadorEditorial ModificadorSensacionalista(ReceitaDeCaso receita)
     {
-        public int defesaPovo = 10, defesaEstado = -5;
-        public int agradarPovo = -5, agradarEstado = 10;
-        public int sensacionalistaOuro = 10;
-        public int agravamento = 25;
+        bool povo = receita != null && receita.soFatos != null && receita.soFatos.povo > 0;
+        bool estado = receita != null && receita.soFatos != null && receita.soFatos.estado > 0;
+        var m = new ReceitaDeCaso.ModificadorEditorial { ouro = OuroDoSensacionalista };
+        if (povo == estado) { m.povo = -PerdaDoLadoFavorecido / 2; m.estado = -PerdaDoLadoFavorecido / 2; }
+        else if (povo) m.povo = -PerdaDoLadoFavorecido;
+        else m.estado = -PerdaDoLadoFavorecido;
+        return m;
     }
 
-    private static Valores ValoresDaFase(int fase) => new Valores();
-
     [MenuItem("Ferramentas/Campanha/4 - Aplicar linha editorial")]
-    public static void AplicarPeloMenu() => Debug.Log(Aplicar());
+    public static void AplicarPeloMenu() => Debug.Log(Aplicar(false));
 
-    public static string Aplicar()
+    [MenuItem("Ferramentas/Campanha/4b - Teor com duas opções (redefinir valores)")]
+    public static void RedefinirPeloMenu() => Debug.Log(Aplicar(true));
+
+    public static string Aplicar(bool redefinir)
     {
-        var r = new StringBuilder("[LinhaEditorialSetup] Aplicar linha editorial\n");
+        var r = new StringBuilder($"[LinhaEditorialSetup] {(redefinir ? "Redefinir teor (Neutro / Sensacionalista)" : "Aplicar linha editorial")}\n");
         if (EditorApplication.isPlayingOrWillChangePlaymode) return r.Append("Saia do Play Mode antes.").ToString();
         for (int i = 0; i < SceneManager.sceneCount; i++)
             if (SceneManager.GetSceneAt(i).isDirty)
@@ -54,27 +68,25 @@ public static class LinhaEditorialSetupTool
             if (receita == null) { r.AppendLine($"  AVISO: '{caso.name}' sem receita de caso."); continue; }
             if (!vistas.Add(receita)) continue;
             if (receita.linhaEditorial == null) receita.linhaEditorial = new ReceitaDeCaso.ConfiguracaoEditorial();
-            if (!receita.linhaEditorial.Vazia) { mantidas++; continue; }
+            if (!redefinir && !receita.linhaEditorial.Vazia) { mantidas++; continue; }
 
-            Valores v = ValoresDaFase(caso.fase);
             ReceitaDeCaso.ConfiguracaoEditorial c = receita.linhaEditorial;
             c.ativa = true;
-            c.defesaDoPovo = new ReceitaDeCaso.ModificadorEditorial { povo = v.defesaPovo, estado = v.defesaEstado };
-            c.agradarOPoder = new ReceitaDeCaso.ModificadorEditorial { povo = v.agradarPovo, estado = v.agradarEstado };
-            c.sensacionalista = new ReceitaDeCaso.ModificadorEditorial { ouro = v.sensacionalistaOuro };
-            c.agravamentoPercentual = v.agravamento;
+            c.sensacionalista = ModificadorSensacionalista(receita);
+            c.agravamentoPercentual = 0;
             EditorUtility.SetDirty(receita);
             configuradas++;
+            r.AppendLine($"  {receita.name}: Sensacionalista Povo {c.sensacionalista.povo:+0;-0;0}, Estado {c.sensacionalista.estado:+0;-0;0}, Ouro +{c.sensacionalista.ouro}.");
         }
 
-        int prefab = RegistrarNoPrefabUI();
+        int prefab = RegistrarNoPrefabUI(redefinir);
         AssetDatabase.SaveAssets();
         r.AppendLine($"  Receitas configuradas: {configuradas}; já configuradas (mantidas): {mantidas}.");
         r.Append($"  Alterações no UI.prefab: {prefab}.");
         return r.ToString();
     }
 
-    private static int RegistrarNoPrefabUI()
+    private static int RegistrarNoPrefabUI(bool redefinirTextos)
     {
         int alterados = 0;
         GameObject raiz = PrefabUtility.LoadPrefabContents(PrefabUI);
@@ -95,6 +107,13 @@ public static class LinhaEditorialSetupTool
                     : prensa.GetComponentInChildren<TMPro.TextMeshProUGUI>(true)?.font;
                 if (fonte != null) { seletor.fonte = fonte; alterados++; }
             }
+            if (redefinirTextos)
+            {
+                // O texto antigo do sensacionalista falava do desmentido agravado, que saiu.
+                alterados += Trocar(ref seletor.descricaoNeutro, LinhaEditorialDaPrensaUI.DescricaoNeutroPadrao);
+                alterados += Trocar(ref seletor.descricaoSensacionalista, LinhaEditorialDaPrensaUI.DescricaoSensacionalistaPadrao);
+                alterados += Trocar(ref seletor.rotuloDoAjuste, LinhaEditorialDaPrensaUI.RotuloDoAjustePadrao);
+            }
             if (alterados > 0) PrefabUtility.SaveAsPrefabAsset(raiz, PrefabUI);
         }
         finally
@@ -102,5 +121,12 @@ public static class LinhaEditorialSetupTool
             PrefabUtility.UnloadPrefabContents(raiz);
         }
         return alterados;
+    }
+
+    private static int Trocar(ref string campo, string valor)
+    {
+        if (campo == valor) return 0;
+        campo = valor;
+        return 1;
     }
 }

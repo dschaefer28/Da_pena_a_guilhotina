@@ -161,7 +161,16 @@ public class DialogueSystem : MonoBehaviour
         currentText = 0;
         finished = false;
         IsDialogueActive = false;
-        OnDialogueEnded?.Invoke();
+
+        // Cada ouvinte isolado: o NPC que entrega a pista se inscreve por último, então um erro em qualquer ouvinte
+        // anterior (HUD, tutorial...) fazia a conversa acabar sem entregar nada.
+        Action fim = OnDialogueEnded;
+        if (fim == null) return;
+        foreach (Action ouvinte in fim.GetInvocationList())
+        {
+            try { ouvinte(); }
+            catch (Exception e) { Debug.LogException(e); }
+        }
     }
 
     void StopCurrentAudio()

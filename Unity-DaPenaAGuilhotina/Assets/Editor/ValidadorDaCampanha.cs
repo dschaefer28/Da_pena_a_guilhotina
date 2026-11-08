@@ -215,8 +215,8 @@ public static class ValidadorDaCampanha
         r.resumo.Add($"Biblioteca: {porCaso} oferta(s).");
     }
 
-    // Prompt 5: todo caso da Fase 2 em diante exige a escolha explícita entre as três linhas, com a direção de cada uma
-    // (Defesa: +Povo/−Estado; Agradar: +Estado/−Povo; Sensacionalista: +ouro e agravamento). O tutorial fica simples.
+    // Todo caso da Fase 2 em diante exige a escolha explícita do teor (08/11/2026): Neutro (efeito normal do caso) ou
+    // Sensacionalista (+ouro, o lado do caso ganha menos, o outro perde o mesmo ou mais). O tutorial fica simples.
     private static void ValidarLinhaEditorial(GameObject ui, List<CaseData> casos, Resultado r)
     {
         if (ui.GetComponentInChildren<LinhaEditorialDaPrensaUI>(true) == null)
@@ -238,17 +238,20 @@ public static class ValidadorDaCampanha
                 continue;
             }
             ativas++;
-            ReceitaDeCaso.ConfiguracaoEditorial c = receita.linhaEditorial;
-            if (c.defesaDoPovo == null || c.defesaDoPovo.povo <= 0 || c.defesaDoPovo.estado >= 0)
-                r.problemas.Add($"'{receita.name}': Defesa do povo precisa de Povo positivo e Estado negativo.");
-            if (c.agradarOPoder == null || c.agradarOPoder.estado <= 0 || c.agradarOPoder.povo >= 0)
-                r.problemas.Add($"'{receita.name}': {LinhasEditoriais.Rotulo(LinhaEditorial.AgradarOPoder, receita)} precisa de Estado positivo e Povo negativo.");
-            if (c.sensacionalista == null || c.sensacionalista.ouro <= 0)
-                r.problemas.Add($"'{receita.name}': Sensacionalista precisa de ouro adicional.");
-            if (c.agravamentoPercentual <= 0)
-                r.problemas.Add($"'{receita.name}': Sensacionalista sem agravamento da penalidade de boato.");
+            ReceitaDeCaso.ModificadorEditorial s = receita.linhaEditorial.sensacionalista;
+            if (s == null || s.ouro <= 0)
+            {
+                r.problemas.Add($"'{receita.name}': Sensacionalista precisa de ouro adicional (rode Ferramentas > Campanha > 4b).");
+                continue;
+            }
+            // Comparado ao Neutro: nenhuma barra sobe; a barra que o caso faz subir (lado favorecido) sobe menos.
+            if (s.povo > 0 || s.estado > 0)
+                r.problemas.Add($"'{receita.name}': Sensacionalista não pode subir Povo nem Estado além do Neutro.");
+            bool favorecePovo = receita.soFatos.povo > 0, favoreceEstado = receita.soFatos.estado > 0;
+            if ((favorecePovo && s.povo >= 0) || (favoreceEstado && s.estado >= 0) || (!favorecePovo && !favoreceEstado && s.povo + s.estado >= 0))
+                r.problemas.Add($"'{receita.name}': no Sensacionalista o lado que o caso defende precisa ganhar menos que no Neutro.");
         }
-        r.resumo.Add($"Linha editorial: {ativas} receita(s) com as três opções.");
+        r.resumo.Add($"Linha editorial: {ativas} receita(s) com Neutro e Sensacionalista.");
     }
 
     // Prompt 4 (Prompt 7: desde a Fase 2): dedução ativa em todo caso das Fases 2, 3 e 4, com pares coerentes (exatamente

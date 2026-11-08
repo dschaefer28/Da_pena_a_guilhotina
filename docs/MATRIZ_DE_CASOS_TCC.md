@@ -127,19 +127,20 @@ O que é histórico e o que é adaptação do jogo. Nenhum texto do jogo dá com
 - **Kornmann e o ouro:** o GDD diz que o caso de Sirven é o que "gera mais dinheiro"; nas receitas atuais, Kornmann (45) rende mais ouro que Sirven (35), embora o ouro seja o maior componente do caso Sirven.
 - **Fase 2 com três casos:** o GDD fala em "dois casos" na Fase 2; o jogo mantém os três (o operário é a segunda perspectiva do motim), como já estava implementado e como pede esta tarefa.
 
-## Linha editorial (Prompt 5, provisório)
+## Linha editorial / teor (duas opções desde 08/11/2026)
 
-A partir da Fase 2, depois de escolher as duas pistas, o jogador escolhe a linha editorial na prensa (o tutorial imprime direto). O modificador é somado **depois** da versão e do apoio e é o mesmo em todas as versões da receita, então não revela a verdade das pistas. Configurado em cada `ReceitaDeCaso` (bloco `linhaEditorial`) por **Ferramentas > Campanha > 4**.
+A partir da Fase 2, depois de escolher as duas pistas, o jogador escolhe o teor na prensa (o tutorial imprime direto). São **duas opções**: **Neutro** e **Sensacionalista** (até 08/11/2026 eram três: Defesa do povo, Agradar a Coroa/o Comitê e Sensacionalista). O ajuste é somado **depois** da versão e do apoio e é o mesmo em todas as versões da receita, então não revela a verdade das pistas. Configurado em cada `ReceitaDeCaso` (bloco `linhaEditorial`) por **Ferramentas > Campanha > 4b** (redefine) ou **4** (só receitas nunca configuradas).
 
-| Fase (casos) | Defesa do povo | Agradar a Coroa / o Comitê | Sensacionalista |
-|---|---|---|---|
-| 2 (Colar da Rainha, Réveillon, Operário) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar a Coroa") | 0 / 0 / +10; perda da revelação +25% (até 17/10: +15 e +50%) |
-| 3 (Kornmann, Danton, Sirven) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar a Coroa") | 0 / 0 / +10; perda +25% (até 17/10: +20 e +50%) |
-| 4 (Desmoulins, Mercador, Girondinos) | +10 / −5 / 0 | −5 / +10 / 0 ("Agradar o Comitê") | 0 / 0 / +10; perda +25% (até 17/10: +20 e +50%) |
+| Lado do caso (Fatos) | Neutro | Sensacionalista (Povo / Estado / Ouro, somado ao Neutro) |
+|---|---|---|
+| Pró-povo (Colar da Rainha, Operário, Danton, Desmoulins) | efeito normal do caso | −10 / 0 / +15: o Povo sobe menos, o Estado cai o mesmo |
+| Pró-Estado (Réveillon, Kornmann, Mercador) | efeito normal do caso | 0 / −10 / +15: o Estado sobe menos, o Povo cai o mesmo |
+| Misto (Sirven, Girondinos) | efeito normal do caso | −5 / −5 / +15: não sobe tanto nem um nem outro |
 
-- **Agravamento:** só no sensacionalista e só se a versão impressa tiver revelação (Com Boato, Calúnia ou Só Alegações). Só as perdas crescem, arredondadas para longe de zero. Ex.: Colar da Rainha Com Boato (pen −25/0) sensacionalista → −31/0. A versão Fatos nunca recebe penalidade.
-- **Exemplo do Prompt 3:** Danton (`Caso_ChampDeMars`) Fatos + Folhas da petição = 40/−5/50 **antes** da linha; com Defesa do povo = 50/−10/50.
-- **Rota:** Defesa e Agradar deslocam o desnível Povo × Estado em 15 pontos por publicação (margem da rota: 20).
+- **Mesmos parâmetros** para casos do povo e do Estado: o lado favorecido é a barra que sobe na versão Fatos da receita (`LinhaEditorialSetupTool.ModificadorSensacionalista`).
+- **Agravamento do desmentido:** o mecanismo continua no código, mas está **desligado (0%)** em todos os casos desde 08/11/2026 (era +25%): o sensacionalista agora paga na hora, ganhando menos no lado do caso.
+- **Exemplo do Prompt 3:** Danton (`Caso_ChampDeMars`) Fatos + ata da biblioteca = 25/−10/50 com Neutro; com Sensacionalista = 15/−10/65.
+- **Rota:** com fatos, o sensacionalista ainda puxa para o lado do caso, só que 10 pontos a menos (margem da rota: 20).
 
 ## Exemplos de percurso até cada rota (só versões Fatos, sem revelações, sem apoio e sem linha editorial)
 
@@ -151,6 +152,6 @@ Início 50/50; tutorial (+5/+5) → 55/55, sem pender para nenhuma rota. Com um 
 | B | Réveillon → 45/80 | Kornmann → 35/100 | −65 → **B** |
 | C | Réveillon → 45/80 | Danton → 65/70 | −5 → **C** |
 
-A linha editorial também muda a rota: Colar da Rainha com "Agradar a Coroa" → 70/55; Sirven com "Agradar a Coroa" → 75/75 → 0 → **C**. O mesmo caminho com "Defesa do povo" nas duas → 100/45 → **A**.
+O teor também muda a rota: simulando as 81 combinações de caso + versão das Fases 2 e 3, trocar Neutro por Sensacionalista muda a rota final em 30 delas (08/11/2026). Ex.: Colar da Rainha sensacionalista → 65/45 (+15 de ouro) em vez de 75/45.
 
-**Regras do balanceamento (17/10):** cada caso tem um lado. Pró-povo (Colar, Operário, Danton, Desmoulins): fatos +20/−10. Pró-Estado (Réveillon, Kornmann, mercador): fatos −10/+25. Misto (Sirven, girondinos): fatos +10/+10. Mentir rende mais na hora (cerca de 1,5× com boato e quase 2× com calúnia, ouro +15 e +30), mas a revelação no fim da fase cai sobre o lado que o panfleto favoreceu (pró-povo −25 e −45 no Povo; pró-Estado −30 e −50 no Estado; mistos −10/−10 e −20/−20). Depois de desmentida, a mentira empurra a rota menos que os fatos; o sensacionalista (perda +25%) tira ainda mais dela, mas nunca a vira contra o próprio lado. Simulando todos os 729 caminhos das Fases 2 e 3 (caso, versão e tom): rota A 33%, B 22%, C 43%; nenhum par de casos fica preso a uma rota só (3 dos 9 alcançam A, B e C, os outros 6 duas rotas); a maior perda de uma revelação é 63; só com fatos, ninguém termina a Fase 3 endividado (sem comprar na biblioteca). `CampanhaTests` confere essas regras nos assets.
+**Regras do balanceamento (17/10):** cada caso tem um lado. Pró-povo (Colar, Operário, Danton, Desmoulins): fatos +20/−10. Pró-Estado (Réveillon, Kornmann, mercador): fatos −10/+25. Misto (Sirven, girondinos): fatos +10/+10. Mentir rende mais na hora (cerca de 1,5× com boato e quase 2× com calúnia, ouro +15 e +30), mas a revelação no fim da fase cai sobre o lado que o panfleto favoreceu (pró-povo −25 e −45 no Povo; pró-Estado −30 e −50 no Estado; mistos −10/−10 e −20/−20). Depois de desmentida, a mentira empurra a rota menos que os fatos; o sensacionalista tira ainda mais dela, mas nunca a vira contra o próprio lado. Simulando todos os 324 caminhos das Fases 2 e 3 com o teor de duas opções (caso, versão e tom; 08/11/2026): rota A 33%, B 19%, C 47%; nenhum par de casos fica preso a uma rota só (3 dos 9 alcançam A, B e C, os outros 6 duas rotas); só com fatos, ninguém termina a Fase 3 endividado (sem comprar na biblioteca). `CampanhaTests` confere essas regras nos assets.

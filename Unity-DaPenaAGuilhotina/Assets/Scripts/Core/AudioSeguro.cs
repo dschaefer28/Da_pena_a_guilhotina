@@ -72,13 +72,6 @@ public static class AudioSeguro
         instancia = default;
     }
 
-    public static void DefinirVolumeDoBus(string caminhoDoBus, float volume01)
-    {
-        if (SemRuntime) return;
-        try { RuntimeManager.GetBus(caminhoDoBus).setVolume(volume01); }
-        catch (Exception e) { Registrar(e); }
-    }
-
     private static void Registrar(Exception e)
     {
         // Sem sistema, não adianta tentar de novo a cada chamada (só geraria custo e spam de log).

@@ -139,9 +139,9 @@ public class TutorialManager : MonoBehaviour
     [TextArea(3, 5)]
     [Tooltip("Mostrada na primeira vez que a prensa abre com um caso que pede linha editorial (Fase 2 em diante).")]
     public string dicaLinhaEditorial =
-        "Agora a prensa pede uma linha editorial: ao apertar Misturar, você escolhe o tom do panfleto. O tom muda o quanto " +
-        "ele move o Povo, o Estado e o ouro, nunca a verdade das pistas. O sensacionalista vende mais, mas, se algo for falso, " +
-        "o desmentido pesa mais.";
+        "Agora a prensa pede uma linha editorial: ao apertar Misturar, você escolhe o tom do panfleto. Neutro dá o efeito " +
+        "normal do caso. Sensacionalista rende mais ouro, mas o lado que o caso defende ganha menos. O tom nunca muda a " +
+        "verdade das pistas.";
 
     [Header("Etapas do Tutorial (em ordem)")]
     [Tooltip("Este roteiro é o padrão para um TutorialManager novo. A cena 'Jogo' já tem sua própria lista " +
@@ -517,13 +517,22 @@ public class TutorialManager : MonoBehaviour
     void Update()
     {
         // Etapa de movimento: só avança depois de o jogador andar de verdade (não basta clicar Continuar).
-        TutorialStep etapa = EtapaAtualObjeto();
-        if (jogador == null || etapa == null || etapa.tipoDeAvanco != TipoDeAvanco.EventoDeJogo ||
-            etapa.nomeDoEvento != EVENTO_JOGADOR_ANDOU) return;
-
+        if (jogador == null) return;
+        // A posição de referência anda junto o tempo todo e só conta o que se andou com a etapa na tela. Antes ela ficava
+        // parada desde a entrada na cena: no PC dá para andar durante as boas-vindas, e a etapa "use A D" sumia no
+        // primeiro frame, sem ser lida.
         Vector3 posicao = jogador.position;
-        distanciaAndada += Vector2.Distance(posicao, ultimaPosicaoJogador);
+        float passo = Vector2.Distance(posicao, ultimaPosicaoJogador);
         ultimaPosicaoJogador = posicao;
+
+        TutorialStep etapa = EtapaAtualObjeto();
+        if (etapa == null || etapa.tipoDeAvanco != TipoDeAvanco.EventoDeJogo || etapa.nomeDoEvento != EVENTO_JOGADOR_ANDOU)
+        {
+            distanciaAndada = 0f;
+            return;
+        }
+
+        distanciaAndada += passo;
         if (distanciaAndada >= distanciaParaAndou)
         {
             distanciaAndada = 0f;

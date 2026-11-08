@@ -501,7 +501,7 @@ public static class SistemaDeSave
                 aplicadoConhecido = dados.versao >= 5 && p.aplicadoConhecido,
                 povoAplicado = p.povoAplicado, estadoAplicado = p.estadoAplicado, ouroAplicado = p.ouroAplicado,
                 // v < 6 não tinha linha editorial: a publicação fica neutra, sem modificador nem agravamento inventados.
-                linha = dados.versao >= 6 ? p.linha : LinhaEditorial.Neutra,
+                linha = dados.versao >= 6 ? p.linha : LinhaEditorial.Nenhuma,
                 editorialPovo = dados.versao >= 6 ? p.editorialPovo : 0, editorialEstado = dados.versao >= 6 ? p.editorialEstado : 0,
                 editorialOuro = dados.versao >= 6 ? p.editorialOuro : 0,
                 agravamentoPovo = dados.versao >= 6 ? p.agravamentoPovo : 0, agravamentoEstado = dados.versao >= 6 ? p.agravamentoEstado : 0
@@ -522,7 +522,7 @@ public static class SistemaDeSave
             gm.revelacoesPendentes.Add(new GameManager.RevelacaoPendente
             {
                 caso = BuscarCaso(catalogo, r.caso), texto = r.texto, povo = r.povo, estado = r.estado,
-                linha = dados.versao >= 6 ? r.linha : LinhaEditorial.Neutra
+                linha = dados.versao >= 6 ? r.linha : LinhaEditorial.Nenhuma
             });
 
         if (dados.versao < 2) MigrarProgressaoDeFases(gm, catalogo);

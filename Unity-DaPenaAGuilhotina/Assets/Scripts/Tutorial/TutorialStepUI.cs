@@ -175,6 +175,7 @@ public class TutorialStepUI : MonoBehaviour
         if (imagemIcone != null) imagemIcone.gameObject.SetActive(false);
         if (textoMensagem != null) textoMensagem.text = DispositivoDeControle.Substituir(dica);
         DefinirTitulo("Dica");
+        DefinirTextoContinuar(TextoContinuar);
         MontarGlifos(ControleTutorial.Nenhum);
         if (botaoPular != null) botaoPular.gameObject.SetActive(false);
         AtivarPopup();
@@ -227,6 +228,17 @@ public class TutorialStepUI : MonoBehaviour
     }
 
     private const string TextoPularPadrao = "<u>Pular tutorial</u>";
+
+    // Nas etapas de ação (falar, abrir, imprimir, descer...) o botão só esconde a mensagem: a etapa espera a ação de
+    // verdade. Com o rótulo "Continuar" o jogador achava que tinha avançado e ficava sem a instrução, que não volta.
+    private const string TextoContinuar = "Continuar";
+    private const string TextoOcultar = "Ocultar";
+
+    private void DefinirTextoContinuar(string texto)
+    {
+        TextMeshProUGUI rotulo = botaoContinuar != null ? botaoContinuar.GetComponentInChildren<TextMeshProUGUI>(true) : null;
+        if (rotulo != null) rotulo.text = texto;
+    }
 
     private void DefinirTextoPular(string texto)
     {
@@ -563,6 +575,7 @@ public class TutorialStepUI : MonoBehaviour
         confirmarPularAte = -1f;
         DefinirTextoPular(TextoPularPadrao);
         DefinirTitulo("Tutorial");
+        DefinirTextoContinuar(etapa.tipoDeAvanco == TipoDeAvanco.CliqueDoJogador ? TextoContinuar : TextoOcultar);
 
         AtivarPopup();
     }

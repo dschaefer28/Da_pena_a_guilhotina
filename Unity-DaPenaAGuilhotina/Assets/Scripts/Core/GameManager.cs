@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
         [Tooltip("O que mudou de fato na HUD (Povo/Estado limitados a 0–100). Falso em publicações de saves < 5.")]
         public bool aplicadoConhecido;
         public int povoAplicado, estadoAplicado, ouroAplicado;
-        [Tooltip("Linha editorial escolhida. Neutra = tutorial/receita sem linha ou publicação de save < 6 (legada, neutra).")]
+        [Tooltip("Linha editorial escolhida. Nenhuma = tutorial/receita sem linha ou publicação de save < 6 (sem modificador).")]
         public LinhaEditorial linha;
         [Tooltip("Parte de povo/estado/ouro que veio da linha editorial, e parte da penalidade que veio do sensacionalista.")]
         public int editorialPovo, editorialEstado, editorialOuro, agravamentoPovo, agravamentoEstado;
@@ -380,7 +380,7 @@ public class GameManager : MonoBehaviour
             });
         }
         Debug.Log($"[FATO x BOATO] Panfleto de '{(caso != null ? caso.caseTitle : "?")}' publicado como {resultado.nivel}" +
-                  (resultado.linha != LinhaEditorial.Neutra ? $", linha {resultado.linha}" : string.Empty) +
+                  (resultado.linha != LinhaEditorial.Nenhuma ? $", linha {resultado.linha}" : string.Empty) +
                   (resultado.suportes.Count > 0 ? $", com apoio de {string.Join(", ", resultado.suportes)}." : "."));
     }
 

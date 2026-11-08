@@ -1,8 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -28,13 +28,14 @@ public class MenuPrincipalManager : MonoBehaviour
     [SerializeField] private GameObject painelSaves;
 
     [Header("Sliders de Opções (Áudio e Texto)")]
-    [Tooltip("Slider de volume da tela de Opções (OnValueChanged ligado a OnVolumeSliderChanged).")]
-    [SerializeField] private Slider sliderVolume;
+    [Tooltip("Slider de volume da música (OnValueChanged ligado a OnMusicaSliderChanged).")]
+    [FormerlySerializedAs("sliderVolume")] [SerializeField] private Slider sliderMusica;
+    [Tooltip("Slider de volume dos efeitos: sons, vozes e ambiente (OnValueChanged ligado a OnEfeitosSliderChanged).")]
+    [SerializeField] private Slider sliderEfeitos;
     [Tooltip("Slider de velocidade do texto da tela de Opções (OnValueChanged ligado a OnTextSpeedSliderChanged).")]
     [SerializeField] private Slider sliderVelocidadeTexto;
 
     // Mesmas chaves e padrões do PauseMenu: o que o jogador ajusta aqui vale no jogo, e o contrário.
-    private const string VolumeKey = "opt_volume";
     private const string TextSpeedKey = "opt_textspeed";
 
     private GameObject focoAntesDaConfirmacao;
@@ -44,22 +45,12 @@ public class MenuPrincipalManager : MonoBehaviour
     private void Start()
     {
         AtualizarContinuar();
-        if (PlayerPrefs.HasKey(VolumeKey)) StartCoroutine(AplicarVolumeSalvo());
     }
 
     /// <summary>Mostra o Continuar só se algum slot tem partida em andamento (chamado de novo ao excluir um save).</summary>
     public void AtualizarContinuar()
     {
         if (botaoContinuar != null) botaoContinuar.SetActive(SistemaDeSave.ExistePartidaEmAndamento);
-    }
-
-    // O menu é a primeira cena: aplica o volume salvo já aqui (nas cenas do jogo quem faz isso é o PauseMenu). No
-    // aparelho os banks do FMOD carregam aos poucos, e antes disso o bus mestre ainda não existe.
-    private IEnumerator AplicarVolumeSalvo()
-    {
-        float limite = Time.unscaledTime + 5f;
-        while (!AudioSeguro.BanksCarregados && Time.unscaledTime < limite) yield return null;
-        AudioSeguro.DefinirVolumeDoBus("bus:/", PlayerPrefs.GetFloat(VolumeKey, 1f));
     }
 
     // Jogar: abre a tela de saves (cada slot vazio começa um jogo novo nele; os ocupados carregam ou são excluídos).
@@ -148,18 +139,15 @@ public class MenuPrincipalManager : MonoBehaviour
         painelOpcoes.SetActive(true);
 
         // Mostra os sliders já na posição salva (mesmos padrões do menu de pause).
-        if (sliderVolume != null)
-            sliderVolume.SetValueWithoutNotify(PlayerPrefs.GetFloat(VolumeKey, 1f));
+        if (sliderMusica != null) sliderMusica.SetValueWithoutNotify(VolumeDoAudio.Musica);
+        if (sliderEfeitos != null) sliderEfeitos.SetValueWithoutNotify(VolumeDoAudio.Efeitos);
         if (sliderVelocidadeTexto != null)
             sliderVelocidadeTexto.SetValueWithoutNotify(PlayerPrefs.GetFloat(TextSpeedKey, 0.5f));
     }
 
-    // Ligado no OnValueChanged do slider de Volume da tela de Opções.
-    public void OnVolumeSliderChanged(float valor01)
-    {
-        PlayerPrefs.SetFloat(VolumeKey, valor01);
-        AudioSeguro.DefinirVolumeDoBus("bus:/", valor01);
-    }
+    // Ligados no OnValueChanged dos sliders de Música e de Efeitos da tela de Opções (o VolumeDoAudio aplica na hora).
+    public void OnMusicaSliderChanged(float valor01) => VolumeDoAudio.DefinirMusica(valor01);
+    public void OnEfeitosSliderChanged(float valor01) => VolumeDoAudio.DefinirEfeitos(valor01);
 
     // Ligado no OnValueChanged do slider de Velocidade de Texto da tela de Opções. No menu não há diálogo na tela: o
     // valor fica salvo e o TypeTextAnimation de cada cena do jogo o lê ao nascer.
