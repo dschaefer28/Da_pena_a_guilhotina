@@ -8,4 +8,10 @@ public interface IInteractable
     /// aviso de interação (PromptDeInteracao) só aparece para esses.
     /// </summary>
     bool PodeInteragir => true;
+
+    /// <summary>
+    /// Nome mostrado logo abaixo do aviso de interação ("E"/"Interagir"), ex: o nome do NPC. Vazio/null = só a tecla
+    /// (portas, mesa, prensa...).
+    /// </summary>
+    string NomeExibido => null;
 }

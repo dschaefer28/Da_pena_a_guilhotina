@@ -1742,6 +1742,10 @@ PrefabInstance:
       value: 6.7708335
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: nomeExibido
+      value: "M\xE9dico"
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: dialogoPadrao
       value: 
       objectReference: {fileID: 11400000, guid: fd32222686ecc2347a9da7c2183419ae, type: 2}
@@ -1959,6 +1963,10 @@ PrefabInstance:
     - target: {fileID: 7714086207090666989, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 6.8541665
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: nomeExibido
+      value: Guillaume Kornmann
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: dialogoPadrao
@@ -2787,6 +2795,10 @@ PrefabInstance:
       value: 6.9375
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: nomeExibido
+      value: Pierre-Paul Sirven
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: dialogoPadrao
       value: 
       objectReference: {fileID: 11400000, guid: 4fce3c72b31904f4ba3eb532dc2b91b2, type: 2}
@@ -3148,6 +3160,10 @@ PrefabInstance:
       value: 6.8541665
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: nomeExibido
+      value: Sobrevivente
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: dialogoPadrao
       value: 
       objectReference: {fileID: 11400000, guid: 22ef7dcc8ffe9674fb60d6fedffee3fe, type: 2}
@@ -3418,6 +3434,10 @@ PrefabInstance:
     - target: {fileID: 7714086207090666989, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 6.9375
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: nomeExibido
+      value: Georges Danton
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: dialogoPadrao

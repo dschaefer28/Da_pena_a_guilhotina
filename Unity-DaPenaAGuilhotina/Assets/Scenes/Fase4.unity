@@ -1954,6 +1954,10 @@ PrefabInstance:
       value: 6.8541665
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: nomeExibido
+      value: Camille Desmoulins
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: dialogoPadrao
       value: 
       objectReference: {fileID: 11400000, guid: 986127efe26beca47a9728a3db02d3dd, type: 2}
@@ -2139,6 +2143,10 @@ PrefabInstance:
     - target: {fileID: 7714086207090666989, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_Offset.x
       value: 0.15388918
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: nomeExibido
+      value: Mercador
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: dialogoPadrao
@@ -2919,6 +2927,10 @@ PrefabInstance:
       value: 6.8541665
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: nomeExibido
+      value: Jacques-Pierre Brissot
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: dialogoPadrao
       value: 
       objectReference: {fileID: 11400000, guid: 6ef6e4fd1eecee24ea77e9a73c74c467, type: 2}
@@ -3306,6 +3318,10 @@ PrefabInstance:
     - target: {fileID: 7714086207090666989, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 6.8541665
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
+      propertyPath: nomeExibido
+      value: Pierre Vergniaud
       objectReference: {fileID: 0}
     - target: {fileID: 7940781439426228322, guid: 40c6e5d22898a1441913d5977b55aa9e, type: 3}
       propertyPath: dialogoPadrao

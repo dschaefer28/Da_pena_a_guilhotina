@@ -109,6 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCMovement
   idDaInteracao: Charles Dupaty
+  nomeExibido: Charles Dupaty
   canInteract: 1
   disableAfterDialogue: 0
   custoEmHoras: 1

@@ -49,6 +49,8 @@ public class NPCMovement : MonoBehaviour, IInteractable
              "(não pelo nome do GameObject). Vazio = caminho na hierarquia. Preencha com Ferramentas > Investigação > " +
              "Gerar IDs de interação. Não troque depois que houver saves: o progresso guardado aponta para ele.")]
     public string idDaInteracao;
+    [Tooltip("Nome que aparece embaixo do \"E\"/\"Interagir\" quando o jogador chega perto. Vazio = nome do GameObject.")]
+    public string nomeExibido;
     public bool canInteract = true;
     [Tooltip("Desmarque isso para NPCs Mentores (como Dupaty) para permitir falar com eles várias vezes.")]
     public bool disableAfterDialogue = true;
@@ -95,6 +97,8 @@ public class NPCMovement : MonoBehaviour, IInteractable
     // enquanto ainda responde. Mesma regra dos dois primeiros "return" de Interact().
     public bool PodeInteragir =>
         canInteract && (casoObrigatorio == null || GameManager.Instance == null || GameManager.Instance.casoEscolhido == casoObrigatorio);
+
+    public string NomeExibido => string.IsNullOrWhiteSpace(nomeExibido) ? gameObject.name : nomeExibido.Trim();
 
     public void Interact()
     {

@@ -48,6 +48,16 @@ public class CheckpointDoTribunal : MonoBehaviour, IInteractable
 
     public bool PodeInteragir => GameManager.Instance != null && GameManager.Instance.faseAtual >= GameManager.UltimaFase;
 
+    // Fica num filho do Dupaty: o aviso de interação mostra o nome dele, não o deste objeto.
+    public string NomeExibido
+    {
+        get
+        {
+            NPCMovement npc = GetComponentInParent<NPCMovement>(true);
+            return npc != null ? npc.NomeExibido : null;
+        }
+    }
+
     public void Interact()
     {
         if (!PodeInteragir) return;

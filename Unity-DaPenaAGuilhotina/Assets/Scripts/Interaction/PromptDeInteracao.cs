@@ -7,6 +7,7 @@ using UnityEngine.UI;
 /// "Interagir" no Android). Atende ao item do documento "ícone de feedback visual indicando
 /// interatividade" (alçapão) e vale para NPCs, portas, mesa e prensa. Coloque no mesmo GameObject
 /// do PlayerInteraction; o visual é montado em runtime (canvas em world space), sem arte externa.
+/// Quando o alvo tem nome (IInteractable.NomeExibido, ex: NPCs), uma etiqueta com o nome fica logo abaixo da tecla.
 /// </summary>
 [RequireComponent(typeof(PlayerInteraction))]
 // Depois das câmeras (CameraFollow, CinemachineBrain) no LateUpdate: o desvio do relógio projeta com a câmera do frame atual.
@@ -23,12 +24,19 @@ public class PromptDeInteracao : MonoBehaviour
     // Mesma cor/sprite do BotaoContinuar (UI.prefab), para bater com o resto da UI (GlifoDeControle).
     private static readonly Color CorFundo = new Color(0.45f, 0.2f, 0.15f, 1f);
     private static readonly Color CorBorda = new Color(0.29f, 0.12f, 0.09f, 1f);
+    // Etiqueta do nome: placa escura translúcida e texto creme, legível sobre qualquer cenário.
+    private static readonly Color CorFundoDoNome = new Color(0.12f, 0.07f, 0.05f, 0.85f);
+    private static readonly Color CorTextoDoNome = new Color(1f, 0.95f, 0.85f, 1f);
+    private const float EspacoEntreNomeETecla = 4f; // px do canvas
 
     private PlayerInteraction jogador;
     private Canvas canvas;
     private RectTransform raiz;
     private TextMeshProUGUI texto;
     private LayoutElement larguraTecla;
+    private RectTransform tecla;
+    private RectTransform etiquetaDoNome;
+    private TextMeshProUGUI textoDoNome;
     private GameObject alvoAtual;
     private Renderer[] renderersDoAlvo;
     private Renderer[] renderersDoJogador;
@@ -60,13 +68,22 @@ public class PromptDeInteracao : MonoBehaviour
 
         renderersDoAlvo = alvo.GetComponentsInChildren<Renderer>();
 
-        string tecla = DispositivoDeControle.Glifo(ControleTutorial.Interagir);
         // Sem largura fixa: a borda acompanha o miolo. Forçar a tecla curta a um quadrado (48) deixava o miolo, que não
         // encolhe abaixo de 66 (texto mínimo + margens), vazando para a direita da borda.
-        texto.text = tecla;
+        texto.text = DispositivoDeControle.Glifo(ControleTutorial.Interagir);
+
+        string nome = alvo.TryGetComponent<IInteractable>(out var interagivel) ? interagivel.NomeExibido : null;
+        bool comNome = !string.IsNullOrWhiteSpace(nome);
+        textoDoNome.text = comNome ? nome : string.Empty;
+        etiquetaDoNome.gameObject.SetActive(comNome);
+
         canvas.gameObject.SetActive(true);
-        // A tecla nasce com o tamanho padrão (100 x 100) até o primeiro layout: o desvio do relógio precisa do tamanho real.
-        LayoutRebuilder.ForceRebuildLayoutImmediate(raiz);
+        // A tecla nasce com o tamanho padrão (100 x 100) até o primeiro layout: o desvio do relógio e o empilhamento
+        // nome/tecla precisam do tamanho real. Cada um é raiz do próprio layout (o canvas não tem layout group).
+        LayoutRebuilder.ForceRebuildLayoutImmediate(tecla);
+        if (comNome) LayoutRebuilder.ForceRebuildLayoutImmediate(etiquetaDoNome);
+        // O nome ocupa o lugar de baixo (logo acima da cabeça) e a tecla sobe para cima dele.
+        tecla.anchoredPosition = new Vector2(0f, comNome ? etiquetaDoNome.rect.height + EspacoEntreNomeETecla : 0f);
         Posicionar();
     }
 
@@ -106,15 +123,19 @@ public class PromptDeInteracao : MonoBehaviour
         Camera cam = Camera.main;
         if (cam == null || !HudDoRelogio.RetanguloNaTela(out Rect relogio)) return posicao;
 
-        var tecla = (RectTransform)larguraTecla.transform;
+        // Bloco inteiro (nome embaixo + tecla em cima), em px do canvas.
+        bool comNome = etiquetaDoNome.gameObject.activeSelf;
+        float altura = tecla.anchoredPosition.y + tecla.rect.height;
+        float largura = Mathf.Max(tecla.rect.width, comNome ? etiquetaDoNome.rect.width : 0f);
+
         Vector3 cantoBaixo = cam.WorldToScreenPoint(posicao);
-        Vector3 cantoCima = cam.WorldToScreenPoint(posicao + Vector3.up * (tecla.rect.height * escala));
-        float meiaLargura = Mathf.Abs(cam.WorldToScreenPoint(posicao + Vector3.right * (tecla.rect.width * 0.5f * escala)).x - cantoBaixo.x);
+        Vector3 cantoCima = cam.WorldToScreenPoint(posicao + Vector3.up * (altura * escala));
+        float meiaLargura = Mathf.Abs(cam.WorldToScreenPoint(posicao + Vector3.right * (largura * 0.5f * escala)).x - cantoBaixo.x);
         Rect naTela = Rect.MinMaxRect(cantoBaixo.x - meiaLargura, cantoBaixo.y, cantoBaixo.x + meiaLargura, cantoCima.y);
         if (!naTela.Overlaps(relogio) || cantoCima.y - cantoBaixo.y <= 0f) return posicao;
 
         float descerEmPixels = cantoCima.y - (relogio.yMin - MargemAbaixoDoRelogio);
-        float unidadesPorPixel = (tecla.rect.height * escala) / (cantoCima.y - cantoBaixo.y);
+        float unidadesPorPixel = (altura * escala) / (cantoCima.y - cantoBaixo.y);
         return posicao - Vector3.up * (descerEmPixels * unidadesPorPixel);
     }
 
@@ -158,6 +179,7 @@ public class PromptDeInteracao : MonoBehaviour
         imgBorda.raycastTarget = false;
         // Com o sprite padrão dos botões, a própria tecla tem moldura e face: o miolo vira só layout (sem imagem).
         bool comSprite = EstiloDeBotao.Aplicar(imgBorda);
+        tecla = rBorda;
         larguraTecla = borda.GetComponent<LayoutElement>();
         larguraTecla.preferredHeight = 48f;
         larguraTecla.minWidth = 48f;
@@ -199,6 +221,46 @@ public class PromptDeInteracao : MonoBehaviour
         texto.overflowMode = TextOverflowModes.Overflow;
         var leTexto = t.AddComponent<LayoutElement>();
         leTexto.minWidth = 42f;
+
+        MontarEtiquetaDoNome();
+    }
+
+    // Placa com o nome do alvo, logo abaixo da tecla (base no ponto do aviso; a tecla sobe quando ela aparece).
+    private void MontarEtiquetaDoNome()
+    {
+        var placa = new GameObject("Nome", typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
+        placa.transform.SetParent(raiz, false);
+        etiquetaDoNome = (RectTransform)placa.transform;
+        etiquetaDoNome.anchorMin = etiquetaDoNome.anchorMax = new Vector2(0.5f, 0.5f);
+        etiquetaDoNome.pivot = new Vector2(0.5f, 0f);
+        etiquetaDoNome.anchoredPosition = Vector2.zero;
+        var img = placa.GetComponent<Image>();
+        img.sprite = SpriteArredondado();
+        img.type = Image.Type.Sliced;
+        img.color = CorFundoDoNome;
+        img.raycastTarget = false;
+        var hl = placa.GetComponent<HorizontalLayoutGroup>();
+        hl.padding = new RectOffset(10, 10, 3, 3);
+        hl.childAlignment = TextAnchor.MiddleCenter;
+        hl.childControlWidth = hl.childControlHeight = true;
+        hl.childForceExpandWidth = hl.childForceExpandHeight = false;
+        var fitter = placa.GetComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        var t = new GameObject("Texto", typeof(RectTransform));
+        t.transform.SetParent(placa.transform, false);
+        textoDoNome = t.AddComponent<TextMeshProUGUI>();
+        if (fonte != null) textoDoNome.font = fonte;
+        textoDoNome.fontSize = 20f;
+        textoDoNome.fontStyle = FontStyles.Bold;
+        textoDoNome.alignment = TextAlignmentOptions.Center;
+        textoDoNome.color = CorTextoDoNome;
+        textoDoNome.raycastTarget = false;
+        textoDoNome.textWrappingMode = TextWrappingModes.NoWrap;
+        textoDoNome.overflowMode = TextOverflowModes.Overflow;
+
+        placa.SetActive(false);
     }
 
     private void OnDestroy()
