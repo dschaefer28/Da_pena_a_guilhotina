@@ -27,7 +27,8 @@ public static class SistemaDeSave
     // 8: fim de jogo registrado depois do tribunal (desfecho da rota e destino do réu)
     // 9: dedução por escolha: em cada par, a pista com que o jogador ficou e a descartada (as hipóteses e os quadros
     //    confirmados da v7 deixam de existir e são ignorados)
-    public const int VersaoAtual = 9;
+    // 10: ID da partida (o arquivo de casos resolvidos do menu separa as partidas por ele)
+    public const int VersaoAtual = 10;
     private const string CenaPadrao = "Jogo";
 
     [Serializable]
@@ -115,6 +116,9 @@ public static class SistemaDeSave
 
         // v9 (ausente em saves antigos = nenhum par decidido)
         public List<EscolhaDeDeducao> escolhasDeDeducao = new List<EscolhaDeDeducao>();
+
+        // v10 (ausente em saves antigos = a partida ganha um ID novo ao continuar)
+        public string idDaPartida;
     }
 
     public static string CaminhoDoArquivo => Path.Combine(Application.persistentDataPath, "save.json");
@@ -193,6 +197,7 @@ public static class SistemaDeSave
             File.WriteAllText(temporario, JsonUtility.ToJson(dados, true));
             if (File.Exists(CaminhoDoArquivo)) File.Delete(CaminhoDoArquivo);
             File.Move(temporario, CaminhoDoArquivo);
+            ArquivoDeCasos.Registrar(dados);
             Debug.Log(dados.jogoConcluido
                 ? $"[SistemaDeSave] Fim de jogo registrado (rota {dados.desfechoRota}, réu {(dados.desfechoReuAbsolvido ? "absolvido" : "condenado")}) em {CaminhoDoArquivo}."
                 : $"[SistemaDeSave] Jogo salvo na cena '{dados.cena}' ({CaminhoDoArquivo}).");
@@ -229,7 +234,8 @@ public static class SistemaDeSave
             interacoesPagasLegadas = new List<string>(registro.interacoesPagasLegadas),
             comprasDaBiblioteca = new List<string>(gm.comprasDaBiblioteca),
             evidenciasObtidas = new List<string>(gm.evidenciasObtidas),
-            escolhasDeDeducao = CopiaDasEscolhas(gm.escolhasDeDeducao)
+            escolhasDeDeducao = CopiaDasEscolhas(gm.escolhasDeDeducao),
+            idDaPartida = gm.IdDaPartida
         };
 
         foreach (CaseData caso in gm.casosJaSelecionados)
@@ -332,6 +338,7 @@ public static class SistemaDeSave
         if (dados.versao > VersaoAtual)
             Debug.LogWarning($"[SistemaDeSave] Save versão {dados.versao} é mais novo que o jogo (versão {VersaoAtual}); campos desconhecidos serão ignorados.");
 
+        if (!string.IsNullOrEmpty(dados.idDaPartida)) gm.idDaPartida = dados.idDaPartida;
         gm.capitalAtual = dados.capital;
         gm.opiniaoPublicaAtual = dados.opiniaoPublica;
         gm.opiniaoEstadoAtual = dados.opiniaoEstado;

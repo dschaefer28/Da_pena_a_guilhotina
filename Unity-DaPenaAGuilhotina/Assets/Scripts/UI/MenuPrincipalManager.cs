@@ -22,6 +22,8 @@ public class MenuPrincipalManager : MonoBehaviour
     [SerializeField] private GameObject painelConfirmarNovoJogo;
     [Tooltip("Botão que recebe o foco do teclado quando a pergunta abre (o \"Não\", para o Enter não apagar o progresso).")]
     [SerializeField] private GameObject botaoCancelarNovoJogo;
+    [Tooltip("Painel \"Casos resolvidos\" (ArquivoDeCasosUI): relê os casos e desfechos das partidas.")]
+    [SerializeField] private GameObject painelCasos;
 
     [Header("Sliders de Opções (Áudio e Texto)")]
     [Tooltip("Slider de volume da tela de Opções (OnValueChanged ligado a OnVolumeSliderChanged).")]
@@ -136,6 +138,18 @@ public class MenuPrincipalManager : MonoBehaviour
     public void FecharOpcoesJogo()
     {
         painelOpcoes.SetActive(false);
+    }
+
+    public void AbrirCasos()
+    {
+        painelMenuInicial.SetActive(false);
+        painelCasos.SetActive(true);
+    }
+
+    public void FecharCasos()
+    {
+        painelCasos.SetActive(false);
+        painelMenuInicial.SetActive(true);
     }
 
     public void AbrirCreditos()

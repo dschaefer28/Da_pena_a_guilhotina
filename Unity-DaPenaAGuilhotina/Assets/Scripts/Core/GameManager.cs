@@ -14,6 +14,18 @@ public class GameManager : MonoBehaviour
              "A Mesa de Casos (CaseSelectionUI) usa isso para bloquear cartões já selecionados.")]
     public List<CaseData> casosJaSelecionados = new List<CaseData>();
 
+    /// <summary>Identifica a partida (Novo Jogo = ID novo; o Continuar recupera o do save). O arquivo de casos
+    /// resolvidos do menu separa as partidas por ele. Não é serializado: o prefab nunca guarda um ID.</summary>
+    [NonSerialized] public string idDaPartida;
+    public string IdDaPartida
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(idDaPartida)) idDaPartida = Guid.NewGuid().ToString("N");
+            return idDaPartida;
+        }
+    }
+
     [Header("Progressão de Fases")]
     [Tooltip("Fase em que o jogador está: 1 = tutorial, 2 e 3 = investigação, 4 = tribunal. " +
              "Avança no escritório (FimDeFase) quando os casos exigidos da fase forem concluídos.")]
@@ -489,6 +501,7 @@ public class GameManager : MonoBehaviour
         }
         resultado.despesa = PagarDespesasDaFase(resultado.fase);
         AvancarFase();
+        ArquivoDeCasos.Registrar(this);
         return resultado;
     }
 
@@ -526,6 +539,7 @@ public class GameManager : MonoBehaviour
         if (!string.IsNullOrWhiteSpace(caso.caseTitle))
             AvisoNaTela.Mostrar($"Caso concluído: {caso.caseTitle.Trim()}");
         ArquivarSobrasDoCaso(caso);
+        ArquivoDeCasos.Registrar(this);
         return true;
     }
 

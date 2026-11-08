@@ -1646,3 +1646,29 @@ Resultado: o Pause ficava a 100 da borda (os outros a 24), três larguras, espa�
 - PlayerPrefs: as 9 chaves da partida continuam em 1, como antes; `opt_volume` e `opt_textspeed` continuam ausentes.
 - Editor: no começo, uma Game View flutuante foi aberta por engano (`EditorWindow.GetWindow`) e depois fechada. O Simulator virou Game View só para o teste de PC e depois voltou ao mesmo lugar, com o Xiaomi Mi Note Pro. Os tamanhos temporários 2400×1080 e 1440×1080 da Game View foram removidos. `DaPena_SimularCelularNoEditor` voltou a falso, `runInBackground` está desligado, `playModeStartScene` está nulo e `menu principal` está aberta e limpa.
 - Nada foi commitado.
+
+## 28. Menu principal: Casos resolvidos (07/11/2026)
+
+Pedido: um menu no menu inicial com os casos que o jogador já resolveu em cada partida (um por fase), para reler o caso e o desfecho sem rejogar. Interface feita com sprites do projeto, na cena (nada de HUD montada em runtime). Sem playtest nesta entrega.
+
+### 28.1 O que foi feito
+
+- **Botão CASOS** na coluna do menu, logo abaixo do JOGAR (cópia dele: mesmo sprite, fonte e som). A coluna subiu meio passo para caber (passo de 110 px mantido).
+- **Painel `painelCasos`** (cópia do painel de CRÉDITOS: moldura `fundohud`, título, VOLTAR e sons): setas `<` `>` entre partidas, quatro botões de caso (sprite `button`, o do caso aberto fica mais claro) e a área de leitura com rolagem (barra no modelo da Mesa de Casos).
+- Montado por **Ferramentas > Menu principal > Criar painel Casos resolvidos** (`Assets/Editor/ArquivoDeCasosSetupTool.cs`), idempotente. Para refazer o painel, apague `painelCasos` da cena e rode de novo.
+- `ArquivoDeCasosUI` (no painel) só preenche os textos e liga/desliga os botões que já existem.
+- **`ArquivoDeCasos`** guarda as partidas em `persistentDataPath/arquivo_de_casos.json`, separado do `save.json`: sobrevive ao Novo Jogo, até 10 partidas (sai a mais antiga). Atualizado quando o jogo salva, quando um caso é concluído na prensa e quando a fase fecha. Só grava em Play Mode e com pelo menos um caso concluído (os testes EditMode não tocam no arquivo).
+- **Save v10:** `idDaPartida` (o Novo Jogo gera um ID novo; o Continuar recupera o do save; saves antigos ganham um ID novo ao continuar). No `GameManager` o campo é `[NonSerialized]`.
+
+### 28.2 Texto de cada caso
+
+Título, fase, relato do cliente (`caseDescription`), objetivo, "Sua investigação" (em quem acreditou no quadro, pistas e apoios impressos, linha editorial e efeito aplicado) e "Desfecho":
+- fase ainda aberta: "só será conhecido no fim desta fase" (nada revela a verdade das pistas antes da hora);
+- fase encerrada: o texto da revelação do boato e a perda, ou "nenhuma informação foi desmentida";
+- Fase 4: o final e o destino do réu depois do tribunal.
+
+O `Caso_Tutorial` não tem título nem relato: aparece como "Tutorial", sem as seções "O caso" e "Objetivo", até alguém preencher o asset.
+
+### 28.3 Verificação
+
+Compilação sem erros, 112/112 EditMode. Painel conferido por captura no editor com dados de exemplo (descartados; a cena foi salva só com o que a ferramenta criou). Nada foi commitado.
