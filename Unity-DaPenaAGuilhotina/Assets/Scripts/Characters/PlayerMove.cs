@@ -6,7 +6,8 @@ using Unity.VisualScripting;
 public class PlayerMove : MonoBehaviour
 {
     [Header("Movimento")]
-    [SerializeField] private float moveSpeed = 5f;
+    [Tooltip("Ao mudar, ajuste junto a velocidade do estado Walk no PlayerAnimator (5 = 1x; hoje 7 = 1.4x) para os pés não deslizarem.")]
+    [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private InputActionReference moveAction;
 
     [Header("Áudio (FMOD)")]
