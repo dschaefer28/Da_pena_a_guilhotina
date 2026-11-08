@@ -70,6 +70,7 @@ public static class ArquivoDeCasos
     {
         // Só no jogo de verdade: os testes de EditMode montam GameManagers e saves falsos.
         if (dados == null || !Application.isPlaying || string.IsNullOrEmpty(dados.idDaPartida)) return;
+        if (ModoDev.PartidaDeDemonstracao) return; // partida do modo dev: não entra nos casos resolvidos
         if (dados.casosConcluidos == null || dados.casosConcluidos.Count == 0) return; // nada para mostrar ainda
 
         try

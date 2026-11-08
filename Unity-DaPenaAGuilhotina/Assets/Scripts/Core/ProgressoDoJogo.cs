@@ -33,6 +33,7 @@ public static class ProgressoDoJogo
     /// menu pelo pause), para os da cena Jogo assumirem com os valores iniciais.</summary>
     public static void ComecarNovoJogo()
     {
+        ModoDev.EncerrarDemonstracao(); // a partida nova (ou o save carregado) volta a gravar
         ApagarProgresso();
         if (TutorialManager.Instance != null) Object.Destroy(TutorialManager.Instance.gameObject);
         if (GameManager.Instance != null) Object.Destroy(GameManager.Instance.gameObject);

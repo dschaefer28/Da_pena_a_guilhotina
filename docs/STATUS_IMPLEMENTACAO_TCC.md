@@ -1688,3 +1688,39 @@ O painel passou a contar a história do caso, e não só o que o jogador fez. Or
 "O seu panfleto" agora conta o que o panfleto dizia: o título (`CaseData.tituloDoPanfleto` ou o item de panfleto da receita), o **teor** (`CaseData.teorDoPanfleto`: o que ele defendia e para quem), **o que afirmava** (uma linha por pista impressa, de `Item.afirmacaoNoPanfleto`; sem texto, mostra o nome da pista), o apoio citado, o **tom** da linha editorial e o efeito na publicação. Nada ali indica qual afirmação era verdadeira.
 - Ferramentas > Campanha > 9 preencheu os 10 teores, o título do memorial do tutorial e as 36 afirmações (só campos vazios).
 - Os textos do tom ficam em `ArquivoDeCasos.TomDaLinha`.
+
+## 29. Modo dev para a apresentação (08/11/2026)
+
+Pedido: um "modo God" para mostrar os três finais na banca (cerca de 20 minutos de apresentação) sem jogar a campanha inteira três vezes.
+
+### 29.1 Como usar
+
+- **F1** abre e fecha o painel em qualquer cena, inclusive no menu principal. No celular: cinco toques seguidos no canto superior esquerdo. No Editor, também em **Ferramentas > Modo dev > Abrir ou fechar o painel** (para quando o foco não está na Game view).
+- **Tribunal: os três finais.** Escolha o destino do réu ("absolvido": o panfleto do caso da Fase 4 saiu só com fatos; "condenado": saiu com boato) e clique em Final A, B ou C. O jogo abre o Tribunal com a rota travada e o caso da Fase 4 daquela rota já publicado. Apresente duas ou três provas e veja o veredito. Na tela "FIM", "Voltar ao menu" e F1 de novo para o próximo final. Enter ou Espaço pulam as legendas das cutscenes.
+- **Começar em:** Fase 1 (tutorial, com a cutscene de abertura), Fase 2, Fase 3 ou Fase 4 com a rota A, B ou C. Abre no escritório, com a mesa mostrando os casos daquela fase.
+- **Partida atual** (só dentro do jogo): Povo/Estado ±10, Ouro +50, repor as horas do caso, receber as pistas e os documentos do caso, concluir o caso (só fatos ou com boato) sem passar pela prensa, voltar ao escritório (fecha a fase, com a cutscene) e ir ao Tribunal sem falar com o Dupaty. Sem caso em andamento, "Receber pistas" e "Concluir caso" aceitam sozinhos um caso da mesa.
+
+### 29.2 O que não muda
+
+- **Partida de demonstração:** tudo o que é aberto pelo painel, e qualquer atalho usado numa partida normal, não grava nos slots de save nem entra em "Casos resolvidos" (`ModoDev.PartidaDeDemonstracao`, conferido em `SistemaDeSave.Gravar` e `ArquivoDeCasos.Registrar`). O slot fica como estava no último ponto de save. O próximo Novo Jogo ou Carregar volta ao normal (`ProgressoDoJogo.ComecarNovoJogo`).
+- Nenhuma cena, prefab ou asset foi alterado: o painel é montado por código (`ModoDevUI`, criado por `RuntimeInitializeOnLoadMethod`).
+- O painel está também no build final. Para tirar, apague `ModoDevUI.cs` e `ModoDevMenu.cs` (o `ModoDev` sozinho não faz nada).
+
+### 29.3 Como a partida é montada
+
+`ModoDev.Preparar` usa as regras do jogo: tutorial concluído; em cada fase já passada, o caso que mais puxa para a rota pedida (pela versão "só fatos" da receita), publicado só com fatos pela `CalculadoraDePanfleto`, com a linha editorial que mais puxa para a rota, e as despesas da fase; ao entrar na Fase 4 a rota é travada pelo `GameManager.DefinirRota` (se as barras não chegarem na rota, ficam em A 75×35, B 35×75 ou C 55×55). Ouro mínimo de 100 a partir da Fase 2. No Tribunal, o caso da Fase 4 da rota é publicado com duas pistas que dão a versão pedida; em cada par do quadro fica a pista impressa e a outra é descartada. As cutscenes e dicas que o jogador já teria visto naquela fase são marcadas como vistas.
+
+### 29.4 Arquivos
+
+- `Assets/Scripts/Core/ModoDev.cs` (novo): montagem das partidas e atalhos.
+- `Assets/Scripts/UI/ModoDevUI.cs` (novo): o painel.
+- `Assets/Editor/ModoDevMenu.cs` (novo): o item de menu do Editor.
+- `Assets/Editor/Testes/ModoDevTests.cs` (novo): 5 testes com os casos e pistas reais.
+- `SistemaDeSave.cs`, `ArquivoDeCasos.cs`, `ProgressoDoJogo.cs`: uma linha cada (a trava da demonstração).
+
+### 29.5 Verificação
+
+- 124/124 EditMode (5 novos: os 6 finais chegam ao Tribunal com a rota certa, o Dupaty libera, o réu tem o destino pedido e as provas não incluem pistas descartadas; o início de cada fase deixa na mesa só os casos da fase, e na Fase 4 só o da rota).
+- Play Mode a partir do menu: F1 abre o painel; Final A jogado até a tela FIM (barra explode, réu absolvido); Final B (réu condenado) e Final C conferidos na abertura do Tribunal (rota e destino do réu certos), sem jogar até o veredito; Fase 2 → "Concluir caso" → "Voltar ao escritório" → cutscene e Fase 3 → "Receber pistas" → "Concluir caso: com boato" → barras puxadas para A → Fase 4 com a rota A travada e a revelação do boato aplicada → "Concluir caso" → "Ir ao Tribunal". Sem erros no console.
+- Os arquivos de save e o arquivo de casos ficaram idênticos (md5) depois de todos os testes: o jogo tentou gravar e a trava da demonstração bloqueou. O PlayerPrefs foi restaurado ao estado anterior.
+- Não testado: F1 num build (só no Editor) e o gesto de toque num celular.

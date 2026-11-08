@@ -314,6 +314,12 @@ public static class SistemaDeSave
 
     private static void Gravar(DadosDeSave dados)
     {
+        // Modo dev (apresentação): a partida montada ou alterada por atalhos nunca sobrescreve o slot do jogador.
+        if (ModoDev.PartidaDeDemonstracao)
+        {
+            Debug.Log("[SistemaDeSave] Partida de demonstração (modo dev): nada foi gravado.");
+            return;
+        }
         MigrarSaveAntigo(); // o save.json antigo não pode cair depois no slot que esta partida acabou de ocupar
         try
         {
