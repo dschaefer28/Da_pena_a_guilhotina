@@ -56,6 +56,12 @@ public class Item : ScriptableObject
     [Tooltip("Qualidade da evidência. Não altera a confiabilidade.")]
     public QualidadeDaEvidencia qualidade = QualidadeDaEvidencia.Comum;
 
+    [Header("Arquivo de casos (menu principal > Casos resolvidos)")]
+    [TextArea(2, 4)]
+    [Tooltip("O que o panfleto afirma quando esta pista é impressa (uma frase). Aparece em \"O seu panfleto\". " +
+             "Vazio = mostra só o nome da pista.")]
+    public string afirmacaoNoPanfleto;
+
     /// <summary>Nome pronto para exibição em UI (usa itemName se configurado, senão cai no nome do asset).</summary>
     public string NomeExibicao => string.IsNullOrWhiteSpace(itemName) ? name : itemName;
 

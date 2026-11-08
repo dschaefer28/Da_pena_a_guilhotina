@@ -38,3 +38,33 @@ MonoBehaviour:
       b: {fileID: 11400000, guid: bd6b684e6c8e0264790faf66aa2ed84b, type: 2}
     - a: {fileID: 11400000, guid: d17c6356e0ae8b3469d412fd43268746, type: 2}
       b: {fileID: 11400000, guid: 4c8c01357c9bbb4419151f49967720c6, type: 2}
+  tituloNoArquivo: 
+  tituloDoPanfleto: 
+  teorDoPanfleto: "Uma defesa do oper\xE1rio sobrevivente: o panfleto pedia que ele
+    n\xE3o fosse condenado como saqueador e cobrava da Guarda Francesa a responsabilidade
+    pelos mortos do faubourg."
+  personagens: "O oper\xE1rio do faubourg Saint-Antoine \u2014 sobrevivente do massacre;
+    seu cliente\nJean-Baptiste R\xE9veillon \u2014 dono da manufatura atacada\nO
+    comandante da Guarda Francesa \u2014 assinou a ordem de dispersar a multid\xE3o\nA
+    multid\xE3o do faubourg \u2014 oper\xE1rios que pediam p\xE3o e sal\xE1rio"
+  historia: "No fim de abril de 1789, oper\xE1rios do faubourg Saint-Antoine marcharam
+    at\xE9 a manufatura de R\xE9veillon pedindo p\xE3o e sal\xE1rio. A multid\xE3o
+    n\xE3o tinha armas de fogo, e a Guarda Francesa atirou para matar.\n\nO cartaz
+    com a ordem do comandante prova que a ordem de dispersar \"por todos os meios\"
+    foi afixada antes de a multid\xE3o chegar \xE0 f\xE1brica: os tiros n\xE3o foram
+    resposta a um inc\xEAndio. As vers\xF5es que circularam depois, de que o povo
+    fora pago por agitadores do duque de Orl\xE9ans e de que o oper\xE1rio ateara
+    fogo \xE0 f\xE1brica, serviram para justificar o massacre.\n\nO sobrevivente,
+    procurado como saqueador, s\xF3 tinha a pr\xF3pria palavra contra a da Guarda."
+  desfechoFatos: "O panfleto mostrou que a multid\xE3o estava desarmada e que a ordem
+    de atirar veio antes. O oper\xE1rio ganhou uma defesa p\xFAblica, e o povo do
+    faubourg viu a tipografia do seu lado."
+  desfechoComBoato: "O panfleto defendeu o oper\xE1rio com um fato e um boato. Comoveu
+    as ruas, mas a parte falsa foi desmentida e deu aos acusadores um motivo para
+    duvidar de tudo."
+  desfechoCalunia: "O panfleto acusou sem provas para defender o oper\xE1rio. Inflamou
+    o bairro e vendeu muito, at\xE9 a cal\xFAnia cair e o povo que voc\xEA defendia
+    pagar pela sua pressa."
+  notaHistorica: "O motim de 27 e 28/04/1789 e os tiros da Guarda Francesa s\xE3o
+    reais. O boato de que o duque de Orl\xE9ans pagou agitadores nunca foi provado.
+    O oper\xE1rio e o cartaz com a ordem do comandante s\xE3o do jogo."

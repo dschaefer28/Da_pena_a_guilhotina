@@ -52,6 +52,43 @@ public class CaseData : ScriptableObject
              "5 - Aplicar dedução ativa. Desligada = comportamento antigo (a verdade aparece com Verificada Por).")]
     public ConfiguracaoDeDeducao deducao = new ConfiguracaoDeDeducao();
 
+    [Header("Arquivo de casos (menu principal > Casos resolvidos)")]
+    [Tooltip("Título no arquivo. Vazio = caseTitle (o caso do tutorial não tem título na mesa).")]
+    public string tituloNoArquivo;
+    [Tooltip("Título do panfleto no arquivo. Vazio = nome do item de panfleto da receita.")]
+    public string tituloDoPanfleto;
+    [TextArea(3, 8)]
+    [Tooltip("O teor do panfleto: o que ele defendia e para quem. As afirmações vêm das pistas impressas " +
+             "(Item.afirmacaoNoPanfleto) e o tom, da linha editorial.")]
+    public string teorDoPanfleto;
+    [TextArea(3, 8)]
+    [Tooltip("Uma linha por personagem, no formato \"Nome — papel no caso\". Só aparece depois que a fase do caso termina.")]
+    public string personagens;
+    [TextArea(6, 14)]
+    [Tooltip("O que realmente aconteceu no caso (a verdade das pistas). Só aparece depois que a fase do caso termina, " +
+             "para nunca revelar antes da hora qual afirmação era verdadeira.")]
+    public string historia;
+    [TextArea(2, 5)] [Tooltip("Desfecho quando o panfleto saiu só com fatos.")]
+    public string desfechoFatos;
+    [TextArea(2, 5)] [Tooltip("Desfecho quando o panfleto misturou um fato e um boato.")]
+    public string desfechoComBoato;
+    [TextArea(2, 5)] [Tooltip("Desfecho quando o panfleto saiu com calúnia (ou dois boatos).")]
+    public string desfechoCalunia;
+    [TextArea(2, 5)]
+    [Tooltip("O que aconteceu na história real, para o jogador separar o jogo dos fatos. Vazio = não aparece.")]
+    public string notaHistorica;
+
+    /// <summary>Desfecho escrito para a versão impressa (Alegações, legado, usa o texto do boato).</summary>
+    public string DesfechoDa(NivelDoPanfleto nivel)
+    {
+        switch (nivel)
+        {
+            case NivelDoPanfleto.Fatos: return desfechoFatos;
+            case NivelDoPanfleto.Calunia: return desfechoCalunia;
+            default: return desfechoComBoato;
+        }
+    }
+
     /// <summary>Verdadeiro se o item é uma das cartas do cliente deste caso (compara itemID).</summary>
     public bool EhAlegacao(Item item)
     {

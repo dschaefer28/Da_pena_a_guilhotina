@@ -85,6 +85,40 @@ public class MenuPrincipalTests
     }
 
     [Test]
+    public void Menu_TelaDeSavesComUmCartaoPorSlot()
+    {
+        ComMenu(menu =>
+        {
+            var painel = Campo(menu, "painelSaves") as GameObject;
+            Assert.IsNotNull(painel, "Campo \"Painel Saves\" vazio: o Jogar não abre a tela de saves.");
+            Assert.IsFalse(painel.activeSelf, "A tela de saves não pode começar aberta.");
+            var ui = painel.GetComponent<SlotsDeSaveUI>();
+            Assert.IsNotNull(ui, "A tela de saves não tem SlotsDeSaveUI.");
+
+            var so = new SerializedObject(ui);
+            Assert.AreEqual(menu, so.FindProperty("menu").objectReferenceValue, "SlotsDeSaveUI sem o MenuPrincipalManager.");
+            SerializedProperty cartoes = so.FindProperty("cartoes");
+            Assert.AreEqual(SistemaDeSave.NumeroDeSlots, cartoes.arraySize, "Um cartão por slot.");
+            for (int i = 0; i < cartoes.arraySize; i++)
+                foreach (string campo in new[] { "titulo", "detalhe", "botaoCarregar", "botaoNovoJogo", "botaoExcluir" })
+                    Assert.IsNotNull(cartoes.GetArrayElementAtIndex(i).FindPropertyRelative(campo).objectReferenceValue,
+                        $"Cartão {i + 1} sem \"{campo}\".");
+
+            var pergunta = so.FindProperty("painelConfirmarExclusao").objectReferenceValue as GameObject;
+            var nao = so.FindProperty("botaoNaoExcluir").objectReferenceValue as GameObject;
+            Assert.IsNotNull(pergunta, "Sem a pergunta de exclusão: o EXCLUIR apagaria sem confirmar.");
+            Assert.IsFalse(pergunta.activeSelf, "A pergunta de exclusão não pode começar aberta.");
+            Assert.IsNotNull(nao, "Sem o NÃO da pergunta de exclusão.");
+            Assert.IsTrue(nao.transform.IsChildOf(pergunta.transform), "O NÃO não é o da pergunta de exclusão.");
+
+            bool voltar = false;
+            foreach (Button b in painel.GetComponentsInChildren<Button>(true))
+                voltar |= Chama(b, menu, nameof(MenuPrincipalManager.FecharSaves));
+            Assert.IsTrue(voltar, "Nenhum botão da tela de saves chama FecharSaves.");
+        });
+    }
+
+    [Test]
     public void Celular_SoGiraEntreAsPaisagens()
     {
         Assert.AreEqual(UIOrientation.AutoRotation, PlayerSettings.defaultInterfaceOrientation);

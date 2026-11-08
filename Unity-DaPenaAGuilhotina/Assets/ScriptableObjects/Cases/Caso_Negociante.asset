@@ -39,3 +39,29 @@ MonoBehaviour:
       b: {fileID: 11400000, guid: c359ba65f80d70d4cbc1f94f86e6ee0b, type: 2}
     - a: {fileID: 11400000, guid: d7d88312a47d732468be974771912d92, type: 2}
       b: {fileID: 11400000, guid: cdff7f6ab344e7e4393ca0741e5a3a0a, type: 2}
+  tituloNoArquivo: 
+  tituloDoPanfleto: 
+  teorDoPanfleto: "Uma defesa do pequeno mercador acusado de a\xE7ambarcamento: o
+    panfleto apontava o verdadeiro dono da farinha do por\xE3o e as falhas das leis
+    de abastecimento que esvaziavam as padarias."
+  personagens: "O pequeno mercador \u2014 acusado de esconder farinha; seu cliente\nO
+    atravessador \u2014 fornecedor dos ex\xE9rcitos, dono da farinha do por\xE3o\nCamille
+    Desmoulins \u2014 repetia que a farinha era do mercador\nOs comiss\xE1rios da
+    se\xE7\xE3o \u2014 fiscalizavam estoques e pre\xE7os"
+  historia: "No outono de 1793, a fome apertava Paris, e a lei contra o a\xE7ambarcamento
+    punia com a morte quem escondesse g\xEAneros. As faturas mostram que a farinha
+    do por\xE3o era de um fornecedor dos ex\xE9rcitos, que alugava o por\xE3o; o
+    mercador s\xF3 recebia o aluguel.\n\nE a farinha sumia das padarias pequenas
+    por causa da pr\xF3pria lei do M\xE1ximo: o pre\xE7o fixado, o de 1790 mais um
+    ter\xE7o e sem contar o frete, n\xE3o pagava o transporte, e a se\xE7\xE3o avisava
+    da falta. A hist\xF3ria de que as padarias estavam cheias era falsa.\n\nO pequeno
+    mercador era o culpado mais f\xE1cil de achar para uma multid\xE3o com fome."
+  desfechoFatos: O panfleto mostrou as faturas e a falha das leis de abastecimento.
+    Diante das provas, o tribunal absolveu o mercador.
+  desfechoComBoato: O panfleto misturou as faturas a um boato. A parte falsa caiu,
+    e o tribunal ficou com a desculpa de que precisava.
+  desfechoCalunia: "O panfleto apostou numa cal\xFAnia. A mentira foi usada contra
+    o pr\xF3prio mercador, e a multid\xE3o teve o culpado que queria."
+  notaHistorica: "A lei contra o a\xE7ambarcamento (26/07/1793, com pena de morte)
+    e o M\xE1ximo geral (29/09/1793, pre\xE7os de 1790 mais um ter\xE7o) s\xE3o reais.
+    O mercador, o atravessador e as faturas s\xE3o do jogo."

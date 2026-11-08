@@ -38,3 +38,32 @@ MonoBehaviour:
       b: {fileID: 11400000, guid: 4d900859377455b4286531856b734455, type: 2}
     - a: {fileID: 11400000, guid: 4656c9f8f2d688d4493824abd9dae37e, type: 2}
       b: {fileID: 11400000, guid: 723e77919d3ae734d8fbccbc7870869e, type: 2}
+  tituloNoArquivo: 
+  tituloDoPanfleto: 
+  teorDoPanfleto: "Uma defesa dos deputados girondinos: o panfleto mostrava ao povo
+    o que as provas da acusa\xE7\xE3o diziam de fato e o quanto o julgamento estava
+    sendo apressado."
+  personagens: "Pierre Vergniaud \u2014 deputado girondino e grande orador; seu cliente\nJacques-Pierre
+    Brissot \u2014 deputado girondino, autor das cartas aos departamentos\nMaximilien
+    Robespierre \u2014 membro do Comit\xEA de Salva\xE7\xE3o P\xFAblica\nCamille
+    Desmoulins \u2014 falava de um plano para separar as prov\xEDncias\nO Tribunal
+    Revolucion\xE1rio \u2014 julgou os vinte e um deputados"
+  historia: "Em outubro de 1793, vinte e um deputados girondinos foram julgados pelo
+    Tribunal Revolucion\xE1rio, acusados de federalismo. As cartas de Brissot aos
+    departamentos pediam que defendessem a Conven\xE7\xE3o da press\xE3o da Comuna
+    de Paris, n\xE3o que se separassem da Rep\xFAblica. O \"plano das prov\xEDncias\"
+    era boato.\n\nEnquanto a eloqu\xEAncia de Vergniaud comovia as galerias, uma
+    nota de Robespierre, arquivada no Comit\xEA, pedia ao tribunal que abreviasse
+    os debates e condenasse depressa. Os girondinos n\xE3o pediram o fim dos debates
+    nem confessaram.\n\nO processo n\xE3o buscava provas: buscava terminar antes
+    que o p\xFAblico mudasse de lado."
+  desfechoFatos: O panfleto mostrou as cartas e a nota de Robespierre. Diante das
+    provas, o tribunal absolveu os acusados.
+  desfechoComBoato: "O panfleto misturou as provas a um boato. A parte falsa foi
+    desmentida e serviu ao Comit\xEA para acelerar a condena\xE7\xE3o."
+  desfechoCalunia: "O panfleto apostou numa cal\xFAnia. A mentira caiu, e o tribunal
+    teve o pretexto para encerrar os debates e condenar."
+  notaHistorica: "O julgamento dos girondinos (24 a 30/10/1793) \xE9 real. Em 29/10/1793,
+    um decreto permitiu encerrar os debates depois de tr\xEAs dias; os condenados
+    foram guilhotinados em 31/10/1793. A nota de Robespierre \xE9 inven\xE7\xE3o
+    do GDD."

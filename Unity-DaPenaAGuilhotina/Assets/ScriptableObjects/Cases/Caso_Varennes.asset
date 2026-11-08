@@ -38,3 +38,36 @@ MonoBehaviour:
       b: {fileID: 11400000, guid: 2d7d8686b4a221a4dac08bdc9b7178e1, type: 2}
     - a: {fileID: 11400000, guid: 45ea98a49d642a74384245c9067ae620, type: 2}
       b: {fileID: 11400000, guid: 3df25e593c8cd2f478fd6b4beaed4ec7, type: 2}
+  tituloNoArquivo: 
+  tituloDoPanfleto: 
+  teorDoPanfleto: "O processo de Kornmann contado como prova da corrup\xE7\xE3o dos
+    antigos ministros: o panfleto acusava gente do poder de proteger quem tinha amigos
+    influentes, enquanto a lei valia s\xF3 para os outros."
+  personagens: "Guillaume Kornmann \u2014 banqueiro; seu cliente\nA senhora Kornmann
+    \u2014 a esposa, acusada de adult\xE9rio\nBeaumarchais \u2014 escritor que interveio
+    a favor dela\nLenoir \u2014 tenente-general de pol\xEDcia\nNicolas Bergasse \u2014
+    advogado que escreveu os m\xE9moires de Kornmann\nGeorges Danton \u2014 dizia
+    que o di\xE1rio fora forjado"
+  historia: "Desde 1787, Guillaume Kornmann acusava a esposa de adult\xE9rio e, pelos
+    m\xE9moires do advogado Bergasse, acusava tamb\xE9m o amante dela, o escritor
+    Beaumarchais e o tenente de pol\xEDcia Lenoir de a protegerem.\n\nO di\xE1rio,
+    escrito na letra da pr\xF3pria esposa, fala da prote\xE7\xE3o de gente do minist\xE9rio
+    e da pol\xEDcia. E o m\xE9moire do pr\xF3prio Beaumarchais confirma: em 1781
+    ele pediu \xE0 pol\xEDcia que tirasse a senhora Kornmann da casa de corre\xE7\xE3o
+    onde o marido a mandara trancar. A esposa teve, sim, protetores poderosos; o
+    di\xE1rio n\xE3o era falso, e Beaumarchais sabia muito bem quem ela era.\n\nEm
+    1792, com a nova lei do div\xF3rcio, Kornmann quis transformar o processo num
+    panfleto contra os antigos ministros."
+  desfechoFatos: "O panfleto mostrou, com o di\xE1rio e o m\xE9moire de Beaumarchais,
+    como o poder dos antigos ministros protegia quem tinha amigos. Agradou \xE0 nova
+    ordem, que gostava de ver o Antigo Regime exposto, e Kornmann pagou bem."
+  desfechoComBoato: "O panfleto de Kornmann misturou um fato a um boato. Rendeu bem
+    e agradou aos poderosos, mas a parte falsa foi desmentida e virou o processo
+    contra o pr\xF3prio banqueiro."
+  desfechoCalunia: "O panfleto usou uma cal\xFAnia contra os protetores da esposa.
+    O esc\xE2ndalo vendeu, at\xE9 a mentira ser exposta e deixar o Estado que voc\xEA
+    quis agradar de m\xE3os sujas."
+  notaHistorica: "Guillaume Kornmann, os m\xE9moires de Bergasse (desde 1787) e a
+    interven\xE7\xE3o de Beaumarchais em 1781 s\xE3o reais; na hist\xF3ria, Beaumarchais
+    foi advers\xE1rio de Kornmann. O div\xF3rcio foi legalizado em 20/09/1792. O
+    di\xE1rio da esposa \xE9 inven\xE7\xE3o do jogo."

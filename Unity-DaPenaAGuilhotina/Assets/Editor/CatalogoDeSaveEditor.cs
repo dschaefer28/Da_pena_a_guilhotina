@@ -52,8 +52,11 @@ public class CatalogoDeSaveEditor : IPreprocessBuildWithReport
     [MenuItem("Ferramentas/Save/Apagar save")]
     public static void ApagarSave()
     {
-        if (File.Exists(SistemaDeSave.CaminhoDoArquivo)) File.Delete(SistemaDeSave.CaminhoDoArquivo);
-        Debug.Log($"[SistemaDeSave] Save apagado ({SistemaDeSave.CaminhoDoArquivo}).");
+        for (int slot = 1; slot <= SistemaDeSave.NumeroDeSlots; slot++)
+            if (File.Exists(SistemaDeSave.CaminhoDoSlot(slot))) File.Delete(SistemaDeSave.CaminhoDoSlot(slot));
+        string antigo = Path.Combine(Application.persistentDataPath, "save.json");
+        if (File.Exists(antigo)) File.Delete(antigo);
+        Debug.Log($"[SistemaDeSave] Saves de todos os slots apagados ({Application.persistentDataPath}).");
     }
 
     [MenuItem("Ferramentas/Save/Abrir pasta do save")]

@@ -25,3 +25,5 @@ MonoBehaviour:
   verificadaPor: []
   documentoDeSuporte: 0
   qualidade: 0
+  afirmacaoNoPanfleto: "A encomenda traz a assinatura \"Marie Antoinette de France\",
+    que n\xE3o \xE9 a que a Rainha usava: a autoriza\xE7\xE3o \xE9 duvidosa."

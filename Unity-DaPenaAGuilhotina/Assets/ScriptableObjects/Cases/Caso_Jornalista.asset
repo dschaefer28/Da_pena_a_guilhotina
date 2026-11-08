@@ -38,3 +38,30 @@ MonoBehaviour:
       b: {fileID: 11400000, guid: e2349def514e26c4b9d3fb424d3a5fdf, type: 2}
     - a: {fileID: 11400000, guid: 5dbb1592cf27c344baed48c6e0dc6fe3, type: 2}
       b: {fileID: 11400000, guid: 3a90b22026f5ff7409b21cb24705640d, type: 2}
+  tituloNoArquivo: 
+  tituloDoPanfleto: 
+  teorDoPanfleto: "O pedido de clem\xEAncia de Camille Desmoulins: o panfleto dizia
+    ao povo que a Lei dos Suspeitos prendia inocentes e pedia que a Revolu\xE7\xE3o
+    parasse de devorar os seus pr\xF3prios filhos."
+  personagens: "Camille Desmoulins \u2014 jornalista; seu cliente\nMaximilien Robespierre
+    \u2014 colega de escola de Camille e membro do Comit\xEA de Salva\xE7\xE3o P\xFAblica\nJacques-Pierre
+    Brissot \u2014 dizia que a lista s\xF3 tinha aristocratas\nOs presos da Lei dos
+    Suspeitos \u2014 gente comum presa por \"indiferen\xE7a\""
+  historia: "Com a Lei dos Suspeitos, de setembro de 1793, as pris\xF5es de Paris
+    se encheram. A lista que Camille copiou dos registros de pris\xE3o mostra alfaiates,
+    vi\xFAvas, padeiros e escriv\xE3es presos por \"indiferen\xE7a\" ou por uma palavra
+    mal dita, n\xE3o s\xF3 aristocratas e banqueiros.\n\nO rascunho do pedido de
+    clem\xEAncia traz anota\xE7\xF5es de Robespierre, na letra dos relat\xF3rios
+    dele: ele risca frases, mas escreve \"publicar\". N\xE3o era falsifica\xE7\xE3o
+    de Camille.\n\nDefender a clem\xEAncia era dizer ao Comit\xEA que a Revolu\xE7\xE3o
+    prendia inocentes. Camille levou essa defesa ao Tribunal Revolucion\xE1rio."
+  desfechoFatos: "O panfleto mostrou a lista e as anota\xE7\xF5es de Robespierre.
+    Diante das provas, o tribunal n\xE3o p\xF4de condenar Camille."
+  desfechoComBoato: O panfleto misturou as provas a um boato. A parte falsa deu ao
+    tribunal o pretexto de que precisava.
+  desfechoCalunia: "O panfleto apostou numa cal\xFAnia. A mentira foi usada contra
+    Camille, e a defesa virou prova de acusa\xE7\xE3o."
+  notaHistorica: "Camille Desmoulins \xE9 real: colega de escola de Robespierre,
+    fez a campanha de clem\xEAncia no Vieux Cordelier entre dezembro de 1793 e janeiro
+    de 1794. Foi preso em mar\xE7o e guilhotinado em 5 de abril de 1794. A lista
+    e o manuscrito anotado s\xE3o documentos do jogo, inspirados em fatos reais."

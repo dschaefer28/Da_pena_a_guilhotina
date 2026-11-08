@@ -1672,3 +1672,19 @@ O `Caso_Tutorial` não tem título nem relato: aparece como "Tutorial", sem as s
 ### 28.3 Verificação
 
 Compilação sem erros, 112/112 EditMode. Painel conferido por captura no editor com dados de exemplo (descartados; a cena foi salva só com o que a ferramenta criou). Nada foi commitado.
+
+### 28.4 História de cada caso (07/11/2026, pedido do Gabriel)
+
+O painel passou a contar a história do caso, e não só o que o jogador fez. Ordem das seções: **Personagens**, **O que aconteceu**, **O seu panfleto**, **Desfecho** e **Na história real**.
+- Campos novos no `CaseData` (cabeçalho "Arquivo de casos"): `tituloNoArquivo`, `personagens` (uma linha por personagem, "Nome — papel"), `historia`, `desfechoFatos`, `desfechoComBoato`, `desfechoCalunia` e `notaHistorica`.
+- Textos dos 10 casos escritos a partir da matriz de casos (o fato de cada par é a verdade da história; boatos e calúnias aparecem como o que se espalhou). A nota histórica só traz o que é documentado, conforme "Adaptações e divergências"; o que é do jogo ou do GDD é dito como tal.
+- Aplicados por **Ferramentas > Campanha > 9 - Histórias do arquivo de casos** (`Assets/Editor/HistoriasDosCasosTool.cs`), que **só preenche campos vazios**: o que o grupo editar no Inspector nunca é sobrescrito.
+- O tutorial ganhou o título de arquivo "Os Três Condenados à Roda" (o `caseTitle` continua vazio, para não mudar o aviso de caso concluído).
+- **Personagens e O que aconteceu só aparecem quando o desfecho já foi contado pelo jogo:** a fase do caso terminou (revelações aplicadas) ou, na Fase 4, o tribunal deu o veredito. Antes disso aparece "O pedido" (o relato do cliente), para não revelar qual afirmação de cada par era verdadeira.
+- Desfecho: o texto da versão impressa (Fatos, Com boato ou Calúnia; o tutorial conta como Fatos), seguido da revelação e da perda quando houve, e, na Fase 4, do destino do réu e do final.
+
+### 28.5 Teor do panfleto (07/11/2026)
+
+"O seu panfleto" agora conta o que o panfleto dizia: o título (`CaseData.tituloDoPanfleto` ou o item de panfleto da receita), o **teor** (`CaseData.teorDoPanfleto`: o que ele defendia e para quem), **o que afirmava** (uma linha por pista impressa, de `Item.afirmacaoNoPanfleto`; sem texto, mostra o nome da pista), o apoio citado, o **tom** da linha editorial e o efeito na publicação. Nada ali indica qual afirmação era verdadeira.
+- Ferramentas > Campanha > 9 preencheu os 10 teores, o título do memorial do tutorial e as 36 afirmações (só campos vazios).
+- Os textos do tom ficam em `ArquivoDeCasos.TomDaLinha`.

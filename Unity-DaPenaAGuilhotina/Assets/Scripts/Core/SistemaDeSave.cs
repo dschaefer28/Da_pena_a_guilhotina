@@ -13,8 +13,12 @@ using UnityEngine.SceneManagement;
 /// do mesmo jeito que acontece ao subir do porão para o escritório.
 ///
 /// Salvar: SistemaDeSave.Salvar() com a cena já rodando (ex: o TutorialStep com "Salvar Ao Concluir").
-/// Carregar: botão Continuar do menu (MenuPrincipalManager.Continuar). O GameManager e o TutorialManager da cena
-/// carregada puxam os dados em Awake/Start.
+/// Carregar: botão Continuar do menu (MenuPrincipalManager.Continuar) ou um slot da tela de saves (SlotsDeSaveUI). O
+/// GameManager e o TutorialManager da cena carregada puxam os dados em Awake/Start.
+///
+/// Slots: há <see cref="NumeroDeSlots"/> arquivos (save_slot1.json...). A partida grava sempre no slot ativo — o que foi
+/// escolhido no Novo Jogo ou carregado na tela de saves —, então um slot nunca sobrescreve outro. O save.json antigo
+/// (de antes dos slots) vira o slot 1 na primeira leitura.
 /// </summary>
 public static class SistemaDeSave
 {
@@ -121,12 +125,132 @@ public static class SistemaDeSave
         public string idDaPartida;
     }
 
-    public static string CaminhoDoArquivo => Path.Combine(Application.persistentDataPath, "save.json");
+    // ===== Slots =====
 
-    public static bool ExisteSave => File.Exists(CaminhoDoArquivo);
+    public const int NumeroDeSlots = 3;
+    private const string ChaveDoSlotAtivo = "save_slot_ativo"; // fora de ProgressoDoJogo: o Novo Jogo não o apaga
+    private const string ArquivoAntigo = "save.json";
 
-    /// <summary>Existe um save de uma partida que ainda não terminou (o botão Continuar do menu).</summary>
-    public static bool ExistePartidaEmAndamento => ExisteSave && PodeContinuar(Ler());
+    /// <summary>Slot (1 a NumeroDeSlots) onde a partida atual grava. Escolhido no Novo Jogo e ao carregar um save.</summary>
+    public static int SlotAtivo
+    {
+        get => Mathf.Clamp(PlayerPrefs.GetInt(ChaveDoSlotAtivo, 1), 1, NumeroDeSlots);
+        set
+        {
+            PlayerPrefs.SetInt(ChaveDoSlotAtivo, Mathf.Clamp(value, 1, NumeroDeSlots));
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static string CaminhoDoSlot(int slot) =>
+        Path.Combine(Application.persistentDataPath, $"save_slot{Mathf.Clamp(slot, 1, NumeroDeSlots)}.json");
+
+    /// <summary>Arquivo do slot ativo (onde o próximo Salvar grava).</summary>
+    public static string CaminhoDoArquivo => CaminhoDoSlot(SlotAtivo);
+
+    public static bool ExisteSlot(int slot)
+    {
+        MigrarSaveAntigo();
+        return File.Exists(CaminhoDoSlot(slot));
+    }
+
+    /// <summary>Algum slot tem save.</summary>
+    public static bool ExisteSave
+    {
+        get
+        {
+            for (int slot = 1; slot <= NumeroDeSlots; slot++)
+                if (ExisteSlot(slot)) return true;
+            return false;
+        }
+    }
+
+    /// <summary>Algum slot tem uma partida que ainda não terminou (o botão Continuar do menu).</summary>
+    public static bool ExistePartidaEmAndamento => SlotMaisRecenteEmAndamento() > 0;
+
+    /// <summary>Primeiro slot sem save, ou 0 se todos estão ocupados.</summary>
+    public static int PrimeiroSlotVazio()
+    {
+        for (int slot = 1; slot <= NumeroDeSlots; slot++)
+            if (!ExisteSlot(slot)) return slot;
+        return 0;
+    }
+
+    /// <summary>Slot com a partida em andamento salva por último (o que o Continuar abre), ou 0 se não houver.</summary>
+    public static int SlotMaisRecenteEmAndamento()
+    {
+        int melhor = 0;
+        DateTime maisRecente = DateTime.MinValue;
+        for (int slot = 1; slot <= NumeroDeSlots; slot++)
+        {
+            if (!ExisteSlot(slot) || !PodeContinuar(LerSlot(slot))) continue;
+            DateTime quando = File.GetLastWriteTimeUtc(CaminhoDoSlot(slot));
+            if (melhor == 0 || quando > maisRecente) { melhor = slot; maisRecente = quando; }
+        }
+        return melhor;
+    }
+
+    /// <summary>Dados do save de um slot (para a tela de saves mostrar), ou nulo se estiver vazio ou ilegível.</summary>
+    public static DadosDeSave LerSlot(int slot)
+    {
+        if (!ExisteSlot(slot)) return null;
+        string caminho = CaminhoDoSlot(slot);
+        try
+        {
+            DadosDeSave dados = DesserializarDados(File.ReadAllText(caminho));
+            if (dados == null) throw new Exception("arquivo vazio ou inválido");
+            return dados;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[SistemaDeSave] Não foi possível ler o save ({caminho}): {e.Message}");
+            return null;
+        }
+    }
+
+    /// <summary>Apaga o save do slot. O arquivo de casos resolvidos não é tocado (ele guarda as partidas à parte).</summary>
+    public static bool ExcluirSlot(int slot)
+    {
+        if (!ExisteSlot(slot)) return false;
+        try
+        {
+            File.Delete(CaminhoDoSlot(slot));
+            Debug.Log($"[SistemaDeSave] Save do slot {slot} excluído.");
+            return true;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[SistemaDeSave] Não foi possível excluir o slot {slot}: {e.Message}");
+            return false;
+        }
+    }
+
+    // Antes dos slots havia um único save.json: ele vira o slot 1 (ou o primeiro vazio), sem perder nada.
+    private static bool migracaoFeita;
+    private static void MigrarSaveAntigo()
+    {
+        if (migracaoFeita) return;
+        migracaoFeita = true;
+        string antigo = Path.Combine(Application.persistentDataPath, ArquivoAntigo);
+        if (!File.Exists(antigo)) return;
+        try
+        {
+            for (int slot = 1; slot <= NumeroDeSlots; slot++)
+            {
+                string destino = CaminhoDoSlot(slot);
+                if (File.Exists(destino)) continue;
+                File.Move(antigo, destino);
+                SlotAtivo = slot;
+                Debug.Log($"[SistemaDeSave] save.json antigo movido para o slot {slot}.");
+                return;
+            }
+            Debug.LogWarning("[SistemaDeSave] save.json antigo mantido: todos os slots já estão ocupados.");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[SistemaDeSave] Não foi possível mover o save.json antigo para um slot: {e.Message}");
+        }
+    }
 
     /// <summary>Um save continua a partida se foi lido e o jogo não terminou no tribunal.</summary>
     public static bool PodeContinuar(DadosDeSave dados) => dados != null && !dados.jogoConcluido;
@@ -190,6 +314,7 @@ public static class SistemaDeSave
 
     private static void Gravar(DadosDeSave dados)
     {
+        MigrarSaveAntigo(); // o save.json antigo não pode cair depois no slot que esta partida acabou de ocupar
         try
         {
             // Grava num arquivo temporário e só depois troca: se o jogo fechar no meio, o save antigo continua inteiro.
@@ -200,7 +325,7 @@ public static class SistemaDeSave
             ArquivoDeCasos.Registrar(dados);
             Debug.Log(dados.jogoConcluido
                 ? $"[SistemaDeSave] Fim de jogo registrado (rota {dados.desfechoRota}, réu {(dados.desfechoReuAbsolvido ? "absolvido" : "condenado")}) em {CaminhoDoArquivo}."
-                : $"[SistemaDeSave] Jogo salvo na cena '{dados.cena}' ({CaminhoDoArquivo}).");
+                : $"[SistemaDeSave] Jogo salvo no slot {SlotAtivo}, cena '{dados.cena}' ({CaminhoDoArquivo}).");
         }
         catch (Exception e)
         {
@@ -269,12 +394,20 @@ public static class SistemaDeSave
 
     // ===== Carregar =====
 
-    /// <summary>Descarta a partida atual, restaura o save e carrega a cena salva. Falso se não houver save válido ou se
-    /// o save for de um jogo já terminado.</summary>
+    /// <summary>Continuar: carrega o slot com a partida em andamento salva por último.</summary>
     public static bool Carregar()
     {
-        DadosDeSave dados = Ler();
+        int slot = SlotMaisRecenteEmAndamento();
+        return slot > 0 && Carregar(slot);
+    }
+
+    /// <summary>Descarta a partida atual, restaura o save do slot e carrega a cena salva; dali em diante a partida grava
+    /// nesse slot. Falso se o slot não tiver save válido ou se o save for de um jogo já terminado.</summary>
+    public static bool Carregar(int slot)
+    {
+        DadosDeSave dados = LerSlot(slot);
         if (!PodeContinuar(dados)) return false; // sem save válido, ou o jogo já terminou no tribunal
+        SlotAtivo = slot;
 
         ProgressoDoJogo.ComecarNovoJogo();
         foreach (string chave in dados.chavesMarcadas) PlayerPrefs.SetInt(chave, 1);
@@ -289,22 +422,6 @@ public static class SistemaDeSave
         else
             SceneManager.LoadScene(cena);
         return true;
-    }
-
-    private static DadosDeSave Ler()
-    {
-        if (!ExisteSave) return null;
-        try
-        {
-            DadosDeSave dados = DesserializarDados(File.ReadAllText(CaminhoDoArquivo));
-            if (dados == null) throw new Exception("arquivo vazio ou inválido");
-            return dados;
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"[SistemaDeSave] Não foi possível ler o save ({CaminhoDoArquivo}): {e.Message}");
-            return null;
-        }
     }
 
     /// <summary>Chamado pelo GameManager.Awake: se há um save sendo carregado, preenche os dados dele.</summary>

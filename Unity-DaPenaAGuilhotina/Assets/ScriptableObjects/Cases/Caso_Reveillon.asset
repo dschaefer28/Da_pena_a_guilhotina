@@ -39,3 +39,36 @@ MonoBehaviour:
       b: {fileID: 11400000, guid: 6bf3409ea5415da43aa0ca791391a660, type: 2}
     - a: {fileID: 11400000, guid: dce74fa9250bef44f936cb44fe76cecd, type: 2}
       b: {fileID: 11400000, guid: 5849e9deae489f8439be3a5d5a7f802c, type: 2}
+  tituloNoArquivo: 
+  tituloDoPanfleto: 
+  teorDoPanfleto: "Uma defesa de Jean-Baptiste R\xE9veillon: o panfleto queria limpar
+    o nome do patr\xE3o depois do saque, contando o que ele prop\xF4s na assembleia
+    e como tratava os seus oper\xE1rios."
+  personagens: "Jean-Baptiste R\xE9veillon \u2014 dono da manufatura de pap\xE9is
+    de parede; seu cliente\nOs oper\xE1rios do faubourg Saint-Antoine \u2014 trabalhadores
+    e vizinhos da f\xE1brica\nO oper\xE1rio sobrevivente \u2014 contava a hist\xF3ria
+    dos \"quinze soldos\"\nO gazeteiro \u2014 espalhava que R\xE9veillon mandava
+    dinheiro \xE0 Inglaterra\nA Guarda Francesa \u2014 atirou contra a multid\xE3o"
+  historia: "Em 23 de abril de 1789, numa assembleia eleitoral, R\xE9veillon prop\xF4s
+    abolir as taxas cobradas nas barreiras de Paris para baratear o p\xE3o e, com
+    ele, os sal\xE1rios. No bairro, a frase chegou cortada: que ele s\xF3 queria
+    baixar os sal\xE1rios, a \"quinze soldos\" por dia.\n\nOs registros da manufatura
+    mostram outro patr\xE3o: R\xE9veillon pagava acima da m\xE9dia e manteve os sal\xE1rios
+    no inverno dur\xEDssimo de 1788. A hist\xF3ria do dinheiro mandado \xE0 Inglaterra
+    era cal\xFAnia.\n\nNos dias 27 e 28 de abril, uma multid\xE3o faminta saqueou
+    sua casa e sua f\xE1brica. R\xE9veillon se refugiou na Bastilha, e a Guarda Francesa
+    atirou contra o povo."
+  desfechoFatos: "O panfleto mostrou o que R\xE9veillon prop\xF4s e como pagava seus
+    oper\xE1rios. Limpou o nome do patr\xE3o e agradou a quem queria ordem nas ruas,
+    mas, no faubourg, muitos o leram como a defesa de um rico enquanto enterravam
+    seus mortos."
+  desfechoComBoato: "O panfleto defendeu R\xE9veillon com um fato e um boato. A vers\xE3o
+    agradou aos poderosos e rendeu bem, at\xE9 a parte falsa ser desmentida e virar
+    muni\xE7\xE3o contra o pr\xF3prio R\xE9veillon."
+  desfechoCalunia: "O panfleto apostou em acusa\xE7\xF5es sem prova para defender
+    R\xE9veillon. O ganho veio r\xE1pido; quando a mentira caiu, o Estado que voc\xEA
+    quis agradar foi o primeiro a se afastar."
+  notaHistorica: "A assembleia de 23/04/1789 e o motim de 27 e 28/04/1789 s\xE3o
+    reais; R\xE9veillon se refugiou na Bastilha e a Guarda Francesa atirou. O n\xFAmero
+    de mortos varia muito entre as fontes, e elas divergem sobre o que ele disse
+    exatamente sobre os sal\xE1rios."

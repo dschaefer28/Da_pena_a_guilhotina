@@ -24,6 +24,8 @@ public class MenuPrincipalManager : MonoBehaviour
     [SerializeField] private GameObject botaoCancelarNovoJogo;
     [Tooltip("Painel \"Casos resolvidos\" (ArquivoDeCasosUI): relê os casos e desfechos das partidas.")]
     [SerializeField] private GameObject painelCasos;
+    [Tooltip("Tela de saves (SlotsDeSaveUI): o Jogar abre esta tela para escolher o slot (novo jogo, carregar ou excluir).")]
+    [SerializeField] private GameObject painelSaves;
 
     [Header("Sliders de Opções (Áudio e Texto)")]
     [Tooltip("Slider de volume da tela de Opções (OnValueChanged ligado a OnVolumeSliderChanged).")]
@@ -41,8 +43,14 @@ public class MenuPrincipalManager : MonoBehaviour
     // o que continuar (o Jogar ainda pergunta antes de substituir esse registro).
     private void Start()
     {
-        if (botaoContinuar != null) botaoContinuar.SetActive(SistemaDeSave.ExistePartidaEmAndamento);
+        AtualizarContinuar();
         if (PlayerPrefs.HasKey(VolumeKey)) StartCoroutine(AplicarVolumeSalvo());
+    }
+
+    /// <summary>Mostra o Continuar só se algum slot tem partida em andamento (chamado de novo ao excluir um save).</summary>
+    public void AtualizarContinuar()
+    {
+        if (botaoContinuar != null) botaoContinuar.SetActive(SistemaDeSave.ExistePartidaEmAndamento);
     }
 
     // O menu é a primeira cena: aplica o volume salvo já aqui (nas cenas do jogo quem faz isso é o PauseMenu). No
@@ -54,9 +62,15 @@ public class MenuPrincipalManager : MonoBehaviour
         AudioSeguro.DefinirVolumeDoBus("bus:/", PlayerPrefs.GetFloat(VolumeKey, 1f));
     }
 
-    // Jogar: sem save, começa direto; com save, pergunta antes, porque o Novo Jogo zera o progresso.
+    // Jogar: abre a tela de saves (cada slot vazio começa um jogo novo nele; os ocupados carregam ou são excluídos).
+    // Sem a tela na cena, volta ao comportamento antigo: sem save começa direto; com save pergunta antes.
     public void Jogar()
     {
+        if (painelSaves != null)
+        {
+            AbrirSaves();
+            return;
+        }
         if (SistemaDeSave.ExisteSave && painelConfirmarNovoJogo != null)
             AbrirConfirmacaoNovoJogo();
         else
@@ -97,11 +111,36 @@ public class MenuPrincipalManager : MonoBehaviour
             eventos.SetSelectedGameObject(focoAntesDaConfirmacao != null && focoAntesDaConfirmacao.activeInHierarchy ? focoAntesDaConfirmacao : null);
     }
 
-    // Continuar: volta ao último ponto de save, com o tutorial na etapa em que estava.
+    // Continuar: volta ao último ponto de save (do slot jogado por último), com o tutorial na etapa em que estava.
     public void Continuar()
     {
         if (!SistemaDeSave.Carregar() && botaoContinuar != null) botaoContinuar.SetActive(false);
     }
+
+    // ===== Tela de saves =====
+
+    public void AbrirSaves()
+    {
+        painelMenuInicial.SetActive(false);
+        painelSaves.SetActive(true);
+    }
+
+    public void FecharSaves()
+    {
+        painelSaves.SetActive(false);
+        painelMenuInicial.SetActive(true);
+        AtualizarContinuar();
+    }
+
+    /// <summary>Novo jogo num slot vazio: a partida passa a gravar nele.</summary>
+    public void ComecarNovoJogoNoSlot(int slot)
+    {
+        SistemaDeSave.SlotAtivo = slot;
+        ComecarNovoJogo();
+    }
+
+    /// <summary>Carrega o save do slot. Falso se ele não puder ser continuado (vazio, ilegível ou jogo já concluído).</summary>
+    public bool CarregarSlot(int slot) => SistemaDeSave.Carregar(slot);
 
     public void AbrirOpcoes()
     {

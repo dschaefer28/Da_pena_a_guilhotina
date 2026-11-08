@@ -39,3 +39,35 @@ MonoBehaviour:
       b: {fileID: 11400000, guid: e3000d49d40acf04c90bed72c6ee976c, type: 2}
     - a: {fileID: 11400000, guid: c7a70783333a9fb4687c8717e59f8bc4, type: 2}
       b: {fileID: 11400000, guid: 54f1527fcee0e7341b630b11dc3d870e, type: 2}
+  tituloNoArquivo: 
+  tituloDoPanfleto: 
+  teorDoPanfleto: "Uma defesa de Georges Danton e dos peticion\xE1rios do Champ de
+    Mars: o panfleto sustentava que eles exerciam um direito e denunciava os tiros
+    da Guarda Nacional de Lafayette."
+  personagens: "Georges Danton \u2014 l\xEDder do clube dos Cordeliers; seu cliente\nA
+    sobrevivente \u2014 estava no altar da p\xE1tria e guardou um peda\xE7o da peti\xE7\xE3o\nO
+    m\xE9dico \u2014 repetia que havia armas no altar\nBailly \u2014 prefeito de
+    Paris, que decretou a lei marcial\nLafayette \u2014 comandante da Guarda Nacional,
+    que abriu fogo"
+  historia: "Em 17 de julho de 1791, depois da fuga do Rei para Varennes, milhares
+    de parisienses foram ao Champ de Mars assinar, no altar da p\xE1tria, uma peti\xE7\xE3o
+    contra a volta de Lu\xEDs XVI ao trono. O peda\xE7o da peti\xE7\xE3o que a sobrevivente
+    guardou, manchado de sangue, mostra as assinaturas feitas uma a uma: quem assinava
+    estava desarmado.\n\nO prefeito Bailly decretou a lei marcial, e a Guarda Nacional
+    de Lafayette atirou na multid\xE3o. Depois vieram os mandados contra os l\xEDderes
+    dos Cordeliers, e Danton foi acusado de armar uma insurrei\xE7\xE3o.\n\nA Constitui\xE7\xE3o
+    de 1791 garantia o direito de se reunir em paz e sem armas e de assinar peti\xE7\xF5es.
+    Danton exerceu um direito; a hist\xF3ria das armas no altar e da lei que proibia
+    a peti\xE7\xE3o era falsa."
+  desfechoFatos: "O panfleto p\xF4s a peti\xE7\xE3o ensanguentada e a Constitui\xE7\xE3o
+    lado a lado. A acusa\xE7\xE3o contra Danton perdeu for\xE7a nas ruas, e o povo
+    de Paris viu quem tinha atirado primeiro."
+  desfechoComBoato: "O panfleto defendeu Danton misturando um fato a um boato. Inflamou
+    os Cordeliers, mas a parte inventada foi desmentida e deu argumentos a quem queria
+    v\xEA-lo preso."
+  desfechoCalunia: "O panfleto apostou numa cal\xFAnia para defender Danton. As ruas
+    leram com f\xFAria, at\xE9 a mentira cair e o povo pagar o pre\xE7o da sua defesa
+    apressada."
+  notaHistorica: "O massacre do Champ de Mars (17/07/1791) \xE9 real. Houve mandado
+    contra Danton, mas n\xE3o julgamento: ele fugiu para a Inglaterra e foi coberto
+    pela anistia de setembro de 1791. Danton foi guilhotinado em abril de 1794."

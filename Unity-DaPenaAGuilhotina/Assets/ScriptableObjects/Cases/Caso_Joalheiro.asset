@@ -39,3 +39,37 @@ MonoBehaviour:
       b: {fileID: 11400000, guid: fd6b9835c78105544af740891ee08b06, type: 2}
     - a: {fileID: 11400000, guid: a74514a5611ff2247a6e5c0b275cf3c7, type: 2}
       b: {fileID: 11400000, guid: 447629d22b151ea459f8d599133affa5, type: 2}
+  tituloNoArquivo: 
+  tituloDoPanfleto: 
+  teorDoPanfleto: "Um panfleto sobre o colar vendido em nome da Rainha, encomendado
+    pelo duque de Orl\xE9ans para p\xF4r Maria Antonieta no centro do esc\xE2ndalo.
+    O texto contava quem negociou a compra e o que a encomenda provava."
+  personagens: "Duque de Orl\xE9ans \u2014 primo do Rei e rival da Rainha; encomendou
+    o panfleto\nMaria Antonieta \u2014 a Rainha, em nome de quem o colar foi vendido\nO
+    cardeal de Rohan \u2014 negociou a compra do colar\nJeanne de La Motte \u2014
+    a intermedi\xE1ria da negocia\xE7\xE3o\nO joalheiro \u2014 vendeu o colar e guardou
+    o registro da compra\nO gazeteiro \u2014 espalhava o \"segredo da Rainha\""
+  historia: "Em 1784, o cardeal de Rohan, que tentava recuperar o favor da Rainha,
+    foi convencido por Jeanne de La Motte de que Maria Antonieta queria, em segredo,
+    um colar de diamantes de 1,6 milh\xE3o de libras. O registro do joalheiro mostra
+    que a compra foi negociada pelo cardeal e pela intermedi\xE1ria: a Rainha nunca
+    compareceu. O encontro noturno em Versalhes que o cardeal contava foi com uma
+    mo\xE7a disfar\xE7ada de Rainha.\n\nA encomenda trazia a assinatura \"Marie Antoinette
+    de France\", que a Rainha nunca usou: era falsa. Ela n\xE3o assinou nada para
+    dar o colar ao cardeal. O colar foi desmontado e vendido em peda\xE7os.\n\nEm
+    1789, o duque de Orl\xE9ans quis reacender o esc\xE2ndalo para manchar a Rainha.
+    Os documentos contam outra hist\xF3ria: Maria Antonieta foi o nome usado numa
+    fraude, n\xE3o a autora dela."
+  desfechoFatos: "Seu panfleto contou o que os documentos provam: uma fraude feita
+    em nome da Rainha. O duque n\xE3o ganhou o esc\xE2ndalo que encomendou, mas as
+    ruas leram a verdade sobre o colar, e a tipografia ganhou fama de s\xE9ria."
+  desfechoComBoato: "O panfleto juntou os documentos ao boato do encontro secreto
+    da Rainha. Vendeu bem e agradou o duque, mas a parte inventada caiu, e com ela
+    o cr\xE9dito do resto do texto."
+  desfechoCalunia: "O panfleto acusou a Rainha de ter assinado e escondido o colar,
+    sem prova nenhuma. A cal\xFAnia correu Paris, encheu o caixa e alimentou o \xF3dio
+    contra Maria Antonieta, at\xE9 ser desmentida e cobrar seu pre\xE7o."
+  notaHistorica: "O esc\xE2ndalo \xE9 real (1785\u20131786). O cardeal de Rohan foi
+    absolvido em 1786; Jeanne de La Motte foi condenada, fugiu da pris\xE3o e publicou
+    mem\xF3rias contra a Rainha. A assinatura \"Marie Antoinette de France\" era
+    falsa. A encomenda do panfleto pelo duque em 1789 \xE9 inven\xE7\xE3o do jogo."

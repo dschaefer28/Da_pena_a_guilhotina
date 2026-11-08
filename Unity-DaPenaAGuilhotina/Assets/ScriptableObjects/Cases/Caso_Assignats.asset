@@ -39,3 +39,34 @@ MonoBehaviour:
       b: {fileID: 11400000, guid: 6db250082e1d88a4599da64cfd70503f, type: 2}
     - a: {fileID: 11400000, guid: 0f4b2a54426a0b640b528f4b17d34ae6, type: 2}
       b: {fileID: 11400000, guid: 4f1c271dc25c8764a8fa6e095950a25a, type: 2}
+  tituloNoArquivo: 
+  tituloDoPanfleto: 
+  teorDoPanfleto: "Uma defesa de Pierre-Paul Sirven e da fam\xEDlia: o panfleto denunciava
+    um julgamento feito sem provas, movido pelo \xF3dio aos protestantes, e pedia
+    que o pai n\xE3o fosse condenado pela morte da filha."
+  personagens: "Pierre-Paul Sirven \u2014 protestante, pai de \xC9lisabeth; seu cliente\n\xC9lisabeth
+    Sirven \u2014 a filha, encontrada morta num po\xE7o\nO m\xE9dico local \u2014
+    tratou \xC9lisabeth depois do convento\nO bispo de Castres \u2014 mandou intern\xE1-la
+    num convento\nGuillaume Kornmann \u2014 repetia que ela queria se converter\nVoltaire
+    \u2014 escreveu o Tratado sobre a Toler\xE2ncia"
+  historia: "\xC9lisabeth, filha do protestante Pierre-Paul Sirven, foi internada
+    num convento por ordem do bispo de Castres, para ser convertida ao catolicismo.
+    Voltou para casa transtornada: o m\xE9dico que a tratou conta que ela falava
+    com sombras e fugia de casa de madrugada. Pouco depois, foi encontrada morta
+    num po\xE7o.\n\nOs ju\xEDzes acusaram o pai de mat\xE1-la para impedir a convers\xE3o,
+    a mesma acusa\xE7\xE3o que levara o protestante Jean Calas ao supl\xEDcio em
+    1762, antes de ser reabilitado em 1765. A hist\xF3ria de que \xC9lisabeth saiu
+    do convento s\xE3 e decidida a se converter era boato, e a \"confiss\xE3o de
+    Calas\" era cal\xFAnia.\n\nO Tratado sobre a Toler\xE2ncia de Voltaire nasceu
+    do caso Calas e deu for\xE7a \xE0 defesa dos Sirven."
+  desfechoFatos: "O panfleto contou como \xC9lisabeth vivia e lembrou o caso Calas.
+    A acusa\xE7\xE3o contra o pai perdeu o ch\xE3o, e o caso virou um exemplo de
+    justi\xE7a feita com preconceito."
+  desfechoComBoato: "O panfleto defendeu os Sirven com um fato e um boato. Comoveu
+    muitos leitores, mas a parte falsa foi desmentida e deu muni\xE7\xE3o aos ju\xEDzes."
+  desfechoCalunia: "O panfleto usou uma cal\xFAnia na defesa. Vendeu bem, at\xE9
+    a mentira cair e manchar tanto a fam\xEDlia quanto a tipografia."
+  notaHistorica: "O caso \xE9 real (Castres, 1760\u20131771): \xC9lisabeth foi internada
+    num convento, voltou perturbada e foi achada num po\xE7o; a fam\xEDlia fugiu,
+    foi condenada \xE0 revelia e reabilitada com a campanha de Voltaire. O m\xE9dico
+    e o laudo s\xE3o do jogo."

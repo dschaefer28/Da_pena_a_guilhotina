@@ -17,6 +17,45 @@ MonoBehaviour:
   objectiveText: 
   moneyReward: 0
   publicOpinionReward: 0
+  stateOpinionReward: 0
   fase: 1
+  rota: 0
+  horasDeInvestigacao: 0
   npcDialogueRoute: {fileID: 0}
   nextSceneName: Fase2
+  receitaDoPanfleto: {fileID: 0}
+  alegacoesIniciais: []
+  deducao:
+    ativa: 0
+    pares: []
+  tituloNoArquivo: "Os Tr\xEAs Condenados \xE0 Roda"
+  tituloDoPanfleto: "Memorial justificativo para tr\xEAs homens condenados \xE0 roda"
+  teorDoPanfleto: "O memorial de defesa dos tr\xEAs condenados. Com o relato de Marie
+    Bradier, apontava as d\xFAvidas sobre o reconhecimento dos acusados; com o decreto
+    de 1780, mostrava que a confiss\xE3o fora arrancada por uma tortura que a pr\xF3pria
+    lei da Coroa j\xE1 tinha abolido. Pedia que a senten\xE7a fosse revista antes
+    que tr\xEAs inocentes morressem na roda."
+  personagens: "Charles Dupaty \u2014 magistrado, seu mestre, que assume a defesa\nMarie
+    Bradier \u2014 da fam\xEDlia de Bradier, um dos condenados\nBradier, Simare e
+    Lardoise \u2014 os tr\xEAs homens condenados \xE0 roda\nOs magistrados \u2014
+    os ju\xEDzes que os condenaram"
+  historia: "Tr\xEAs homens pobres do interior, Bradier, Simare e Lardoise, foram
+    condenados \xE0 morte na roda por um roubo com viol\xEAncia. O processo foi conduzido
+    \xE0s pressas: ningu\xE9m investigou de verdade, os acusados n\xE3o foram ouvidos
+    e a identifica\xE7\xE3o feita pelas v\xEDtimas veio tarde e cheia de d\xFAvidas.\n\nMarie
+    Bradier contou o que viu em casa e o que n\xE3o fazia sentido no reconhecimento.
+    Dupaty mostrou o resto: os tr\xEAs foram torturados para confessar, embora o
+    decreto de 1780 de Lu\xEDs XVI j\xE1 tivesse abolido a tortura na instru\xE7\xE3o
+    dos processos. Os ju\xEDzes agiram contra a pr\xF3pria lei da Coroa.\n\nCom o
+    relato de Marie e o decreto, voc\xEA escreveu e imprimiu o memorial da defesa:
+    o primeiro panfleto da tipografia."
+  desfechoFatos: "O memorial levou o caso a leitores que nunca tinham ouvido falar
+    daqueles homens. Uma senten\xE7a dada no sil\xEAncio virou esc\xE2ndalo p\xFAblico,
+    e os magistrados tiveram de responder \xE0s perguntas que tinham ignorado."
+  desfechoComBoato: 
+  desfechoCalunia: 
+  notaHistorica: "O caso \xE9 real. Em 1786, Charles Dupaty publicou o \"M\xE9moire
+    justificatif pour trois hommes condamn\xE9s \xE0 la roue\". O Parlamento de Paris
+    mandou queimar o texto, mas o esc\xE2ndalo for\xE7ou a revis\xE3o do processo,
+    e os tr\xEAs homens foram absolvidos em 1787. A tortura preparat\xF3ria tinha
+    sido abolida por Lu\xEDs XVI em 1780."

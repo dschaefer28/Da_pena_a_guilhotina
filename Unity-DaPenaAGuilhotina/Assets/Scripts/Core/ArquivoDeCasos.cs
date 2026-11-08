@@ -194,6 +194,7 @@ public static class ArquivoDeCasos
 
     public static string TituloDo(CaseData caso, string nomeDoAsset)
     {
+        if (caso != null && !string.IsNullOrWhiteSpace(caso.tituloNoArquivo)) return caso.tituloNoArquivo.Trim();
         if (caso != null && !string.IsNullOrWhiteSpace(caso.caseTitle)) return caso.caseTitle.Trim();
         return caso != null && caso.fase == 1 ? "Tutorial" : nomeDoAsset; // o caso do tutorial não tem título na mesa
     }
@@ -215,23 +216,35 @@ public static class ArquivoDeCasos
         return $"Partida {numero} de {total} · iniciada em {partida.inicio} · {situacao}";
     }
 
+    /// <summary>O jogo já contou o desfecho deste caso: a fase dele terminou (revelações aplicadas) ou, na Fase 4, o
+    /// tribunal deu o veredito. Antes disso o arquivo não mostra a história, que diria qual afirmação era verdadeira.</summary>
+    public static bool DesfechoConhecido(PartidaArquivada partida, int fase) =>
+        partida.concluida || (fase > 0 && fase < GameManager.UltimaFase && partida.faseAtual > fase);
+
     /// <summary>Texto completo do caso (rich text do TextMeshPro).</summary>
     public static string TextoDoCaso(PartidaArquivada partida, CasoArquivado arquivado, CatalogoDeSave catalogo)
     {
         CaseData caso = catalogo != null ? catalogo.BuscarCaso(arquivado.caso) : null;
         int fase = caso != null ? caso.fase : 0;
+        bool conhecido = DesfechoConhecido(partida, fase);
         var t = new StringBuilder();
 
         t.Append("<size=125%>").Append(TituloDo(caso, arquivado.caso)).Append("</size>\n");
         if (fase > 0) t.Append("<i>").Append(NomeDaFase(fase)).Append("</i>\n");
 
-        if (caso != null && !string.IsNullOrWhiteSpace(caso.caseDescription))
-            Secao(t, "O caso", caso.caseDescription.Trim());
-        if (caso != null && !string.IsNullOrWhiteSpace(caso.objectiveText))
-            Secao(t, "Objetivo", caso.objectiveText.Trim());
+        bool temHistoria = caso != null && !string.IsNullOrWhiteSpace(caso.historia);
+        if (conhecido && temHistoria)
+        {
+            Secao(t, "Personagens", Personagens(caso.personagens));
+            Secao(t, "O que aconteceu", caso.historia.Trim());
+        }
+        else if (caso != null && !string.IsNullOrWhiteSpace(caso.caseDescription))
+            Secao(t, "O pedido", caso.caseDescription.Trim());
 
-        Secao(t, "Sua investigação", Investigacao(arquivado, caso, catalogo));
-        Secao(t, "Desfecho", Desfecho(partida, arquivado, caso, fase));
+        Secao(t, "O seu panfleto", Panfleto(arquivado, caso, catalogo));
+        Secao(t, "Desfecho", Desfecho(partida, arquivado, caso, fase, conhecido));
+        if (conhecido && caso != null && !string.IsNullOrWhiteSpace(caso.notaHistorica))
+            Secao(t, "Na história real", caso.notaHistorica.Trim());
         return t.ToString();
     }
 
@@ -242,48 +255,113 @@ public static class ArquivoDeCasos
         t.Append("\n<color=#6B2E14><size=90%>").Append(titulo.ToUpperInvariant()).Append("</size></color>\n").Append(corpo).Append('\n');
     }
 
-    private static string Investigacao(CasoArquivado arquivado, CaseData caso, CatalogoDeSave catalogo)
+    // "Nome — papel" por linha vira uma lista com marcadores.
+    private static string Personagens(string texto)
+    {
+        if (string.IsNullOrWhiteSpace(texto)) return null;
+        var t = new StringBuilder();
+        foreach (string linha in texto.Split('\n'))
+        {
+            string limpa = linha.Trim().TrimStart('•', '-', '*').Trim();
+            if (limpa.Length > 0) t.Append("• ").Append(limpa).Append('\n');
+        }
+        return t.ToString().TrimEnd('\n');
+    }
+
+    // Teor do panfleto: título, o que ele defendia, o que afirmava (uma linha por pista impressa), o apoio citado, o
+    // tom da linha editorial e o efeito na hora da publicação. Não diz qual afirmação era verdadeira.
+    private static string Panfleto(CasoArquivado arquivado, CaseData caso, CatalogoDeSave catalogo)
     {
         var t = new StringBuilder();
-        if (arquivado.acreditou != null && arquivado.acreditou.Count > 0)
-            t.Append("No quadro de dedução, você acreditou em: ").Append(Nomes(arquivado.acreditou, catalogo)).Append(".\n");
-
         SistemaDeSave.PanfletoSalvo p = arquivado.temPanfleto ? arquivado.panfleto : null;
-        if (p == null)
-        {
-            t.Append("O panfleto do caso saiu da prensa.");
-            return t.ToString();
-        }
+
+        string titulo = TituloDoPanfleto(caso, p);
+        if (!string.IsNullOrWhiteSpace(titulo)) t.Append("<i>").Append(titulo.Trim()).Append("</i>\n");
+        if (caso != null && !string.IsNullOrWhiteSpace(caso.teorDoPanfleto)) t.Append(caso.teorDoPanfleto.Trim()).Append('\n');
+        if (p == null) return t.Length > 0 ? t.ToString().TrimEnd('\n') : "O panfleto do caso saiu da prensa.";
 
         if (p.pistas != null && p.pistas.Count > 0)
-            t.Append("Pistas impressas no panfleto: ").Append(Nomes(p.pistas, catalogo)).Append(".\n");
+        {
+            t.Append("\nO panfleto afirmava:\n");
+            foreach (string id in p.pistas)
+            {
+                if (string.IsNullOrEmpty(id)) continue;
+                Item pista = catalogo != null ? catalogo.BuscarItem(id) : null;
+                string frase = pista != null && !string.IsNullOrWhiteSpace(pista.afirmacaoNoPanfleto)
+                    ? pista.afirmacaoNoPanfleto.Trim()
+                    : (pista != null ? pista.NomeExibicao : id);
+                t.Append("• ").Append(frase).Append('\n');
+            }
+        }
         if (p.suportes != null && p.suportes.Count > 0)
-            t.Append("Documentos de apoio: ").Append(Nomes(p.suportes, catalogo)).Append(".\n");
-        if (LinhasEditoriais.Escolhivel(p.linha))
-            t.Append("Linha editorial: ").Append(LinhasEditoriais.Rotulo(p.linha, caso != null ? caso.receitaDoPanfleto : null)).Append(".\n");
+            t.Append("Como apoio, citava: ").Append(Nomes(p.suportes, catalogo)).Append(".\n");
+
+        string tom = TomDaLinha(p.linha, caso);
+        if (!string.IsNullOrEmpty(tom)) t.Append('\n').Append(tom).Append('\n');
         if (p.aplicadoConhecido)
             t.Append("Efeito da publicação: ").Append(Valores(p.povoAplicado, p.estadoAplicado, p.ouroAplicado)).Append('.');
         return t.ToString().TrimEnd('\n');
     }
 
-    private static string Desfecho(PartidaArquivada partida, CasoArquivado arquivado, CaseData caso, int fase)
+    private static string TituloDoPanfleto(CaseData caso, SistemaDeSave.PanfletoSalvo p)
     {
+        if (caso == null) return null;
+        if (!string.IsNullOrWhiteSpace(caso.tituloDoPanfleto)) return caso.tituloDoPanfleto;
+        ReceitaDeCaso receita = caso.receitaDoPanfleto;
+        if (receita == null) return null;
+        Item item = p != null ? receita.PanfletoDe(receita.VersaoDe(p.nivel)) : receita.panfletoPadrao;
+        return item != null ? item.NomeExibicao : null;
+    }
+
+    private static string TomDaLinha(LinhaEditorial linha, CaseData caso)
+    {
+        switch (linha)
+        {
+            case LinhaEditorial.DefesaDoPovo:
+                return "Tom: defesa do povo. O texto falava aos pobres e aos trabalhadores de Paris e apontava o dedo para os poderosos.";
+            case LinhaEditorial.AgradarOPoder:
+                string rotulo = LinhasEditoriais.Rotulo(linha, caso != null ? caso.receitaDoPanfleto : null);
+                rotulo = rotulo.Length > 0 ? char.ToLowerInvariant(rotulo[0]) + rotulo.Substring(1) : rotulo; // "agradar a Coroa"
+                return $"Tom: {rotulo}. O texto pedia ordem, poupava as autoridades e evitava acusar quem estava no poder.";
+            case LinhaEditorial.Sensacionalista:
+                return "Tom: sensacionalista. Manchetes fortes e detalhes carregados, escritos para vender o máximo possível.";
+            default:
+                return null;
+        }
+    }
+
+    private static string Desfecho(PartidaArquivada partida, CasoArquivado arquivado, CaseData caso, int fase, bool conhecido)
+    {
+        if (!conhecido)
+            return fase >= GameManager.UltimaFase
+                ? "O julgamento ainda não aconteceu. A história do caso e o desfecho aparecem aqui depois do veredito."
+                : "A história do caso e o desfecho aparecem aqui quando esta fase terminar.";
+
+        var t = new StringBuilder();
+        // Sem histórico da publicação (o tutorial), o panfleto conta como só fatos: a receita do tutorial é exata.
+        NivelDoPanfleto nivel = arquivado.temPanfleto && arquivado.panfleto != null ? arquivado.panfleto.nivel : NivelDoPanfleto.Fatos;
+        string texto = caso != null ? caso.DesfechoDa(nivel) : null;
+        if (!string.IsNullOrWhiteSpace(texto)) t.Append(texto.Trim()).Append('\n');
+
+        if (arquivado.temRevelacao)
+        {
+            string revelacao = string.IsNullOrWhiteSpace(arquivado.textoRevelacao)
+                ? $"Parte do que o panfleto de \"{TituloDo(caso, arquivado.caso)}\" afirmava foi desmentida nas ruas."
+                : arquivado.textoRevelacao.Trim();
+            t.Append("\n<i>").Append(revelacao).Append("</i>\n");
+            string perda = Valores(arquivado.revelacaoPovo, arquivado.revelacaoEstado, 0);
+            if (!string.IsNullOrEmpty(perda)) t.Append("Consequência: ").Append(perda).Append(".\n");
+        }
+        else if (fase < GameManager.UltimaFase && string.IsNullOrWhiteSpace(texto))
+            t.Append("Nenhuma informação do panfleto foi desmentida depois da publicação.\n");
+
         if (fase >= GameManager.UltimaFase)
         {
-            if (!partida.concluida) return "O julgamento ainda não aconteceu.";
             string titulo = string.IsNullOrWhiteSpace(partida.desfechoTitulo) ? "Fim do jogo" : partida.desfechoTitulo.Trim();
-            return $"{titulo}. No tribunal, o réu foi {(partida.reuAbsolvido ? "absolvido" : "condenado")}.";
+            t.Append("\nNo tribunal, o réu foi ").Append(partida.reuAbsolvido ? "absolvido" : "condenado")
+             .Append(". ").Append(titulo).Append('.');
         }
-
-        bool faseEncerrada = partida.concluida || (fase > 0 && partida.faseAtual > fase);
-        if (!faseEncerrada) return "O que o panfleto vai provocar só será conhecido no fim desta fase.";
-        if (!arquivado.temRevelacao) return "Nenhuma informação do panfleto foi desmentida depois da publicação.";
-
-        string texto = string.IsNullOrWhiteSpace(arquivado.textoRevelacao)
-            ? $"Parte do que o panfleto de \"{TituloDo(caso, arquivado.caso)}\" afirmava foi desmentida nas ruas."
-            : arquivado.textoRevelacao.Trim();
-        string perda = Valores(arquivado.revelacaoPovo, arquivado.revelacaoEstado, 0);
-        return string.IsNullOrEmpty(perda) ? texto : $"{texto}\nConsequência: {perda}.";
+        return t.ToString().TrimEnd('\n');
     }
 
     private static string Nomes(List<string> itemIDs, CatalogoDeSave catalogo)
