@@ -78,6 +78,13 @@ public class Item : ScriptableObject
              "mouse na prova; não muda a barra nem o veredito. Panfletos não precisam: o lado vem das pistas impressas.")]
     public PesoNoJulgamento pesoNoJulgamento = PesoNoJulgamento.NaoDefinido;
 
+    [Header("Inventário")]
+    [Tooltip("Panfleto impresso na prensa: fica na aba Panfletos do inventário, separado das pistas e documentos.")]
+    public bool ehPanfleto;
+
+    /// <summary>Panfleto pronto (vai para a aba Panfletos do inventário).</summary>
+    public bool EhPanfleto => ehPanfleto;
+
     /// <summary>Nome pronto para exibição em UI (usa itemName se configurado, senão cai no nome do asset).</summary>
     public string NomeExibicao => string.IsNullOrWhiteSpace(itemName) ? name : itemName;
 

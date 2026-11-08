@@ -373,15 +373,7 @@ public static class SistemaDeSave
             if (item != null) dados.inventario.Add(new ItemSalvo { itemID = item.itemID, quantidade = item.itemAmt });
 
         foreach (var p in gm.panfletosPublicados)
-            dados.panfletosPublicados.Add(new PanfletoSalvo
-            {
-                caso = p.caso != null ? p.caso.name : null, nivel = p.nivel, legado = p.legado,
-                pistas = Copia(p.pistas), suportes = Copia(p.suportes), qualificadores = Copia(p.qualificadores),
-                povo = p.povo, estado = p.estado, ouro = p.ouro, penalidadePovo = p.penalidadePovo, penalidadeEstado = p.penalidadeEstado,
-                aplicadoConhecido = p.aplicadoConhecido, povoAplicado = p.povoAplicado, estadoAplicado = p.estadoAplicado, ouroAplicado = p.ouroAplicado,
-                linha = p.linha, editorialPovo = p.editorialPovo, editorialEstado = p.editorialEstado, editorialOuro = p.editorialOuro,
-                agravamentoPovo = p.agravamentoPovo, agravamentoEstado = p.agravamentoEstado
-            });
+            if (p != null) dados.panfletosPublicados.Add(ParaSalvar(p));
 
         foreach (var r in gm.revelacoesPendentes)
             dados.revelacoesPendentes.Add(new RevelacaoSalva
@@ -547,6 +539,17 @@ public static class SistemaDeSave
     }
 
     private static List<string> Copia(List<string> lista) => lista != null ? new List<string>(lista) : new List<string>();
+
+    /// <summary>Publicação no formato do save (também usada pela ficha do panfleto, que monta o texto do arquivo de casos).</summary>
+    public static PanfletoSalvo ParaSalvar(GameManager.PanfletoPublicado p) => p == null ? null : new PanfletoSalvo
+    {
+        caso = p.caso != null ? p.caso.name : null, nivel = p.nivel, legado = p.legado,
+        pistas = Copia(p.pistas), suportes = Copia(p.suportes), qualificadores = Copia(p.qualificadores),
+        povo = p.povo, estado = p.estado, ouro = p.ouro, penalidadePovo = p.penalidadePovo, penalidadeEstado = p.penalidadeEstado,
+        aplicadoConhecido = p.aplicadoConhecido, povoAplicado = p.povoAplicado, estadoAplicado = p.estadoAplicado, ouroAplicado = p.ouroAplicado,
+        linha = p.linha, editorialPovo = p.editorialPovo, editorialEstado = p.editorialEstado, editorialOuro = p.editorialOuro,
+        agravamentoPovo = p.agravamentoPovo, agravamentoEstado = p.agravamentoEstado
+    };
 
     private static List<EscolhaDeDeducao> CopiaDasEscolhas(List<EscolhaDeDeducao> lista)
     {

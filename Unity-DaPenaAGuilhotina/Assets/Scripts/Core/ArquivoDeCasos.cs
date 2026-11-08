@@ -280,6 +280,22 @@ public static class ArquivoDeCasos
         if (caso != null && !string.IsNullOrWhiteSpace(caso.teorDoPanfleto)) t.Append(caso.teorDoPanfleto.Trim()).Append('\n');
         if (p == null) return t.Length > 0 ? t.ToString().TrimEnd('\n') : "O panfleto do caso saiu da prensa.";
 
+        AnexarPublicacao(t, p, caso, catalogo);
+        return t.ToString().TrimEnd('\n');
+    }
+
+    /// <summary>O que a publicação fez: afirmações das pistas impressas, apoio citado, tom da linha editorial e efeito
+    /// nas barras. Também usado na ficha do panfleto no inventário (FichaDaPista). Não diz qual afirmação era verdadeira.</summary>
+    public static string DetalhesDaPublicacao(SistemaDeSave.PanfletoSalvo p, CaseData caso, CatalogoDeSave catalogo)
+    {
+        if (p == null) return string.Empty;
+        var t = new StringBuilder();
+        AnexarPublicacao(t, p, caso, catalogo);
+        return t.ToString().Trim('\n');
+    }
+
+    private static void AnexarPublicacao(StringBuilder t, SistemaDeSave.PanfletoSalvo p, CaseData caso, CatalogoDeSave catalogo)
+    {
         if (p.pistas != null && p.pistas.Count > 0)
         {
             t.Append("\nO panfleto afirmava:\n");
@@ -300,7 +316,6 @@ public static class ArquivoDeCasos
         if (!string.IsNullOrEmpty(tom)) t.Append('\n').Append(tom).Append('\n');
         if (p.aplicadoConhecido)
             t.Append("Efeito da publicação: ").Append(Valores(p.povoAplicado, p.estadoAplicado, p.ouroAplicado)).Append('.');
-        return t.ToString().TrimEnd('\n');
     }
 
     private static string TituloDoPanfleto(CaseData caso, SistemaDeSave.PanfletoSalvo p)

@@ -23,3 +23,6 @@ MonoBehaviour:
   verificadaPor: []
   documentoDeSuporte: 0
   qualidade: 0
+  afirmacaoNoPanfleto: 
+  pesoNoJulgamento: 0
+  ehPanfleto: 1

@@ -25,7 +25,7 @@ public class FichaDaPista : MonoBehaviour
     public static void Mostrar(Item item, RectTransform ancora)
     {
         if (item == null || ancora == null) return;
-        if (!item.EhPista && string.IsNullOrWhiteSpace(item.descricao)) { Esconder(null); return; }
+        if (!item.EhPista && !item.EhPanfleto && string.IsNullOrWhiteSpace(item.descricao)) { Esconder(null); return; }
 
         Canvas raiz = ancora.GetComponentInParent<Canvas>();
         if (raiz == null) return;
@@ -93,6 +93,8 @@ public class FichaDaPista : MonoBehaviour
 
     private static string MontarTexto(Item item)
     {
+        if (item.EhPanfleto) return TextoDoPanfleto(item, GameManager.Instance, CatalogoDeSave.Instancia);
+
         var sb = new System.Text.StringBuilder();
         sb.Append("<b>").Append(item.NomeExibicao).Append("</b>");
         if (!string.IsNullOrWhiteSpace(item.fonte))
@@ -117,6 +119,32 @@ public class FichaDaPista : MonoBehaviour
             if (contraria != null)
                 sb.Append("\n<size=85%><color=#C8B89A>Contradiz: ").Append(contraria.NomeExibicao).Append("</color></size>");
         }
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Ficha do panfleto: de qual caso é, o que defende (o teor do caso; sem caso, a descrição do item) e, depois de
+    /// publicado, o mesmo texto do arquivo de casos: o que afirmou (pistas impressas), o apoio citado, o tom e o efeito
+    /// nas barras. Nunca diz qual afirmação era verdadeira nem qual versão saiu.
+    /// </summary>
+    public static string TextoDoPanfleto(Item panfleto, GameManager gm, CatalogoDeSave catalogo)
+    {
+        if (panfleto == null) return string.Empty;
+        GameManager.PanfletoPublicado publicado = gm != null ? gm.PublicacaoDoPanfleto(panfleto) : null;
+        CaseData caso = publicado != null ? publicado.caso : null;
+
+        var sb = new System.Text.StringBuilder();
+        sb.Append("<b>").Append(panfleto.NomeExibicao).Append("</b>");
+        string origem = caso != null && !string.IsNullOrWhiteSpace(caso.caseTitle) ? "Panfleto · Caso: " + caso.caseTitle.Trim()
+                      : !string.IsNullOrWhiteSpace(panfleto.fonte) ? "Panfleto · Fonte: " + panfleto.fonte.Trim()
+                      : "Panfleto";
+        sb.Append("\n<size=85%><color=#C8B89A>").Append(origem).Append("</color></size>");
+
+        string teor = caso != null && !string.IsNullOrWhiteSpace(caso.teorDoPanfleto) ? caso.teorDoPanfleto : panfleto.descricao;
+        if (!string.IsNullOrWhiteSpace(teor)) sb.Append("\n\n").Append(teor.Trim());
+
+        string detalhes = publicado != null ? ArquivoDeCasos.DetalhesDaPublicacao(SistemaDeSave.ParaSalvar(publicado), caso, catalogo) : null;
+        if (!string.IsNullOrWhiteSpace(detalhes)) sb.Append("\n\n<size=85%>").Append(detalhes).Append("</size>");
         return sb.ToString();
     }
 

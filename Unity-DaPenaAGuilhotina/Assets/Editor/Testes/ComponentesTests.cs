@@ -638,4 +638,105 @@ public class ComponentesTests
         Assert.AreEqual(40, gm.capitalAtual);
         Assert.IsTrue(inv.HasItem("doc"));
     }
+
+    // ===== Abas do inventário (Pistas / Panfletos) =====
+
+    [Test]
+    public void Inventario_AbaPanfletos_SeparaOsPanfletos_EGuardarNaAbaErradaMudaDeAba()
+    {
+        foreach (Transform linha in inv.inventoryGrid.transform) linha.gameObject.AddComponent<CanvasGroup>();
+        Item pista = Pista("p1", casoA);
+        Item panfleto = Criar<Item>("Panfleto");
+        panfleto.itemID = "panf"; panfleto.ehPanfleto = true; panfleto.itemAmt = 1;
+
+        Assert.IsTrue(inv.AddItem(pista));
+        Assert.IsTrue(inv.AddItem(panfleto));
+        Assert.AreEqual(AbaDoInventario.Pistas, inv.AbaAtual, "receber item com o inventário fechado não troca a aba");
+        Assert.AreEqual(1, inv.QuantidadeNaAba(AbaDoInventario.Pistas));
+        Assert.AreEqual(1, inv.QuantidadeNaAba(AbaDoInventario.Panfletos));
+
+        UISlotHandler linhaDa(string id)
+        {
+            foreach (Transform t in inv.inventoryGrid.transform)
+            {
+                UISlotHandler s = t.GetComponent<UISlotHandler>();
+                if (s.item != null && s.item.itemID == id) return s;
+            }
+            return null;
+        }
+        int vaziasVisiveis()
+        {
+            int n = 0;
+            foreach (Transform t in inv.inventoryGrid.transform)
+                if (t.GetComponent<UISlotHandler>().item == null && t.GetComponent<CanvasGroup>().alpha > 0f) n++;
+            return n;
+        }
+
+        Assert.AreEqual(1f, linhaDa("p1").GetComponent<CanvasGroup>().alpha);
+        Assert.AreEqual(0f, linhaDa("panf").GetComponent<CanvasGroup>().alpha, "panfleto não aparece na aba Pistas");
+        Assert.AreEqual(1, vaziasVisiveis(), "uma linha vazia para guardar o que estiver na mão");
+
+        inv.MostrarAba(AbaDoInventario.Panfletos);
+        Assert.AreEqual(0f, linhaDa("p1").GetComponent<CanvasGroup>().alpha, "pista não aparece na aba Panfletos");
+        Assert.AreEqual(1f, linhaDa("panf").GetComponent<CanvasGroup>().alpha);
+        Assert.AreEqual(1, vaziasVisiveis(), "a aba Panfletos também tem a linha vazia");
+
+        // Inventário aberto: guardar o panfleto da prensa com a aba Pistas aberta leva a lista para Panfletos.
+        GameObject ui = Go("InventarioUI");
+        inv.inventoryUI = ui;
+        inv.MostrarAba(AbaDoInventario.Pistas);
+        Item outro = Criar<Item>("Panfleto2");
+        outro.itemID = "panf2"; outro.ehPanfleto = true; outro.itemAmt = 1;
+        inv.PlaceInInventory(prensa.slotOutput, outro.Clone());
+        Assert.AreEqual(AbaDoInventario.Pistas, inv.AbaAtual, "a saída da prensa não é linha da lista");
+
+        UISlotHandler vazia = null;
+        foreach (Transform t in inv.inventoryGrid.transform)
+            if (t.GetComponent<UISlotHandler>().item == null) { vazia = t.GetComponent<UISlotHandler>(); break; }
+        inv.PlaceInInventory(vazia, outro.Clone());
+        Assert.AreEqual(AbaDoInventario.Panfletos, inv.AbaAtual);
+        Assert.AreEqual(1f, linhaDa("panf2").GetComponent<CanvasGroup>().alpha, "o panfleto guardado fica à vista");
+    }
+
+    // ===== Ficha do panfleto (passar o mouse no inventário) =====
+
+    [Test]
+    public void FichaDoPanfleto_MostraCasoTeorAfirmacoesTomEEfeito_SemRevelarAVersao()
+    {
+        ReceitaDeCaso receita = ReceitaComLinha(casoA);
+        receita.panfletoPadrao.ehPanfleto = true;
+        receita.panfletoPadrao.itemName = "O Grito do Povo";
+        casoA.caseTitle = "O Caso A";
+        casoA.teorDoPanfleto = "Uma defesa do acusado A.";
+        Item fato = Pista("f1", casoA), mentira = Pista("b1", casoA, Confiabilidade.Boato);
+        fato.afirmacaoNoPanfleto = "A estava em casa naquela noite.";
+        mentira.afirmacaoNoPanfleto = "O vizinho mentiu ao juiz.";
+        CatalogoDeSave catalogo = Criar<CatalogoDeSave>("Catalogo");
+        catalogo.itens = new List<Item> { fato, mentira };
+
+        gm.ConfirmarCaso(casoA);
+        NasEntradas(fato, mentira);
+        prensa.ImprimirComLinhaEditorial(LinhaEditorial.DefesaDoPovo);
+        Assert.AreEqual(1, gm.panfletosPublicados.Count);
+        Item impresso = prensa.slotOutput.item;
+        Assert.IsTrue(impresso.EhPanfleto);
+
+        string ficha = FichaDaPista.TextoDoPanfleto(impresso, gm, catalogo);
+        StringAssert.Contains("O Grito do Povo", ficha);
+        StringAssert.Contains("Caso: O Caso A", ficha);
+        StringAssert.Contains("Uma defesa do acusado A.", ficha);
+        StringAssert.Contains("A estava em casa naquela noite.", ficha);
+        StringAssert.Contains("O vizinho mentiu ao juiz.", ficha);
+        StringAssert.Contains("Tom: defesa do povo", ficha);
+        StringAssert.Contains("Efeito da publicação: Povo +", ficha);
+        foreach (string verdade in new[] { "boato", "Boato", "calúnia", "Calúnia", "ComBoato", "verdadeir", "confirmada" })
+            StringAssert.DoesNotContain(verdade, ficha, "a ficha nunca diz qual afirmação era verdadeira");
+
+        // Sem publicação registrada (o panfleto do tutorial sai de receita exata): mostra a descrição do item.
+        Item memorial = Criar<Item>("Memorial");
+        memorial.itemID = "memorial"; memorial.ehPanfleto = true; memorial.descricao = "Memorial de defesa dos condenados.";
+        string fichaDoTutorial = FichaDaPista.TextoDoPanfleto(memorial, gm, catalogo);
+        StringAssert.Contains("Memorial de defesa dos condenados.", fichaDoTutorial);
+        StringAssert.DoesNotContain("Efeito da publicação", fichaDoTutorial);
+    }
 }

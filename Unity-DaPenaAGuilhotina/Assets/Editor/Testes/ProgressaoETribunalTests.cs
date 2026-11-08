@@ -344,4 +344,37 @@ public class ProgressaoETribunalTests
         }
         CollectionAssert.IsEmpty(semLado, "preencha 'Peso No Julgamento' (Item > Julgamento) nestas provas da Fase 4");
     }
+
+    /// <summary>Todo panfleto que a prensa imprime (Recipe e ReceitaDeCaso) vai para a aba Panfletos do inventário, e nada
+    /// que vai para a prensa ou é só leitura está marcado como panfleto (sumiria da aba Pistas).</summary>
+    [Test]
+    public void Campanha_PanfletosDaPrensa_FicamNaAbaPanfletos()
+    {
+        var impressos = new HashSet<Item>();
+        foreach (string guid in UnityEditor.AssetDatabase.FindAssets("t:Recipe"))
+        {
+            Recipe r = UnityEditor.AssetDatabase.LoadAssetAtPath<Recipe>(UnityEditor.AssetDatabase.GUIDToAssetPath(guid));
+            if (r != null && r.resultItem != null) impressos.Add(r.resultItem);
+        }
+        foreach (string guid in UnityEditor.AssetDatabase.FindAssets("t:ReceitaDeCaso"))
+        {
+            ReceitaDeCaso r = UnityEditor.AssetDatabase.LoadAssetAtPath<ReceitaDeCaso>(UnityEditor.AssetDatabase.GUIDToAssetPath(guid));
+            if (r == null) continue;
+            foreach (ReceitaDeCaso.Versao v in new[] { r.soFatos, r.comBoato, r.calunia, r.soAlegacoes })
+                if (r.PanfletoDe(v) != null) impressos.Add(r.PanfletoDe(v));
+        }
+        Assert.IsNotEmpty(impressos);
+
+        var semMarca = new List<string>();
+        foreach (Item p in impressos) if (!p.EhPanfleto) semMarca.Add(p.name);
+        CollectionAssert.IsEmpty(semMarca, "marque 'Eh Panfleto' (Item > Inventário) nestes panfletos");
+
+        var marcadosErrado = new List<string>();
+        foreach (string guid in UnityEditor.AssetDatabase.FindAssets("t:Item"))
+        {
+            Item item = UnityEditor.AssetDatabase.LoadAssetAtPath<Item>(UnityEditor.AssetDatabase.GUIDToAssetPath(guid));
+            if (item != null && item.EhPanfleto && (item.EhPista || item.EhSuporte || item.EhLeitura)) marcadosErrado.Add(item.name);
+        }
+        CollectionAssert.IsEmpty(marcadosErrado, "pistas, documentos de apoio e cartas não são panfletos");
+    }
 }

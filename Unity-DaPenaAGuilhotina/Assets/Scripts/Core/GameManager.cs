@@ -312,6 +312,20 @@ public class GameManager : MonoBehaviour
 
     public bool FoiPublicado(CaseData caso) => caso != null && panfletosPublicados.Exists(p => p.caso == caso);
 
+    /// <summary>Publicação que imprimiu este panfleto (o da versão registrada na receita do caso), ou nulo: o tutorial usa
+    /// receita exata e não registra publicação.</summary>
+    public PanfletoPublicado PublicacaoDoPanfleto(Item panfleto)
+    {
+        if (panfleto == null) return null;
+        foreach (PanfletoPublicado p in panfletosPublicados)
+        {
+            ReceitaDeCaso receita = p != null && p.caso != null ? p.caso.receitaDoPanfleto : null;
+            Item impresso = receita != null ? receita.PanfletoDe(receita.VersaoDe(p.nivel)) : null;
+            if (impresso != null && impresso.Matches(panfleto)) return p;
+        }
+        return null;
+    }
+
     /// <summary>Compatibilidade: registra a partir de uma versão da receita, sem pistas/suportes.</summary>
     public void RegistrarPanfletoDeCaso(CaseData caso, NivelDoPanfleto nivel, ReceitaDeCaso.Versao versao)
     {

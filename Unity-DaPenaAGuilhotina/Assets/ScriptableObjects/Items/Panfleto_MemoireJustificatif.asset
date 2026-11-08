@@ -16,10 +16,17 @@ MonoBehaviour:
   itemImg: {fileID: -8839012482589888107, guid: 5cdee8b608acb3f44acd6c6f984a83bb, type: 3}
   itemAmt: 1
   itemName: Panfleto Memoire
-  descricao: 
-  fonte: 
+  descricao: "Memorial de defesa dos tr\xEAs homens condenados \xE0 roda. Com o relato
+    de Marie Bradier e o decreto de 1780, aponta as d\xFAvidas sobre o reconhecimento
+    dos acusados e mostra que a confiss\xE3o foi arrancada por uma tortura que a
+    pr\xF3pria lei da Coroa j\xE1 tinha abolido. Pede que a senten\xE7a seja revista
+    antes que tr\xEAs inocentes morram na roda."
+  fonte: Tipografia
   caso: {fileID: 0}
   confiabilidade: 0
   verificadaPor: []
   documentoDeSuporte: 0
   qualidade: 0
+  afirmacaoNoPanfleto: 
+  pesoNoJulgamento: 0
+  ehPanfleto: 1

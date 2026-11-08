@@ -282,7 +282,14 @@ public static class InventarioListaBuilder
         viewport.anchorMax = Vector2.one;
         viewport.pivot = new Vector2(0.5f, 0.5f);
         viewport.offsetMin = new Vector2(Margem, Margem);
-        viewport.offsetMax = new Vector2(-Margem, -AlturaCabecalho);
+        viewport.offsetMax = new Vector2(-Margem, -(AlturaCabecalho + AlturaDasAbas(viewport.parent)));
+    }
+
+    // As abas Pistas/Panfletos (objeto "Abas" no prefab, logo abaixo do cabeçalho) empurram a lista para baixo.
+    private static float AlturaDasAbas(Transform painel)
+    {
+        RectTransform abas = painel != null ? painel.Find("Abas") as RectTransform : null;
+        return abas != null ? abas.sizeDelta.y + EspacoEntreLinhas : 0f;
     }
 
     private static void ConfigurarGrade(RectTransform conteudo)

@@ -5,6 +5,13 @@ using UnityEngine.InputSystem;
 using System;
 using FMODUnity;
 
+/// <summary>Abas do inventário: pistas/documentos de um lado, panfletos prontos do outro.</summary>
+public enum AbaDoInventario
+{
+    Pistas,
+    Panfletos
+}
+
 public class InventoryManager : MonoBehaviour
 {
     public GameObject inventoryGrid;
@@ -24,6 +31,10 @@ public class InventoryManager : MonoBehaviour
     // Disparado quando um slot ganha, perde ou muda a quantidade de um item (o botão Misturar da
     // prensa usa isso para só ficar habilitado com as duas entradas preenchidas).
     public event Action<UISlotHandler> OnSlotAlterado;
+
+    // Aba mostrada na lista. A grade guarda tudo junto; a aba só decide quais linhas aparecem.
+    public AbaDoInventario AbaAtual { get; private set; } = AbaDoInventario.Pistas;
+    public event Action<AbaDoInventario> OnAbaAlterada;
 
     // Fica true durante RestaurarInventario() para NÃO disparar o popup de "item recebido"
     // ao simplesmente repor no ar os itens que o jogador já tinha antes de trocar de cena.
@@ -77,6 +88,10 @@ public class InventoryManager : MonoBehaviour
             }
             if (vaiAbrir && JanelasModais.AlgumaAberta) return; // um modal por vez (biblioteca, quadro de dedução)
 
+            // Sempre abre nas pistas (é o que a prensa e a investigação usam); antes do SetActive para as abas já
+            // nascerem certas no OnEnable.
+            if (vaiAbrir) DefinirAba(AbaDoInventario.Pistas);
+
             inventoryUI.SetActive(vaiAbrir);
             if (vaiAbrir) ConfigureInventory();
 
@@ -105,9 +120,45 @@ public class InventoryManager : MonoBehaviour
         activeSlot.slotImg.gameObject.SetActive(true);
         if (activeSlot.itemNameText != null) activeSlot.itemNameText.text = TextoDaLinha(item);
         activeSlot.AtualizarObjetoVazio();
+        // Guardado pelo jogador numa linha da aba errada (ex.: o panfleto tirado da prensa com a aba Pistas aberta):
+        // a lista vai para a aba do item, senão ele sumiria da vista assim que fosse solto.
+        if (!restaurandoInventario && EhLinhaDaLista(activeSlot) && inventoryUI != null && inventoryUI.activeSelf)
+            DefinirAba(AbaDo(item));
         ConfigureInventory();
         OnSlotAlterado?.Invoke(activeSlot);
     }
+
+    // ===== Abas (Pistas / Panfletos) =====
+
+    public static AbaDoInventario AbaDo(Item item) =>
+        item != null && item.EhPanfleto ? AbaDoInventario.Panfletos : AbaDoInventario.Pistas;
+
+    /// <summary>Troca a aba mostrada na lista (botões das abas no UI_Inventory).</summary>
+    public void MostrarAba(AbaDoInventario aba)
+    {
+        if (aba == AbaAtual) return;
+        DefinirAba(aba);
+        ConfigureInventory();
+    }
+
+    private void DefinirAba(AbaDoInventario aba)
+    {
+        if (aba == AbaAtual) return;
+        AbaAtual = aba;
+        OnAbaAlterada?.Invoke(aba);
+    }
+
+    /// <summary>Quantas linhas da lista têm item desta aba (o rótulo da aba mostra o número).</summary>
+    public int QuantidadeNaAba(AbaDoInventario aba)
+    {
+        int quantidade = 0;
+        foreach (Item item in ItensNaGrade())
+            if (AbaDo(item) == aba) quantidade++;
+        return quantidade;
+    }
+
+    private bool EhLinhaDaLista(UISlotHandler slot) =>
+        slot != null && inventoryGrid != null && slot.transform.parent == inventoryGrid.transform;
 
     public void StackInInventory(UISlotHandler activeSlot, Item item)
     {
@@ -175,8 +226,8 @@ public class InventoryManager : MonoBehaviour
         ResetInventoryScroll();
     }
 
-    // Numa lista só as linhas com item aparecem, mais UMA linha vazia: ela é o alvo onde o jogador
-    // toca para guardar o item que estiver segurando (ex: o panfleto tirado da prensa).
+    // Numa lista só as linhas com item da aba atual aparecem, mais UMA linha vazia (nas duas abas): ela é o alvo
+    // onde o jogador toca para guardar o item que estiver segurando (ex: o panfleto tirado da prensa).
     private void AtualizarLinhasVisiveis(List<Transform> uiSlots)
     {
         bool vagaJaVisivel = false;
@@ -188,7 +239,7 @@ public class InventoryManager : MonoBehaviour
             // Linhas do prefab UI_Inventory não conseguem referenciar este manager (ele fica fora do prefab).
             if (slot.inventoryManager == null) slot.inventoryManager = this;
 
-            bool visivel = slot.item != null || !vagaJaVisivel;
+            bool visivel = slot.item != null ? AbaDo(slot.item) == AbaAtual : !vagaJaVisivel;
             if (slot.item == null && visivel) vagaJaVisivel = true;
             slot.DefinirVisivelNaLista(visivel);
 
