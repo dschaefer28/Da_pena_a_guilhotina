@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce92dce80394ca14a9e848764a53f50f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootInteractable
+  nomeExibido: Muro de Cartazes
   pistasPossiveis:
   - caso: {fileID: 11400000, guid: 7a0e078f8e986e941b027cfc9a522d2f, type: 2}
     itemParaDar: {fileID: 11400000, guid: 447629d22b151ea459f8d599133affa5, type: 2}
@@ -2123,6 +2124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce92dce80394ca14a9e848764a53f50f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootInteractable
+  nomeExibido: Mesa da Taverna
   pistasPossiveis:
   - caso: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
     itemParaDar: {fileID: 11400000, guid: 4c8c01357c9bbb4419151f49967720c6, type: 2}
@@ -2553,6 +2555,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce92dce80394ca14a9e848764a53f50f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootInteractable
+  nomeExibido: Banca de Panfletos
   pistasPossiveis:
   - caso: {fileID: 11400000, guid: 5c0733705941aa94db8fdec6796223e7, type: 2}
     itemParaDar: {fileID: 11400000, guid: dce74fa9250bef44f936cb44fe76cecd, type: 2}

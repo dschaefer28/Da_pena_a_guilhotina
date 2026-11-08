@@ -11,6 +11,11 @@ public struct LootDeCaso
 
 public class LootInteractable : MonoBehaviour, IInteractable
 {
+    [Tooltip("Nome que aparece embaixo do \"E\"/\"Interagir\" quando o jogador chega perto (ex: Muro de Cartazes). " +
+             "Vazio = nome do GameObject.")]
+    public string nomeExibido;
+    public string NomeExibido => NomeDoInteragivel.Resolver(nomeExibido, gameObject);
+
     [Header("Pistas da Estante (1 por Caso)")]
     [Tooltip("Adicione os casos e a pista correspondente a cada um.")]
     public List<LootDeCaso> pistasPossiveis;

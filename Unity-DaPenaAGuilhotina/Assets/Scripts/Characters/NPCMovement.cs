@@ -98,7 +98,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
     public bool PodeInteragir =>
         canInteract && (casoObrigatorio == null || GameManager.Instance == null || GameManager.Instance.casoEscolhido == casoObrigatorio);
 
-    public string NomeExibido => string.IsNullOrWhiteSpace(nomeExibido) ? gameObject.name : nomeExibido.Trim();
+    public string NomeExibido => NomeDoInteragivel.Resolver(nomeExibido, gameObject);
 
     public void Interact()
     {

@@ -4,6 +4,10 @@ using UnityEngine.SceneManagement;
 
 public class DoorInteractable : MonoBehaviour, IInteractable
 {
+    [Tooltip("Nome que aparece embaixo do \"E\"/\"Interagir\" quando o jogador chega perto. Vazio = nome do GameObject.")]
+    public string nomeExibido = "Porta";
+    public string NomeExibido => NomeDoInteragivel.Resolver(nomeExibido, gameObject);
+
     [Header("Configurações de Transição")]
     [Tooltip("O nome exato da cena de destino (Ex: Fase2)")]
     public string cenaDestino = "Fase2";

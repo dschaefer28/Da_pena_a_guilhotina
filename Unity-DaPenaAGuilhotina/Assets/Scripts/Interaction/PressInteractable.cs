@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class PressInteractable : MonoBehaviour, IInteractable
 {
+    [Tooltip("Nome que aparece embaixo do \"E\"/\"Interagir\" quando o jogador chega perto. Vazio = nome do GameObject.")]
+    public string nomeExibido = "Prensa";
+    public string NomeExibido => NomeDoInteragivel.Resolver(nomeExibido, gameObject);
+
     [Header("Paineis de Interface (UI)")]
     public GameObject pressUIPanel;
     public InventoryManager inventoryManager;

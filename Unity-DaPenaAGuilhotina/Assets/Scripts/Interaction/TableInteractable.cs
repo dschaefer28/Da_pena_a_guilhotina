@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class TableInteractable : MonoBehaviour, IInteractable
 {
+    [Tooltip("Nome que aparece embaixo do \"E\"/\"Interagir\" quando o jogador chega perto. Vazio = nome do GameObject.")]
+    public string nomeExibido = "Mesa de Casos";
+    public string NomeExibido => NomeDoInteragivel.Resolver(nomeExibido, gameObject);
+
     [Header("Interface")]
     [Tooltip("Arraste o GameObject do painel de Casos (UI) aqui")]
     public GameObject caseSelectionUI;

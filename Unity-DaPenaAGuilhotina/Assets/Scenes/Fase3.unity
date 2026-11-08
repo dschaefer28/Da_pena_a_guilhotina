@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce92dce80394ca14a9e848764a53f50f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootInteractable
+  nomeExibido: Mural dos Cordeliers
   pistasPossiveis:
   - caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
     itemParaDar: {fileID: 11400000, guid: c7a70783333a9fb4687c8717e59f8bc4, type: 2}
@@ -2547,6 +2548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce92dce80394ca14a9e848764a53f50f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootInteractable
+  nomeExibido: Caixa de Tipos
   pistasPossiveis:
   - caso: {fileID: 11400000, guid: 3e7ab311bd5b0034291b6ef03cba9565, type: 2}
     itemParaDar: {fileID: 11400000, guid: 3df25e593c8cd2f478fd6b4beaed4ec7, type: 2}
@@ -2916,6 +2918,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce92dce80394ca14a9e848764a53f50f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootInteractable
+  nomeExibido: "Mesa do Caf\xE9"
   pistasPossiveis:
   - caso: {fileID: 11400000, guid: 73a5be01c9ae5f04aab1674e5b9ae41e, type: 2}
     itemParaDar: {fileID: 11400000, guid: 54f1527fcee0e7341b630b11dc3d870e, type: 2}

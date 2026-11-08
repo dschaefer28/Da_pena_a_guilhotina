@@ -15,6 +15,10 @@ public struct RequisitosDoPorao
 
 public class TrapdoorInteractable : MonoBehaviour, IInteractable
 {
+    [Tooltip("Nome que aparece embaixo do \"E\"/\"Interagir\" quando o jogador chega perto. Vazio = nome do GameObject.")]
+    public string nomeExibido = "Alçapão";
+    public string NomeExibido => NomeDoInteragivel.Resolver(nomeExibido, gameObject);
+
     public string nomeCenaPorao = "Porao";
     public List<RequisitosDoPorao> requisitosDeCaso;
 
