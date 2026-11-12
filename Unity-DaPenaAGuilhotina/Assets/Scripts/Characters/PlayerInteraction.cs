@@ -9,7 +9,14 @@ public class PlayerInteraction : MonoBehaviour
     public InputActionReference interactAction;
     public InputActionReference toggleInventoryAction;
 
-    private readonly List<GameObject> interactablesInRange = new List<GameObject>();
+    [Header("Alcance de interação")]
+    [Tooltip("Quanto a área de interação passa da borda do corpo do player, para cada lado (unidades do mundo). " +
+             "0 = só interage encostando no objeto. Só cresce na horizontal, para não pegar objetos de outro andar.")]
+    [Min(0f)] public float margemDeAlcance = 0.4f;
+
+    private Collider2D corpo;
+    private ContactFilter2D filtroComTriggers;
+    private readonly List<Collider2D> contatos = new List<Collider2D>();
 
     /// <summary>Objeto interagível mais próximo que responde agora (ou null). Alimenta o PromptDeInteracao.</summary>
     public GameObject InteragivelMaisProximo { get; private set; }
@@ -27,6 +34,12 @@ public class PlayerInteraction : MonoBehaviour
             if (inventoryManager != null && inventoryManager.inventoryUI != null && inventoryManager.inventoryUI.activeSelf) return false;
             return true;
         }
+    }
+
+    private void Awake()
+    {
+        corpo = GetComponent<Collider2D>();
+        filtroComTriggers = new ContactFilter2D { useTriggers = true };
     }
 
     private void OnEnable()
@@ -113,14 +126,30 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     // === LÓGICA DE FÍSICA ===
+    // Antes o alcance era o próprio corpo encostando no trigger do objeto, então o player quase entrava nas coisas.
+    // Agora a área é o corpo alargado margemDeAlcance para cada lado, consultada a cada frame.
+    private Bounds AreaDeInteracao()
+    {
+        Bounds area = corpo.bounds;
+        area.Expand(new Vector3(2f * margemDeAlcance, 0f, 0f));
+        return area;
+    }
+
     private GameObject GetClosestInteractable()
     {
+        if (corpo == null) return null;
+
         GameObject closest = null;
         float minDistance = float.MaxValue;
 
-        interactablesInRange.RemoveAll(item => item == null || !item.activeInHierarchy);
-        foreach (var obj in interactablesInRange)
+        Bounds area = AreaDeInteracao();
+        Physics2D.OverlapBox(area.center, area.size, 0f, filtroComTriggers, contatos);
+        foreach (var col in contatos)
         {
+            // Só o trigger do objeto conta como a área dele, como antes (o colisor sólido não).
+            if (!col.isTrigger) continue;
+            GameObject obj = col.gameObject;
+
             // Ignora quem está no alcance mas não responde agora (NPC que já entregou a pista, etc.),
             // senão ele "rouba" o Interagir de um objeto útil logo ao lado.
             if (!obj.TryGetComponent<IInteractable>(out var interactable) || !interactable.PodeInteragir) continue;
@@ -135,17 +164,13 @@ public class PlayerInteraction : MonoBehaviour
         return closest;
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    // Retângulo amarelo na Scene view com o Player selecionado: mostra até onde ele alcança.
+    private void OnDrawGizmosSelected()
     {
-        if (other.TryGetComponent<IInteractable>(out _))
-        {
-            if (!interactablesInRange.Contains(other.gameObject))
-                interactablesInRange.Add(other.gameObject);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        interactablesInRange.Remove(other.gameObject);
+        if (corpo == null) corpo = GetComponent<Collider2D>();
+        if (corpo == null) return;
+        Bounds area = AreaDeInteracao();
+        Gizmos.color = new Color(1f, 0.8f, 0.2f, 0.9f);
+        Gizmos.DrawWireCube(area.center, area.size);
     }
 }
