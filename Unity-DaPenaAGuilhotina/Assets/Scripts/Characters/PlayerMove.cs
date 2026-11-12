@@ -6,19 +6,15 @@ using Unity.VisualScripting;
 public class PlayerMove : MonoBehaviour
 {
     [Header("Movimento")]
-    [Tooltip("Ao mudar, ajuste junto a velocidade do estado Walk no PlayerAnimator (5 = 1x; hoje 7 = 1.4x) para os pés não deslizarem.")]
-    [SerializeField] private float moveSpeed = 7f;
+    [Tooltip("Ao mudar, ajuste junto a velocidade do estado Walk no PlayerAnimator (5 = 1x; hoje 6 = 1.2x) para os pés não deslizarem. O som dos passos segue a animação (PassosDoJogador).")]
+    [SerializeField] private float moveSpeed = 6f;
     [SerializeField] private InputActionReference moveAction;
-
-    [Header("Áudio (FMOD)")]
-    //[SerializeField] private EventReference footstepEvent;
 
     private Rigidbody2D rb;
     private Animator anim;
     private SpriteRenderer spriteRenderer;
     private Vector2 move;
 
-    public GameObject fs;
     public bool walk;
 
     void Awake()
@@ -26,15 +22,6 @@ public class PlayerMove : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-    }
-
-    void Start()
-    {
-        // Garante que o objeto comece desativado
-        if (fs != null)
-        {
-            fs.SetActive(false);
-        }
     }
 
     void OnEnable()
@@ -72,15 +59,10 @@ public class PlayerMove : MonoBehaviour
             else if (move.x < 0) spriteRenderer.flipX = true;
         }
 
+        // O som dos passos vem dos Animation Events do clipe walk (PassosDoJogador), então só toca enquanto anda.
         if (anim != null)
         {
             anim.SetBool("isWalking", isMoving);
-        }
-
-        // Ativa se estiver andando, desativa se estiver parado
-        if (fs != null)
-        {
-            fs.SetActive(isMoving);
         }
     }
 
