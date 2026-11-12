@@ -174,6 +174,49 @@ public class TutorialEUiTests
         Assert.AreEqual("depois", tm.EtapaAtualId);
     }
 
+    [Test]
+    public void Alcapao_FalaDeAcordoComOMomento_SoCobraAsPistasDoTutorialDuranteOTutorial()
+    {
+        DialogueSystem ds = Go("Dialogo").AddComponent<DialogueSystem>();
+        gm.dialogueSystem = ds;
+        MethodInfo terminar = typeof(DialogueSystem).GetMethod("EndDialogue", BindingFlags.NonPublic | BindingFlags.Instance);
+        CaseData tutorial = Criar<CaseData>("Tutorial");
+        tutorial.fase = 1;
+        Item relato = Criar<Item>("Relato");
+        relato.itemID = "Relato";
+
+        TrapdoorInteractable alcapao = Go("Alcapao").AddComponent<TrapdoorInteractable>();
+        alcapao.pensamentoSemCaso = Criar<DialogueData>("SemCaso");
+        alcapao.pensamentoPanfletoImpresso = Criar<DialogueData>("PanfletoImpresso");
+        alcapao.pensamentoFaltamPistas = Criar<DialogueData>("FaltamPistas");
+        foreach (DialogueData d in new[] { alcapao.pensamentoSemCaso, alcapao.pensamentoPanfletoImpresso, alcapao.pensamentoFaltamPistas })
+            d.talkScript = new List<Dialogue> { new Dialogue { name = "Julien Valois", text = d.name, choices = new List<Choice>() } };
+        alcapao.requisitosDeCaso = new List<RequisitosDoPorao> { new RequisitosDoPorao { caso = tutorial, pista1 = relato } };
+
+        DialogueData Pensamento()
+        {
+            alcapao.Interact();
+            DialogueData tocado = ds.IsDialogueActive ? ds.dialogueData : null;
+            terminar.Invoke(ds, null);
+            return tocado;
+        }
+
+        gm.faseAtual = 1;
+        gm.casoEscolhido = tutorial;
+        Assert.AreSame(alcapao.pensamentoFaltamPistas, Pensamento(), "tutorial em andamento sem a pista");
+
+        gm.casosConcluidos.Add(tutorial);
+        gm.faseAtual = 2;
+        Assert.AreSame(alcapao.pensamentoSemCaso, Pensamento(), "Fase 2 antes de aceitar um caso: o tutorial já foi impresso");
+
+        CaseData julgamento = Criar<CaseData>("Julgamento");
+        julgamento.fase = GameManager.UltimaFase;
+        gm.faseAtual = GameManager.UltimaFase;
+        gm.casoEscolhido = julgamento;
+        gm.casosConcluidos.Add(julgamento);
+        Assert.AreSame(alcapao.pensamentoPanfletoImpresso, Pensamento(), "Fase 4 já impressa: a vez é do tribunal");
+    }
+
     // ===== Tutorial sem travar (ações fora de ordem e troca de cena no meio) =====
 
     private static TutorialStep Evento(string id, string evento) =>

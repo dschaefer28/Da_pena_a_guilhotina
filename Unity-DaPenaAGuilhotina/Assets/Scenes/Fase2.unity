@@ -2043,7 +2043,7 @@ GameObject:
   - component: {fileID: 875504383}
   - component: {fileID: 875504382}
   m_Layer: 0
-  m_Name: Mesa da Taverna
+  m_Name: Quadro de Avisos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2061,7 +2061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce92dce80394ca14a9e848764a53f50f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootInteractable
-  nomeExibido: Mesa da Taverna
+  nomeExibido: Quadro de Avisos
   pistasPossiveis:
   - caso: {fileID: 11400000, guid: 676909893d4417d48b2f48221a0754fe, type: 2}
     itemParaDar: {fileID: 11400000, guid: 4c8c01357c9bbb4419151f49967720c6, type: 2}

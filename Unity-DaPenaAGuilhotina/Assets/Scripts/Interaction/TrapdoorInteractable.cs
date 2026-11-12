@@ -22,7 +22,11 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
     public string nomeCenaPorao = "Porao";
     public List<RequisitosDoPorao> requisitosDeCaso;
 
+    [Tooltip("Nenhum caso em andamento (nenhum aceito, ou o último já impresso): falta aceitar um caso na mesa.")]
     public DialogueData pensamentoSemCaso;
+    [Tooltip("Fase 4 com o panfleto já impresso: o próximo passo é Dupaty e o tribunal, não a mesa. Vazio = pensamento sem caso.")]
+    public DialogueData pensamentoPanfletoImpresso;
+    [Tooltip("Caso em andamento sem as pistas exigidas em Requisitos De Caso (o tutorial).")]
     public DialogueData pensamentoFaltamPistas;
 
     [Header("Áudio (FMOD)")]
@@ -30,20 +34,24 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (GameManager.Instance == null)
+        GameManager gm = GameManager.Instance;
+        if (gm == null)
         {
             Debug.LogWarning("[TrapdoorInteractable] GameManager ausente.");
             return;
         }
 
-        CaseData casoAtual = GameManager.Instance.casoEscolhido;
-        if (casoAtual == null)
+        // Sem caso em andamento não há o que imprimir. O caso do tutorial continua "escolhido" depois de impresso, e o
+        // alçapão dizia na Fase 2 que ainda faltavam o relato de Marie e o decreto de Dupaty.
+        if (!gm.CasoAtualEmAndamento)
         {
-            TocarPensamento(pensamentoSemCaso);
+            bool aguardaTribunal = gm.faseAtual >= GameManager.UltimaFase && gm.FaseConcluida;
+            TocarPensamento(aguardaTribunal && pensamentoPanfletoImpresso != null ? pensamentoPanfletoImpresso : pensamentoSemCaso);
             return;
         }
 
-        InventoryManager inventario = GameManager.Instance.inventoryManager;
+        CaseData casoAtual = gm.casoEscolhido;
+        InventoryManager inventario = gm.inventoryManager;
 
         bool temPermissaoParaDescer = false;
         bool casoEncontradoNaLista = false;

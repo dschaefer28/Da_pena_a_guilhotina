@@ -301,7 +301,7 @@ public static class NarrativaGddSetupTool
         No(Operario, D2 + "Jean-Baptiste Réveillon_Caso_Operario.asset")
             .F(REV, "Aqueles homens não pediam pão: vieram armados, pagos na véspera por agitadores do duque de Orléans!")
             .F(REV, "A Guarda só atirou para se defender. Anote isso.")
-            .F(REV, "Colaram a ordem da Guarda no muro de cartazes, e na mesa da taverna deixaram um bilhete sobre o incêndio da minha fábrica. Cada um conta de um jeito.")
+            .F(REV, "Colaram a ordem da Guarda no muro de cartazes, e no quadro de avisos pregaram um bilhete sobre o incêndio da minha fábrica. Cada um conta de um jeito.")
             .Op("O senhor viu os agitadores?", D2 + "Jean-Baptiste Réveillon_Caso_Operario_R1.asset")
             .Op("Por que o duque de Orléans pagaria uma revolta?", D2 + "Jean-Baptiste Réveillon_Caso_Operario_R2.asset");
         No(Operario, D2 + "Jean-Baptiste Réveillon_Caso_Operario_R1.asset")

@@ -35,7 +35,7 @@ MonoBehaviour:
       Path: event:/P1Normal
     choices: []
   - name: "Jean R\xE9veillon"
-    text: "Colaram a ordem da Guarda no muro de cartazes, e na mesa da taverna deixaram
+    text: "Colaram a ordem da Guarda no muro de cartazes, e no quadro de avisos pregaram
       um bilhete sobre o inc\xEAndio da minha f\xE1brica. Cada um conta de um jeito."
     dialogueAudio:
       Guid:

@@ -331,7 +331,7 @@ public static class CampanhaSetupTool
             porCaso = { { Caso("Caso_Reveillon"), SO + "Item_Jean2.asset" } } });
         Loots.Add(new L { cena = F, id = "MuroDeCartazes", nome = "Muro de Cartazes", sprite = SpritePanfleto, x = 40f, y = 0f, escala = 0.5f,
             porCaso = { { Caso("Caso_Joalheiro"), Item(F, "Pista_Joias_Calunia") }, { Caso("Caso_Operario"), SO + "Item_operario2.asset" } } });
-        Loots.Add(new L { cena = F, id = "MesaDaTaverna", nome = "Mesa da Taverna", sprite = SpriteMesa, x = 68f, y = -2.1f, escala = 1.2f,
+        Loots.Add(new L { cena = F, id = "MesaDaTaverna", nome = "Quadro de Avisos", sprite = SpriteMesa, x = 68f, y = -2.1f, escala = 1.2f,
             porCaso = { { Caso("Caso_Operario"), Item(F, "Pista_Operario_Calunia") } } }); // Joias: a assinatura agora vem do joalheiro
     }
 

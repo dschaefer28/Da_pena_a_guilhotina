@@ -949,8 +949,8 @@ MonoBehaviour:
     dizem qual \xE9 verdadeira e n\xE3o s\xE3o vendidos fiado."
   dicaLinhaEditorial: "Agora a prensa pede uma linha editorial: ao apertar Misturar,
     voc\xEA escolhe o tom do panfleto. Neutro d\xE1 o efeito normal do caso. Sensacionalista
-    rende mais ouro, mas o lado que o caso defende ganha menos. O tom nunca muda a
-    verdade das pistas."
+    rende mais ouro, mas o lado que o caso defende ganha menos. O tom nunca muda
+    a verdade das pistas."
   etapas:
   - etapaId: boas_vindas
     mensagem: "Bem-vindo ao seu primeiro dia na tipografia! Estes s\xE3o os controles
@@ -1219,12 +1219,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57d48110afd5bde4eaf2d9cb97b367a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrapdoorInteractable
+  nomeExibido: "Al\xE7ap\xE3o"
   nomeCenaPorao: Porao
   requisitosDeCaso:
   - caso: {fileID: 11400000, guid: d0bd65d553c918045aaf794e01462c68, type: 2}
     pista1: {fileID: 11400000, guid: 6c1c1ed830eb85f47a44f2dc6488276f, type: 2}
     pista2: {fileID: 11400000, guid: a41fb3cd7d8b20f479759eb72c5d511b, type: 2}
   pensamentoSemCaso: {fileID: 11400000, guid: 21cef46036a141a40afa71e28cf8b512, type: 2}
+  pensamentoPanfletoImpresso: {fileID: 11400000, guid: badbce1487647574ab79c36464b7662e, type: 2}
   pensamentoFaltamPistas: {fileID: 11400000, guid: a0216cc89836a1449b9c7fa85a199c54, type: 2}
   somAlcapao:
     Guid:
@@ -1700,6 +1702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834b08dd932996c4289f2fc810dc42f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TableInteractable
+  nomeExibido: Mesa de Casos
   caseSelectionUI: {fileID: 1674497308671956037}
   exigeTutorialConcluido: 1
   itemObrigatorio: {fileID: 0}
