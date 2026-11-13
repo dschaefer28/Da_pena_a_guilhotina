@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: 94d2009f0465dfa45ae634a7d0fec6eb
+guid: 191cd5d432cf84340b52b86f7ff62209
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4415592376520415476
-    second: saint-just_0
+      213: 853789327196244415
+    second: mercador-Sheet_0
+  - first:
+      213: -4639870404846462882
+    second: mercador-Sheet_1
+  - first:
+      213: -1551833652000274023
+    second: mercador-Sheet_2
+  - first:
+      213: 3405554637226114413
+    second: mercador-Sheet_3
+  - first:
+      213: 1359873313640324210
+    second: mercador-Sheet_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +58,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 48
+  spritePixelsToUnits: 96
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,23 +125,111 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: saint-just_0
+      name: mercador-Sheet_0
       rect:
         serializedVersion: 2
-        x: 11
-        y: 0
-        width: 25
-        height: 33
+        x: 47
+        y: 23
+        width: 170
+        height: 697
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c07e39cd02aa8b2c0800000000000000
-      internalID: -4415592376520415476
+      spriteID: fb94d889ed449db00800000000000000
+      internalID: 853789327196244415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mercador-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 23
+        width: 170
+        height: 697
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e58574b237edb9fb0800000000000000
+      internalID: -4639870404846462882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mercador-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 23
+        width: 170
+        height: 697
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 999c606f387c67ae0800000000000000
+      internalID: -1551833652000274023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mercador-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 911
+        y: 23
+        width: 170
+        height: 697
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6dfb0f26e5f24f20800000000000000
+      internalID: 3405554637226114413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mercador-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 1199
+        y: 23
+        width: 170
+        height: 697
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27c9017e29d3fd210800000000000000
+      internalID: 1359873313640324210
       vertices: []
       indices: 
       edges: []
@@ -138,7 +238,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: c580058f1c43c9145aea2ea704e9b53d
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +248,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      saint-just_0: -4415592376520415476
+      mercador-Sheet_0: 853789327196244415
+      mercador-Sheet_1: -4639870404846462882
+      mercador-Sheet_2: -1551833652000274023
+      mercador-Sheet_3: 3405554637226114413
+      mercador-Sheet_4: 1359873313640324210
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
