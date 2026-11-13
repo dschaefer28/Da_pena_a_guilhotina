@@ -21,8 +21,8 @@ MonoBehaviour:
   objectiveText: "Descobrir como \xC9lisabeth vivia antes de morrer e o que sustenta
     a acusa\xE7\xE3o contra o pai."
   moneyReward: 35
-  publicOpinionReward: 10
-  stateOpinionReward: 10
+  publicOpinionReward: 5
+  stateOpinionReward: 5
   fase: 3
   rota: 0
   horasDeInvestigacao: 0

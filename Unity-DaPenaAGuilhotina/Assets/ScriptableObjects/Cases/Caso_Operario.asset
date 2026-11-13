@@ -20,8 +20,8 @@ MonoBehaviour:
   objectiveText: "Descobrir como a Guarda agiu contra a multid\xE3o e o que sustenta
     a acusa\xE7\xE3o contra o oper\xE1rio."
   moneyReward: 30
-  publicOpinionReward: 20
-  stateOpinionReward: -10
+  publicOpinionReward: 10
+  stateOpinionReward: -5
   fase: 2
   rota: 0
   horasDeInvestigacao: 0

@@ -61,8 +61,8 @@ public class FinaisEBoatosTests
     {
         GameManager gm = CriarGameManager(3);
         CaseData caso = CriarCaso("Caso_Boato", 3);
-        gm.opiniaoPublicaAtual = 70;
-        gm.opiniaoEstadoAtual = 45; // desnível 25: sem a penalidade, a rota seria A
+        gm.opiniaoPublicaAtual = 60;
+        gm.opiniaoEstadoAtual = 45; // desnível 15 (margem 12): sem a penalidade, a rota seria A
         Assert.AreEqual(RotaFinal.A_Guilhotina, gm.CalcularRota());
         gm.revelacoesPendentes.Add(new GameManager.RevelacaoPendente { caso = caso, texto = "Mentira exposta.", povo = -10, estado = 0 });
 
@@ -71,7 +71,7 @@ public class FinaisEBoatosTests
         Assert.AreEqual(3, fim.fase);
         Assert.AreEqual(1, fim.revelacoes.Count);
         Assert.AreEqual(0, gm.revelacoesPendentes.Count, "a revelação é consumida uma única vez");
-        Assert.AreEqual(60, gm.opiniaoPublicaAtual);
+        Assert.AreEqual(50, gm.opiniaoPublicaAtual);
         Assert.AreEqual(4, gm.faseAtual);
         Assert.AreEqual(RotaFinal.C_Equilibrio, gm.rotaFinal, "a mentira descoberta pesa na Definição de Rota");
         Assert.AreEqual(50, fim.despesa);
@@ -107,6 +107,28 @@ public class FinaisEBoatosTests
         Assert.AreEqual(1, fim.revelacoes.Count, "a cutscene ainda conta o desmentido");
         Assert.AreEqual(45, gm.opiniaoPublicaAtual, "sem cobrança dupla");
         Assert.AreEqual(25, gm.opiniaoEstadoAtual);
+    }
+
+    // 13/11/2026: ganho que bate no teto não faz o desmentido punir mais (80 + 40 - 45 = 75, não 100 - 45 = 55).
+    [Test]
+    public void PanfletoComMentira_GanhoNoTeto_TerminaNoSaldoDoPanfleto()
+    {
+        GameManager gm = CriarGameManager(2);
+        CaseData caso = CriarCaso("Caso_Teto", 2);
+        gm.opiniaoPublicaAtual = 80;
+        gm.opiniaoEstadoAtual = 10;
+        var resultado = new ResultadoDoPanfleto
+        {
+            nivel = NivelDoPanfleto.Calunia, povo = 40, estado = -20, penalidadePovo = -45, penalidadeEstado = -5,
+            textoRevelacao = "Calúnia exposta."
+        };
+
+        Vector3Int aplicado = gm.AplicarImpactoPanfleto(resultado.povo, resultado.estado, resultado.ouro);
+        Assert.AreEqual(100, gm.opiniaoPublicaAtual, "a barra ainda sobe até o teto");
+        gm.RegistrarPanfletoDeCaso(caso, resultado, aplicado);
+
+        Assert.AreEqual(75, gm.opiniaoPublicaAtual, "80 + 40 - 45");
+        Assert.AreEqual(0, gm.opiniaoEstadoAtual, "10 - 20 - 5, limitado a 0");
     }
 
     [Test]

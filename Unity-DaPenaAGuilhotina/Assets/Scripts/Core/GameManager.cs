@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
     public RotaFinal rotaFinal = RotaFinal.Nenhuma;
     [Tooltip("Diferença mínima entre Opinião Pública e Opinião do Estado para a rota pender para um lado. " +
              "Abaixo disso, a rota é a C (equilíbrio). Mínimo 1: com 0, o empate iria para a rota A.")]
-    [Min(1)] public int margemDaRota = 20;
+    [Min(1)] public int margemDaRota = 12; // 13/11/2026: receitas pela metade; 12 mantém todo par de casos com 2+ rotas
 
     [Header("Status Globais (HUD)")]
     public int capitalAtual = 0;
@@ -378,9 +378,18 @@ public class GameManager : MonoBehaviour
             // continua na lista para a cutscene de fim de fase contar o desmentido, sem cobrar de novo.
             if (resultado.penalidadePovo != 0 || resultado.penalidadeEstado != 0)
             {
-                AplicarImpactoPanfleto(resultado.penalidadePovo, resultado.penalidadeEstado, 0);
+                // Ganho e perda valem juntos contra o limite 0–100: se o ganho bateu no teto (povo 80 + 40 = 100, não
+                // 120), a perda não pode entrar inteira por cima, senão a mentira pune mais quanto mais alta a barra
+                // (80 → 100 → 55 em vez de 80 → 75). A barra ainda sobe e desce; só o ponto final é o do saldo.
+                int perdaPovo = resultado.penalidadePovo, perdaEstado = resultado.penalidadeEstado;
+                if (aplicado.HasValue)
+                {
+                    perdaPovo = PerdaContraOLimite(opiniaoPublicaAtual, aplicado.Value.x, resultado.povo, resultado.penalidadePovo);
+                    perdaEstado = PerdaContraOLimite(opiniaoEstadoAtual, aplicado.Value.y, resultado.estado, resultado.penalidadeEstado);
+                }
+                Vector3Int perda = AplicarImpactoPanfleto(perdaPovo, perdaEstado, 0);
                 AvisoNaTela.Mostrar("O panfleto foi desmentido nas ruas: a tipografia perdeu apoio" +
-                                    Perda(resultado.penalidadePovo, "Povo") + Perda(resultado.penalidadeEstado, "Estado") + ".",
+                                    Perda(perda.x, "Povo") + Perda(perda.y, "Estado") + ".",
                                     null, DuracaoDoAvisoDeDesmentido);
             }
             revelacoesPendentes.Add(new RevelacaoPendente
@@ -400,6 +409,15 @@ public class GameManager : MonoBehaviour
 
     /// <summary>Segundos do aviso de desmentido na tela: é ele que explica por que a barra caiu logo depois de subir.</summary>
     public const float DuracaoDoAvisoDeDesmentido = 7f;
+
+    /// <summary>Perda a aplicar agora para a barra terminar onde terminaria se ganho e perda fossem somados antes do
+    /// limite 0–100: alvo = Clamp(valorAntesDoGanho + ganho + penalidade) e a perda é a distância do valor atual até ele.</summary>
+    public static int PerdaContraOLimite(int valorAtual, int ganhoAplicado, int ganhoCalculado, int penalidade)
+    {
+        if (penalidade == 0) return 0;
+        int antes = valorAtual - ganhoAplicado;
+        return Mathf.Clamp(antes + ganhoCalculado + penalidade, 0, 100) - valorAtual;
+    }
 
     private static string Perda(int valor, string barra) =>
         valor == 0 ? string.Empty : $" ({(valor > 0 ? "+" : string.Empty)}{valor} {barra})";

@@ -21,8 +21,8 @@ MonoBehaviour:
   objectiveText: "Provar se Danton incitou uma insurrei\xE7\xE3o armada ou exerceu
     o direito de peti\xE7\xE3o."
   moneyReward: 30
-  publicOpinionReward: 20
-  stateOpinionReward: -10
+  publicOpinionReward: 10
+  stateOpinionReward: -5
   fase: 3
   rota: 0
   horasDeInvestigacao: 0

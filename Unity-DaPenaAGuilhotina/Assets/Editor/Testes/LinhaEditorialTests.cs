@@ -196,9 +196,9 @@ public class LinhaEditorialTests
         ReceitaDeCaso.ModificadorEditorial p = LinhaEditorialSetupTool.ModificadorSensacionalista(proPovo);
         ReceitaDeCaso.ModificadorEditorial e = LinhaEditorialSetupTool.ModificadorSensacionalista(proEstado);
         ReceitaDeCaso.ModificadorEditorial m = LinhaEditorialSetupTool.ModificadorSensacionalista(misto);
-        Assert.AreEqual((-10, 0, 15), (p.povo, p.estado, p.ouro), "pró-povo: Povo sobe menos, Estado cai o mesmo");
-        Assert.AreEqual((0, -10, 15), (e.povo, e.estado, e.ouro), "pró-Estado: o espelho");
-        Assert.AreEqual((-5, -5, 15), (m.povo, m.estado, m.ouro), "misto: não sobe tanto nem um nem outro");
+        Assert.AreEqual((-5, 0, 15), (p.povo, p.estado, p.ouro), "pró-povo: Povo sobe menos, Estado cai o mesmo");
+        Assert.AreEqual((0, -5, 15), (e.povo, e.estado, e.ouro), "pró-Estado: o espelho");
+        Assert.AreEqual((-2, -2, 15), (m.povo, m.estado, m.ouro), "misto: não sobe tanto nem um nem outro");
     }
 
     [Test]
@@ -217,8 +217,8 @@ public class LinhaEditorialTests
         {
             ReceitaDeCaso.ModificadorEditorial mod = r.linhaEditorial.De(linha);
             ResultadoDoPanfleto com = CalculadoraDePanfleto.Calcular(r, f1, f2, new[] { ata, ata }, linha);
-            Assert.AreEqual(25 + mod.povo, com.povo, linha + ": fatos + apoio (25/-10/50) + linha");
-            Assert.AreEqual(-10 + mod.estado, com.estado, linha.ToString());
+            Assert.AreEqual(12 + mod.povo, com.povo, linha + ": fatos + apoio (12/-5/50) + linha");
+            Assert.AreEqual(-5 + mod.estado, com.estado, linha.ToString());
             Assert.AreEqual(50 + mod.ouro, com.ouro, linha.ToString());
             CollectionAssert.AreEqual(new[] { "apoio_champdemars" }, com.qualificadores, "o apoio vale uma vez");
 

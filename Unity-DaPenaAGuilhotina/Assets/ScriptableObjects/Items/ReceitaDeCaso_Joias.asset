@@ -16,31 +16,31 @@ MonoBehaviour:
   panfletoPadrao: {fileID: 11400000, guid: 721a6feba8742e24eb5f60b5e107ae1f, type: 2}
   soFatos:
     panfleto: {fileID: 0}
-    povo: 20
-    estado: -10
+    povo: 10
+    estado: -5
     ouro: 30
     textoRevelacao: 
     penalidadePovo: 0
     penalidadeEstado: 0
   comBoato:
     panfleto: {fileID: 0}
-    povo: 30
-    estado: -15
+    povo: 15
+    estado: -7
     ouro: 45
     textoRevelacao: "O registro de venda mostrou que a Rainha nunca foi \xE0 loja:
       o boato de que ela escolheu o colar disfar\xE7ada caiu por terra, e o panfleto
       que o repetiu tamb\xE9m."
-    penalidadePovo: -25
+    penalidadePovo: -12
     penalidadeEstado: 0
   calunia:
     panfleto: {fileID: 0}
-    povo: 40
-    estado: -20
+    povo: 20
+    estado: -10
     ouro: 60
     textoRevelacao: "A encomenda trazia uma assinatura que a Rainha nunca usou: a
       folha que a acusava de assinar para o Cardeal era cal\xFAnia, e a tipografia
       ganhou fama de caluniadora."
-    penalidadePovo: -45
+    penalidadePovo: -22
     penalidadeEstado: 0
   soAlegacoes:
     panfleto: {fileID: 0}
@@ -56,7 +56,7 @@ MonoBehaviour:
   linhaEditorial:
     ativa: 1
     sensacionalista:
-      povo: -10
+      povo: -5
       estado: 0
       ouro: 15
     agravamentoPercentual: 0

@@ -16,31 +16,31 @@ MonoBehaviour:
   panfletoPadrao: {fileID: 11400000, guid: 0c819b8641132564596ff3a2b4d444bb, type: 2}
   soFatos:
     panfleto: {fileID: 0}
-    povo: -10
-    estado: 25
+    povo: -5
+    estado: 12
     ouro: 50
     textoRevelacao: 
     penalidadePovo: 0
     penalidadeEstado: 0
   comBoato:
     panfleto: {fileID: 0}
-    povo: -15
-    estado: 35
+    povo: -7
+    estado: 17
     ouro: 65
     textoRevelacao: "A ata da assembleia desmentiu o boato: R\xE9veillon falou em
       baratear o p\xE3o junto com os sal\xE1rios; n\xE3o pediu s\xF3 o corte. O panfleto
       que repetiu a vers\xE3o dos oper\xE1rios desmoronou."
     penalidadePovo: 0
-    penalidadeEstado: -30
+    penalidadeEstado: -15
   calunia:
     panfleto: {fileID: 0}
-    povo: -20
-    estado: 45
+    povo: -10
+    estado: 22
     ouro: 80
     textoRevelacao: "Ningu\xE9m encontrou prova de que R\xE9veillon servia aos ingleses:
       a cal\xFAnia voltou-se contra a tipografia."
     penalidadePovo: 0
-    penalidadeEstado: -50
+    penalidadeEstado: -25
   soAlegacoes:
     panfleto: {fileID: 0}
     povo: -8
@@ -55,6 +55,6 @@ MonoBehaviour:
     ativa: 1
     sensacionalista:
       povo: 0
-      estado: -10
+      estado: -5
       ouro: 15
     agravamentoPercentual: 0

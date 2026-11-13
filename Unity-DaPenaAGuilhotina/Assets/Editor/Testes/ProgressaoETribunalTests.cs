@@ -69,11 +69,11 @@ public class ProgressaoETribunalTests
     [Test]
     public void Rota_LimitesDaMargemPadrao()
     {
-        Assert.AreEqual(20, gm.margemDaRota);
+        Assert.AreEqual(12, gm.margemDaRota); // 13/11/2026: valores das receitas pela metade, margem 20 → 12
         var esperado = new Dictionary<int, RotaFinal>
         {
-            { -21, RotaFinal.B_Tirano }, { -20, RotaFinal.B_Tirano }, { -19, RotaFinal.C_Equilibrio }, { 0, RotaFinal.C_Equilibrio },
-            { 19, RotaFinal.C_Equilibrio }, { 20, RotaFinal.A_Guilhotina }, { 21, RotaFinal.A_Guilhotina },
+            { -13, RotaFinal.B_Tirano }, { -12, RotaFinal.B_Tirano }, { -11, RotaFinal.C_Equilibrio }, { 0, RotaFinal.C_Equilibrio },
+            { 11, RotaFinal.C_Equilibrio }, { 12, RotaFinal.A_Guilhotina }, { 13, RotaFinal.A_Guilhotina },
         };
         foreach (var par in esperado)
         {

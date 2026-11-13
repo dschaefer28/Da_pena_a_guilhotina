@@ -34,7 +34,7 @@ public class BibliotecaTests
     }
 
     [Test]
-    public void ExemploNumerico_ChampDeMars_ApoioMudaDe20_10_30Para25_10_50()
+    public void ExemploNumerico_ChampDeMars_ApoioMudaDe10_5_30Para12_5_50()
     {
         CaseData champ = Carregar<CaseData>("Assets/ScriptableObjects/Cases/Caso_ChampDeMars.asset");
         ReceitaDeCaso receita = champ.receitaDoPanfleto;
@@ -46,19 +46,19 @@ public class BibliotecaTests
         // O exemplo do Prompt 3 é a etapa "versão → apoio"; a linha editorial (Prompt 5) soma depois (LinhaEditorialTests).
         ResultadoDoPanfleto sem = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, null);
         Assert.AreEqual(NivelDoPanfleto.Fatos, sem.nivel);
-        AssertValores(sem, 20, -10, 30, "sem apoio");
+        AssertValores(sem, 10, -5, 30, "sem apoio");
 
         ResultadoDoPanfleto com = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, new[] { ata });
-        AssertValores(com, 25, -10, 50, "com o apoio exigido (balanceamento de 17/10: apoio +5/0/+20)");
+        AssertValores(com, 12, -5, 50, "com o apoio exigido (13/11/2026, barras pela metade: apoio +2/0/+20)");
         CollectionAssert.AreEqual(new[] { "apoio_champdemars" }, com.qualificadores);
 
         ResultadoDoPanfleto repetido = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, new[] { ata, ata, ata });
-        AssertValores(repetido, 25, -10, 50, "o mesmo bônus não empilha");
+        AssertValores(repetido, 12, -5, 50, "o mesmo bônus não empilha");
 
         ResultadoDoPanfleto outro = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, new[] { deOutroCaso });
-        AssertValores(outro, 20, -10, 30, "documento de outro caso não vale");
+        AssertValores(outro, 10, -5, 30, "documento de outro caso não vale");
 
-        Assert.AreEqual(20, receita.soFatos.povo, "calcular não altera o asset compartilhado");
+        Assert.AreEqual(10, receita.soFatos.povo, "calcular não altera o asset compartilhado");
         Assert.AreEqual(30, receita.soFatos.ouro);
     }
 

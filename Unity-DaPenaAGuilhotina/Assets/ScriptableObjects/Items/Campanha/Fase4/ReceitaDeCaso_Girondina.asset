@@ -16,32 +16,32 @@ MonoBehaviour:
   panfletoPadrao: {fileID: 11400000, guid: 9dfc42c63bb48a14ab8b24355b600d22, type: 2}
   soFatos:
     panfleto: {fileID: 0}
-    povo: 10
-    estado: 10
+    povo: 5
+    estado: 5
     ouro: 30
     textoRevelacao: 
     penalidadePovo: 0
     penalidadeEstado: 0
   comBoato:
     panfleto: {fileID: 0}
-    povo: 15
-    estado: 15
+    povo: 7
+    estado: 7
     ouro: 45
     textoRevelacao: "As cartas foram lidas em p\xFAblico: pediam a defesa da Conven\xE7\xE3o,
       e n\xE3o a separa\xE7\xE3o das prov\xEDncias nem a entrega dos portos. O boato
       ruiu, e o panfleto que o repetiu tamb\xE9m."
-    penalidadePovo: -10
-    penalidadeEstado: -10
+    penalidadePovo: -5
+    penalidadeEstado: -5
   calunia:
     panfleto: {fileID: 0}
-    povo: 20
-    estado: 20
+    povo: 10
+    estado: 10
     ouro: 60
     textoRevelacao: "A pressa vinha da acusa\xE7\xE3o, e n\xE3o dos r\xE9us: a nota
       de Robespierre pedia que os debates fossem abreviados. O cartaz era cal\xFAnia,
       e a tipografia foi acusada de mentir."
-    penalidadePovo: -20
-    penalidadeEstado: -20
+    penalidadePovo: -10
+    penalidadeEstado: -10
   soAlegacoes:
     panfleto: {fileID: 0}
     povo: 4
@@ -60,13 +60,13 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 7b74039f15e5d8b44aa1446ad19923ee, type: 2}
     qualidadeMinima: 1
     niveis: 
-    povo: 5
-    estado: 5
+    povo: 2
+    estado: 2
     ouro: 15
   linhaEditorial:
     ativa: 1
     sensacionalista:
-      povo: -5
-      estado: -5
+      povo: -2
+      estado: -2
       ouro: 15
     agravamentoPercentual: 0

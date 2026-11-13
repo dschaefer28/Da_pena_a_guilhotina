@@ -21,8 +21,8 @@ MonoBehaviour:
   objectiveText: "Descobrir a quem pertence a farinha do por\xE3o e por que ela some
     das lojas."
   moneyReward: 60
-  publicOpinionReward: -10
-  stateOpinionReward: 25
+  publicOpinionReward: -5
+  stateOpinionReward: 12
   fase: 4
   rota: 2
   horasDeInvestigacao: 0

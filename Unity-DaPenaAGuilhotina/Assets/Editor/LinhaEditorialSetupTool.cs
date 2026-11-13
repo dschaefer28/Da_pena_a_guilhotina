@@ -21,14 +21,14 @@ public static class LinhaEditorialSetupTool
     private const string PrefabUI = "Assets/Prefabs/UI.prefab";
 
     /// <summary>Quanto o lado favorecido ganha a menos no sensacionalista (nos mistos, metade em cada barra).</summary>
-    public const int PerdaDoLadoFavorecido = 10;
+    public const int PerdaDoLadoFavorecido = 5; // 13/11/2026: era 10, metade junto com as receitas
     /// <summary>Ouro a mais do sensacionalista.</summary>
     public const int OuroDoSensacionalista = 15;
 
     /// <summary>
     /// Modificador do sensacionalista para a receita, pelo lado do caso na versão Fatos: barra que sobe = lado favorecido.
-    /// Pró-povo (+Povo/−Estado): Povo −10, Estado 0. Pró-Estado: Estado −10, Povo 0. Misto (as duas sobem) ou sem lado:
-    /// −5 em cada. Sempre +15 de ouro. Igual em todas as versões, para não depender da verdade das pistas.
+    /// Pró-povo (+Povo/−Estado): Povo −5, Estado 0. Pró-Estado: Estado −5, Povo 0. Misto (as duas sobem) ou sem lado:
+    /// −2 em cada. Sempre +15 de ouro. Igual em todas as versões, para não depender da verdade das pistas.
     /// </summary>
     public static ReceitaDeCaso.ModificadorEditorial ModificadorSensacionalista(ReceitaDeCaso receita)
     {

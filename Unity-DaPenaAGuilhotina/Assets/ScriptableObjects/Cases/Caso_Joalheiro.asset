@@ -21,8 +21,8 @@ MonoBehaviour:
   objectiveText: Descobrir quem negociou o colar em nome da Rainha e o que a encomenda
     realmente prova.
   moneyReward: 30
-  publicOpinionReward: 20
-  stateOpinionReward: -10
+  publicOpinionReward: 10
+  stateOpinionReward: -5
   fase: 2
   rota: 0
   horasDeInvestigacao: 0

@@ -45,10 +45,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   casoEscolhido: {fileID: 11400000, guid: d0bd65d553c918045aaf794e01462c68, type: 2}
+  casosJaSelecionados: []
+  faseAtual: 1
+  casosPorFase: 01000000010000000100000001000000
+  casosConcluidos: []
+  horasPorCaso: 8
+  horasDoCaso: 0
+  horasRestantes: 0
+  registroDaInvestigacao:
+    interacoesPagas: []
+    lootsColetados: []
+    recompensasEntregues: []
+    casosComEstadoLegado: []
+    interacoesPagasLegadas: []
+  despesasPorFase: 00000000190000003200000000000000
+  horasPerdidasPorDivida: 1
+  rotaFinal: 0
+  margemDaRota: 12
   capitalAtual: 0
   opiniaoPublicaAtual: 45
   opiniaoEstadoAtual: 45
   inventarioSalvo: []
+  itensForaDaGrade: []
+  panfletosPublicados: []
+  revelacoesPendentes: []
+  pistasVerificadas: []
+  evidenciasObtidas: []
+  comprasDaBiblioteca: []
+  escolhasDeDeducao: []
   inventoryManager: {fileID: 0}
   dialogueSystem: {fileID: 0}
-  horasPorCaso: 8
