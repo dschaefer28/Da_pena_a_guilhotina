@@ -72,6 +72,13 @@ public class NPCMovement : MonoBehaviour, IInteractable
     [Tooltip("Configure aqui como o NPC reage a cada caso diferente.")]
     public List<CasoReacao> reacoesDeCaso;
 
+    [Header("Virar para o jogador")]
+    [Tooltip("Ao começar a conversa o NPC (e o jogador) se viram um para o outro. Todos os sprites de NPC são desenhados " +
+             "olhando para a direita, como o do jogador; desmarque para um NPC que não deve virar (sentado, de perfil fixo...).")]
+    public bool virarParaOJogador = true;
+    [Tooltip("Ao fim da conversa o NPC volta a olhar para o lado em que estava.")]
+    public bool voltarADirecaoOriginal = true;
+
     [Header("Feedback e Eventos")]
     public GameObject visualIndicator;
     public UnityEvent OnDialogueComplete;
@@ -209,7 +216,38 @@ public class NPCMovement : MonoBehaviour, IInteractable
         dialogueSystem.OnDialogueEnded -= HandleDialogueEnded; // nunca inscrever duas vezes
         dialogueSystem.OnDialogueEnded += HandleDialogueEnded;
         aguardandoFimDoDialogo = true;
+        VirarUmParaOOutro();
         dialogueSystem.Next();
+    }
+
+    // ===== Virar para o jogador =====
+
+    private SpriteRenderer sprite;
+    private bool virado;          // flipX original guardado e ainda não devolvido
+    private bool flipXOriginal;
+
+    // Sprites de NPC e do jogador olham para a direita com flipX = false (PlayerMove usa a mesma convenção).
+    private void VirarUmParaOOutro()
+    {
+        if (!virarParaOJogador) return;
+        PlayerMove jogador = FindFirstObjectByType<PlayerMove>();
+        if (jogador == null) return;
+        if (sprite == null) sprite = GetComponent<SpriteRenderer>();
+        if (sprite == null) return;
+
+        float dx = jogador.transform.position.x - transform.position.x;
+        if (Mathf.Abs(dx) < 0.01f) return; // em cima um do outro: nenhum lado faz sentido
+
+        if (!virado) { flipXOriginal = sprite.flipX; virado = true; }
+        sprite.flipX = dx < 0f;          // jogador à esquerda -> NPC olha para a esquerda
+        jogador.OlharParaX(transform.position.x);
+    }
+
+    private void VoltarADirecaoOriginal()
+    {
+        if (!virado) return;
+        virado = false;
+        if (voltarADirecaoOriginal && sprite != null) sprite.flipX = flipXOriginal;
     }
 
     /// <summary>Reação configurada para o caso (a primeira da lista, como em Interact).</summary>
@@ -395,6 +433,8 @@ public class NPCMovement : MonoBehaviour, IInteractable
         // Etapa complementar já liberada: a conversa segue nela. Os avisos de fim (eventos, tutorial, desligar) ficam
         // para o fim da conversa inteira, quando este método rodar de novo.
         if (!faltouEntregar && ContinuarNaEtapaLiberada(dialogueSystem)) return;
+
+        VoltarADirecaoOriginal();
 
         // Só desliga quem foi configurado para isso (disableAfterDialogue); com entrega pendente, continua
         // acessível para o jogador voltar e receber o resto.

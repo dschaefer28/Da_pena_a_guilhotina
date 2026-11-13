@@ -53,7 +53,8 @@ public class PlayerMove : MonoBehaviour
     {
         bool isMoving = PodeMover() && move != Vector2.zero;
 
-        if (spriteRenderer != null)
+        // Parado (diálogo, janela aberta) não vira com a tecla segurada: senão desfazia o OlharParaX do começo da conversa.
+        if (spriteRenderer != null && PodeMover())
         {
             if (move.x > 0) spriteRenderer.flipX = false;
             else if (move.x < 0) spriteRenderer.flipX = true;
@@ -79,5 +80,13 @@ public class PlayerMove : MonoBehaviour
         if (JanelasModais.AlgumaAberta) return false;
         var dialogo = GameManager.Instance != null ? GameManager.Instance.dialogueSystem : null;
         return dialogo == null || !dialogo.IsDialogueActive;
+    }
+
+    /// <summary>Vira o sprite para o ponto x do mundo (ex.: o NPC com quem começou a conversar).</summary>
+    public void OlharParaX(float x)
+    {
+        if (spriteRenderer == null) return;
+        float dx = x - transform.position.x;
+        if (Mathf.Abs(dx) >= 0.01f) spriteRenderer.flipX = dx < 0f;
     }
 }

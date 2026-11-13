@@ -30,6 +30,9 @@ public class TribunalManager : MonoBehaviour
         public string nome;
         [Tooltip("Opcional. Sem retrato, o cartão mostra a inicial do nome.")]
         public Sprite retrato;
+        [Tooltip("Opcional: quadros da spritesheet da cara, na ordem da folha (1ª metade respirando de olhos abertos, " +
+                 "2ª metade as mesmas poses ao contrário, de olhos fechados). Com 2 ou mais, o retrato respira e pisca.")]
+        public Sprite[] quadros;
     }
 
     [Serializable]
@@ -76,6 +79,12 @@ public class TribunalManager : MonoBehaviour
         new Juiz { nome = "Saint-Just" },
         new Juiz { nome = "Couthon" },
     };
+    [Tooltip("Segundos de cada quadro da respiração dos retratos.")]
+    [Min(0.02f)] public float segundosPorQuadroDoRetrato = 0.18f;
+    [Tooltip("Tempo entre uma piscada e outra de cada juiz, sorteado entre os dois valores (segundos).")]
+    public Vector2 intervaloEntrePiscadas = new Vector2(2.5f, 5f);
+    [Tooltip("Segundos de olhos fechados em cada piscada.")]
+    [Min(0.02f)] public float duracaoDaPiscada = 0.15f;
     [Tooltip("Quantas provas o jogador apresenta antes do veredito (menos, se tiver menos provas).")]
     [Min(1)] public int maxArgumentos = 5;
     [Tooltip("Provas que o jogador precisa apresentar antes de poder encerrar a defesa (limitado ao total). Encerrar leva " +
@@ -663,10 +672,15 @@ public class TribunalManager : MonoBehaviour
         {
             RectTransform cartao = Painel("Juiz", bancada, Vector2.zero, Vector2.one, CorPainel);
             RectTransform retrato = Painel("Retrato", cartao, new Vector2(0.3f, 0.3f), new Vector2(0.7f, 0.95f), CorBotao);
-            if (juiz.retrato != null)
+            Sprite[] quadros = juiz.quadros != null ? Array.FindAll(juiz.quadros, q => q != null) : Array.Empty<Sprite>();
+            Sprite parado = juiz.retrato != null ? juiz.retrato : (quadros.Length > 0 ? quadros[0] : null);
+            if (parado != null)
             {
                 var img = retrato.GetComponent<Image>();
-                img.sprite = juiz.retrato; img.color = Color.white; img.preserveAspect = true;
+                img.sprite = parado; img.color = Color.white; img.preserveAspect = true;
+                if (quadros.Length > 1)
+                    retrato.gameObject.AddComponent<RetratoAnimado>()
+                        .Iniciar(img, quadros, segundosPorQuadroDoRetrato, intervaloEntrePiscadas, duracaoDaPiscada);
             }
             else if (!string.IsNullOrEmpty(juiz.nome))
                 Texto("Inicial", retrato, Vector2.zero, Vector2.one, 64f, juiz.nome.Substring(0, 1));
