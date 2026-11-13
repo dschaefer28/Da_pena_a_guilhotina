@@ -102,10 +102,13 @@ public class FimDeFase : MonoBehaviour
         List<CutsceneLegendas.Linha> daFase = LegendasDa(fim.fase);
         if (daFase != null) legendas.AddRange(daFase);
 
-        if (legendas.Count > 0)
+        revelacoesParaAvisar = fim.revelacoes;
+        if (legendas.Count > 0 && CutsceneLegendas.Instance != null)
+            CutsceneLegendas.Instance.TocarTransicao(legendas, MostrarDesmentidos);
+        else
         {
-            if (CutsceneLegendas.Instance != null) CutsceneLegendas.Instance.TocarTransicao(legendas);
-            else foreach (CutsceneLegendas.Linha linha in legendas) AvisoNaTela.Mostrar(linha.texto);
+            foreach (CutsceneLegendas.Linha linha in legendas) AvisoNaTela.Mostrar(linha.texto);
+            MostrarDesmentidos();
         }
 
         // Primeira cobrança: a dica aparece depois da cutscene (o popup espera a tela ficar livre). Pedida antes do save
@@ -115,6 +118,47 @@ public class FimDeFase : MonoBehaviour
 
         StartCoroutine(SalvarNoProximoFrame());
     }
+
+    [Header("Aviso depois da cutscene")]
+    [Tooltip("Aviso de cada panfleto desmentido, mostrado depois da cutscene enquanto a barra desce. {0} = título do caso, " +
+             "{1} = o que mudou (ex.: \"a opinião do povo caiu 22 pontos\").")]
+    public string textoAvisoDesmentido = "O panfleto sobre \"{0}\" foi desmentido nas ruas. Por causa disso, {1}.";
+
+    private List<GameManager.RevelacaoPendente> revelacoesParaAvisar;
+
+    // Depois da cutscene: um aviso de 5 s por panfleto desmentido e a barra descendo (a HUD segurava a perda).
+    private void MostrarDesmentidos()
+    {
+        GameManager gm = GameManager.Instance;
+        if (revelacoesParaAvisar != null)
+            foreach (GameManager.RevelacaoPendente r in revelacoesParaAvisar)
+            {
+                var partes = new List<string>();
+                if (r.perdaAplicada.x != 0) partes.Add("a opinião do povo " + Mudanca(r.perdaAplicada.x));
+                if (r.perdaAplicada.y != 0) partes.Add((partes.Count > 0 ? "a do Estado " : "a opinião do Estado ") + Mudanca(r.perdaAplicada.y));
+                if (partes.Count == 0) continue;
+                AvisoNaTela.Mostrar(string.Format(textoAvisoDesmentido, TituloDo(r), string.Join(" e ", partes)),
+                                    null, GameManager.DuracaoDoAvisoDeDesmentido);
+            }
+        revelacoesParaAvisar = null;
+        if (gm != null) gm.ExibirDesmentido();
+    }
+
+    // Saiu da cena no meio da cutscene: a HUD não pode ficar segurando a perda para sempre.
+    private void OnDestroy()
+    {
+        if (revelacoesParaAvisar != null && GameManager.Instance != null) GameManager.Instance.ExibirDesmentido();
+    }
+
+    private static string Mudanca(int valor)
+    {
+        int pontos = Mathf.Abs(valor);
+        return $"{(valor < 0 ? "caiu" : "subiu")} {pontos} {(pontos == 1 ? "ponto" : "pontos")}";
+    }
+
+    private static string TituloDo(GameManager.RevelacaoPendente revelacao) =>
+        revelacao.caso == null ? "caso"
+            : (string.IsNullOrWhiteSpace(revelacao.caso.caseTitle) ? revelacao.caso.name : revelacao.caso.caseTitle).Trim();
 
     private string TextoDa(GameManager.RevelacaoPendente revelacao)
     {

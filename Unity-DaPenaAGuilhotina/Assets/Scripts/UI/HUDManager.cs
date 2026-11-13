@@ -87,7 +87,9 @@ public class HUDManager : MonoBehaviour
     private void AtualizarTela()
     {
         var gm = GameManager.Instance;
-        int povo = gm.opiniaoPublicaAtual, estado = gm.opiniaoEstadoAtual, capital = gm.capitalAtual;
+        // Desmentido do fim da fase: já está nos números, mas a barra só desce depois da cutscene (FimDeFase).
+        int povo = gm.opiniaoPublicaAtual - gm.desmentidoNaoExibido.x, estado = gm.opiniaoEstadoAtual - gm.desmentidoNaoExibido.y;
+        int capital = gm.capitalAtual;
 
         // Primeira leitura (cena acabou de abrir): valores entram direto, sem animação nem "+X".
         if (!jaExibiu)

@@ -250,6 +250,8 @@ public class TutorialManager : MonoBehaviour
         new TutorialStep
         {
             etapaId = "coletar_resultado_prensa",
+            // Desde 13/11/2026 o panfleto vai sozinho para o inventário: esta etapa já nasce concluída e é pulada
+            // (AcaoJaFeita); fica só para inventário cheio, quando ele ainda sai no Resultado.
             mensagem = "Panfleto impresso! Repare como as barras e o ouro mudaram: cada panfleto agrada uns e irrita outros, e o ouro paga " +
                        "aluguel, papel e tinta no fim do período. {Toque} no panfleto em Resultado e depois em Espaço livre no inventário para guardá-lo.",
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
@@ -258,7 +260,8 @@ public class TutorialManager : MonoBehaviour
         new TutorialStep
         {
             etapaId = "voltar_escritorio",
-            mensagem = "Feche os painéis, vá até a saída do porão e use {interagir} para subir ao escritório.",
+            mensagem = "Panfleto impresso e guardado no inventário! Repare como as barras e o ouro mudaram: cada panfleto agrada uns e " +
+                       "irrita outros. Feche os painéis, vá até a saída do porão e use {interagir} para subir ao escritório.",
             controle = ControleTutorial.Interagir,
             tipoDeAvanco = TipoDeAvanco.CarregamentoDeCena,
             nomeDaCena = "Jogo",

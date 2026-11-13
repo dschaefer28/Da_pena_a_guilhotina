@@ -313,7 +313,7 @@ public class LinhaEditorialTests
         GameManager origem = CriarGameManager(2);
         // Valores da receita de teste; o save guarda o caso pelo nome do asset, então a publicação vai em um caso do catálogo.
         ResultadoDoPanfleto r = Calcular(fato1, calunia, LinhaEditorial.Sensacionalista);
-        origem.RegistrarPanfletoDeCaso(joias, r, new Vector3Int(40, -20, 70));
+        origem.RegistrarPanfletoDeCaso(joias, r, new Vector3Int(r.povo, r.estado, r.ouro)); // nada cortado no limite 0–100
 
         string json = JsonUtility.ToJson(SistemaDeSave.CapturarDados(origem, "Porao", 14));
         GameManager destino = CriarGameManager(2);

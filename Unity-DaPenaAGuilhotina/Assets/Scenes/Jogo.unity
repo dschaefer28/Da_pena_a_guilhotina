@@ -1074,8 +1074,9 @@ MonoBehaviour:
     nomeDaCena: 
     salvarAoConcluir: 0
   - etapaId: voltar_escritorio
-    mensagem: "Feche os pain\xE9is, v\xE1 at\xE9 a sa\xEDda do por\xE3o e use {interagir}
-      para subir ao escrit\xF3rio."
+    mensagem: "Panfleto impresso e guardado no invent\xE1rio! Repare como as barras e o
+      ouro mudaram: cada panfleto agrada uns e irrita outros. Feche os pain\xE9is,
+      v\xE1 at\xE9 a sa\xEDda do por\xE3o e use {interagir} para subir ao escrit\xF3rio."
     icone: {fileID: 0}
     controle: 2
     tipoDeAvanco: 2

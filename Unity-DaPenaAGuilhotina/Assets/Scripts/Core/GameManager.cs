@@ -110,9 +110,26 @@ public class GameManager : MonoBehaviour
         public int estado;
         [Tooltip("Linha editorial do panfleto desmentido (a cutscene conta quando o sensacionalista agravou a perda).")]
         public LinhaEditorial linha;
-        [Tooltip("A penalidade já entrou nas barras na hora da impressão (desde 13/11/2026). O fim da fase só conta a " +
-                 "história na cutscene; falso = save antigo, cobrado no fim da fase como antes.")]
+        [Tooltip("A penalidade já entrou nas barras (saves do curto período em que ela era cobrada na impressão). " +
+                 "Falso = cobrada no fim da fase, que é o normal.")]
         public bool aplicada;
+        /// <summary>O que o EncerrarFase de fato tirou das barras (depois do limite 0–100), para o aviso pós-cutscene.</summary>
+        [NonSerialized] public Vector2Int perdaAplicada;
+    }
+
+    /// <summary>
+    /// Perda do desmentido já aplicada nos números (a rota precisa dela) mas ainda não mostrada na HUD: a cutscene de
+    /// fim de fase cobre a tela, e a barra só deve descer depois dela, junto com o aviso (FimDeFase). A HUD exibe
+    /// valor − isto até <see cref="ExibirDesmentido"/>. Não vai para o save.
+    /// </summary>
+    [NonSerialized] public Vector2Int desmentidoNaoExibido;
+
+    /// <summary>Libera a perda segurada: a HUD anima as barras descendo até o valor real.</summary>
+    public void ExibirDesmentido()
+    {
+        if (desmentidoNaoExibido == Vector2Int.zero) return;
+        desmentidoNaoExibido = Vector2Int.zero;
+        OnStatusChanged?.Invoke();
     }
 
     [Header("Fato x Boato")]
@@ -373,33 +390,23 @@ public class GameManager : MonoBehaviour
         // Fatos nunca gera revelação, com qualquer linha editorial: o sensacionalista só agrava uma mentira que existe.
         if (resultado.nivel != NivelDoPanfleto.Fatos && resultado.TemRevelacao)
         {
-            // A penalidade entra nas barras já na impressão (logo depois do ganho do panfleto, mesma ordem e mesmo
-            // limite 0–100 de antes): cobrada só ao voltar ao escritório, a barra mudava sem explicação. A revelação
-            // continua na lista para a cutscene de fim de fase contar o desmentido, sem cobrar de novo.
-            if (resultado.penalidadePovo != 0 || resultado.penalidadeEstado != 0)
+            // A penalidade é cobrada no fim da fase (EncerrarFase), e a barra só desce depois da cutscene, com o aviso
+            // (FimDeFase). Ganho e perda valem juntos contra o limite 0–100: se o ganho bateu no teto (povo 80 + 40 =
+            // 100, não 120), a perda guardada já desconta o que o teto comeu (80 → 100 → 75, não 55).
+            int perdaPovo = resultado.penalidadePovo, perdaEstado = resultado.penalidadeEstado;
+            if (aplicado.HasValue)
             {
-                // Ganho e perda valem juntos contra o limite 0–100: se o ganho bateu no teto (povo 80 + 40 = 100, não
-                // 120), a perda não pode entrar inteira por cima, senão a mentira pune mais quanto mais alta a barra
-                // (80 → 100 → 55 em vez de 80 → 75). A barra ainda sobe e desce; só o ponto final é o do saldo.
-                int perdaPovo = resultado.penalidadePovo, perdaEstado = resultado.penalidadeEstado;
-                if (aplicado.HasValue)
-                {
-                    perdaPovo = PerdaContraOLimite(opiniaoPublicaAtual, aplicado.Value.x, resultado.povo, resultado.penalidadePovo);
-                    perdaEstado = PerdaContraOLimite(opiniaoEstadoAtual, aplicado.Value.y, resultado.estado, resultado.penalidadeEstado);
-                }
-                Vector3Int perda = AplicarImpactoPanfleto(perdaPovo, perdaEstado, 0);
-                AvisoNaTela.Mostrar("O panfleto foi desmentido nas ruas: a tipografia perdeu apoio" +
-                                    Perda(perda.x, "Povo") + Perda(perda.y, "Estado") + ".",
-                                    null, DuracaoDoAvisoDeDesmentido);
+                perdaPovo = PerdaContraOLimite(opiniaoPublicaAtual, aplicado.Value.x, resultado.povo, resultado.penalidadePovo);
+                perdaEstado = PerdaContraOLimite(opiniaoEstadoAtual, aplicado.Value.y, resultado.estado, resultado.penalidadeEstado);
             }
             revelacoesPendentes.Add(new RevelacaoPendente
             {
                 caso = caso,
                 texto = resultado.textoRevelacao,
-                povo = resultado.penalidadePovo,
-                estado = resultado.penalidadeEstado,
+                povo = perdaPovo,
+                estado = perdaEstado,
                 linha = resultado.linha,
-                aplicada = true
+                aplicada = false
             });
         }
         Debug.Log($"[FATO x BOATO] Panfleto de '{(caso != null ? caso.caseTitle : "?")}' publicado como {resultado.nivel}" +
@@ -407,8 +414,8 @@ public class GameManager : MonoBehaviour
                   (resultado.suportes.Count > 0 ? $", com apoio de {string.Join(", ", resultado.suportes)}." : "."));
     }
 
-    /// <summary>Segundos do aviso de desmentido na tela: é ele que explica por que a barra caiu logo depois de subir.</summary>
-    public const float DuracaoDoAvisoDeDesmentido = 7f;
+    /// <summary>Segundos do aviso de desmentido na tela, depois da cutscene de fim de fase: explica por que a barra caiu.</summary>
+    public const float DuracaoDoAvisoDeDesmentido = 5f;
 
     /// <summary>Perda a aplicar agora para a barra terminar onde terminaria se ganho e perda fossem somados antes do
     /// limite 0–100: alvo = Clamp(valorAntesDoGanho + ganho + penalidade) e a perda é a distância do valor atual até ele.</summary>
@@ -539,9 +546,9 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Fecha a fase atual, nesta ordem: os boatos publicados nela são contados (a penalidade já entrou nas barras na
-    /// impressão; só as de saves antigos, ainda não aplicadas, são cobradas aqui), as despesas são cobradas e a fase
-    /// avança. As penalidades vêm ANTES do avanço porque entrar na Fase 4 trava a rota pelas barras: a mentira
+    /// Fecha a fase atual, nesta ordem: os boatos publicados nela são cobrados (a perda entra nos números já, mas fica
+    /// em <see cref="desmentidoNaoExibido"/> até o FimDeFase mostrá-la depois da cutscene), as despesas são cobradas
+    /// e a fase avança. As penalidades vêm ANTES do avanço porque entrar na Fase 4 trava a rota pelas barras: a mentira
     /// descoberta pesa na Definição de Rota (documento, Fase 4).
     /// </summary>
     public EncerramentoDeFase EncerrarFase()
@@ -549,7 +556,12 @@ public class GameManager : MonoBehaviour
         var resultado = new EncerramentoDeFase { fase = faseAtual };
         foreach (RevelacaoPendente revelacao in ConsumirRevelacoes())
         {
-            if (!revelacao.aplicada) AplicarImpactoPanfleto(revelacao.povo, revelacao.estado, 0);
+            if (!revelacao.aplicada)
+            {
+                Vector3Int perda = AplicarImpactoPanfleto(revelacao.povo, revelacao.estado, 0);
+                revelacao.perdaAplicada = new Vector2Int(perda.x, perda.y);
+                desmentidoNaoExibido += revelacao.perdaAplicada;
+            }
             resultado.revelacoes.Add(revelacao);
         }
         resultado.despesa = PagarDespesasDaFase(resultado.fase);

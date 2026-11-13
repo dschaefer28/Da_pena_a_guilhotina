@@ -293,7 +293,7 @@ public class CraftingPress : MonoBehaviour
 
         ConsumeItem(slotInput1);
         ConsumeItem(slotInput2);
-        ProduceItem(panfleto);
+        bool foiParaOInventario = ProduceItem(panfleto);
         UltimoPanfleto = panfleto;
 
         // Dispara a consequência matemática da receita (GDD)
@@ -301,9 +301,9 @@ public class CraftingPress : MonoBehaviour
 
         OnPanfletoGerado?.Invoke();
 
-        // Avisa o jogador (mesmo popup de "item recebido" já usado no resto do jogo), já que
-        // ProduceItem coloca o panfleto direto no slot de saída da prensa, sem passar por AddItem.
-        Inventario.NotificarItemRecebido(panfleto);
+        // No inventário, o AddItem já mostrou o popup de "item recebido"; só o que ficou no slot de saída
+        // (inventário cheio) precisa do aviso manual.
+        if (!foiParaOInventario) Inventario.NotificarItemRecebido(panfleto);
         return true;
     }
 
@@ -330,9 +330,18 @@ public class CraftingPress : MonoBehaviour
         }
     }
 
-    private void ProduceItem(Item resultPrefab)
+    /// <summary>O panfleto vai direto para o inventário (fechar a prensa com ele no Resultado o deixava esquecido lá).
+    /// Só com o inventário cheio ele fica no slot de saída, como antes. Verdadeiro = foi para o inventário.</summary>
+    private bool ProduceItem(Item resultPrefab)
     {
-        if (resultPrefab == null) return;
+        if (resultPrefab == null) return false;
+
+        if (slotOutput.item == null && Inventario != null)
+        {
+            Item novo = resultPrefab.Clone();
+            novo.itemAmt = 1;
+            if (Inventario.AddItem(novo)) return true;
+        }
 
         if (slotOutput.item == null)
         {
@@ -346,5 +355,6 @@ public class CraftingPress : MonoBehaviour
             if (slotOutput.itemCount != null)
                 slotOutput.itemCount.text = slotOutput.item.itemAmt.ToString();
         }
+        return false;
     }
 }

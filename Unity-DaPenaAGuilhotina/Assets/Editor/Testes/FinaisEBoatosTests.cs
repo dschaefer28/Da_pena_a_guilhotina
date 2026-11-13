@@ -78,35 +78,38 @@ public class FinaisEBoatosTests
         Assert.AreEqual(-50, gm.capitalAtual);
     }
 
-    // 13/11/2026: a penalidade do desmentido entra nas barras na impressão; o fim da fase só conta a história.
+    // 13/11/2026 (pedido do usuário): o desmentido NÃO é cobrado na impressão. Ele entra nos números no fim da fase
+    // (a rota precisa dele), mas a HUD segura a queda até o FimDeFase mostrá-la depois da cutscene, com o aviso.
     [Test]
-    public void PanfletoComMentira_PenalidadeEntraNaImpressao_ENaoERepetidaNoFimDaFase()
+    public void PanfletoComMentira_CobradoNoFimDaFase_EHudSeguraAteDepoisDaCutscene()
     {
         GameManager gm = CriarGameManager(2);
         CaseData caso = CriarCaso("Caso_Calunia", 2);
-        gm.opiniaoPublicaAtual = 90; // já com o ganho do panfleto, como a prensa deixa antes de registrar
+        gm.opiniaoPublicaAtual = 70; // já com o ganho do panfleto, como a prensa deixa antes de registrar
         gm.opiniaoEstadoAtual = 30;
 
         gm.RegistrarPanfletoDeCaso(caso, new ResultadoDoPanfleto
         {
-            nivel = NivelDoPanfleto.Calunia, povo = 40, estado = -20, penalidadePovo = -45, penalidadeEstado = -5,
+            nivel = NivelDoPanfleto.Calunia, povo = 20, estado = -10, penalidadePovo = -22, penalidadeEstado = -5,
             textoRevelacao = "Calúnia exposta."
         });
 
-        Assert.AreEqual(45, gm.opiniaoPublicaAtual, "o desmentido é cobrado na hora");
-        Assert.AreEqual(25, gm.opiniaoEstadoAtual);
-        Assert.AreEqual(1, gm.revelacoesPendentes.Count, "a revelação fica para a cutscene de fim de fase");
-        Assert.IsTrue(gm.revelacoesPendentes[0].aplicada);
-
-        // O save guarda que já foi cobrada: o Continuar não cobra de novo.
-        SistemaDeSave.DadosDeSave dados = SistemaDeSave.DesserializarDados(JsonUtility.ToJson(SistemaDeSave.CapturarDados(gm, "Jogo", 0)));
-        Assert.IsTrue(dados.revelacoesPendentes[0].aplicada);
+        Assert.AreEqual(70, gm.opiniaoPublicaAtual, "nada é cobrado na impressão");
+        Assert.AreEqual(30, gm.opiniaoEstadoAtual);
+        Assert.AreEqual(1, gm.revelacoesPendentes.Count);
+        Assert.IsFalse(gm.revelacoesPendentes[0].aplicada);
 
         GameManager.EncerramentoDeFase fim = gm.EncerrarFase();
 
-        Assert.AreEqual(1, fim.revelacoes.Count, "a cutscene ainda conta o desmentido");
-        Assert.AreEqual(45, gm.opiniaoPublicaAtual, "sem cobrança dupla");
+        Assert.AreEqual(1, fim.revelacoes.Count, "a cutscene conta o desmentido");
+        Assert.AreEqual(48, gm.opiniaoPublicaAtual, "cobrado no fim da fase");
         Assert.AreEqual(25, gm.opiniaoEstadoAtual);
+        Assert.AreEqual(new Vector2Int(-22, -5), fim.revelacoes[0].perdaAplicada, "o aviso mostra o que de fato caiu");
+        Assert.AreEqual(new Vector2Int(-22, -5), gm.desmentidoNaoExibido, "a HUD segura a queda durante a cutscene");
+
+        gm.ExibirDesmentido();
+        Assert.AreEqual(Vector2Int.zero, gm.desmentidoNaoExibido, "depois da cutscene a barra desce");
+        Assert.AreEqual(48, gm.opiniaoPublicaAtual, "sem cobrança dupla");
     }
 
     // 13/11/2026: ganho que bate no teto não faz o desmentido punir mais (80 + 40 - 45 = 75, não 100 - 45 = 55).
@@ -126,6 +129,7 @@ public class FinaisEBoatosTests
         Vector3Int aplicado = gm.AplicarImpactoPanfleto(resultado.povo, resultado.estado, resultado.ouro);
         Assert.AreEqual(100, gm.opiniaoPublicaAtual, "a barra ainda sobe até o teto");
         gm.RegistrarPanfletoDeCaso(caso, resultado, aplicado);
+        gm.EncerrarFase();
 
         Assert.AreEqual(75, gm.opiniaoPublicaAtual, "80 + 40 - 45");
         Assert.AreEqual(0, gm.opiniaoEstadoAtual, "10 - 20 - 5, limitado a 0");

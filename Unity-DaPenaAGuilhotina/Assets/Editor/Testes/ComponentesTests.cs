@@ -496,7 +496,8 @@ public class ComponentesTests
         prensa.CombineItems();
         Assert.AreEqual(1, gm.panfletosPublicados.Count);
         Assert.IsNull(prensa.slotInput1.item, "sobras do caso concluído saem também das entradas da prensa");
-        Assert.IsNotNull(prensa.slotOutput.item, "o panfleto fica na saída");
+        Assert.IsNull(prensa.slotOutput.item, "13/11/2026: o panfleto vai direto para o inventário");
+        Assert.IsNotNull(inv.ItemNaGrade(prensa.UltimoPanfleto.itemID), "o panfleto está no inventário");
     }
 
     [Test]
@@ -678,7 +679,7 @@ public class ComponentesTests
         NasEntradas(decreto, carta);
         prensa.CombineItems();
         Assert.AreEqual(0, pedidos, "o tutorial não ganha etapa extra");
-        Assert.AreEqual("panfleto_tutorial", prensa.slotOutput.item.itemID);
+        Assert.IsNotNull(inv.ItemNaGrade("panfleto_tutorial"), "o panfleto vai direto para o inventário");
         CollectionAssert.Contains(gm.casosConcluidos, tutorial);
         Assert.AreEqual(65, gm.opiniaoPublicaAtual);
         Assert.AreEqual(20, gm.capitalAtual);
@@ -823,7 +824,7 @@ public class ComponentesTests
         NasEntradas(fato, mentira);
         prensa.ImprimirComLinhaEditorial(LinhaEditorial.Neutro);
         Assert.AreEqual(1, gm.panfletosPublicados.Count);
-        Item impresso = prensa.slotOutput.item;
+        Item impresso = inv.ItemNaGrade(prensa.UltimoPanfleto.itemID);
         Assert.IsTrue(impresso.EhPanfleto);
 
         string ficha = FichaDaPista.TextoDoPanfleto(impresso, gm, catalogo);
