@@ -407,11 +407,11 @@ MonoBehaviour:
   reuAbsolvidoDeTeste: 1
   juizes:
   - nome: Robespierre
-    retrato: {fileID: 0}
+    retrato: {fileID: 21300000, guid: 6e0a915e50aecca46850ad27e0b69853, type: 3}
   - nome: Saint-Just
-    retrato: {fileID: 0}
+    retrato: {fileID: 21300000, guid: 94d2009f0465dfa45ae634a7d0fec6eb, type: 3}
   - nome: Couthon
-    retrato: {fileID: 0}
+    retrato: {fileID: 21300000, guid: 3187f4e5d26d18c4fa5b16f01bdd55bb, type: 3}
   maxArgumentos: 5
   minimoParaEncerrar: 2
   duracaoDaBarra: 0.8
