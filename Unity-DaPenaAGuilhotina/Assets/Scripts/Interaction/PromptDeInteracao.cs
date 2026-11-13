@@ -111,7 +111,23 @@ public class PromptDeInteracao : MonoBehaviour
         if (topoJogador.y > topo.y) topo.y = topoJogador.y;
 
         Vector3 posicao = topo + Vector3.up * alturaAcimaDoAlvo;
+        posicao = ManterDentroDaTela(posicao);
         canvas.transform.position = FugirDoRelogio(posicao);
+    }
+
+    private const float MargemNoTopoDaTela = 0.2f; // unidades do mundo
+
+    // Alvos altos (quadros/murais) têm o topo colado no limite da câmera: o aviso nascia acima dele, fora da tela, e o jogador
+    // nunca via que dava para interagir. Se o bloco (nome + tecla) passaria do topo visível, desce até caber.
+    private Vector3 ManterDentroDaTela(Vector3 posicao)
+    {
+        Camera cam = Camera.main;
+        if (cam == null) return posicao;
+
+        float altura = (tecla.anchoredPosition.y + tecla.rect.height) * escala;
+        float topoVisivel = cam.ViewportToWorldPoint(new Vector3(0.5f, 1f, Mathf.Abs(cam.transform.position.z))).y - MargemNoTopoDaTela;
+        if (posicao.y + altura > topoVisivel) posicao.y = topoVisivel - altura;
+        return posicao;
     }
 
     private const float MargemAbaixoDoRelogio = 10f; // pixels de tela

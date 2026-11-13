@@ -1,0 +1,442 @@
+fileFormatVersion: 2
+guid: 79befc365f5a5264681611cd7b75ca24
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3013722877184022237
+    second: DeganGameStudio_Logo_0
+  - first:
+      213: -7322596521626021726
+    second: DeganGameStudio_Logo_1
+  - first:
+      213: -1140676442380541807
+    second: DeganGameStudio_Logo_2
+  - first:
+      213: 6521255615266560901
+    second: DeganGameStudio_Logo_3
+  - first:
+      213: 7831332179408930564
+    second: DeganGameStudio_Logo_4
+  - first:
+      213: 4388574837652001069
+    second: DeganGameStudio_Logo_5
+  - first:
+      213: -8770471237249953800
+    second: DeganGameStudio_Logo_6
+  - first:
+      213: 4781513825265441934
+    second: DeganGameStudio_Logo_7
+  - first:
+      213: 2693007143734117518
+    second: DeganGameStudio_Logo_8
+  - first:
+      213: -1620200554204261428
+    second: DeganGameStudio_Logo_9
+  - first:
+      213: 3296980470281170411
+    second: DeganGameStudio_Logo_10
+  - first:
+      213: -4505358557321826980
+    second: DeganGameStudio_Logo_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: DeganGameStudio_Logo_0
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 91
+        width: 85
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3296af5b20b1d26d0800000000000000
+      internalID: -3013722877184022237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeganGameStudio_Logo_1
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 173
+        width: 278
+        height: 279
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a058f6a249e06a90800000000000000
+      internalID: -7322596521626021726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeganGameStudio_Logo_2
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 90
+        width: 67
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1906048b1d08b20f0800000000000000
+      internalID: -1140676442380541807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeganGameStudio_Logo_3
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 65
+        width: 73
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58b1c755e67208a50800000000000000
+      internalID: 6521255615266560901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeganGameStudio_Logo_4
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 90
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40741cfff1b7eac60800000000000000
+      internalID: 7831332179408930564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeganGameStudio_Logo_5
+      rect:
+        serializedVersion: 2
+        x: 334
+        y: 90
+        width: 71
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d21177c209957ec30800000000000000
+      internalID: 4388574837652001069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeganGameStudio_Logo_6
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 34
+        width: 88
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ff8feea0e6094680800000000000000
+      internalID: -8770471237249953800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeganGameStudio_Logo_7
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 34
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8cd0939d795b5240800000000000000
+      internalID: 4781513825265441934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeganGameStudio_Logo_8
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 35
+        width: 44
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e848cd3aabb7f5520800000000000000
+      internalID: 2693007143734117518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeganGameStudio_Logo_9
+      rect:
+        serializedVersion: 2
+        x: 253
+        y: 34
+        width: 28
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc393cd1e24e389e0800000000000000
+      internalID: -1620200554204261428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeganGameStudio_Logo_10
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 34
+        width: 39
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bed6282054a31cd20800000000000000
+      internalID: 3296980470281170411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeganGameStudio_Logo_11
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 34
+        width: 33
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5de0153340c971c0800000000000000
+      internalID: -4505358557321826980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      DeganGameStudio_Logo_0: -3013722877184022237
+      DeganGameStudio_Logo_1: -7322596521626021726
+      DeganGameStudio_Logo_10: 3296980470281170411
+      DeganGameStudio_Logo_11: -4505358557321826980
+      DeganGameStudio_Logo_2: -1140676442380541807
+      DeganGameStudio_Logo_3: 6521255615266560901
+      DeganGameStudio_Logo_4: 7831332179408930564
+      DeganGameStudio_Logo_5: 4388574837652001069
+      DeganGameStudio_Logo_6: -8770471237249953800
+      DeganGameStudio_Logo_7: 4781513825265441934
+      DeganGameStudio_Logo_8: 2693007143734117518
+      DeganGameStudio_Logo_9: -1620200554204261428
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
