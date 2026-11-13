@@ -78,6 +78,37 @@ public class FinaisEBoatosTests
         Assert.AreEqual(-50, gm.capitalAtual);
     }
 
+    // 13/11/2026: a penalidade do desmentido entra nas barras na impressão; o fim da fase só conta a história.
+    [Test]
+    public void PanfletoComMentira_PenalidadeEntraNaImpressao_ENaoERepetidaNoFimDaFase()
+    {
+        GameManager gm = CriarGameManager(2);
+        CaseData caso = CriarCaso("Caso_Calunia", 2);
+        gm.opiniaoPublicaAtual = 90; // já com o ganho do panfleto, como a prensa deixa antes de registrar
+        gm.opiniaoEstadoAtual = 30;
+
+        gm.RegistrarPanfletoDeCaso(caso, new ResultadoDoPanfleto
+        {
+            nivel = NivelDoPanfleto.Calunia, povo = 40, estado = -20, penalidadePovo = -45, penalidadeEstado = -5,
+            textoRevelacao = "Calúnia exposta."
+        });
+
+        Assert.AreEqual(45, gm.opiniaoPublicaAtual, "o desmentido é cobrado na hora");
+        Assert.AreEqual(25, gm.opiniaoEstadoAtual);
+        Assert.AreEqual(1, gm.revelacoesPendentes.Count, "a revelação fica para a cutscene de fim de fase");
+        Assert.IsTrue(gm.revelacoesPendentes[0].aplicada);
+
+        // O save guarda que já foi cobrada: o Continuar não cobra de novo.
+        SistemaDeSave.DadosDeSave dados = SistemaDeSave.DesserializarDados(JsonUtility.ToJson(SistemaDeSave.CapturarDados(gm, "Jogo", 0)));
+        Assert.IsTrue(dados.revelacoesPendentes[0].aplicada);
+
+        GameManager.EncerramentoDeFase fim = gm.EncerrarFase();
+
+        Assert.AreEqual(1, fim.revelacoes.Count, "a cutscene ainda conta o desmentido");
+        Assert.AreEqual(45, gm.opiniaoPublicaAtual, "sem cobrança dupla");
+        Assert.AreEqual(25, gm.opiniaoEstadoAtual);
+    }
+
     [Test]
     public void EncerrarFase_SemBoatos_SoCobraEAvanca()
     {

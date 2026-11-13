@@ -1037,7 +1037,7 @@ MonoBehaviour:
     mensagem: "Antes de imprimir, veja o status no alto: a barra de cima \xE9 a Opini\xE3o
       do Povo, a de baixo a do Estado, e embaixo fica o seu ouro. Um panfleto s\xF3
       com fatos move as barras como o caso promete; com boato ou cal\xFAnia rende
-      mais agora, mas perde apoio quando a mentira \xE9 descoberta, no fim do per\xEDodo.
+      mais, mas perde apoio assim que a mentira \xE9 descoberta.
       Quando terminar de ler, {continuar}."
     icone: {fileID: 0}
     controle: 0

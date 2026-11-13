@@ -42,7 +42,8 @@ public class ItemPickupNotificationUI : MonoBehaviour
     private InventoryManager inventoryManagerAtual;
     private float? alturaBasePopup;
     // Itens recebidos e avisos de texto (AvisoNaTela) dividem a mesma fila, para nunca se sobreporem.
-    private readonly Queue<(string texto, Sprite icone)> filaDeItens = new Queue<(string, Sprite)>();
+    // duracao 0 = duracaoExibicao; um aviso pode pedir mais tempo (AvisoNaTela.Mostrar(..., segundos)).
+    private readonly Queue<(string texto, Sprite icone, float duracao)> filaDeItens = new Queue<(string, Sprite, float)>();
     private Coroutine exibicaoEmAndamento;
 
     void Start()
@@ -107,14 +108,14 @@ public class ItemPickupNotificationUI : MonoBehaviour
         Enfileirar(string.Format(formatoMensagem, item.NomeExibicao), item.itemImg);
     }
 
-    private void HandleAviso(string texto, Sprite icone) => Enfileirar(texto, icone);
+    private void HandleAviso(string texto, Sprite icone) => Enfileirar(texto, icone, AvisoNaTela.DuracaoPedida);
 
-    private void Enfileirar(string texto, Sprite icone)
+    private void Enfileirar(string texto, Sprite icone, float duracao = 0f)
     {
         // Objeto inativo não roda corrotina (ex: UI da cena antiga durante a troca de cena).
         if (!isActiveAndEnabled) return;
 
-        filaDeItens.Enqueue((texto, icone));
+        filaDeItens.Enqueue((texto, icone, duracao));
         if (exibicaoEmAndamento == null)
             exibicaoEmAndamento = StartCoroutine(ExibirFila());
     }
@@ -125,10 +126,10 @@ public class ItemPickupNotificationUI : MonoBehaviour
     {
         while (filaDeItens.Count > 0)
         {
-            var (texto, icone) = filaDeItens.Dequeue();
+            var (texto, icone, duracao) = filaDeItens.Dequeue();
             MostrarPopup(texto, icone);
             yield return Fade(0f, 1f);
-            yield return new WaitForSecondsRealtime(duracaoExibicao);
+            yield return new WaitForSecondsRealtime(duracao > 0f ? duracao : duracaoExibicao);
             yield return Fade(1f, 0f);
             if (painelPopup != null) painelPopup.SetActive(false);
         }

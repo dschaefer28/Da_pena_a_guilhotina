@@ -110,12 +110,15 @@ public class GameManager : MonoBehaviour
         public int estado;
         [Tooltip("Linha editorial do panfleto desmentido (a cutscene conta quando o sensacionalista agravou a perda).")]
         public LinhaEditorial linha;
+        [Tooltip("A penalidade já entrou nas barras na hora da impressão (desde 13/11/2026). O fim da fase só conta a " +
+                 "história na cutscene; falso = save antigo, cobrado no fim da fase como antes.")]
+        public bool aplicada;
     }
 
     [Header("Fato x Boato")]
     [Tooltip("Histórico de panfletos de caso impressos e a versão de cada um (útil para o Tribunal na Fase 4).")]
     public List<PanfletoPublicado> panfletosPublicados = new List<PanfletoPublicado>();
-    [Tooltip("Boatos publicados que ainda vão ser expostos. Aplicados no fim da fase (EncerrarFase), antes da rota.")]
+    [Tooltip("Boatos publicados na fase. A penalidade entra nas barras na impressão; a cutscene de fim de fase (EncerrarFase) conta o desmentido.")]
     public List<RevelacaoPendente> revelacoesPendentes = new List<RevelacaoPendente>();
     [Tooltip("itemIDs de pistas cuja verdade o jogador já descobriu. Guardado aqui para a ficha não voltar a " +
              "'não verificada' quando o item que confirmou a pista for gasto na prensa.")]
@@ -370,19 +373,36 @@ public class GameManager : MonoBehaviour
         // Fatos nunca gera revelação, com qualquer linha editorial: o sensacionalista só agrava uma mentira que existe.
         if (resultado.nivel != NivelDoPanfleto.Fatos && resultado.TemRevelacao)
         {
+            // A penalidade entra nas barras já na impressão (logo depois do ganho do panfleto, mesma ordem e mesmo
+            // limite 0–100 de antes): cobrada só ao voltar ao escritório, a barra mudava sem explicação. A revelação
+            // continua na lista para a cutscene de fim de fase contar o desmentido, sem cobrar de novo.
+            if (resultado.penalidadePovo != 0 || resultado.penalidadeEstado != 0)
+            {
+                AplicarImpactoPanfleto(resultado.penalidadePovo, resultado.penalidadeEstado, 0);
+                AvisoNaTela.Mostrar("O panfleto foi desmentido nas ruas: a tipografia perdeu apoio" +
+                                    Perda(resultado.penalidadePovo, "Povo") + Perda(resultado.penalidadeEstado, "Estado") + ".",
+                                    null, DuracaoDoAvisoDeDesmentido);
+            }
             revelacoesPendentes.Add(new RevelacaoPendente
             {
                 caso = caso,
                 texto = resultado.textoRevelacao,
                 povo = resultado.penalidadePovo,
                 estado = resultado.penalidadeEstado,
-                linha = resultado.linha
+                linha = resultado.linha,
+                aplicada = true
             });
         }
         Debug.Log($"[FATO x BOATO] Panfleto de '{(caso != null ? caso.caseTitle : "?")}' publicado como {resultado.nivel}" +
                   (resultado.linha != LinhaEditorial.Nenhuma ? $", linha {resultado.linha}" : string.Empty) +
                   (resultado.suportes.Count > 0 ? $", com apoio de {string.Join(", ", resultado.suportes)}." : "."));
     }
+
+    /// <summary>Segundos do aviso de desmentido na tela: é ele que explica por que a barra caiu logo depois de subir.</summary>
+    public const float DuracaoDoAvisoDeDesmentido = 7f;
+
+    private static string Perda(int valor, string barra) =>
+        valor == 0 ? string.Empty : $" ({(valor > 0 ? "+" : string.Empty)}{valor} {barra})";
 
     // ===== Evidências e Biblioteca =====
 
@@ -501,16 +521,17 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Fecha a fase atual, nesta ordem: os boatos publicados nela são expostos (penalidades aplicadas), as despesas
-    /// são cobradas e a fase avança. As penalidades vêm ANTES do avanço porque entrar na Fase 4 trava a rota pelas
-    /// barras: a mentira descoberta pesa na Definição de Rota (documento, Fase 4).
+    /// Fecha a fase atual, nesta ordem: os boatos publicados nela são contados (a penalidade já entrou nas barras na
+    /// impressão; só as de saves antigos, ainda não aplicadas, são cobradas aqui), as despesas são cobradas e a fase
+    /// avança. As penalidades vêm ANTES do avanço porque entrar na Fase 4 trava a rota pelas barras: a mentira
+    /// descoberta pesa na Definição de Rota (documento, Fase 4).
     /// </summary>
     public EncerramentoDeFase EncerrarFase()
     {
         var resultado = new EncerramentoDeFase { fase = faseAtual };
         foreach (RevelacaoPendente revelacao in ConsumirRevelacoes())
         {
-            AplicarImpactoPanfleto(revelacao.povo, revelacao.estado, 0);
+            if (!revelacao.aplicada) AplicarImpactoPanfleto(revelacao.povo, revelacao.estado, 0);
             resultado.revelacoes.Add(revelacao);
         }
         resultado.despesa = PagarDespesasDaFase(resultado.fase);

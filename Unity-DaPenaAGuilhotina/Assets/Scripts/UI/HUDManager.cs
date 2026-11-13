@@ -27,7 +27,21 @@ public class HUDManager : MonoBehaviour
     // Valores já mostrados na tela: a diferença para o GameManager é o que acabou de mudar.
     private int povoExibido, estadoExibido, capitalExibido;
     private bool jaExibiu;
-    private Coroutine animPovo, animEstado, animCapital;
+    private Coroutine animCapital;
+
+    [Tooltip("Pausa entre duas mudanças seguidas da mesma barra (ex.: o ganho do panfleto e, logo depois, o desmentido).")]
+    [Min(0f)] public float pausaEntreMudancas = 0.7f;
+
+    // Mudanças seguidas da mesma barra tocam uma depois da outra (sobe com o panfleto, desce com o desmentido), em vez
+    // de a segunda atropelar a primeira e o jogador só ver o resultado final.
+    private class Barra
+    {
+        public Slider slider;
+        public TextMeshProUGUI delta;
+        public readonly System.Collections.Generic.Queue<Vector2Int> fila = new System.Collections.Generic.Queue<Vector2Int>();
+        public bool rodando;
+    }
+    private Barra barraPovo, barraEstado;
     // Cor de cada barra guardada no início: se uma animação for interrompida no meio do "pisca", a próxima
     // não pode tomar a cor meio-branca como a cor verdadeira da barra.
     private readonly System.Collections.Generic.Dictionary<Slider, Color> corDaBarra = new System.Collections.Generic.Dictionary<Slider, Color>();
@@ -42,6 +56,8 @@ public class HUDManager : MonoBehaviour
         EsconderDelta(deltaPovoText);
         EsconderDelta(deltaEstadoText);
         EsconderDelta(deltaCapitalText);
+        barraPovo = new Barra { slider = publicOpinionSlider, delta = deltaPovoText };
+        barraEstado = new Barra { slider = stateOpinionSlider, delta = deltaEstadoText };
 
         // ARQUITETURA BLINDADA:
         // O Start() garante que o Awake() do GameManager já terminou de rodar na cena.
@@ -84,8 +100,8 @@ public class HUDManager : MonoBehaviour
         else
         {
             // Aprender vendo: a barra corre até o valor novo, pisca e mostra quanto mudou.
-            if (povo != povoExibido) Reiniciar(ref animPovo, AnimarBarra(publicOpinionSlider, povoExibido, povo, deltaPovoText));
-            if (estado != estadoExibido) Reiniciar(ref animEstado, AnimarBarra(stateOpinionSlider, estadoExibido, estado, deltaEstadoText));
+            if (povo != povoExibido) Enfileirar(barraPovo, povoExibido, povo);
+            if (estado != estadoExibido) Enfileirar(barraEstado, estadoExibido, estado);
             if (capital != capitalExibido) Reiniciar(ref animCapital, AnimarCapital(capitalExibido, capital));
         }
 
@@ -106,8 +122,63 @@ public class HUDManager : MonoBehaviour
         rotina = StartCoroutine(nova);
     }
 
+    private void Enfileirar(Barra barra, int de, int para)
+    {
+        barra.fila.Enqueue(new Vector2Int(de, para));
+        if (barra.rodando) return;
+        if (!isActiveAndEnabled) { MostrarSemAnimar(barra); return; } // corrotina não roda com a HUD desligada
+        barra.rodando = true;
+        StartCoroutine(RodarFila(barra));
+    }
+
+    // HUD desligada no meio de uma animação: as corrotinas morrem, então as barras vão direto para o valor final.
+    private void OnDisable()
+    {
+        if (barraPovo != null) MostrarSemAnimar(barraPovo);
+        if (barraEstado != null) MostrarSemAnimar(barraEstado);
+    }
+
+    private void MostrarSemAnimar(Barra barra)
+    {
+        int? final = null;
+        while (barra.fila.Count > 0) final = barra.fila.Dequeue().y;
+        barra.rodando = false;
+        if (barra.slider == null) return;
+        if (final.HasValue) barra.slider.value = final.Value;
+        else barra.slider.value = barra == barraPovo ? povoExibido : estadoExibido;
+        if (barra.slider.fillRect != null && barra.slider.fillRect.TryGetComponent(out Graphic g) && corDaBarra.TryGetValue(barra.slider, out Color cor))
+            g.color = cor;
+        EsconderDelta(barra.delta);
+    }
+
     // Tempo "unscaled": a prensa e o inventário deixam o jogo em timeScale 0 justamente quando o panfleto sai.
-    private IEnumerator AnimarBarra(Slider barra, int de, int para, TextMeshProUGUI delta)
+    private IEnumerator RodarFila(Barra barra)
+    {
+        while (barra.fila.Count > 0)
+        {
+            Vector2Int passo = barra.fila.Dequeue();
+            yield return MoverBarra(barra.slider, passo.x, passo.y, barra.delta);
+
+            if (barra.fila.Count > 0)
+            {
+                yield return new WaitForSecondsRealtime(pausaEntreMudancas);
+                continue;
+            }
+
+            // Última mudança: o "+X" fica um tempo e some; uma mudança nova durante a espera entra na hora.
+            float fim = Time.unscaledTime + Mathf.Max(0f, duracaoDelta - duracaoAnimacao);
+            while (Time.unscaledTime < fim && barra.fila.Count == 0) yield return null;
+            for (float t = 0f; t < 0.4f && barra.fila.Count == 0 && barra.delta != null; t += Time.unscaledDeltaTime)
+            {
+                barra.delta.alpha = 1f - t / 0.4f;
+                yield return null;
+            }
+            if (barra.fila.Count == 0) EsconderDelta(barra.delta);
+        }
+        barra.rodando = false;
+    }
+
+    private IEnumerator MoverBarra(Slider barra, int de, int para, TextMeshProUGUI delta)
     {
         MostrarDelta(delta, para - de);
         if (barra == null) yield break;
@@ -125,8 +196,6 @@ public class HUDManager : MonoBehaviour
         }
         barra.value = para;
         if (preenchimento != null) preenchimento.color = corOriginal;
-
-        yield return EsperarEsconder(delta);
     }
 
     private IEnumerator AnimarCapital(int de, int para)

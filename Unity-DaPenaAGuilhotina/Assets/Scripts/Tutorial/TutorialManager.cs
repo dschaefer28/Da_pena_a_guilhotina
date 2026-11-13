@@ -229,8 +229,8 @@ public class TutorialManager : MonoBehaviour
             // enquanto esta etapa está na tela (DestaqueDeEtapaTutorial no prefab UI).
             etapaId = "explicar_efeito_barras",
             mensagem = "Antes de imprimir, veja o status no alto: a barra de cima é a Opinião do Povo, a de baixo a do Estado, e embaixo fica o seu ouro. " +
-                       "Um panfleto só com fatos move as barras como o caso promete; com boato ou calúnia rende mais agora, " +
-                       "mas perde apoio quando a mentira é descoberta, no fim do período. Quando terminar de ler, {continuar}.",
+                       "Um panfleto só com fatos move as barras como o caso promete; com boato ou calúnia rende mais, " +
+                       "mas perde apoio assim que a mentira é descoberta. Quando terminar de ler, {continuar}.",
             tipoDeAvanco = TipoDeAvanco.CliqueDoJogador
         },
         new TutorialStep

@@ -69,6 +69,7 @@ public static class SistemaDeSave
         public int povo;
         public int estado;
         public LinhaEditorial linha; // v6
+        public bool aplicada;        // penalidade já cobrada na impressão; ausente em saves antigos = cobrar no fim da fase
     }
 
     [Serializable]
@@ -384,7 +385,8 @@ public static class SistemaDeSave
         foreach (var r in gm.revelacoesPendentes)
             dados.revelacoesPendentes.Add(new RevelacaoSalva
             {
-                caso = r.caso != null ? r.caso.name : null, texto = r.texto, povo = r.povo, estado = r.estado, linha = r.linha
+                caso = r.caso != null ? r.caso.name : null, texto = r.texto, povo = r.povo, estado = r.estado, linha = r.linha,
+                aplicada = r.aplicada
             });
 
         return dados;
@@ -522,7 +524,8 @@ public static class SistemaDeSave
             gm.revelacoesPendentes.Add(new GameManager.RevelacaoPendente
             {
                 caso = BuscarCaso(catalogo, r.caso), texto = r.texto, povo = r.povo, estado = r.estado,
-                linha = dados.versao >= 6 ? r.linha : LinhaEditorial.Nenhuma
+                linha = dados.versao >= 6 ? r.linha : LinhaEditorial.Nenhuma,
+                aplicada = r.aplicada
             });
 
         if (dados.versao < 2) MigrarProgressaoDeFases(gm, catalogo);
