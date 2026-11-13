@@ -46,8 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   casoEscolhido: {fileID: 11400000, guid: d0bd65d553c918045aaf794e01462c68, type: 2}
   capitalAtual: 0
-  opiniaoPublicaAtual: 50
-  opiniaoEstadoAtual: 50
+  opiniaoPublicaAtual: 45
+  opiniaoEstadoAtual: 45
   inventarioSalvo: []
   inventoryManager: {fileID: 0}
   dialogueSystem: {fileID: 0}

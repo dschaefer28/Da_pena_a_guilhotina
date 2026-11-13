@@ -434,7 +434,8 @@ public class ComponentesTests
         gaveta.Interact();
         Assert.IsTrue(inv.HasItem("p1"));
         Assert.AreEqual(3, gm.horasRestantes);
-        Assert.IsFalse(gaveta.PodeInteragir);
+        Assert.IsTrue(gaveta.JaVasculhado);
+        Assert.IsTrue(gaveta.PodeInteragir, "já vasculhada ainda mostra nome + tecla");
 
         inv.RemoverItens(i => i.itemID == "p1");
         gaveta.Interact();

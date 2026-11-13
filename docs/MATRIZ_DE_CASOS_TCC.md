@@ -144,7 +144,7 @@ A partir da Fase 2, depois de escolher as duas pistas, o jogador escolhe o teor 
 
 ## Exemplos de percurso até cada rota (só versões Fatos, sem revelações, sem apoio e sem linha editorial)
 
-Início 50/50; tutorial (+5/+5) → 55/55, sem pender para nenhuma rota. Com um caso só na Fase 3 (27/09), a rota é decidida por três publicações. Margem da rota: 20. Valores limitados a 0..100. Valores do balanceamento de 17/10 (STATUS §24).
+Início 45/45 (GameManager.prefab, desde 12/11/2026); tutorial (+5/+5) → 50/50, sem pender para nenhuma rota. Com um caso só na Fase 3 (27/09), a rota é decidida por três publicações. Margem da rota: 20. Valores limitados a 0..100. Valores do balanceamento de 17/10 (STATUS §24).
 
 | Rota | Fase 2 | Fase 3 | Resultado |
 |---|---|---|---|

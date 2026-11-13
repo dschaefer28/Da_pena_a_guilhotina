@@ -49,7 +49,12 @@ public class LootInteractable : MonoBehaviour, IInteractable
         }
     }
 
-    public bool PodeInteragir => !ColetadoNoCasoAtual;
+    /// <summary>Pista deste objeto já guardada no caso atual.</summary>
+    public bool JaVasculhado => ColetadoNoCasoAtual;
+
+    // Sempre verdadeiro: mesmo já vasculhado, o aviso (nome + tecla) continua aparecendo sobre o objeto;
+    // apertar a tecla só avisa que já foi vasculhado (ver Interact).
+    public bool PodeInteragir => true;
 
     private void Start()
     {
@@ -82,7 +87,11 @@ public class LootInteractable : MonoBehaviour, IInteractable
             Debug.LogWarning("[LootInteractable] GameManager ausente.");
             return;
         }
-        if (ColetadoNoCasoAtual) return;
+        if (ColetadoNoCasoAtual)
+        {
+            AvisoNaTela.Mostrar("Você já vasculhou aqui.");
+            return;
+        }
 
         CaseData casoAtual = GameManager.Instance.casoEscolhido;
         if (casoAtual == null)

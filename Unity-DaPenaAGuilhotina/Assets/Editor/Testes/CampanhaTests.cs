@@ -167,8 +167,8 @@ public class CampanhaTests
                 foreach (NivelDoPanfleto n2 in niveis) foreach (LinhaEditorial t2 in LinhasEditoriais.Opcoes)
                 foreach (NivelDoPanfleto n3 in niveis) foreach (LinhaEditorial t3 in LinhasEditoriais.Opcoes)
                 {
-                    int povo = Mathf.Clamp(50 + tutorial.publicOpinionImpact, 0, 100);
-                    int estado = Mathf.Clamp(50 + tutorial.stateOpinionImpact, 0, 100);
+                    int povo = Mathf.Clamp(padrao.opiniaoPublicaAtual + tutorial.publicOpinionImpact, 0, 100);
+                    int estado = Mathf.Clamp(padrao.opiniaoEstadoAtual + tutorial.stateOpinionImpact, 0, 100);
                     int ouro = tutorial.moneyReward;
                     Publicar(c2.receitaDoPanfleto, n2, t2, ref povo, ref estado, ref ouro, padrao.despesasPorFase[1]);
                     Publicar(c3.receitaDoPanfleto, n3, t3, ref povo, ref estado, ref ouro, padrao.despesasPorFase[2]);
