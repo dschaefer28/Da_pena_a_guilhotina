@@ -112,8 +112,11 @@ public class CutsceneLegendas : MonoBehaviour
     /// <param name="fadeDeEntradaInstantaneo">Verdadeiro pula o fade de entrada (tela já nasce preta).
     /// Use para uma cutscene que é a primeira coisa exibida na cena (não há cenário de jogo visível
     /// ainda para esmaecer) — senão o cenário "pisca" por trás do fade antes de escurecer de vez.</param>
-    public void Tocar(List<Linha> linhas, Action aoTerminar = null, bool fadeDeEntradaInstantaneo = false) =>
-        Iniciar(linhas, aoTerminar, fadeDeEntradaInstantaneo, false);
+    /// <param name="terminarNoPreto">Verdadeiro pula o fade de saída: o preto some no mesmo frame em que aoTerminar
+    /// roda. Use quando aoTerminar põe outra tela preta por cima (ex.: tela final do tribunal) — senão o cenário
+    /// reaparece por um instante entre as duas.</param>
+    public void Tocar(List<Linha> linhas, Action aoTerminar = null, bool fadeDeEntradaInstantaneo = false, bool terminarNoPreto = false) =>
+        Iniciar(linhas, aoTerminar, fadeDeEntradaInstantaneo, false, terminarNoPreto);
 
     /// <summary>
     /// Legendas de transição (abertura e passagem entre fases): o fundo fica preto do começo ao fim e só o texto entra
@@ -123,13 +126,13 @@ public class CutsceneLegendas : MonoBehaviour
     /// bloco que ainda não apareceu).
     /// </summary>
     public void TocarTransicao(List<Linha> linhas, Action aoTerminar = null, bool fadeDeEntradaInstantaneo = false) =>
-        Iniciar(linhas, aoTerminar, fadeDeEntradaInstantaneo, true);
+        Iniciar(linhas, aoTerminar, fadeDeEntradaInstantaneo, true, false);
 
-    private void Iniciar(List<Linha> linhas, Action aoTerminar, bool fadeDeEntradaInstantaneo, bool transicao)
+    private void Iniciar(List<Linha> linhas, Action aoTerminar, bool fadeDeEntradaInstantaneo, bool transicao, bool terminarNoPreto)
     {
         if (linhas == null || linhas.Count == 0) { aoTerminar?.Invoke(); return; }
         if (emAndamento != null) StopCoroutine(emAndamento);
-        emAndamento = StartCoroutine(Rotina(linhas, aoTerminar, fadeDeEntradaInstantaneo, transicao));
+        emAndamento = StartCoroutine(Rotina(linhas, aoTerminar, fadeDeEntradaInstantaneo, transicao, terminarNoPreto));
     }
 
     /// <summary>Segundos de leitura de um bloco de transição: margem + 1 s a cada N palavras, nunca menos que o
@@ -153,7 +156,7 @@ public class CutsceneLegendas : MonoBehaviour
         return total;
     }
 
-    private IEnumerator Rotina(List<Linha> linhas, Action aoTerminar, bool fadeDeEntradaInstantaneo, bool transicao)
+    private IEnumerator Rotina(List<Linha> linhas, Action aoTerminar, bool fadeDeEntradaInstantaneo, bool transicao, bool terminarNoPreto)
     {
         EmExibicao = true;
         float escalaAnterior = Time.timeScale;
@@ -187,7 +190,10 @@ public class CutsceneLegendas : MonoBehaviour
 
         legenda.text = string.Empty;
         legenda.alpha = 1f;
-        yield return Fade(1f, 0f);
+        // Terminando no preto, o resto desta rotina e o aoTerminar rodam no mesmo frame: não há render entre o preto da
+        // cutscene sumir e a tela de quem chamou aparecer.
+        if (terminarNoPreto) fundo.alpha = 0f;
+        else yield return Fade(1f, 0f);
         fundo.blocksRaycasts = false;
         fundo.gameObject.SetActive(false);
         Time.timeScale = escalaAnterior == 0f ? 1f : escalaAnterior;

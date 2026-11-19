@@ -532,7 +532,9 @@ public class TribunalManager : MonoBehaviour
             if (!string.IsNullOrWhiteSpace(doReu)) legendas.Add(new CutsceneLegendas.Linha { texto = doReu, duracao = 5f });
             if (desfecho.legendas != null) legendas.AddRange(desfecho.legendas);
         }
-        if (legendas.Count > 0) cutscene.Tocar(legendas, () => MostrarFim(desfecho));
+        // Sem fade de saída: a tela final (preta) entra no mesmo frame em que o preto da cutscene sai, e o tribunal não
+        // pisca entre as duas.
+        if (legendas.Count > 0) cutscene.Tocar(legendas, () => MostrarFim(desfecho), terminarNoPreto: true);
         else MostrarFim(desfecho);
     }
 
