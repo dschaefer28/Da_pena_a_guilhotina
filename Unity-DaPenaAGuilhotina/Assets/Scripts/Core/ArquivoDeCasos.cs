@@ -5,14 +5,9 @@ using System.Text;
 using UnityEngine;
 
 /// <summary>
-/// Arquivo dos casos resolvidos, lido pelo painel "Casos resolvidos" do menu principal: o jogador relê o caso de cada
-/// fase e o desfecho dele sem precisar rejogar. Fica num arquivo separado do save
-/// (Application.persistentDataPath/arquivo_de_casos.json) porque sobrevive ao Novo Jogo: cada partida é guardada à
-/// parte (até <see cref="MaximoDePartidas"/>, as mais antigas saem primeiro).
-///
-/// Cada partida é um retrato dos dados do save (DadosDeSave), atualizado quando o jogo salva, quando um caso é concluído
-/// na prensa e quando a fase fecha. O desfecho só aparece depois que o jogo o revelou: a revelação de um boato no fim
-/// da fase e o veredito do tribunal no fim do jogo. Antes disso, o painel não diz nada sobre a verdade das pistas.
+/// Histórico de casos resolvidos do painel "Casos resolvidos". Arquivo separado do save porque sobrevive ao
+/// Novo Jogo (até <see cref="MaximoDePartidas"/> partidas). O desfecho só é exibido depois que o jogo o revelou
+/// (fim da fase ou veredito), para não entregar a verdade das pistas.
 /// </summary>
 public static class ArquivoDeCasos
 {
@@ -25,9 +20,9 @@ public static class ArquivoDeCasos
         public string caso;                       // CaseData.name
         public bool temPanfleto;
         public SistemaDeSave.PanfletoSalvo panfleto;
-        public List<string> acreditou = new List<string>(); // itemIDs das pistas escolhidas no quadro de dedução
+        public List<string> acreditou = new List<string>(); // itemIDs escolhidos no quadro de dedução
 
-        // Revelação do boato publicado (guardada enquanto estava pendente: depois do fim da fase o save não a tem mais).
+        // Copiada enquanto pendente: após o fim da fase o save não a tem mais.
         public bool temRevelacao;
         public string textoRevelacao;
         public int revelacaoPovo, revelacaoEstado;
@@ -58,20 +53,18 @@ public static class ArquivoDeCasos
 
     // ===== Registrar =====
 
-    /// <summary>Atualiza a partida em andamento a partir do GameManager (caso concluído, fim de fase).</summary>
     public static void Registrar(GameManager gm)
     {
         if (gm == null || !Application.isPlaying) return;
         Registrar(SistemaDeSave.CapturarDados(gm, string.Empty, 0));
     }
 
-    /// <summary>Atualiza a partida a partir dos dados que acabaram de ir para o save (inclui o fim de jogo).</summary>
     public static void Registrar(SistemaDeSave.DadosDeSave dados)
     {
-        // Só no jogo de verdade: os testes de EditMode montam GameManagers e saves falsos.
+        // isPlaying: testes de EditMode montam GameManagers e saves falsos.
         if (dados == null || !Application.isPlaying || string.IsNullOrEmpty(dados.idDaPartida)) return;
-        if (ModoDev.PartidaDeDemonstracao) return; // partida do modo dev: não entra nos casos resolvidos
-        if (dados.casosConcluidos == null || dados.casosConcluidos.Count == 0) return; // nada para mostrar ainda
+        if (ModoDev.PartidaDeDemonstracao) return;
+        if (dados.casosConcluidos == null || dados.casosConcluidos.Count == 0) return;
 
         try
         {
@@ -81,7 +74,7 @@ public static class ArquivoDeCasos
             PartidaArquivada nova = Montar(dados, anterior, CatalogoDeSave.Instancia);
 
             if (indice >= 0) arquivo.partidas.RemoveAt(indice);
-            arquivo.partidas.Add(nova); // a mais recente fica no fim
+            arquivo.partidas.Add(nova);
             while (arquivo.partidas.Count > MaximoDePartidas) arquivo.partidas.RemoveAt(0);
 
             string temporario = CaminhoDoArquivo + ".tmp";
@@ -95,8 +88,7 @@ public static class ArquivoDeCasos
         }
     }
 
-    /// <summary>Monta o retrato da partida (sem tocar em disco). A revelação de um boato vem do save enquanto está
-    /// pendente; depois do fim da fase, fica a que já estava no arquivo ou, em último caso, a da receita do caso.</summary>
+    // Revelação: pendente no save > já arquivada > derivada da receita do caso.
     public static PartidaArquivada Montar(SistemaDeSave.DadosDeSave dados, PartidaArquivada anterior, CatalogoDeSave catalogo)
     {
         string agora = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
@@ -146,7 +138,7 @@ public static class ArquivoDeCasos
             }
             else if (panfleto != null && panfleto.nivel != NivelDoPanfleto.Fatos)
             {
-                // Arquivo começou depois do fim da fase (ou save antigo): usa o que a receita define para essa versão.
+                // Arquivo criado após o fim da fase (ou save antigo).
                 CaseData dadosDoCaso = catalogo != null ? catalogo.BuscarCaso(nome) : null;
                 ReceitaDeCaso.Versao versao = dadosDoCaso != null && dadosDoCaso.receitaDoPanfleto != null
                     ? dadosDoCaso.receitaDoPanfleto.VersaoDe(panfleto.nivel) : null;
@@ -166,7 +158,6 @@ public static class ArquivoDeCasos
 
     // ===== Ler =====
 
-    /// <summary>Partidas guardadas, da mais antiga para a mais recente (lista vazia se não houver arquivo).</summary>
     public static List<PartidaArquivada> Partidas()
     {
         Dados arquivo = Ler();
@@ -210,19 +201,16 @@ public static class ArquivoDeCasos
         }
     }
 
-    /// <summary>Rótulo da partida: "Partida 2 de 3 · iniciada em 07/11/2026 14:30 · em andamento".</summary>
     public static string RotuloDaPartida(PartidaArquivada partida, int numero, int total)
     {
         string situacao = partida.concluida ? "concluída" : "em andamento";
         return $"Partida {numero} de {total} · iniciada em {partida.inicio} · {situacao}";
     }
 
-    /// <summary>O jogo já contou o desfecho deste caso: a fase dele terminou (revelações aplicadas) ou, na Fase 4, o
-    /// tribunal deu o veredito. Antes disso o arquivo não mostra a história, que diria qual afirmação era verdadeira.</summary>
+    // Fase do caso encerrada ou veredito dado; antes disso a história entregaria qual afirmação era verdadeira.
     public static bool DesfechoConhecido(PartidaArquivada partida, int fase) =>
         partida.concluida || (fase > 0 && fase < GameManager.UltimaFase && partida.faseAtual > fase);
 
-    /// <summary>Texto completo do caso (rich text do TextMeshPro).</summary>
     public static string TextoDoCaso(PartidaArquivada partida, CasoArquivado arquivado, CatalogoDeSave catalogo)
     {
         CaseData caso = catalogo != null ? catalogo.BuscarCaso(arquivado.caso) : null;
@@ -269,8 +257,6 @@ public static class ArquivoDeCasos
         return t.ToString().TrimEnd('\n');
     }
 
-    // Teor do panfleto: título, o que ele defendia, o que afirmava (uma linha por pista impressa), o apoio citado, o
-    // tom da linha editorial e o efeito na hora da publicação. Não diz qual afirmação era verdadeira.
     private static string Panfleto(CasoArquivado arquivado, CaseData caso, CatalogoDeSave catalogo)
     {
         var t = new StringBuilder();
@@ -285,8 +271,7 @@ public static class ArquivoDeCasos
         return t.ToString().TrimEnd('\n');
     }
 
-    /// <summary>O que a publicação fez: afirmações das pistas impressas, apoio citado, tom da linha editorial e efeito
-    /// nas barras. Também usado na ficha do panfleto no inventário (FichaDaPista). Não diz qual afirmação era verdadeira.</summary>
+    // Também usado pela FichaDaPista. Não revela qual afirmação era verdadeira.
     public static string DetalhesDaPublicacao(SistemaDeSave.PanfletoSalvo p, CaseData caso, CatalogoDeSave catalogo)
     {
         if (p == null) return string.Empty;
@@ -335,11 +320,11 @@ public static class ArquivoDeCasos
         {
             case LinhaEditorial.Neutro:
                 return "Tom: neutro. O texto contava o caso sem exagero, sem manchetes carregadas.";
-            case LinhaEditorial.DefesaDoPovo: // legado: publicações de saves de antes de 08/11/2026
+            case LinhaEditorial.DefesaDoPovo: // legado: saves antigos
                 return "Tom: defesa do povo. O texto falava aos pobres e aos trabalhadores de Paris e apontava o dedo para os poderosos.";
             case LinhaEditorial.AgradarOPoder: // legado
                 string rotulo = LinhasEditoriais.Rotulo(linha, caso != null ? caso.receitaDoPanfleto : null);
-                rotulo = rotulo.Length > 0 ? char.ToLowerInvariant(rotulo[0]) + rotulo.Substring(1) : rotulo; // "agradar a Coroa"
+                rotulo = rotulo.Length > 0 ? char.ToLowerInvariant(rotulo[0]) + rotulo.Substring(1) : rotulo;
                 return $"Tom: {rotulo}. O texto pedia ordem, poupava as autoridades e evitava acusar quem estava no poder.";
             case LinhaEditorial.Sensacionalista:
                 return "Tom: sensacionalista. Manchetes fortes e detalhes carregados, escritos para vender o máximo possível.";
@@ -356,7 +341,7 @@ public static class ArquivoDeCasos
                 : "A história do caso e o desfecho aparecem aqui quando esta fase terminar.";
 
         var t = new StringBuilder();
-        // Sem histórico da publicação (o tutorial), o panfleto conta como só fatos: a receita do tutorial é exata.
+        // Sem registro da publicação (tutorial), conta como só fatos.
         NivelDoPanfleto nivel = arquivado.temPanfleto && arquivado.panfleto != null ? arquivado.panfleto.nivel : NivelDoPanfleto.Fatos;
         string texto = caso != null ? caso.DesfechoDa(nivel) : null;
         if (!string.IsNullOrWhiteSpace(texto)) t.Append(texto.Trim()).Append('\n');

@@ -7,9 +7,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Relatório de testes de 28/09, P0 1 e 2. Usa a cena "menu principal" real: o botão Continuar e a pergunta do Novo Jogo
-/// precisam continuar ligados ao MenuPrincipalManager (o Continuar já foi apagado sem aviso numa edição do menu, commit
-/// 27cfe24). E o build do celular não pode girar para retrato.
+/// Usa a cena "menu principal" real: o botão Continuar e a pergunta do Novo Jogo precisam continuar ligados ao
+/// MenuPrincipalManager (já foram desligados sem aviso numa edição do menu). E o build do celular não pode girar para retrato.
 /// </summary>
 public class MenuPrincipalTests
 {

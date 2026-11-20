@@ -2,10 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Player Settings > Resolution and Presentation (relatório de testes de 28/09, P0 2): a UI só existe em paisagem
-/// (referência 1920 x 1080), então o celular gira só entre as duas paisagens. Default Orientation = Auto Rotation com
-/// Landscape Left e Landscape Right; Portrait e Portrait Upside Down desligados. Essa configuração é a mesma para
-/// Android e iOS; no Windows ela não tem efeito.
+/// A UI só existe em paisagem (1920x1080): Auto Rotation apenas entre Landscape Left e Right (Android/iOS).
 /// Idempotente.
 /// Menu: Ferramentas > Build > Android só em paisagem
 /// </summary>

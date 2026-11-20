@@ -4,15 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>Como o jogador avança de uma etapa do tutorial para a próxima.</summary>
 public enum TipoDeAvanco
 {
-    // O popup mostra um botão "Continuar" e a etapa só avança quando o jogador clica.
     CliqueDoJogador,
-    // A etapa avança sozinha quando um dos eventos do jogo abaixo acontece
-    // (configure "Nome Do Evento" com uma das constantes EVENTO_* do TutorialManager).
-    EventoDeJogo,
-    // A etapa avança sozinha assim que a cena configurada em "Nome Da Cena" termina de carregar.
+    EventoDeJogo,       // nomeDoEvento = uma das constantes EVENTO_*
     CarregamentoDeCena
 }
 
@@ -49,32 +44,17 @@ public class TutorialStep
 }
 
 /// <summary>
-/// Gerencia o progresso do tutorial guiado (escritório -> porão) como uma sequência linear de etapas.
-/// Segue o mesmo padrão "blindado" do GameManager: este objeto é persistente (DontDestroyOnLoad) e
-/// guarda apenas DADOS (texto, ícone, índice da etapa atual); ele nunca referencia diretamente botões
-/// ou painéis de uma cena específica, porque esses objetos são recriados a cada troca de cena.
-///
-/// Quem mostra o popup e revela os botões de cada etapa é o script TutorialStepUI, colocado localmente
-/// no Canvas de cada cena (Jogo e Porao). O TutorialManager só avisa "a etapa atual agora é X" através
-/// do evento OnEtapaAlterada.
-///
-/// Setup no Editor:
-/// 1. Crie um GameObject vazio (pode ser na cena "Jogo", que carrega primeiro) chamado "TutorialManager"
-///    e adicione este script nele.
-/// 2. Ajuste a lista "Etapas" com o texto/imagem de cada passo do tutorial (já vem com um roteiro de exemplo).
-/// 3. Em cada cena (Jogo e Porao), adicione o script TutorialStepUI num objeto do Canvas e configure
-///    o popup + quais botões/objetos cada etapa revela (veja os comentários em TutorialStepUI.cs).
+/// Progresso linear do tutorial (escritório -> porão). Persistente (DontDestroyOnLoad) e só com dados: nunca
+/// referencia UI de cena, que é recriada a cada troca. O TutorialStepUI de cada cena escuta OnEtapaAlterada.
 /// </summary>
 public class TutorialManager : MonoBehaviour
 {
     public static TutorialManager Instance { get; private set; }
 
-    // Nomes de eventos prontos para usar no campo "Nome Do Evento" das etapas.
-    public const string EVENTO_DIALOGO_FINALIZADO = "dialogo_finalizado"; // fim de conversa com NPC (NPCMovement), não de pensamentos
+    public const string EVENTO_DIALOGO_FINALIZADO = "dialogo_finalizado"; // só conversa com NPC, não pensamentos
     public const string EVENTO_ITEM_RECEBIDO = "item_recebido";
     public const string EVENTO_PANFLETO_GERADO = "panfleto_gerado";
     public const string EVENTO_INVENTARIO_ALTERNADO = "inventario_alternado";
-    // Gatilhos que verificam a ação de verdade, em vez de confiar no "Continuar" (aprender fazendo).
     public const string EVENTO_JOGADOR_ANDOU = "jogador_andou";
     public const string EVENTO_PRENSA_ABERTA = "prensa_aberta";
     public const string EVENTO_ENTRADAS_PRENSA_CHEIAS = "entradas_prensa_cheias";
@@ -84,7 +64,7 @@ public class TutorialManager : MonoBehaviour
     public const string CHAVE_TUTORIAL_CONCLUIDO = "tutorial_concluido";
     public const string CHAVE_DICA_FATO_BOATO = "dica_fato_boato_vista";
     public const string CHAVE_DICA_TEMPO = "dica_tempo_vista";
-    // Dicas de primeira vez do Prompt 7 (mesmo tratamento: uma vez por partida, zeradas no Novo Jogo, levadas no save).
+    // Dicas de primeira vez: uma vez por partida, zeradas no Novo Jogo, levadas no save.
     public const string CHAVE_DICA_DESPESAS = "dica_despesas_vista";
     public const string CHAVE_DICA_BIBLIOTECA = "dica_biblioteca_vista";
     public const string CHAVE_DICA_DEDUCAO = "dica_deducao_vista";
@@ -99,8 +79,6 @@ public class TutorialManager : MonoBehaviour
     [Tooltip("Distância (em unidades do mundo) que o jogador precisa andar para a etapa de movimento avançar.")]
     [Min(0.1f)] public float distanciaParaAndou = 1.5f;
 
-    /// <summary>Texto padrão da dica de Fato x Boato desde o Prompt 7 (com a dedução desde a Fase 2, o jeito de checar uma
-    /// pista é compará-la com a afirmação contrária no quadro, não "procurar outra fonte que confirme").</summary>
     public const string DicaFatoBoatoPadrao =
         "Nem toda pista é verdade. No inventário, {apontar} uma pista para ler o que ela afirma e quem contou. " +
         "Uma pista \"não verificada\" pode ser boato: compare-a com a afirmação contrária no Quadro de pistas antes de imprimir.";
@@ -148,10 +126,8 @@ public class TutorialManager : MonoBehaviour
              "configurada no Inspector (que sobrescreve este valor) — edite-a por lá para afetar o jogo rodando.")]
     public List<TutorialStep> etapas = new List<TutorialStep>
     {
-        // Um roteiro só para Windows e Android: os marcadores {mover} {interagir} {inventario} {pausa}
-        // {continuar} {toque}/{Toque} viram "a tecla E" ou "o botão Interagir" conforme o aparelho
-        // (DispositivoDeControle). Uma ação por etapa, e toda etapa que pede uma ação só avança quando
-        // o jogo detecta a ação (EventoDeJogo) — "Continuar" fica só para as mensagens de leitura.
+        // Marcadores {mover} {interagir} {inventario} {pausa} {continuar} {toque} viram o texto do aparelho
+        // (DispositivoDeControle). Etapa que pede ação avança pelo evento; "Continuar" só nas de leitura.
         new TutorialStep
         {
             etapaId = "boas_vindas",
@@ -169,7 +145,6 @@ public class TutorialManager : MonoBehaviour
         },
         new TutorialStep
         {
-            // Junto dos outros controles, antes da história começar (não no meio da busca pelas pistas).
             etapaId = "PauseButton",
             mensagem = "A qualquer momento, use {pausa} para abrir o menu de pausa: lá você ajusta o volume e a velocidade do texto, ou volta ao menu principal. Quando quiser, {continuar}.",
             controle = ControleTutorial.Pausa,
@@ -225,8 +200,7 @@ public class TutorialManager : MonoBehaviour
         },
         new TutorialStep
         {
-            // Documento (Fase 1, "A Prensa"): ao abrir a prensa, o tutorial de status. O HUD de status pisca
-            // enquanto esta etapa está na tela (DestaqueDeEtapaTutorial no prefab UI).
+            // O HUD de status pulsa nesta etapa (DestaqueDeEtapaTutorial no prefab UI).
             etapaId = "explicar_efeito_barras",
             mensagem = "Antes de imprimir, veja o status no alto: a barra de cima é a Opinião do Povo, a de baixo a do Estado, e embaixo fica o seu ouro. " +
                        "Um panfleto só com fatos move as barras como o caso promete; com boato ou calúnia rende mais, " +
@@ -250,8 +224,7 @@ public class TutorialManager : MonoBehaviour
         new TutorialStep
         {
             etapaId = "coletar_resultado_prensa",
-            // Desde 13/11/2026 o panfleto vai sozinho para o inventário: esta etapa já nasce concluída e é pulada
-            // (AcaoJaFeita); fica só para inventário cheio, quando ele ainda sai no Resultado.
+            // O panfleto vai sozinho ao inventário e esta etapa é pulada (AcaoJaFeita); só aparece com inventário cheio.
             mensagem = "Panfleto impresso! Repare como as barras e o ouro mudaram: cada panfleto agrada uns e irrita outros, e o ouro paga " +
                        "aluguel, papel e tinta no fim do período. {Toque} no panfleto em Resultado e depois em Espaço livre no inventário para guardá-lo.",
             tipoDeAvanco = TipoDeAvanco.EventoDeJogo,
@@ -265,7 +238,6 @@ public class TutorialManager : MonoBehaviour
             controle = ControleTutorial.Interagir,
             tipoDeAvanco = TipoDeAvanco.CarregamentoDeCena,
             nomeDaCena = "Jogo",
-            // Primeiro panfleto impresso e de volta ao escritório: fim do aprendizado, ponto de save.
             salvarAoConcluir = true
         },
         new TutorialStep
@@ -278,36 +250,26 @@ public class TutorialManager : MonoBehaviour
         }
     };
 
-    /// <summary>Disparado sempre que a etapa atual muda (inclusive ao (re)carregar uma cena), com o ID da nova etapa
-    /// (ou null quando o tutorial já terminou). O TutorialStepUI de cada cena escuta este evento.</summary>
+    /// <summary>Também dispara ao (re)carregar uma cena; null quando o tutorial terminou.</summary>
     public event Action<string> OnEtapaAlterada;
 
-    /// <summary>Disparado uma única vez quando a última etapa é concluída (ou quando o tutorial é pulado).
-    /// Ponto de extensão para o Desfecho da Fase 1 (GDD): quem implementar a cutscene final da Fase 1
-    /// pode se inscrever aqui em vez de mexer neste script.</summary>
+    /// <summary>Dispara uma única vez, ao concluir a última etapa ou pular o tutorial.</summary>
     public event Action OnTutorialConcluido;
 
-    /// <summary>Pedido de dica contextual (texto já com marcadores). O TutorialStepUI da cena mostra no popup.</summary>
     public event Action<string> OnDicaSolicitada;
 
-    // Dicas pedidas e ainda não fechadas pelo jogador, na ordem do pedido. Ficam aqui (objeto persistente) e não no
-    // popup da cena: duas dicas pedidas juntas (ex.: despesas e Biblioteca na virada da Fase 3) aparecem uma depois da
-    // outra, e uma dica que não chegou a ser fechada volta na cena seguinte em vez de se perder.
+    // Fila no objeto persistente: dicas pedidas juntas aparecem em sequência, e uma não fechada volta na cena seguinte.
     private readonly List<string> dicasNaFila = new List<string>();
 
-    /// <summary>Dica que o popup deve mostrar agora (a mais antiga ainda não fechada), ou null.</summary>
     public string DicaPendente => dicasNaFila.Count > 0 ? dicasNaFila[0] : null;
 
-    /// <summary>O jogador fechou a dica que estava na tela: a próxima da fila (se houver) pode aparecer.</summary>
     public void ConcluirDica()
     {
         if (dicasNaFila.Count > 0) dicasNaFila.RemoveAt(0);
     }
 
     private int indiceAtual = -1;
-    // Eventos que aconteceram antes da etapa que os espera (ex.: pegar a segunda pista com Dupaty sem ter aberto o
-    // inventário). Sem isto a etapa ficava esperando algo que não se repete — ele não entrega a pista de novo — e o
-    // tutorial travava nela, inclusive no porão. Vale só para as etapas da cena atual (zera a cada troca de cena).
+    // Eventos não repetíveis ocorridos antes da etapa que os espera; zerados a cada troca de cena.
     private readonly Dictionary<string, int> eventosAdiantados = new Dictionary<string, int>();
     private InventoryManager inventoryManagerAtual;
     private CraftingPress craftingPressAtual;
@@ -315,10 +277,9 @@ public class TutorialManager : MonoBehaviour
     private Vector3 ultimaPosicaoJogador;
     private float distanciaAndada;
 
-    /// <summary>ID da etapa atual, ou null se o tutorial ainda não começou/já terminou.</summary>
+    /// <summary>Null se o tutorial ainda não começou ou já terminou.</summary>
     public string EtapaAtualId => EtapaAtualObjeto()?.etapaId;
 
-    /// <summary>Verdadeiro quando todas as etapas já foram concluídas (ou o tutorial foi pulado).</summary>
     public bool TutorialConcluido => indiceAtual >= etapas.Count;
 
     /// <summary>Posição no roteiro (etapas.Count = concluído). Guardada pelo SistemaDeSave.</summary>
@@ -349,7 +310,7 @@ public class TutorialManager : MonoBehaviour
 
         if (SistemaDeSave.ConsumirEtapaDoTutorial(out int etapaSalva))
         {
-            // Continuar do menu: retoma a etapa em que o jogo foi salvo (o save é aplicado ao GameManager no Awake dele).
+            // Continuar: o save já foi aplicado ao GameManager no Awake dele.
             GameManager gm = GameManager.Instance;
             indiceAtual = EtapaAoCarregar(etapaSalva, etapas.Count, IndiceDaEtapa(EtapaMesaDeCasos), gm != null && gm.TutorialConcluido);
         }
@@ -366,13 +327,11 @@ public class TutorialManager : MonoBehaviour
                   $"Se 'forcarReiniciar' estiver marcado e você já tiver terminado antes, isso é esperado.");
     }
 
-    /// <summary>Etapa em que o tutorial para quando o caso do tutorial termina (a volta ao escritório com a mesa liberada).</summary>
     public const string EtapaMesaDeCasos = "mesa_de_casos";
 
     /// <summary>
-    /// Etapa ao carregar um save. Saves antigos (v6) gravaram a etapa do momento, e alguns ficaram numa etapa anterior à
-    /// mesa (ex.: "desça ao porão") com o tutorial já concluído no GameManager: o jogo pedia de novo a prensa numa fase
-    /// em que o alçapão responde "faltam pistas". Com o tutorial concluído, o tutorial vai ao menos até a mesa de casos.
+    /// Com o tutorial concluído no GameManager, vai ao menos até a mesa de casos: saves v6 podem ter parado numa
+    /// etapa anterior (ex.: "desça ao porão") que não tem mais como ser cumprida.
     /// </summary>
     public static int EtapaAoCarregar(int etapaSalva, int totalDeEtapas, int indiceDaMesa, bool tutorialConcluido)
     {
@@ -387,34 +346,28 @@ public class TutorialManager : MonoBehaviour
         return etapas.FindIndex(e => e != null && e.etapaId == etapaId);
     }
 
-    // Disparado a cada troca de cena (ex: Jogo -> Porao). Reencontra os sistemas locais da cena nova
-    // (mesma arquitetura do GameManager.OnSceneLoaded) e, se a etapa atual estiver esperando esta cena
-    // carregar, avança automaticamente.
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         VincularDependenciasLocais();
         SincronizarComACena(scene.name);
     }
 
-    /// <summary>Acerta a etapa atual com a cena em que o jogador acabou de entrar e avisa a UI (OnEtapaAlterada).</summary>
     private void SincronizarComACena(string cena)
     {
-        eventosAdiantados.Clear(); // valiam para as etapas da cena anterior
+        eventosAdiantados.Clear();
 
         TutorialStep etapa = EtapaAtualObjeto();
         Debug.Log($"[TutorialManager] Cena '{cena}' carregada. Etapa atual: {(etapa?.etapaId ?? "(nenhuma)")}, " +
                   $"tipoDeAvanco: {(etapa != null ? etapa.tipoDeAvanco.ToString() : "-")}, nomeDaCena esperado: '{etapa?.nomeDaCena}'.");
 
-        // Antes do Start (que escolhe a etapa inicial) ou com o tutorial terminado não há o que acertar.
+        // Antes do Start ou com o tutorial terminado.
         if (etapa == null)
         {
             BroadcastEtapaAtual();
             return;
         }
 
-        // O jogador pode sair de uma cena sem terminar (nem pular) as etapas dela: descer ao porão sem ter aberto o
-        // inventário, subir sem guardar o panfleto... Se o que faltava só guiava o jogador, o tutorial pula até a etapa
-        // que espera esta cena, em vez de ficar preso numa instrução de outra cena.
+        // Saiu da cena com etapas pendentes que só guiavam: pula até a etapa que espera esta cena.
         int alvo = IndiceDaProximaEtapaDeCena(cena);
         if (alvo >= 0)
         {
@@ -422,12 +375,11 @@ public class TutorialManager : MonoBehaviour
                 Debug.Log($"[TutorialManager] Saiu antes do fim das etapas de '{etapa.etapaId}': pulando para '{etapas[alvo].etapaId}'.");
             indiceAtual = alvo;
             Debug.Log($"[TutorialManager] Cena bateu com a etapa '{etapas[alvo].etapaId}' — avançando automaticamente.");
-            CompletarEtapaAtual(); // já avisa a UI
+            CompletarEtapaAtual();
             return;
         }
 
-        // Saiu no meio de uma etapa obrigatória (ex.: subiu do porão sem imprimir o panfleto): a instrução da prensa
-        // não faz sentido no escritório, então o tutorial volta para a etapa que leva até lá ("desça ao porão").
+        // Saiu no meio de uma etapa obrigatória: volta para a etapa que leva de novo à cena dela.
         int volta = IndiceDaEtapaQueLevaDeVolta(cena);
         if (volta >= 0)
         {
@@ -437,16 +389,14 @@ public class TutorialManager : MonoBehaviour
         BroadcastEtapaAtual();
     }
 
-    // Etapas que só guiam o jogador (andar, conversar, receber pista, abrir o inventário, guardar o panfleto): quem chegou
-    // à cena seguinte sem concluí-las já fez o que importava (o alçapão só abre com as duas pistas), então elas não
-    // prendem o tutorial ao trocar de cena. As da prensa (abrir, encher, misturar) e a da mesa continuam obrigatórias.
+    // Etapas que só guiam: quem chegou à cena seguinte já fez o que importava (o alçapão exige as duas pistas).
+    // As da prensa e a da mesa continuam obrigatórias.
     private static readonly HashSet<string> EventosDispensaveisAoTrocarDeCena = new HashSet<string>
     {
         EVENTO_JOGADOR_ANDOU, EVENTO_DIALOGO_FINALIZADO, EVENTO_ITEM_RECEBIDO, EVENTO_INVENTARIO_ALTERNADO, EVENTO_PANFLETO_GUARDADO
     };
 
-    /// <summary>Índice da próxima etapa que espera a cena <paramref name="cena"/> carregar, desde que todas as
-    /// etapas até lá possam ser dispensadas (leitura, ou EventosDispensaveisAoTrocarDeCena). -1 se não houver.</summary>
+    /// <summary>Próxima etapa que espera <paramref name="cena"/>, se todas até lá forem dispensáveis; senão -1.</summary>
     private int IndiceDaProximaEtapaDeCena(string cena)
     {
         for (int i = Mathf.Max(indiceAtual, 0); i < etapas.Count; i++)
@@ -460,8 +410,7 @@ public class TutorialManager : MonoBehaviour
         return -1;
     }
 
-    /// <summary>Cena em que a etapa acontece: o destino da última etapa de troca de cena antes dela
-    /// (null = a cena em que o tutorial começa).</summary>
+    /// <summary>Destino da última troca de cena antes da etapa (null = cena inicial do tutorial).</summary>
     private string CenaDaEtapa(int indice)
     {
         for (int i = Mathf.Min(indice, etapas.Count) - 1; i >= 0; i--)
@@ -469,8 +418,7 @@ public class TutorialManager : MonoBehaviour
         return null;
     }
 
-    /// <summary>Índice da etapa que, mostrada na cena <paramref name="cena"/>, leva de volta à cena da etapa atual
-    /// (ex.: "desça ao porão" para quem subiu no meio da prensa). -1 se o jogador já está na cena da etapa.</summary>
+    /// <summary>Etapa mostrada em <paramref name="cena"/> que leva de volta à cena da etapa atual; -1 se já está nela.</summary>
     private int IndiceDaEtapaQueLevaDeVolta(string cena)
     {
         string cenaDaEtapa = CenaDaEtapa(indiceAtual);
@@ -479,7 +427,7 @@ public class TutorialManager : MonoBehaviour
         {
             TutorialStep e = etapas[i];
             if (e.tipoDeAvanco != TipoDeAvanco.CarregamentoDeCena || e.nomeDaCena != cenaDaEtapa) continue;
-            // Origem sem nome = a cena em que o tutorial começa. O menu (saída pelo pause) não é cena do tutorial.
+            // Origem null = cena inicial; o menu (saída pelo pause) não é cena do tutorial.
             string origem = CenaDaEtapa(i);
             bool mostradaNestaCena = origem == cena ||
                 (origem == null && etapas.Exists(x => x.tipoDeAvanco == TipoDeAvanco.CarregamentoDeCena && x.nomeDaCena == cena));
@@ -499,8 +447,7 @@ public class TutorialManager : MonoBehaviour
         if (craftingPressAtual != null) craftingPressAtual.OnPanfletoGerado -= HandlePanfletoGerado;
 
         inventoryManagerAtual = GameManager.Instance != null ? GameManager.Instance.inventoryManager : FindAnyObjectByType<InventoryManager>(FindObjectsInactive.Include);
-        // O painel da prensa começa desativado na cena: sem "Include" a busca voltava null, o tutorial
-        // nunca ouvia OnPanfletoGerado e travava na etapa "misturar_itens".
+        // O painel da prensa começa desativado: sem Include a busca volta null.
         craftingPressAtual = FindAnyObjectByType<CraftingPress>(FindObjectsInactive.Include);
 
         if (inventoryManagerAtual != null)
@@ -519,11 +466,8 @@ public class TutorialManager : MonoBehaviour
 
     void Update()
     {
-        // Etapa de movimento: só avança depois de o jogador andar de verdade (não basta clicar Continuar).
         if (jogador == null) return;
-        // A posição de referência anda junto o tempo todo e só conta o que se andou com a etapa na tela. Antes ela ficava
-        // parada desde a entrada na cena: no PC dá para andar durante as boas-vindas, e a etapa "use A D" sumia no
-        // primeiro frame, sem ser lida.
+        // Referência atualizada todo frame: só conta o que se andou com a etapa de movimento na tela.
         Vector3 posicao = jogador.position;
         float passo = Vector2.Distance(posicao, ultimaPosicaoJogador);
         ultimaPosicaoJogador = posicao;
@@ -543,9 +487,7 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    /// <summary>Fim de uma conversa com NPC (chamado pelo NPCMovement). Só conversas contam para "fale com ... até o fim":
-    /// antes o evento vinha do fim de QUALQUER diálogo, e o pensamento do protagonista no alçapão (ou na porta, na mesa)
-    /// concluía a etapa de falar com Dupaty sem conversa nenhuma.</summary>
+    /// <summary>Chamado pelo NPCMovement: pensamentos do protagonista não contam como conversa.</summary>
     public void NotificarConversaComNpcTerminada() => NotificarEvento(EVENTO_DIALOGO_FINALIZADO);
     private void HandlePanfletoGerado() => NotificarEvento(EVENTO_PANFLETO_GERADO);
 
@@ -553,11 +495,10 @@ public class TutorialManager : MonoBehaviour
     {
         NotificarEvento(EVENTO_ITEM_RECEBIDO);
         if (item != null && item.EhPista) SolicitarDicaUmaVez(CHAVE_DICA_FATO_BOATO, dicaFatoBoato);
-        // Primeira pista de um quadro de dedução: é quando o Quadro de pistas passa a ter o que mostrar.
         if (Deducao.NoConjunto(item)) SolicitarDicaUmaVez(CHAVE_DICA_DEDUCAO, dicaDeducao);
     }
 
-    // Entradas da prensa cheias / panfleto guardado no inventário: os dois só existem como mudança de slot.
+    // Entradas cheias e panfleto guardado só são observáveis como mudança de slot.
     private void HandleSlotAlterado(UISlotHandler slot)
     {
         if (craftingPressAtual == null || slot == null) return;
@@ -575,9 +516,8 @@ public class TutorialManager : MonoBehaviour
             NotificarEvento(EVENTO_PANFLETO_GUARDADO);
     }
 
-    /// <summary>Dica contextual fora do roteiro (ex: Fato x Boato na Fase 2): mostrada uma única vez por partida.
-    /// A chave é marcada já no pedido (vai no próximo save, e o Continuar não a repete); o texto entra na fila e o
-    /// popup da cena o mostra assim que a tela estiver livre (sem conversa, cutscene, pause ou janela aberta).</summary>
+    /// <summary>Uma vez por partida. A chave é marcada já no pedido (vai no próximo save); o popup mostra quando a tela
+    /// estiver livre.</summary>
     public void SolicitarDicaUmaVez(string chave, string texto)
     {
         if (string.IsNullOrWhiteSpace(texto) || string.IsNullOrEmpty(chave) || PlayerPrefs.GetInt(chave, 0) == 1) return;
@@ -586,14 +526,10 @@ public class TutorialManager : MonoBehaviour
         dicasNaFila.Add(texto);
         OnDicaSolicitada?.Invoke(texto);
     }
-    // Dispara tanto ao abrir quanto ao fechar o inventário — o mesmo comportamento que o botão de
-    // inventário já disparava manualmente (só na cena Jogo). Fazer isso aqui, ouvindo o InventoryManager
-    // diretamente, garante que funcione em qualquer cena (inclusive Porao), mesmo sem um botão configurado
-    // manualmente no Inspector daquela cena para chamar TutorialManager.
+    // Ao abrir e ao fechar, em qualquer cena.
     private void HandleInventarioAlternado(bool aberto) => NotificarEvento(EVENTO_INVENTARIO_ALTERNADO);
 
-    /// <summary>Avança a etapa atual se ela estiver esperando exatamente este evento. Pode ser chamado
-    /// também a partir de UnityEvents (botões, animações, etc.) além dos gatilhos automáticos acima.</summary>
+    /// <summary>Também pode ser chamado por UnityEvents.</summary>
     public void NotificarEvento(string nomeDoEvento)
     {
         TutorialStep etapa = EtapaAtualObjeto();
@@ -605,21 +541,17 @@ public class TutorialManager : MonoBehaviour
         }
         else if (EtapaAdianteNestaCenaEspera(nomeDoEvento))
         {
-            // Feito antes da hora: a etapa que espera este evento conta como concluída quando chegar a vez dela.
             eventosAdiantados.TryGetValue(nomeDoEvento, out int vezes);
             eventosAdiantados[nomeDoEvento] = vezes + 1;
         }
     }
 
-    // Só conversa e pista recebida são lembradas antes da hora: não se repetem sob demanda (o NPC não entrega a pista de
-    // novo). Os eventos da prensa já são conferidos pelo estado real (AcaoJaFeita), e abrir o inventário se repete a
-    // qualquer hora (no PC a tecla funciona antes de a etapa "InventoryButton" ensiná-la).
+    // Só eventos que não se repetem sob demanda; os da prensa são conferidos pelo estado real (AcaoJaFeita).
     private static readonly HashSet<string> EventosLembradosAntesDaHora = new HashSet<string>
     {
         EVENTO_DIALOGO_FINALIZADO, EVENTO_ITEM_RECEBIDO
     };
 
-    // Alguma etapa depois da atual, ainda nesta cena (antes da próxima troca de cena), espera este evento?
     private bool EtapaAdianteNestaCenaEspera(string nomeDoEvento)
     {
         if (string.IsNullOrEmpty(nomeDoEvento) || !EventosLembradosAntesDaHora.Contains(nomeDoEvento)) return false;
@@ -647,8 +579,7 @@ public class TutorialManager : MonoBehaviour
         return etapas.Find(e => e.etapaId == etapaId);
     }
 
-    /// <summary>Verdadeiro se a etapa já foi concluída ou é a etapa atual (usado pelo TutorialStepUI para
-    /// manter botões já ensinados visíveis mesmo depois de o jogador sair e voltar para a cena).</summary>
+    /// <summary>Concluída ou atual.</summary>
     public bool EtapaJaFoiAlcancada(string etapaId)
     {
         if (TutorialConcluido) return true;
@@ -657,9 +588,7 @@ public class TutorialManager : MonoBehaviour
         return indiceDaEtapa >= 0 && indiceDaEtapa <= indiceAtual;
     }
 
-    // Detecta o erro mais comum ao adicionar etapas pelo "+" do Inspector: a Unity duplica os valores
-    // da última etapa (inclusive o Etapa Id), então duas etapas acabam com o mesmo ID e ObterEtapa()
-    // sempre acha a primeira, fazendo o texto novo nunca aparecer.
+    // O "+" do Inspector duplica a última etapa, inclusive o Etapa Id.
     private void ValidarEtapaIdsUnicos()
     {
         if (etapas == null) return;
@@ -685,16 +614,13 @@ public class TutorialManager : MonoBehaviour
         return (indiceAtual >= 0 && indiceAtual < etapas.Count) ? etapas[indiceAtual] : null;
     }
 
-    /// <summary>Chamado pelo botão "Continuar" do popup (etapas de clique) ou pelos gatilhos automáticos acima.</summary>
     public void CompletarEtapaAtual()
     {
         if (indiceAtual < 0 || indiceAtual >= etapas.Count) return;
 
         if (etapas[indiceAtual].salvarAoConcluir) StartCoroutine(SalvarComACenaPronta());
         indiceAtual++;
-        // A ação pedida pela próxima etapa pode já ter sido feita (ex.: o jogador encheu a prensa enquanto lia o
-        // texto do status, ou pegou a segunda pista antes de abrir o inventário): ela conta como concluída, senão o
-        // tutorial esperaria um evento que não vai se repetir.
+        // Pula etapas cuja ação já foi feita, senão esperariam um evento que não se repete.
         while (indiceAtual < etapas.Count && (AcaoJaFeita(etapas[indiceAtual]) || ConsumirEventoAdiantado(etapas[indiceAtual])))
         {
             if (etapas[indiceAtual].salvarAoConcluir) StartCoroutine(SalvarComACenaPronta());
@@ -728,15 +654,13 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    // Etapas de troca de cena concluem no sceneLoaded, antes do Start da cena nova: o inventário ainda está vazio
-    // (restaura no Start) e a cutscene da Fase 1 ainda não marcou que tocou. Um frame depois tudo já está montado.
+    // Etapas de troca de cena concluem no sceneLoaded, antes do Start da cena nova (inventário ainda não restaurado).
     private IEnumerator SalvarComACenaPronta()
     {
         yield return null;
         SistemaDeSave.Salvar();
     }
 
-    /// <summary>Pula o tutorial inteiro (ex: para um botão "Pular Tutorial" no menu de opções).</summary>
     public void PularTutorial()
     {
         bool jaEstavaConcluido = TutorialConcluido;

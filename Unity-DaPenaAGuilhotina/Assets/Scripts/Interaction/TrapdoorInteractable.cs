@@ -41,8 +41,7 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
             return;
         }
 
-        // Sem caso em andamento não há o que imprimir. O caso do tutorial continua "escolhido" depois de impresso, e o
-        // alçapão dizia na Fase 2 que ainda faltavam o relato de Marie e o decreto de Dupaty.
+        // Checa "em andamento", não "escolhido": o caso do tutorial continua escolhido depois de impresso.
         if (!gm.CasoAtualEmAndamento)
         {
             bool aguardaTribunal = gm.faseAtual >= GameManager.UltimaFase && gm.FaseConcluida;
@@ -64,7 +63,7 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
 
                 casoEncontradoNaLista = true;
 
-                // O pulo do gato: Se o slot da pista estiver vazio no Inspector, ele pula a checagem (considera true)
+                // Slot vazio no Inspector = sem exigência.
                 bool temPista1 = (req.pista1 == null) || (inventario != null && inventario.HasItem(req.pista1.itemID));
                 bool temPista2 = (req.pista2 == null) || (inventario != null && inventario.HasItem(req.pista2.itemID));
 
@@ -76,7 +75,7 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
             }
         }
 
-        // Se o caso atual for da Fase 2 e nem estiver configurado nesta lista, o alçapão abre direto!
+        // Caso fora da lista: acesso livre.
         if (!casoEncontradoNaLista)
         {
             Debug.Log($"O caso {casoAtual.name} não exige fiscalização do alçapão. Acesso livre!");
@@ -91,7 +90,6 @@ public class TrapdoorInteractable : MonoBehaviour, IInteractable
                 return;
             }
 
-            // AudioSeguro ignora eventos vazios e nunca lança exceção se o FMOD falhar.
                 AudioSeguro.TocarUmaVez(somAlcapao, transform.position);
 
             Debug.Log("Acessando o porão...");

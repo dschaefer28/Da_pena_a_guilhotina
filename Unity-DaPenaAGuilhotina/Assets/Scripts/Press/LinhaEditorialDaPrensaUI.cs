@@ -6,19 +6,10 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// Escolha da linha editorial na prensa (Prompt 5). Quando o jogador aperta Misturar com duas pistas de um caso que
-/// exige linha editorial, a CraftingPress valida tudo, não consome nada e pede a escolha (OnLinhaEditorialPedida).
-/// Esta janela cobre o painel da prensa — as barras de Povo/Estado continuam visíveis — com as duas opções (Neutro e
-/// Sensacionalista, desde 08/11/2026) e "Cancelar". Escolher chama CraftingPress.ImprimirComLinhaEditorial, que valida de novo antes de consumir.
-///
-/// Cancelar, Esc, fechar o inventário ou trocar de cena só fecham a janela: nada foi gasto e nenhuma escolha fica
-/// guardada para outra impressão ou outro caso. Os textos mostram só a regra de cada linha (valores da receita, iguais
-/// em qualquer versão), marcados como ajuste somado ao panfleto: a janela recebe apenas a receita, então não pode
-/// revelar a verdade das pistas.
-/// Depois da impressão (CraftingPress.OnPanfletoDeCasoPublicado), a mesma janela mostra as parcelas do total — pistas,
-/// apoio e linha — e o que entrou nas barras. Não nomeia a versão nem mostra a penalidade de um desmentido futuro.
-/// Mouse/toque nos botões; teclado: 1 e 2 escolhem, Esc cancela, setas + Enter navegam.
-/// Vai no PainelPrensa (UI.prefab), ao lado do SuportesDaPrensaUI, e se monta por código na primeira vez.
+/// Janela da linha editorial sobre o painel da prensa: responde a OnLinhaEditorialPedida e, após a impressão, mostra as
+/// parcelas do total. Fechar nunca consome nem guarda escolha. Só recebe a receita, então não pode revelar a verdade
+/// das pistas (nem nomeia a versão ou a penalidade futura). Teclado: 1/2 escolhem, Esc cancela.
+/// Vai no PainelPrensa (UI.prefab) e se monta por código na primeira abertura.
 /// </summary>
 [RequireComponent(typeof(CraftingPress))]
 public class LinhaEditorialDaPrensaUI : MonoBehaviour
@@ -37,7 +28,7 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
     [Tooltip("No lugar dos valores, na opção sem ajuste (Neutro).")]
     public string textoSemAjuste = "sem ajuste";
 
-    // Textos padrão também usados pela ferramenta de setup (Ferramentas > Campanha > 4b) para atualizar o UI.prefab.
+    // Também usados pela ferramenta Ferramentas > Campanha > 4b para atualizar o UI.prefab.
     public const string DescricaoNeutroPadrao = "Conta o caso sem exagero: o panfleto tem o efeito normal do caso.";
     public const string DescricaoSensacionalistaPadrao = "Manchete escandalosa: vende mais, mas convence menos o lado que o caso defende.";
     public const string RotuloDoAjustePadrao = "Ajuste:";
@@ -54,7 +45,7 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
     public string textoLimite = "{0} na barra: {1} (limite {2})";
 
     private static readonly Color CorTexto = new Color(0.93f, 0.9f, 0.84f);
-    // Opaco: no espaço de cor Linear do projeto, um fundo escuro com alpha 0,97 ainda deixa ver os rótulos da prensa.
+    // Opaco: em espaço Linear, alpha 0,97 ainda deixa ver os rótulos da prensa.
     private static readonly Color CorFundo = new Color(0.11f, 0.08f, 0.07f, 1f);
     private static readonly Color CorBotao = new Color(0.25f, 0.18f, 0.13f);
 
@@ -69,10 +60,8 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
     private TextMeshProUGUI textoResultado;
     private bool mostrandoResultado;
 
-    /// <summary>A janela está aberta (esperando a escolha ou mostrando o resultado).</summary>
     public bool Aberta => janela != null && janela.activeSelf;
 
-    /// <summary>A janela aberta mostra o resultado de uma impressão, não as opções.</summary>
     public bool MostrandoResultado => Aberta && mostrandoResultado;
 
     private void Awake() => prensa = GetComponent<CraftingPress>();
@@ -84,9 +73,7 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         PedirDicaSeOCasoUsaLinha();
     }
 
-    // Prompt 7: na primeira vez que a prensa abre com um caso que pede linha editorial, a dica explica a escolha que vem
-    // ao apertar Misturar. Pedida aqui, e não quando a janela abre: com a janela aberta o "Cancelar" tem o foco do
-    // teclado, e o Enter que fecha a dica também cancelaria a escolha.
+    // Dica pedida ao abrir a prensa, não a janela: lá o "Cancelar" tem o foco e o Enter que fecha a dica cancelaria a escolha.
     private static void PedirDicaSeOCasoUsaLinha()
     {
         GameManager gm = GameManager.Instance;
@@ -104,7 +91,7 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
             prensa.OnLinhaEditorialPedida -= Abrir;
             prensa.OnPanfletoDeCasoPublicado -= MostrarResultado;
         }
-        Fechar(); // inventário/prensa fechados com a janela aberta: nada foi consumido, nada fica escolhido
+        Fechar();
     }
 
     private void Update()
@@ -129,8 +116,7 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         Exibir();
     }
 
-    /// <summary>Opção escolhida (botão ou tecla). Fecha antes de imprimir: um segundo clique não chega à prensa, e se
-    /// chegasse a regra de publicação única recusaria.</summary>
+    /// <summary>Fecha antes de imprimir para um segundo clique não chegar à prensa.</summary>
     public void Escolher(LinhaEditorial linha)
     {
         if (!Aberta || mostrandoResultado) return;
@@ -138,7 +124,6 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         prensa.ImprimirComLinhaEditorial(linha);
     }
 
-    // Panfleto de caso publicado: a mesma janela volta com as parcelas do total.
     private void MostrarResultado(ReceitaDeCaso receita, ResultadoDoPanfleto resultado, Vector3Int aplicado)
     {
         if (resultado == null) return;
@@ -154,7 +139,7 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
     {
         mostrandoResultado = resultado;
         foreach (Button opcao in opcoes) opcao.gameObject.SetActive(!resultado);
-        textoNota.gameObject.SetActive(!resultado); // a nota explica as opções; o resultado já diz que o total é a soma
+        textoNota.gameObject.SetActive(!resultado);
         textoResultado.gameObject.SetActive(resultado);
         rotuloCancelar.text = resultado ? "<b>Continuar</b>" : "<b>Cancelar</b>";
     }
@@ -175,7 +160,7 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(null);
     }
 
-    // Só regra conhecida: rótulo da fase, descrição e o modificador configurado na receita (o mesmo em qualquer versão).
+    // Só regra conhecida: o modificador da receita é o mesmo em qualquer versão.
     private string TextoDaOpcao(int numero, LinhaEditorial linha, ReceitaDeCaso receita)
     {
         ReceitaDeCaso.ConfiguracaoEditorial config = receita.linhaEditorial;
@@ -189,7 +174,6 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         }
         else
         {
-            // Os valores da linha não são o efeito do panfleto: são somados ao das pistas e do apoio.
             if (!string.IsNullOrWhiteSpace(rotuloDoAjuste))
                 sb.Append($"<color=#B0A48C>{rotuloDoAjuste.Trim()}</color> ");
             Efeito(sb, mod.povo, "Povo");
@@ -202,8 +186,7 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         return sb.ToString();
     }
 
-    // Parcelas do total, na ordem do cálculo (CalculadoraDePanfleto): pistas → apoio → linha. A versão nunca é nomeada
-    // e a penalidade de um desmentido futuro não aparece; o limite 0–100 só é citado quando cortou parte do total.
+    // Ordem do cálculo: pistas → apoio → linha. O limite 0–100 só é citado quando cortou parte do total.
     private string TextoDoResultado(ReceitaDeCaso receita, ResultadoDoPanfleto r, Vector3Int aplicado)
     {
         var sb = new StringBuilder();
@@ -219,15 +202,14 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         }
         if (LinhasEditoriais.Escolhivel(r.linha))
             Parcela(sb, LinhasEditoriais.Rotulo(r.linha, receita), r.editorialPovo, r.editorialEstado, r.editorialOuro);
-        sb.Append("\n<size=40%> </size>"); // respiro antes do total
+        sb.Append("\n<size=40%> </size>");
         Parcela(sb, rotuloTotal, r.povo, r.estado, r.ouro);
         Limite(sb, "Povo", r.povo, aplicado.x);
         Limite(sb, "Estado", r.estado, aplicado.y);
         return sb.ToString();
     }
 
-    // Rótulo numa linha e valores na seguinte: com os três valores na mesma linha do rótulo, a largura da janela
-    // quebrava a linha no meio de um valor.
+    // Valores na linha de baixo: na mesma linha do rótulo, a quebra caía no meio de um valor.
     private static void Parcela(StringBuilder sb, string rotulo, int povo, int estado, int ouro)
     {
         if (sb.Length > 0) sb.Append('\n');
@@ -266,18 +248,17 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         janela.layer = gameObject.layer;
         janela.transform.SetParent(transform, false);
         var rt = (RectTransform)janela.transform;
-        rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero; // cobre o painel da prensa
-        janela.GetComponent<Image>().color = CorFundo; // e bloqueia o clique nos slots/Misturar por baixo
+        rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero;
+        janela.GetComponent<Image>().color = CorFundo; // bloqueia o clique nos slots por baixo
         var v = janela.GetComponent<VerticalLayoutGroup>();
-        // Margens verticais menores: com 22/12 o conteúdo pedia 747 de altura num painel de 720, e o título e a nota
-        // eram espremidos até passar da própria caixa.
+        // Margens verticais curtas: o conteúdo mal cabe no painel de 720.
         v.padding = new RectOffset(22, 22, 16, 16); v.spacing = 8f;
         v.childControlWidth = v.childControlHeight = true; v.childForceExpandWidth = true; v.childForceExpandHeight = false;
 
-        // Tamanhos revistos com a EB Garamond (27/10/2026): nada abaixo de ~22 na referência de 1080 (15 px em 720).
+        // Mínimo de ~22 na referência de 1080 (EB Garamond).
         textoTitulo = Texto("Titulo", janela.transform, 34f);
-        textoResultado = Texto("Resultado", janela.transform, 27f); // no lugar das opções, depois da impressão
-        textoResultado.GetComponent<LayoutElement>().flexibleHeight = 1f; // ocupa a sobra: o botão fica embaixo
+        textoResultado = Texto("Resultado", janela.transform, 27f);
+        textoResultado.GetComponent<LayoutElement>().flexibleHeight = 1f; // empurra o botão para baixo
         textoResultado.gameObject.SetActive(false);
         for (int i = 0; i < opcoes.Length; i++)
         {
@@ -288,7 +269,7 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         textoNota = Texto("Nota", janela.transform, 23f);
         textoNota.text = $"<color=#B0A48C>{nota}</color>";
         botaoCancelar = Botao(janela.transform, "Cancelar", 72f, out rotuloCancelar);
-        botaoCancelar.GetComponent<LayoutElement>().flexibleHeight = 0f; // sem as opções sobra espaço: não esticar
+        botaoCancelar.GetComponent<LayoutElement>().flexibleHeight = 0f;
         rotuloCancelar.text = "<b>Cancelar</b>";
         rotuloCancelar.alignment = TextAlignmentOptions.Center;
         botaoCancelar.onClick.AddListener(Fechar);
@@ -308,7 +289,6 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         return tmp;
     }
 
-    // Botão que cresce com o texto (altura mínima boa para toque).
     private Button Botao(Transform pai, string nome, float alturaMinima, out TextMeshProUGUI rotulo)
     {
         var go = new GameObject(nome, typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement), typeof(VerticalLayoutGroup));

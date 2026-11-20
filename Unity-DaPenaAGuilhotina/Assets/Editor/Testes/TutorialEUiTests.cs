@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Prompt 7: dicas de primeira vez (fila, persistência e Novo Jogo), Marie ausente pelo progresso (também depois de
+/// Dicas de primeira vez (fila, persistência e Novo Jogo), Marie ausente pelo progresso (também depois de
 /// carregar um save), 8h de investigação nas Fases 2 a 4, pause que não abre sob uma cutscene, Mesa de Casos como janela
 /// modal, o Quadro de pistas desde a Fase 2 e a coluna de botões do canto superior direito (Pause, Biblioteca e Quadro).
 /// As PlayerPrefs de progresso de quem está testando são guardadas no SetUp e devolvidas no TearDown.

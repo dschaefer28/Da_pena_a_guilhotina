@@ -7,16 +7,11 @@ public class MobileUIManager : MonoBehaviour
     public GameObject joystickUI;
 
 #if UNITY_EDITOR
-    /// <summary>Chave do ajuste global "simular celular no Editor" (menu Ferramentas > Controles). Antes era um
-    /// checkbox por cena (showInEditorForTesting), e cada cena ficava com um valor: o tutorial mostrava "E" no
-    /// Jogo e "Interagir" no Porão.</summary>
+    /// <summary>EditorPrefs global (Ferramentas > Controles), não por cena, para todas as cenas concordarem.</summary>
     public const string ChaveSimularCelularNoEditor = "DaPena_SimularCelularNoEditor";
 #endif
 
-    /// <summary>Verdadeiro quando os controles de toque estão em uso. É a fonte da verdade para textos e glifos
-    /// do tutorial (DispositivoDeControle) e para mostrar ou não os botões mobile, igual em todas as cenas:
-    /// build Android/iOS = celular; build PC = teclado; no Editor = menu Ferramentas > Controles, ou o
-    /// Device Simulator (aba Simulator no lugar da Game).</summary>
+    /// <summary>Fonte da verdade de "é toque?" para textos e botões. No Editor: Ferramentas > Controles ou Device Simulator.</summary>
     public static bool ControlesMobileAtivos
     {
         get
@@ -36,13 +31,11 @@ public class MobileUIManager : MonoBehaviour
 
     void Awake()
     {
-        // Lógica de PC vs Android
         gameObject.SetActive(ControlesMobileAtivos);
     }
 
     void Start()
     {
-        // Encontra o sistema de diálogos ao iniciar a cena (prioriza a referência global já resolvida)
         if (GameManager.Instance != null && GameManager.Instance.dialogueSystem != null)
             dialogueSystem = GameManager.Instance.dialogueSystem;
         else
@@ -50,7 +43,6 @@ public class MobileUIManager : MonoBehaviour
 
         if (dialogueSystem != null)
         {
-            // Evita inscrição dupla caso Start rode mais de uma vez
             dialogueSystem.OnDialogueStarted -= EsconderJoystick;
             dialogueSystem.OnDialogueEnded -= MostrarJoystick;
 
@@ -65,7 +57,6 @@ public class MobileUIManager : MonoBehaviour
 
     void OnDestroy()
     {
-        // Se desinscreve para evitar erros caso a cena mude
         if (dialogueSystem != null)
         {
             dialogueSystem.OnDialogueStarted -= EsconderJoystick;

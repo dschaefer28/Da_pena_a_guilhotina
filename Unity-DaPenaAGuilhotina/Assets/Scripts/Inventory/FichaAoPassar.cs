@@ -2,9 +2,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// Mostra a FichaDaPista com um texto pronto enquanto o ponteiro está sobre este elemento de UI (as provas do tribunal,
-/// que não são slots de inventário). Só trata entrar e sair: não intercepta o clique nem a rolagem do ScrollRect, como
-/// um EventTrigger faria.
+/// FichaDaPista com texto pronto para elementos que não são slots (provas do tribunal). Usa só enter/exit em vez de
+/// EventTrigger para não interceptar clique nem rolagem do ScrollRect.
 /// </summary>
 public class FichaAoPassar : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {

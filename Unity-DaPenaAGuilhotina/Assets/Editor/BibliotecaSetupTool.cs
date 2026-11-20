@@ -7,13 +7,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Prompt 3: biblioteca e documentos de apoio sobre o conteúdo do Prompt 2.
-/// - um documento de qualidade superior à venda por caso das Fases 3 e 4 (OfertaDaBiblioteca + Item de suporte);
-/// - um qualificador explícito na receita de cada um desses casos (não é multiplicador universal);
-/// - exemplo verificável no Champ de Mars: Fatos (+20 Povo, −10 Estado, +30) → com apoio (+40, −5, +50);
-/// - duas etapas complementares de NPC (Varennes e Girondina) que entregam um documento de apoio alternativo;
-/// - BibliotecaUI no UI.prefab e SuportesDaPrensaUI no painel da prensa.
-/// CONTEÚDO PROVISÓRIO (textos, preços e bônus). Idempotente: não sobrescreve o que já foi preenchido/editado.
+/// Biblioteca e documentos de apoio das Fases 3 e 4: uma oferta (documento Superior) por caso, com qualificador
+/// explícito na receita do caso (não é multiplicador universal), e etapas complementares de NPC (Varennes e Girondina)
+/// que entregam um documento alternativo. Exemplo de referência no Champ de Mars: Fatos (+20 Povo, −10 Estado, +30)
+/// → com apoio (+40, −5, +50).
+/// CONTEÚDO PROVISÓRIO. Idempotente: não sobrescreve o que já foi preenchido/editado.
 /// Menu: Ferramentas > Campanha > 3 - Aplicar biblioteca e documentos de apoio
 /// </summary>
 public static class BibliotecaSetupTool
@@ -36,8 +34,7 @@ public static class BibliotecaSetupTool
         public string[] falas;
     }
 
-    // Descrições revistas na dedução ativa (Prompt 4, 27/09): cada documento dá contexto para julgar um dos pares do caso,
-    // sem dizer qual pista é verdadeira. A oferta do Padeiro saiu com o caso (Ferramentas > Campanha > 6).
+    // Cada documento dá contexto para julgar um dos pares de dedução do caso, sem dizer qual pista é verdadeira.
     private static readonly Oferta[] Ofertas =
     {
         new Oferta { caso = "Caso_Varennes", fase = "Fase3", id = "biblioteca_varennes", preco = 25, povo = 0, estado = 10, ouro = 20,
@@ -76,12 +73,11 @@ public static class BibliotecaSetupTool
             falas = new[] { "Ele retirou a denúncia? Graças a Deus.", "Então tome também isto: a seção me deu esta carta quando doei roupas aos voluntários." } },
     };
 
-    /// <summary>Descrição de referência do documento vendido para o caso (ex.: "Caso_Varennes"), ou null. Desde o conteúdo
-    /// do GDD, os textos em vigor são os de NarrativaGddSetupTool (ferramenta 8); os de baixo servem para criar os assets.</summary>
+    /// <summary>Descrição de referência da oferta do caso, ou null. Prevalece o texto do NarrativaGddSetupTool; o daqui
+    /// só serve para criar os assets.</summary>
     internal static string DescricaoDaOferta(string casoArquivo) =>
         NarrativaGddSetupTool.DescricaoDaOferta(casoArquivo) ?? System.Array.Find(Ofertas, o => o.caso == casoArquivo)?.descricao;
 
-    /// <summary>Falas de referência de uma etapa complementar (ex.: "recibo_da_estalagem"), ou null.</summary>
     internal static string[] FalasDaEtapa(string etapaId) =>
         NarrativaGddSetupTool.FalasDaEtapa(etapaId) ?? System.Array.Find(Etapas, e => e.id == etapaId)?.falas;
 
@@ -101,7 +97,7 @@ public static class BibliotecaSetupTool
 
         MigrarExemploDoChampDeMars(ref alterados);
 
-        // Documentos das etapas complementares (criados antes para entrarem nos qualificadores).
+        // Criados antes das ofertas para entrarem nos qualificadores.
         var docsDeNpc = new Dictionary<string, string>(); // caso -> caminho do documento
         foreach (Etapa e in Etapas)
         {
@@ -129,7 +125,7 @@ public static class BibliotecaSetupTool
             }
             caminhosDasOfertas.Add(caminhoOferta);
 
-            // Qualificador explícito da receita do caso (aceita o documento comprado e, se houver, o do NPC).
+            // Aceita o documento comprado e, se houver, o do NPC.
             ReceitaDeCaso receita = caso.receitaDoPanfleto;
             if (receita.qualificadores == null) receita.qualificadores = new List<ReceitaDeCaso.Qualificador>();
             string idQ = "apoio_" + o.caso.Replace("Caso_", "").ToLowerInvariant();
@@ -154,7 +150,7 @@ public static class BibliotecaSetupTool
         }
         AssetDatabase.SaveAssets();
 
-        // Etapas complementares nos NPCs das cenas (guardando caminhos: abrir cena descarrega assets não usados).
+        // Guarda caminhos, não referências: abrir cena descarrega assets não usados.
         var falas = new Dictionary<string, string>();
         foreach (Etapa e in Etapas)
         {
@@ -193,7 +189,7 @@ public static class BibliotecaSetupTool
         return r.Append($"Assets criados: {criados}; alterações: {alterados}.").ToString();
     }
 
-    // Exemplo verificável pedido pelo Prompt 3. Só troca os valores provisórios do Prompt 2 se ninguém os editou.
+    // Só troca os valores provisórios antigos se ninguém os editou.
     private static void MigrarExemploDoChampDeMars(ref int alterados)
     {
         CaseData caso = AssetDatabase.LoadAssetAtPath<CaseData>("Assets/ScriptableObjects/Cases/Caso_ChampDeMars.asset");

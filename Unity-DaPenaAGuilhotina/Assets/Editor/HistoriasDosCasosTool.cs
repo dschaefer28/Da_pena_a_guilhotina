@@ -4,12 +4,9 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Preenche os textos do arquivo de casos (menu principal > Casos resolvidos) em cada CaseData: título e teor do panfleto, personagens, o que
-/// aconteceu (a verdade das pistas, conforme docs/MATRIZ_DE_CASOS_TCC.md), o desfecho de cada versão do panfleto e a
-/// nota histórica; e, em cada pista, o que o panfleto afirma quando ela é impressa. Só escreve campos VAZIOS: o que o grupo editar no Inspector nunca é sobrescrito. Para trocar um texto
-/// por este padrão de novo, apague o campo no Inspector e rode o menu.
-/// O que é invenção do GDD/jogo fica no "o que aconteceu" (é a verdade do mundo do jogo); a "nota histórica" só traz o
-/// que é documentado (ver "Adaptações e divergências" na matriz).
+/// Preenche os textos do arquivo de casos (CaseData) e a afirmação no panfleto de cada pista. Só escreve campos VAZIOS:
+/// para restaurar o padrão, apague o campo no Inspector e rode de novo.
+/// "historia" é a verdade do mundo do jogo (docs/MATRIZ_DE_CASOS_TCC.md); "nota histórica" só traz o que é documentado.
 /// Menu: Ferramentas > Campanha > 9 - Histórias do arquivo de casos
 /// </summary>
 public static class HistoriasDosCasosTool

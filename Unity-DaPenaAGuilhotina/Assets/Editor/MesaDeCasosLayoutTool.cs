@@ -5,15 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Mesa de Casos legível (relatório de testes de 28/09, item 4). Nos prefabs, não nas cenas:
-/// - CartaoPrefab: fundo escuro e opaco (era cinza-claro 0,56 com texto bege/branco, pouco contraste), sem o
-///   ContentSizeFitter (a linha de cartões controla o tamanho), com um espaçador antes do "Aceitar Caso", para os
-///   botões dos cartões da mesma linha ficarem alinhados embaixo, e a descrição alinhada à esquerda (justificada, abria
-///   buracos na coluna). Os cartões ficam em colunas (CaseSelectionUI).
-/// - UI.prefab, Painel_MesaDeCasos: barra de rolagem (aparece só quando os cartões não cabem, indicando que há mais
-///   para ver; fora da navegação do teclado), margem direita para ela e o "Fechar" na mesma fonte dos cartões (estava
-///   em LiberationSans).
-/// Idempotente: só troca o que ainda está com o valor antigo; o resto fica como está.
+/// Layout da Mesa de Casos nos prefabs (não nas cenas):
+/// - CartaoPrefab: fundo escuro opaco, sem ContentSizeFitter (a linha controla o tamanho), espaçador antes do
+///   "Aceitar Caso" para alinhar os botões embaixo e descrição alinhada à esquerda;
+/// - Painel_MesaDeCasos (UI.prefab): barra de rolagem automática e "Fechar" na fonte dos cartões.
+/// Idempotente: só troca o que ainda está com o valor antigo.
 /// Menu: Ferramentas > UI > Aplicar layout da Mesa de Casos
 /// </summary>
 public static class MesaDeCasosLayoutTool
@@ -55,8 +51,7 @@ public static class MesaDeCasosLayoutTool
 
             if (raiz.GetComponent<LayoutElement>() == null) { raiz.AddComponent<LayoutElement>().flexibleWidth = 0f; feito.Append("LayoutElement; "); }
 
-            // Na coluna (~600 de largura) o texto justificado abria buracos entre as palavras; alinhado à esquerda, como o
-            // objetivo e as consequências do mesmo cartão.
+            // Justificado abria buracos entre as palavras na coluna estreita (~600).
             TextMeshProUGUI descricao = raiz.transform.Find("DescricaoTexto")?.GetComponent<TextMeshProUGUI>();
             if (descricao != null && descricao.alignment == TextAlignmentOptions.TopJustified)
             {
@@ -95,7 +90,6 @@ public static class MesaDeCasosLayoutTool
             if (mesa == null) return $"'{CaminhoDaMesa}' não existe no UI.prefab; nada alterado.";
             var feito = new StringBuilder();
 
-            // Fechar na fonte dos cartões (EB Garamond desde 27/10/2026).
             TextMeshProUGUI rotuloFechar = mesa.Find("BotaoFechar")?.GetComponentInChildren<TextMeshProUGUI>(true);
             TMP_FontAsset fonteDosCartoes = FonteDosCartoes();
             if (rotuloFechar != null && fonteDosCartoes != null && rotuloFechar.font != fonteDosCartoes)
@@ -110,8 +104,7 @@ public static class MesaDeCasosLayoutTool
             if (rolagem != null)
             {
                 if (rolagem.verticalScrollbar == null) { rolagem.verticalScrollbar = CriarBarra(area); feito.Append("barra de rolagem; "); }
-                // Fora da navegação do teclado: com "Automatic", a seta para baixo saindo do Fechar caía na barra (logo
-                // abaixo dele) e não nos cartões. A barra continua para mouse, arrasto e toque.
+                // Com "Automatic", a seta para baixo saindo do Fechar caía na barra em vez dos cartões.
                 if (rolagem.verticalScrollbar.navigation.mode != Navigation.Mode.None)
                 {
                     rolagem.verticalScrollbar.navigation = new Navigation { mode = Navigation.Mode.None };

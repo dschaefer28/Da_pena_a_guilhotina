@@ -6,12 +6,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// Tela de saves do menu principal (aberta pelo JOGAR): um cartão por slot do SistemaDeSave.
-/// Slot vazio: NOVO JOGO (a partida passa a gravar nele). Slot ocupado: CARREGAR (volta ao ponto salvo e continua
-/// gravando nele) e EXCLUIR (pede confirmação). Um jogo já concluído no tribunal não carrega; só pode ser excluído.
-///
-/// Todo o visual (moldura, cartões, botões, textos e a pergunta de exclusão) já existe na cena, montado por
-/// Ferramentas > Menu principal > Criar tela de Saves. Este script só preenche os textos e liga/desliga os botões.
+/// Tela de saves do menu principal: um cartão por slot. Jogo concluído no tribunal não carrega, só pode ser excluído.
+/// O visual é montado por Ferramentas > Menu principal > Criar tela de Saves; aqui só se preenchem textos e botões.
 /// </summary>
 public class SlotsDeSaveUI : MonoBehaviour
 {
@@ -46,7 +42,6 @@ public class SlotsDeSaveUI : MonoBehaviour
 
     private void OnEnable() => Mostrar();
 
-    /// <summary>Relê os slots e preenche os cartões.</summary>
     public void Mostrar()
     {
         if (cartoes == null) return;
@@ -79,21 +74,19 @@ public class SlotsDeSaveUI : MonoBehaviour
         if (eventos != null && primeiroBotao != null) eventos.SetSelectedGameObject(primeiroBotao);
     }
 
-    /// <summary>Ligado no OnClick do NOVO JOGO de cada cartão (índice do cartão, de cima para baixo).</summary>
+    /// <summary>Métodos de OnClick recebem o índice do cartão (0 = slot 1).</summary>
     public void NovoJogo(int indice)
     {
-        if (menu == null || SistemaDeSave.ExisteSlot(indice + 1)) return; // slot ocupado: só carrega ou exclui
+        if (menu == null || SistemaDeSave.ExisteSlot(indice + 1)) return;
         menu.ComecarNovoJogoNoSlot(indice + 1);
     }
 
-    /// <summary>Ligado no OnClick do CARREGAR de cada cartão.</summary>
     public void Carregar(int indice)
     {
         if (menu == null) return;
-        if (!menu.CarregarSlot(indice + 1)) Mostrar(); // não deu para carregar: o cartão mostra o porquê
+        if (!menu.CarregarSlot(indice + 1)) Mostrar(); // o cartão mostra o porquê
     }
 
-    /// <summary>Ligado no OnClick do EXCLUIR de cada cartão: abre a pergunta.</summary>
     public void PedirExclusao(int indice)
     {
         slotParaExcluir = indice + 1;
@@ -109,7 +102,6 @@ public class SlotsDeSaveUI : MonoBehaviour
         if (eventos != null && botaoNaoExcluir != null) eventos.SetSelectedGameObject(botaoNaoExcluir);
     }
 
-    /// <summary>"Sim" da pergunta.</summary>
     public void ConfirmarExclusao()
     {
         if (slotParaExcluir > 0) SistemaDeSave.ExcluirSlot(slotParaExcluir);
@@ -118,7 +110,6 @@ public class SlotsDeSaveUI : MonoBehaviour
         if (menu != null) menu.AtualizarContinuar();
     }
 
-    /// <summary>"Não" da pergunta.</summary>
     public void CancelarExclusao()
     {
         slotParaExcluir = 0;
@@ -154,7 +145,7 @@ public class SlotsDeSaveUI : MonoBehaviour
         if (string.IsNullOrEmpty(dados.casoEscolhido)) return null;
         CatalogoDeSave catalogo = CatalogoDeSave.Instancia;
         CaseData caso = catalogo != null ? catalogo.BuscarCaso(dados.casoEscolhido) : null;
-        // Só o caso da fase atual: o escolhido da fase anterior fica no save até o jogador aceitar outro.
+        // O caso da fase anterior fica no save até o jogador aceitar outro.
         if (caso == null || caso.fase != dados.faseAtual || string.IsNullOrWhiteSpace(caso.caseTitle)) return null;
         return caso.caseTitle.Trim();
     }

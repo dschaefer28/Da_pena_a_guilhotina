@@ -10,12 +10,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Cena "menu principal": cria o botão CASOS na coluna do menu (cópia do JOGAR, logo abaixo dele; a coluna sobe meio
-/// passo para caber) e o painel "Casos resolvidos" (cópia do painel de CRÉDITOS: mesma moldura fundohud, título, botão
-/// VOLTAR e sons). Dentro do painel: lista de casos e setas de partida (cópias do VOLTAR, sprite button), texto do caso
-/// com rolagem (fonte do título) e a barra de rolagem no mesmo modelo da Mesa de Casos. O ArquivoDeCasosUI só preenche.
-/// Idempotente: o que já existe fica como está (para refazer o painel, apague "painelCasos" e rode de novo).
-/// Recusa rodar em Play Mode ou com cena suja; restaura a cena que estava aberta.
+/// Cena "menu principal": cria o botão CASOS (cópia do JOGAR) e o painel "Casos resolvidos" (cópia do painel de
+/// CRÉDITOS). Nenhum visual é criado em runtime: o ArquivoDeCasosUI só preenche.
+/// Idempotente (para refazer, apague "painelCasos"). Recusa Play Mode e cena suja; restaura a cena aberta.
 /// Menu: Ferramentas > Menu principal > Criar painel Casos resolvidos
 /// </summary>
 public static class ArquivoDeCasosSetupTool
@@ -77,7 +74,7 @@ public static class ArquivoDeCasosSetupTool
             return $"'{NomeBotaoMenu}' já existia; mantido.";
         }
 
-        // Coluna de cima para baixo, com o CASOS logo depois do JOGAR; mesmo passo, meio passo acima para caber na tela.
+        // A coluna sobe meio passo para o botão novo caber na tela.
         var botoes = new List<RectTransform>();
         foreach (Transform filho in coluna)
             if (filho.GetComponent<Button>() != null) botoes.Add((RectTransform)filho);
@@ -202,7 +199,6 @@ public static class ArquivoDeCasosSetupTool
         return "criado a partir do painel de CRÉDITOS (mesma moldura, título, VOLTAR e sons).";
     }
 
-    // Área de leitura à direita da lista: viewport com máscara, texto que cresce para baixo e barra de rolagem.
     private static ScrollRect CriarDetalhe(Transform painel, TMP_Text modeloDeTexto, out TMP_Text texto)
     {
         var area = new GameObject("Detalhe", typeof(RectTransform), typeof(Image), typeof(ScrollRect));
@@ -210,7 +206,7 @@ public static class ArquivoDeCasosSetupTool
         area.transform.SetParent(painel, false);
         Posicionar((RectTransform)area.transform, new Vector2(222f, -17f), new Vector2(810f, 465f));
         var alvo = area.GetComponent<Image>();
-        alvo.color = new Color(1f, 1f, 1f, 0f); // só recebe o arraste/roda do mouse
+        alvo.color = new Color(1f, 1f, 1f, 0f); // invisível; só recebe arraste/roda do mouse
 
         var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D));
         viewport.layer = area.layer;

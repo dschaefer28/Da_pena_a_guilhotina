@@ -9,12 +9,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Cutscene provisória do documento de tarefas: tela preta com legendas, uma linha por vez, até as
-/// artes ficarem prontas. Vive no prefab UI (existe em todas as cenas) e é chamada por quem precisa:
-/// IntroCutscene, Fase1Desfecho e FimDeFase pelo TocarTransicao (abertura e passagem entre fases) e o
-/// tribunal pelo Tocar (abertura do julgamento e finais).
-/// Enquanto toca, congela o jogo (timeScale 0) e esconde o popup do tutorial (EmExibicao).
-/// Toque/clique/Enter pula para a próxima linha.
+/// Legendas sobre tela preta, uma por vez. Vive no prefab UI (todas as cenas). TocarTransicao: abertura e
+/// passagem entre fases; Tocar: tribunal. Enquanto toca, congela o jogo (timeScale 0) e esconde o tutorial.
 /// </summary>
 public class CutsceneLegendas : MonoBehaviour
 {
@@ -28,7 +24,7 @@ public class CutsceneLegendas : MonoBehaviour
     }
 
     public static CutsceneLegendas Instance { get; private set; }
-    /// <summary>Verdadeiro enquanto alguma cutscene estiver na tela (o tutorial usa para se esconder).</summary>
+    /// <summary>O tutorial usa para se esconder.</summary>
     public static bool EmExibicao { get; private set; }
     public static event Action OnTerminou;
 
@@ -56,15 +52,14 @@ public class CutsceneLegendas : MonoBehaviour
 
     private Coroutine emAndamento;
     private bool pularLinha;
-    // Só o texto montado por código troca de layout entre os dois modos; um texto ligado no Inspector fica como está.
+    // Só o texto montado por código troca de layout; um texto ligado no Inspector fica como está.
     private bool layoutAutomatico;
 
-    // Cada frame avança no máximo isto do fade do texto: um frame lento (salvar, carregar) não o pula de uma vez.
+    // Limita o passo do fade por frame: um frame lento (salvar, carregar) não o pula de uma vez.
     private const float PassoMaximoDoFade = 1f / 30f;
-    // A cutscene que nasce com a tela coberta pela troca de cena espera o preto dela sair, no máximo por isto.
     private const float EsperaMaximaPelaTrocaDeCena = 3f;
 
-    // Frame em que a última cena terminou de carregar: cutscene tocada no Start da cena nova nasce preta.
+    // Cutscene tocada no Start da cena nova nasce preta.
     private static int frameDaUltimaCena = -100;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -81,8 +76,7 @@ public class CutsceneLegendas : MonoBehaviour
 
     private void Awake()
     {
-        // Uma cópia existe em cada cena (prefab UI). Na troca de cena as duas coexistem por um instante:
-        // a mais nova vence, porque a antiga está a caminho de ser destruída.
+        // Na troca de cena as duas cópias coexistem por um instante: a mais nova vence.
         Instance = this;
         if (fundo == null || legenda == null) Montar();
         fundo.alpha = 0f;
@@ -92,7 +86,7 @@ public class CutsceneLegendas : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Se esta cópia morrer no meio de uma cutscene (troca de cena), não pode deixar o jogo congelado.
+        // Destruída no meio da cutscene: não deixa o jogo congelado.
         if (emAndamento != null)
         {
             EmExibicao = false;
@@ -109,21 +103,14 @@ public class CutsceneLegendas : MonoBehaviour
         if (toque || tecla) pularLinha = true;
     }
 
-    /// <param name="fadeDeEntradaInstantaneo">Verdadeiro pula o fade de entrada (tela já nasce preta).
-    /// Use para uma cutscene que é a primeira coisa exibida na cena (não há cenário de jogo visível
-    /// ainda para esmaecer) — senão o cenário "pisca" por trás do fade antes de escurecer de vez.</param>
-    /// <param name="terminarNoPreto">Verdadeiro pula o fade de saída: o preto some no mesmo frame em que aoTerminar
-    /// roda. Use quando aoTerminar põe outra tela preta por cima (ex.: tela final do tribunal) — senão o cenário
-    /// reaparece por um instante entre as duas.</param>
+    /// <param name="fadeDeEntradaInstantaneo">Nasce preta; para cutscene que abre a cena (evita o cenário piscar).</param>
+    /// <param name="terminarNoPreto">Sem fade de saída; para quando aoTerminar põe outra tela preta por cima.</param>
     public void Tocar(List<Linha> linhas, Action aoTerminar = null, bool fadeDeEntradaInstantaneo = false, bool terminarNoPreto = false) =>
         Iniciar(linhas, aoTerminar, fadeDeEntradaInstantaneo, false, terminarNoPreto);
 
     /// <summary>
-    /// Legendas de transição (abertura e passagem entre fases): o fundo fica preto do começo ao fim e só o texto entra
-    /// e sai em fade, um bloco por vez, com um intervalo vazio entre eles. Cada bloco fica legível pelo tempo de
-    /// TempoDeLeitura, contado depois de o texto aparecer por inteiro. Toque/clique/Enter durante a entrada só a
-    /// completa; durante a leitura, passa ao próximo bloco; durante a saída e o intervalo, é ignorado (nunca pula um
-    /// bloco que ainda não apareceu).
+    /// Fundo preto fixo; só o texto entra/sai em fade, bloco a bloco, por TempoDeLeitura após aparecer inteiro.
+    /// Toque na entrada só a completa; na leitura, avança; na saída/intervalo é ignorado.
     /// </summary>
     public void TocarTransicao(List<Linha> linhas, Action aoTerminar = null, bool fadeDeEntradaInstantaneo = false) =>
         Iniciar(linhas, aoTerminar, fadeDeEntradaInstantaneo, true, false);
@@ -135,8 +122,7 @@ public class CutsceneLegendas : MonoBehaviour
         emAndamento = StartCoroutine(Rotina(linhas, aoTerminar, fadeDeEntradaInstantaneo, transicao, terminarNoPreto));
     }
 
-    /// <summary>Segundos de leitura de um bloco de transição: margem + 1 s a cada N palavras, nunca menos que o
-    /// mínimo nem que a duração da própria linha.</summary>
+    /// <summary>margem + palavras/ritmo, nunca menos que o mínimo nem que a duração da linha.</summary>
     public static float TempoDeLeitura(string texto, float duracaoDaLinha, float margem, float palavrasPorSegundo, float minimo)
     {
         float pelasPalavras = margem + ContarPalavras(texto) / Mathf.Max(0.1f, palavrasPorSegundo);
@@ -166,8 +152,7 @@ public class CutsceneLegendas : MonoBehaviour
         fundo.blocksRaycasts = true;
         legenda.text = string.Empty;
         legenda.alpha = 1f;
-        // Começando junto com a cena (Start) ou com a tela ainda coberta pela troca de cena, a cutscene já nasce
-        // preta: com fade de entrada, o preto da troca sumia enquanto o da cutscene surgia e o cenário piscava.
+        // No início da cena ou sob a troca de cena, nasce preta: o fade cruzado fazia o cenário piscar.
         if (fadeDeEntradaInstantaneo || InicioDeCena || SceneTransitionManager.TelaCoberta) fundo.alpha = 1f;
         else yield return Fade(0f, 1f);
 
@@ -190,8 +175,7 @@ public class CutsceneLegendas : MonoBehaviour
 
         legenda.text = string.Empty;
         legenda.alpha = 1f;
-        // Terminando no preto, o resto desta rotina e o aoTerminar rodam no mesmo frame: não há render entre o preto da
-        // cutscene sumir e a tela de quem chamou aparecer.
+        // Sem yield até aoTerminar: nenhum frame é renderizado entre um preto e outro.
         if (terminarNoPreto) fundo.alpha = 0f;
         else yield return Fade(1f, 0f);
         fundo.blocksRaycasts = false;
@@ -205,8 +189,7 @@ public class CutsceneLegendas : MonoBehaviour
 
     private IEnumerator BlocosDeTransicao(List<Linha> linhas)
     {
-        // Nascendo sob o preto da troca de cena, o texto só começa a aparecer quando ele sai: senão a entrada (e parte
-        // da leitura do primeiro bloco) acontecia por baixo dele.
+        // Espera o preto da troca de cena sair, senão o primeiro bloco seria lido por baixo dele.
         float espera = 0f;
         while (SceneTransitionManager.TelaCoberta && espera < EsperaMaximaPelaTrocaDeCena)
         {
@@ -278,8 +261,7 @@ public class CutsceneLegendas : MonoBehaviour
 
     private void Montar()
     {
-        // Este objeto vive dentro do Canvas do prefab UI, então o canvas criado aqui é "aninhado": o modo
-        // de render vem do pai e a ordem só vale com overrideSorting. O RectTransform precisa cobrir o pai.
+        // Canvas aninhado no do prefab UI: a ordem só vale com overrideSorting e o RectTransform precisa cobrir o pai.
         var go = new GameObject("CutsceneLegendas_Canvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasGroup), typeof(GraphicRaycaster));
         go.layer = gameObject.layer;
         go.transform.SetParent(transform, false);
@@ -291,7 +273,6 @@ public class CutsceneLegendas : MonoBehaviour
         canvas.sortingOrder = 50; // acima dos popups (10) e dos controles mobile (2); abaixo do fade de cena (1000)
         fundo = go.GetComponent<CanvasGroup>();
 
-        // O próprio "Cutscenes" também precisa cobrir a tela (é um RectTransform vazio dentro do canvas).
         var rEste = transform as RectTransform;
         if (rEste != null) { rEste.anchorMin = Vector2.zero; rEste.anchorMax = Vector2.one; rEste.offsetMin = rEste.offsetMax = Vector2.zero; }
 
@@ -312,8 +293,7 @@ public class CutsceneLegendas : MonoBehaviour
         AplicarLayout(false);
     }
 
-    // Tocar: caixa de 80% × 70% da tela, com auto size. Transição: tamanho fixo em todos os blocos e coluna centralizada
-    // de no máximo larguraMaxima; o bloco fica centrado na vertical, tenha uma, duas ou três linhas.
+    // Tocar: caixa 80% × 70% com auto size. Transição: tamanho fixo e coluna centralizada de até larguraMaxima.
     private void AplicarLayout(bool transicao)
     {
         RectTransform r = legenda.rectTransform;
@@ -333,7 +313,7 @@ public class CutsceneLegendas : MonoBehaviour
         }
     }
 
-    // Recalculada a cada bloco, para acompanhar a tela se ela mudar de tamanho no meio da cutscene.
+    // Recalculada a cada bloco caso a tela mude de tamanho.
     private void AjustarLargura()
     {
         var pai = legenda.rectTransform.parent as RectTransform;

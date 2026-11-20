@@ -1,20 +1,13 @@
 using UnityEngine;
 
-/// <summary>
-/// Controla se os controles mobile (joystick virtual, botões de ação, etc.)
-/// estão recebendo toque ou não. Deve ser colocado no mesmo GameObject
-/// que tem o Canvas "MobileControlsUI" e o CanvasGroup atribuído no Inspector.
-/// </summary>
+/// <summary>Liga/desliga o toque dos controles mobile. Vai no GameObject do Canvas "MobileControlsUI".</summary>
 public class MobileControlsManager : MonoBehaviour
 {
     public static MobileControlsManager Instance { get; private set; }
 
     [SerializeField] private CanvasGroup canvasGroup;
 
-    // NOVO: o "TouchZone" (área de toque em tela cheia usada pelo joystick) é irmã do
-    // JoystickBG, então o CanvasGroup acima (só no JoystickBG) não cobre ela. Sem isso,
-    // o TouchZone continuava sempre recebendo raycast e "roubava" o toque de qualquer
-    // UI que abrisse por cima (pause, inventário, prensa) mesmo com o joystick desligado.
+    // TouchZone (tela cheia) é irmã do JoystickBG, fora do canvasGroup acima; sem isto ela rouba o toque da UI modal.
     [SerializeField] private CanvasGroup touchZoneCanvasGroup;
 
     void Awake()
@@ -35,11 +28,7 @@ public class MobileControlsManager : MonoBehaviour
         if (Instance == this) Instance = null;
     }
 
-    /// <summary>
-    /// true  -> controles mobile ativos e recebendo toque normalmente (estado padrão).
-    /// false -> controles mobile "desligados" para raycast, para que UI modal
-    ///          (diálogo, pause, etc.) por cima receba o toque em vez deles.
-    /// </summary>
+    /// <summary>False desliga o raycast para a UI modal por cima receber o toque.</summary>
     public void SetControlsInteractable(bool isInteractable)
     {
         if (canvasGroup == null)
@@ -52,7 +41,6 @@ public class MobileControlsManager : MonoBehaviour
             canvasGroup.blocksRaycasts = isInteractable;
         }
 
-        // Desliga também o TouchZone (senão ele continua roubando o toque da UI aberta por cima).
         if (touchZoneCanvasGroup != null)
         {
             touchZoneCanvasGroup.interactable = isInteractable;

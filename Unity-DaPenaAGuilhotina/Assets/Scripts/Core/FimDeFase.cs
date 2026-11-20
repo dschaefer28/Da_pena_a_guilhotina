@@ -5,14 +5,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Fecha a fase quando o jogador volta ao escritório com os casos exigidos concluídos (GameManager.casosPorFase):
-/// expõe os boatos publicados na fase (penalidades), cobra as despesas, passa o GameManager para a fase seguinte
-/// (GameManager.EncerrarFase), toca a cutscene de fim de fase (legendas de transição sobre tela preta) e salva.
-/// A cutscene conta primeiro o que fecha a fase (boatos expostos, despesas) e termina na passagem histórica que
-/// prepara a fase nova. A partir daí a Mesa de Casos mostra os casos da nova fase e a porta leva à cena do caso aceito.
-///
-/// Fica no prefab UI, ao lado do Fase1Desfecho, e só age na cena do escritório. A Fase 1 não tem legendas aqui
-/// porque o Fase1Desfecho já toca a cutscene dela; a Fase 4 termina no tribunal, não no escritório.
+/// Fecha a fase ao voltar ao escritório com os casos exigidos concluídos: expõe boatos, cobra despesas,
+/// avança a fase (GameManager.EncerrarFase), toca a cutscene de transição e salva.
+/// Fase 1 usa o Fase1Desfecho; a Fase 4 termina no tribunal.
 /// </summary>
 public class FimDeFase : MonoBehaviour
 {
@@ -81,8 +76,7 @@ public class FimDeFase : MonoBehaviour
         // Aplica tudo já, antes da cutscene: se a cena trocar no meio dela, nada fica pendente.
         GameManager.EncerramentoDeFase fim = gm.EncerrarFase();
 
-        // Primeiro o que fecha a fase que terminou; por último a passagem histórica, que leva à fase nova.
-        // Duração 0 = tempo de leitura pelas palavras (CutsceneLegendas.TocarTransicao).
+        // Ordem: revelações, despesas e por fim a passagem histórica para a fase nova.
         var legendas = new List<CutsceneLegendas.Linha>();
         if (fim.revelacoes.Count > 0)
         {
@@ -111,8 +105,7 @@ public class FimDeFase : MonoBehaviour
             MostrarDesmentidos();
         }
 
-        // Primeira cobrança: a dica aparece depois da cutscene (o popup espera a tela ficar livre). Pedida antes do save
-        // do próximo frame, então o Continuar não a repete.
+        // Pedida antes do save do próximo frame, para o Continuar não repetir a dica.
         if (fim.despesa > 0 && TutorialManager.Instance != null)
             TutorialManager.Instance.SolicitarDicaUmaVez(TutorialManager.CHAVE_DICA_DESPESAS, TutorialManager.Instance.dicaDespesas);
 
@@ -126,7 +119,7 @@ public class FimDeFase : MonoBehaviour
 
     private List<GameManager.RevelacaoPendente> revelacoesParaAvisar;
 
-    // Depois da cutscene: um aviso de 5 s por panfleto desmentido e a barra descendo (a HUD segurava a perda).
+    // A HUD segura a perda até aqui; ExibirDesmentido libera a barra.
     private void MostrarDesmentidos()
     {
         GameManager gm = GameManager.Instance;
@@ -144,7 +137,7 @@ public class FimDeFase : MonoBehaviour
         if (gm != null) gm.ExibirDesmentido();
     }
 
-    // Saiu da cena no meio da cutscene: a HUD não pode ficar segurando a perda para sempre.
+    // Saída de cena no meio da cutscene: não deixa a HUD segurando a perda.
     private void OnDestroy()
     {
         if (revelacoesParaAvisar != null && GameManager.Instance != null) GameManager.Instance.ExibirDesmentido();
@@ -169,8 +162,7 @@ public class FimDeFase : MonoBehaviour
                 : (string.IsNullOrWhiteSpace(revelacao.caso.caseTitle) ? revelacao.caso.name : revelacao.caso.caseTitle).Trim();
             texto = string.Format(textoPadraoRevelacao, titulo);
         }
-        // Só quando o agravamento está ligado no caso: desde 08/11/2026 ele vem desligado (0%) e o sensacionalista paga
-        // na hora, com menos para o lado do caso.
+        // Só com agravamento > 0 no caso (padrão 0%: o sensacionalista já paga na publicação).
         ReceitaDeCaso receita = revelacao.caso != null ? revelacao.caso.receitaDoPanfleto : null;
         bool agravada = receita != null && receita.linhaEditorial != null && receita.linhaEditorial.agravamentoPercentual > 0;
         if (revelacao.linha == LinhaEditorial.Sensacionalista && agravada && !string.IsNullOrWhiteSpace(textoAgravamentoSensacionalista))
@@ -185,7 +177,7 @@ public class FimDeFase : MonoBehaviour
         return null;
     }
 
-    // Espera um frame: o inventário da cena só é restaurado no Start dele, e o save lê o inventário da tela.
+    // Espera um frame: o save lê o inventário da tela, restaurado só no Start dele.
     private IEnumerator SalvarNoProximoFrame()
     {
         yield return null;

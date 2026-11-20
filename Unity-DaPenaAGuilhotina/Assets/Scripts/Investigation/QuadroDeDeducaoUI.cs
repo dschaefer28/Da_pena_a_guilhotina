@@ -6,17 +6,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// Quadro de dedução (Prompt 4, proposta C; desde o Prompt 7, Fases 2, 3 e 4): botão na HUD enquanto o caso em andamento
-/// tiver dedução ativa.
-/// A janela agrupa por contradição (par) as pistas do conjunto do caso que o jogador já descobriu (mesmo as gastas na
-/// prensa ou descartadas), com fonte e descrição. Quando as duas afirmações de um par foram achadas, o jogador escolhe em
-/// qual acredita (dois toques: "Escolher esta" e "Confirmar"); a outra sai do inventário de vez. Cada par é decidido à
-/// parte, qualquer escolha é aceita e o quadro nunca diz qual afirmação é a verdadeira (regras em Deducao): a verdade só
-/// decide a versão do panfleto. A prensa não aceita uma pista cujo par ainda espera a escolha.
-///
-/// Enquanto aberto: jogo pausado, movimento, interação, inventário e pause bloqueados, controles de toque desligados;
-/// Esc ou Fechar restauram tudo. Fica no objeto "QuadroDeDeducao" do prefab UI e se monta por código no primeiro uso,
-/// como a Biblioteca.
+/// Quadro de dedução: agrupa por par as pistas descobertas do caso em andamento e deixa o jogador escolher em qual
+/// acredita (dois toques). Nunca revela a verdade (regras em Deducao). Montado por código no primeiro uso; aberto,
+/// pausa o jogo (timeScale 0) e desliga os controles de toque.
 /// </summary>
 public class QuadroDeDeducaoUI : MonoBehaviour
 {
@@ -41,14 +33,13 @@ public class QuadroDeDeducaoUI : MonoBehaviour
     [TextArea(1, 3)] public string respostaEscolha = "Você ficou com \"{escolhida}\". \"{descartada}\" foi descartada.";
     [TextArea(1, 3)] public string lembreteDaPrensa = "A escolha não tem volta. De cada contradição, só a afirmação escolhida pode ir para a prensa.";
 
-    /// <summary>Verdadeiro com a janela aberta (PauseMenu, inventário, jogador e interação consultam via JanelasModais).</summary>
     public static bool Aberto { get; private set; }
     private static int frameEmQueFechou = -1;
     /// <summary>O Esc que fechou o quadro não pode abrir o pause no mesmo frame.</summary>
     public static bool BloqueiaPausa => Aberto || frameEmQueFechou == Time.frameCount;
 
     private static readonly Color CorTexto = new Color(0.93f, 0.9f, 0.84f);
-    // Opaco: no espaço de cor Linear do projeto, alpha 0,97 ainda deixava o cenário aparecer por trás.
+    // Opaco: em espaço de cor Linear, alpha 0,97 ainda deixava o cenário vazar.
     private static readonly Color CorPainel = new Color(0.11f, 0.08f, 0.07f, 1f);
     private static readonly Color CorLinha = new Color(0.18f, 0.13f, 0.11f, 1f);
     private static readonly Color CorPista = new Color(0.23f, 0.17f, 0.14f, 1f);
@@ -69,10 +60,10 @@ public class QuadroDeDeducaoUI : MonoBehaviour
     private Button botaoFechar;
     private float timeScaleAoAbrir = 1f;
     private CaseData casoAberto;
-    // Primeiro toque em "Escolher esta": a escolha só vale no segundo (o descarte não tem volta).
+    // A escolha só vale no segundo toque: o descarte não tem volta.
     private Item pistaAConfirmar;
 
-    // Play Mode sem recarregar domínio: o estado estático não pode vazar de uma sessão para a outra.
+    // Play Mode sem domain reload: o estado estático não pode vazar entre sessões.
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ZerarEstado()
     {
@@ -87,7 +78,6 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         if (Aberto && janela != null && janela.activeSelf) Fechar(); // troca de cena com a janela aberta
     }
 
-    /// <summary>O caso em andamento usa o quadro (a partir da fase mínima).</summary>
     public bool Disponivel
     {
         get
@@ -100,7 +90,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
     private void Update()
     {
         GameManager gm = GameManager.Instance;
-        // Some com qualquer outro modal aberto: não fica por cima do pause nem oferece um clique que seria recusado.
+        // Some com outro modal aberto: não fica por cima nem oferece um clique que seria recusado.
         bool outroModal = CutsceneLegendas.EmExibicao || CaseSelectionUI.Aberta || BibliotecaUI.Aberta ||
                           (PauseMenu.Instance != null && PauseMenu.Instance.IsOpen) ||
                           (gm != null && gm.dialogueSystem != null && gm.dialogueSystem.IsDialogueActive) ||
@@ -174,7 +164,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
             Destroy(velho);
         }
 
-        // A numeração segue a ordem de descoberta (ParesConhecidos), nunca a posição do par no caso.
+        // Numeração pela ordem de descoberta, nunca pela posição do par no caso.
         List<List<Item>> pares = Deducao.ParesConhecidos(gm, caso);
         for (int i = 0; i < pares.Count; i++) CriarPar(i + 1, pares[i], gm, caso);
         if (pares.Count == 0)
@@ -212,14 +202,13 @@ public class QuadroDeDeducaoUI : MonoBehaviour
 
         string nome = descartada ? $"<s>{pista.NomeExibicao}</s>" : $"<b>{pista.NomeExibicao}</b>";
         string fonteDaPista = string.IsNullOrWhiteSpace(pista.fonte) ? string.Empty : $"<size=80%><color=#C8B89A>Fonte: {pista.fonte}</color></size>\n";
-        // Tamanhos revistos com a EB Garamond (27/10/2026): nada abaixo de ~22 na referência de 1080 (15 px em 720).
+        // EB Garamond: nada abaixo de ~22 na referência de 1080.
         var textos = Texto("Textos", linha.transform, 28f,
             $"{nome}  <size=80%>({Deducao.Rotulo(gm, pista)})</size>\n{fonteDaPista}<size=90%>{pista.descricao}</size>",
             TextAlignmentOptions.MidlineLeft);
         textos.GetComponent<LayoutElement>().flexibleWidth = 1f;
         if (descartada) textos.alpha = 0.55f;
 
-        // Coluna da direita: o botão enquanto o par espera a escolha; depois, só a situação.
         if (escolhida) { Selo(linha.transform, "<b>Sua escolha</b>"); return; }
         if (descartada) { Selo(linha.transform, "<color=#9E9E9E>Descartada</color>"); return; }
         if (!Deducao.PodeEscolher(gm, caso, pista)) { Selo(linha.transform, "<size=85%><color=#9E9E9E>Falta a contrária</color></size>"); return; }
@@ -227,11 +216,10 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         bool aConfirmar = Mesma(pistaAConfirmar, pista);
         bool recua = pistaAConfirmar != null && !aConfirmar && Mesma(Deducao.Contradicao(gm, pista), pistaAConfirmar);
         Button b = Botao("Escolher", linha.transform, aConfirmar ? "Confirmar" : "Escolher esta");
-        // Largura fixa: o texto da pista encolhe primeiro (o botão continua tocável em telas estreitas) e os botões das
-        // duas linhas do par ficam alinhados.
+        // Largura fixa: o texto encolhe primeiro e os botões do par ficam alinhados.
         LayoutElement le = b.GetComponent<LayoutElement>();
         le.minWidth = le.preferredWidth = LarguraDaColuna;
-        // Cor lisa: o botão a confirmar clareia. Com o sprite (que não clareia além do branco), a outra opção é que recua.
+        // Cor lisa: o botão a confirmar clareia. Com sprite (não clareia além do branco), a outra opção recua.
         if (spriteDoBotao == null) { if (aConfirmar) b.GetComponent<Image>().color = CorMarcado; }
         else if (recua) b.GetComponent<Image>().color = CorMarcaInativa;
         b.onClick.AddListener(() => Escolher(pista, caso));
@@ -239,7 +227,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
 
     private const float LarguraDaColuna = 220f;
 
-    // Texto fixo na coluna do botão (mesma largura), para as linhas não mudarem de tamanho depois da escolha.
+    // Mesma largura do botão: as linhas não mudam de tamanho depois da escolha.
     private void Selo(Transform pai, string texto)
     {
         LayoutElement le = Texto("Situacao", pai, 26f, texto, TextAlignmentOptions.Center).GetComponent<LayoutElement>();
@@ -248,7 +236,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
 
     private static bool Mesma(Item x, Item y) => x != null && y != null && x.itemID == y.itemID;
 
-    // Primeiro toque: pede confirmação (nada muda). Segundo toque na mesma pista: fica com ela e descarta a contrária.
+    // Primeiro toque só pede confirmação; o segundo na mesma pista decide.
     private void Escolher(Item pista, CaseData caso)
     {
         GameManager gm = GameManager.Instance;
@@ -267,7 +255,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         if (!Deducao.Escolher(gm, caso, pista, out Item descartada)) return;
         textoMensagem.text = ComNomes(respostaEscolha, pista, descartada);
         Reconstruir();
-        if (gm.inventoryManager != null) gm.inventoryManager.ConfigureInventory(); // etiquetas das pistas
+        if (gm.inventoryManager != null) gm.inventoryManager.ConfigureInventory(); // atualiza etiquetas das pistas
     }
 
     private static string ComNomes(string modelo, Item escolhida, Item descartada) =>
@@ -289,8 +277,6 @@ public class QuadroDeDeducaoUI : MonoBehaviour
             if (modelo != null) fonte = modelo.font;
         }
 
-        // Botão no canto superior direito, logo abaixo do botão da Biblioteca (ou no lugar dela, na fase em que ela ainda
-        // não existe): mesma coluna, tamanho e fonte do Pause e da Biblioteca, dentro da área segura.
         biblioteca = raiz.GetComponentInChildren<BibliotecaUI>(true);
         Button abrir = Botao("BotaoQuadroDeDeducao", raiz, rotuloDoBotao);
         var canvasBotao = abrir.gameObject.AddComponent<Canvas>(); // acima do canvas dos controles de toque
@@ -303,7 +289,6 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         abrir.onClick.AddListener(Abrir);
         botaoAbrir.gameObject.SetActive(false);
 
-        // Janela modal: fundo escurecido que bloqueia cliques no jogo + painel central.
         janela = new GameObject("JanelaQuadroDeDeducao", typeof(RectTransform), typeof(Canvas), typeof(GraphicRaycaster), typeof(Image));
         janela.transform.SetParent(raiz, false);
         var rtJanela = (RectTransform)janela.transform;
@@ -327,7 +312,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         cabecalho.transform.SetParent(painel.transform, false);
         cabecalho.GetComponent<LayoutElement>().minHeight = 72f;
         var hc = cabecalho.GetComponent<HorizontalLayoutGroup>();
-        // Sem esticar na altura: senão a faixa vira "flexível" e divide a sobra da janela com a lista.
+        // Sem esticar na altura: senão a faixa divide a sobra da janela com a lista.
         hc.childControlWidth = hc.childControlHeight = true; hc.childForceExpandWidth = hc.childForceExpandHeight = false; hc.spacing = 16f;
         hc.childAlignment = TextAnchor.MiddleLeft;
         Texto("Titulo", cabecalho.transform, 44f, "<b>Quadro de dedução</b>", TextAlignmentOptions.MidlineLeft).GetComponent<LayoutElement>().flexibleWidth = 1f;
@@ -340,7 +325,6 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         Texto("Regras", painel.transform, 25f, $"<color=#B0A48C>{regras}</color>", TextAlignmentOptions.MidlineLeft);
         textoContador = Texto("Contador", painel.transform, 26f, string.Empty, TextAlignmentOptions.MidlineLeft);
 
-        // Lista com rolagem (mouse, arrasto e toque).
         var area = new GameObject("Lista", typeof(RectTransform), typeof(Image), typeof(RectMask2D), typeof(ScrollRect), typeof(LayoutElement));
         area.transform.SetParent(painel.transform, false);
         area.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.25f);
@@ -372,8 +356,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         janela.SetActive(false);
     }
 
-    // Na fase sem Biblioteca (Fase 2) o botão sobe para o lugar dela: nada de buraco no canto da tela. A vaga segue a
-    // fase, não a visibilidade do botão da Biblioteca, para ele não pular de lugar quando um painel abre.
+    // Sem Biblioteca (Fase 2) ocupa a vaga dela. Segue a fase, não a visibilidade do botão, para não pular de lugar.
     private int VagaNaColuna()
     {
         GameManager gm = GameManager.Instance;
@@ -397,7 +380,7 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         return tmp;
     }
 
-    // Com o sprite "button" (mesmos valores da Biblioteca): 1 pixel da arte = 1/EscalaDaMoldura unidades do canvas.
+    // Mesma espessura de moldura da Biblioteca.
     private const float EscalaDaMoldura = 0.7f;
 
     private Button Botao(string nome, Transform pai, string rotulo)
@@ -410,12 +393,10 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         bool comSprite = spriteDoBotao != null;
         if (comSprite)
         {
-            // Fatiado (9-slice): só o miolo estica, então a moldura não deforma em botões de outras proporções.
             fundo.sprite = spriteDoBotao;
             fundo.type = Image.Type.Sliced;
             fundo.pixelsPerUnitMultiplier = EscalaDaMoldura;
-            // Estados padrão do Button (pressionado e desativado), como em Pause/Inventário/Interagir. A tinta não
-            // clareia o sprite além da cor dele, então o realce e o foco do teclado escurecem um pouco em vez de clarear.
+            // A tinta não clareia além da cor do sprite: realce e foco escurecem um pouco.
             ColorBlock cores = botao.colors;
             cores.highlightedColor = cores.selectedColor = new Color(0.88f, 0.88f, 0.88f, 1f);
             botao.colors = cores;
@@ -434,9 +415,8 @@ public class QuadroDeDeducaoUI : MonoBehaviour
         rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero;
         if (comSprite)
         {
-            // Uma linha só, dentro da face: se o texto não couber, encolhe um pouco em vez de encostar na moldura.
             texto.textWrappingMode = TextWrappingModes.NoWrap;
-            EstiloDeBotao.AjustarRotulo(texto); // recuos e respiro padrão de todos os botões
+            EstiloDeBotao.AjustarRotulo(texto);
         }
         return botao;
     }

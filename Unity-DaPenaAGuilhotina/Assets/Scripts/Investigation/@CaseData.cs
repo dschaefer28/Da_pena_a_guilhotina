@@ -78,7 +78,7 @@ public class CaseData : ScriptableObject
     [Tooltip("O que aconteceu na história real, para o jogador separar o jogo dos fatos. Vazio = não aparece.")]
     public string notaHistorica;
 
-    /// <summary>Desfecho escrito para a versão impressa (Alegações, legado, usa o texto do boato).</summary>
+    /// <summary>Alegações (legado) usa o texto do boato.</summary>
     public string DesfechoDa(NivelDoPanfleto nivel)
     {
         switch (nivel)
@@ -89,7 +89,6 @@ public class CaseData : ScriptableObject
         }
     }
 
-    /// <summary>Verdadeiro se o item é uma das cartas do cliente deste caso (compara itemID).</summary>
     public bool EhAlegacao(Item item)
     {
         if (item == null || string.IsNullOrEmpty(item.itemID) || alegacoesIniciais == null) return false;
@@ -99,8 +98,7 @@ public class CaseData : ScriptableObject
     }
 
 #if UNITY_EDITOR
-    // Só assets salvos (cópias em memória, como as dos testes, não são o que o jogador vê). Título e rota só são exigidos
-    // dos casos que vão à Mesa (Fase 2 em diante): o caso do tutorial (Fase 1) já começa escolhido e nunca aparece na mesa.
+    // Só assets salvos e casos da Mesa (Fase 2+): o tutorial já começa escolhido e nunca aparece na mesa.
     private void OnValidate()
     {
         if (fase < 2 || !UnityEditor.EditorUtility.IsPersistent(this)) return;

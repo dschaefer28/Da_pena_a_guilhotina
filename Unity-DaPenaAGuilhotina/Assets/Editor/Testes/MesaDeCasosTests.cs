@@ -5,8 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Relatório de testes de 28/09, item 4 (Ferramentas > UI > Aplicar layout da Mesa de Casos). Confere nos prefabs reais o
-/// que deixa a Mesa legível: cartão escuro e opaco, dimensionado pela linha de cartões, com o "Aceitar Caso" alinhado
+/// Layout da Mesa de Casos (Ferramentas > UI > Aplicar layout da Mesa de Casos). Confere nos prefabs reais o que deixa
+/// a Mesa legível: cartão escuro e opaco, dimensionado pela linha de cartões, com o "Aceitar Caso" alinhado
 /// embaixo; barra de rolagem que aparece quando os cartões não cabem; "Fechar" na mesma fonte dos cartões.
 /// </summary>
 public class MesaDeCasosTests

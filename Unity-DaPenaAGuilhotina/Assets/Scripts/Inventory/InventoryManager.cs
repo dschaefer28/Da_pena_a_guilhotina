@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 using System;
 using FMODUnity;
 
-/// <summary>Abas do inventário: pistas/documentos de um lado, panfletos prontos do outro.</summary>
 public enum AbaDoInventario
 {
     Pistas,
@@ -21,28 +20,21 @@ public class InventoryManager : MonoBehaviour
     [Header("Áudio (FMOD)")]
     public EventReference somToggleInventario;
 
-    // NOVO: Evento Observer para avisar outras UIs (como a Prensa)
     public event Action<bool> OnInventoryToggled;
 
-    // NOVO: Evento Observer disparado sempre que um item novo entra no inventário
-    // (usado pelo popup de "item recebido" e pelo tutorial).
+    // Só itens novos de verdade (não dispara na restauração ao trocar de cena).
     public event Action<Item> OnItemAdicionado;
 
-    // Disparado quando um slot ganha, perde ou muda a quantidade de um item (o botão Misturar da
-    // prensa usa isso para só ficar habilitado com as duas entradas preenchidas).
     public event Action<UISlotHandler> OnSlotAlterado;
 
-    // Aba mostrada na lista. A grade guarda tudo junto; a aba só decide quais linhas aparecem.
+    // A grade guarda tudo junto; a aba só decide quais linhas aparecem.
     public AbaDoInventario AbaAtual { get; private set; } = AbaDoInventario.Pistas;
     public event Action<AbaDoInventario> OnAbaAlterada;
 
-    // Fica true durante RestaurarInventario() para NÃO disparar o popup de "item recebido"
-    // ao simplesmente repor no ar os itens que o jogador já tinha antes de trocar de cena.
+    // Suprime o popup de "item recebido" ao repor itens que o jogador já tinha.
     private bool restaurandoInventario = false;
 
-    // Permite que sistemas que colocam item em um slot sem passar por AddItem (ex: a prensa
-    // colocando o panfleto pronto no próprio slot de saída) ainda assim disparem o popup de
-    // "item recebido" já usado no resto do jogo.
+    // Para quem põe item num slot sem passar por AddItem (ex.: saída da prensa).
     public void NotificarItemRecebido(Item item)
     {
         if (item != null && !restaurandoInventario) OnItemAdicionado?.Invoke(item);
@@ -50,8 +42,7 @@ public class InventoryManager : MonoBehaviour
 
    private void Awake()
     {
-        // ARQUITETURA BLINDADA: Injeção de Dependência Reversa
-        // Garante que o GameManager imortal sempre aponte para o inventário vivo da cena atual
+        // O GameManager persistente aponta sempre para o inventário da cena atual.
         if (GameManager.Instance != null)
         {
             GameManager.Instance.inventoryManager = this;
@@ -60,7 +51,7 @@ public class InventoryManager : MonoBehaviour
         ConfigureInventory();
         if(inventoryUI != null) inventoryUI.SetActive(false);
 
-        // Segurança: nenhuma cena deve iniciar com o jogo congelado por um inventário aberto na cena anterior
+        // Não herdar timeScale 0 de um inventário aberto na cena anterior.
         Time.timeScale = 1f;
     }
 
@@ -70,16 +61,13 @@ public class InventoryManager : MonoBehaviour
         {
             bool vaiAbrir = !inventoryUI.activeSelf;
 
-            // Não deixa abrir o inventário com o jogo pausado (evita os dois modais brigando pela tela/raycast).
             if (vaiAbrir && PauseMenu.Instance != null && PauseMenu.Instance.IsOpen)
             {
                 Debug.Log("Não é possível abrir o inventário com o jogo pausado.");
                 return;
             }
 
-            // Mesma trava, mas para diálogo: evita o inventário abrir por cima de uma conversa em
-            // andamento (o que fazia os cliques de fechar o inventário caírem em cima do texto do
-            // diálogo por baixo, e o jogador precisar de vários cliques até os dois se dessincronizarem).
+            // Aberto sobre um diálogo, os cliques de fechar caíam no texto e os dois dessincronizavam.
             var dialogo = GameManager.Instance != null ? GameManager.Instance.dialogueSystem : null;
             if (vaiAbrir && dialogo != null && dialogo.IsDialogueActive)
             {
@@ -88,22 +76,18 @@ public class InventoryManager : MonoBehaviour
             }
             if (vaiAbrir && JanelasModais.AlgumaAberta) return; // um modal por vez (biblioteca, quadro de dedução)
 
-            // Sempre abre nas pistas (é o que a prensa e a investigação usam); antes do SetActive para as abas já
-            // nascerem certas no OnEnable.
+            // Sempre abre nas pistas; antes do SetActive para as abas já nascerem certas no OnEnable.
             if (vaiAbrir) DefinirAba(AbaDoInventario.Pistas);
             else DevolverItemDaMao();
 
             inventoryUI.SetActive(vaiAbrir);
             if (vaiAbrir) ConfigureInventory();
 
-            // AudioSeguro ignora eventos vazios e nunca lança exceção se o FMOD falhar.
                 AudioSeguro.TocarUmaVez(somToggleInventario);
 
-            // Dispara o evento avisando a Prensa se o inventário abriu(true) ou fechou(false)
             OnInventoryToggled?.Invoke(vaiAbrir);
 
-            // Mesmo tratamento do PauseMenu: desliga o raycast dos controles mobile enquanto
-            // o inventário está aberto, para o toque ir pros slots da UI em vez do joystick/botões.
+            // O toque vai para os slots, não para o joystick/botões mobile.
             if (MobileControlsManager.Instance != null)
                 MobileControlsManager.Instance.SetControlsInteractable(!vaiAbrir);
 
@@ -112,10 +96,8 @@ public class InventoryManager : MonoBehaviour
     }
 
     /// <summary>
-    /// O item "na mão" (tocado e ainda não solto) volta para a lista ao fechar o inventário. O ícone dele vive dentro do
-    /// painel e sumia junto: a pista ficava invisível fora da grade, o NPC não a reconhecia (HasItem) e o alçapão dizia
-    /// "faltam pistas" — o tutorial travava em "volte até Dupaty". No celular basta tocar na pista para ler a ficha (o que
-    /// a dica de Fato x Boato pede) para ela ir para a mão. Não é item novo: sem popup nem "item recebido" no tutorial.
+    /// Devolve à grade o item "na mão" ao fechar: fora da grade o HasItem não o via e o tutorial travava em
+    /// "volte até Dupaty" (no celular, ler a ficha já põe a pista na mão). Sem popup: não é item novo.
     /// </summary>
     private void DevolverItemDaMao()
     {
@@ -125,7 +107,7 @@ public class InventoryManager : MonoBehaviour
         restaurandoInventario = true;
         bool guardou = AddItem(mao.heldItem);
         restaurandoInventario = false;
-        if (guardou) mao.heldItem = null; // grade cheia (só com item vindo da prensa): continua na mão, como antes
+        if (guardou) mao.heldItem = null; // grade cheia: continua na mão
     }
 
     public void PlaceInInventory(UISlotHandler activeSlot, Item item)
@@ -139,8 +121,7 @@ public class InventoryManager : MonoBehaviour
         activeSlot.slotImg.gameObject.SetActive(true);
         if (activeSlot.itemNameText != null) activeSlot.itemNameText.text = TextoDaLinha(item);
         activeSlot.AtualizarObjetoVazio();
-        // Guardado pelo jogador numa linha da aba errada (ex.: o panfleto tirado da prensa com a aba Pistas aberta):
-        // a lista vai para a aba do item, senão ele sumiria da vista assim que fosse solto.
+        // Solto na aba errada (ex.: panfleto com Pistas aberta): troca para a aba do item, senão ele some da vista.
         if (!restaurandoInventario && EhLinhaDaLista(activeSlot) && inventoryUI != null && inventoryUI.activeSelf)
             DefinirAba(AbaDo(item));
         ConfigureInventory();
@@ -152,7 +133,6 @@ public class InventoryManager : MonoBehaviour
     public static AbaDoInventario AbaDo(Item item) =>
         item != null && item.EhPanfleto ? AbaDoInventario.Panfletos : AbaDoInventario.Pistas;
 
-    /// <summary>Troca a aba mostrada na lista (botões das abas no UI_Inventory).</summary>
     public void MostrarAba(AbaDoInventario aba)
     {
         if (aba == AbaAtual) return;
@@ -167,7 +147,6 @@ public class InventoryManager : MonoBehaviour
         OnAbaAlterada?.Invoke(aba);
     }
 
-    /// <summary>Quantas linhas da lista têm item desta aba (o rótulo da aba mostra o número).</summary>
     public int QuantidadeNaAba(AbaDoInventario aba)
     {
         int quantidade = 0;
@@ -223,7 +202,6 @@ public class InventoryManager : MonoBehaviour
 
         if (!messyInventory)
         {
-            // Itens primeiro, slots vazios depois
             uiSlots.Sort((a, b) =>
             {
                 UISlotHandler itemA = a.GetComponent<UISlotHandler>();
@@ -245,8 +223,7 @@ public class InventoryManager : MonoBehaviour
         ResetInventoryScroll();
     }
 
-    // Numa lista só as linhas com item da aba atual aparecem, mais UMA linha vazia (nas duas abas): ela é o alvo
-    // onde o jogador toca para guardar o item que estiver segurando (ex: o panfleto tirado da prensa).
+    // Só as linhas da aba atual, mais UMA vazia: o alvo para guardar o item que o jogador está segurando.
     private void AtualizarLinhasVisiveis(List<Transform> uiSlots)
     {
         bool vagaJaVisivel = false;
@@ -255,7 +232,7 @@ public class InventoryManager : MonoBehaviour
             UISlotHandler slot = t.GetComponent<UISlotHandler>();
             if (slot == null) continue;
 
-            // Linhas do prefab UI_Inventory não conseguem referenciar este manager (ele fica fora do prefab).
+            // Linhas do UI_Inventory.prefab não conseguem referenciar este manager (fora do prefab).
             if (slot.inventoryManager == null) slot.inventoryManager = this;
 
             bool visivel = slot.item != null ? AbaDo(slot.item) == AbaAtual : !vagaJaVisivel;
@@ -269,7 +246,6 @@ public class InventoryManager : MonoBehaviour
 
     // ===== Fato x Boato =====
 
-    /// <summary>Nome do item na lista; pistas ganham a etiqueta da situação (não verificada / confirmada / boato).</summary>
     public string TextoDaLinha(Item item)
     {
         if (item == null) return string.Empty;
@@ -279,8 +255,7 @@ public class InventoryManager : MonoBehaviour
         return $"{item.NomeExibicao} <size=75%>({RotuloDaPista(item)})</size>";
     }
 
-    /// <summary>Situação da pista para a lista e a ficha. Casos com dedução ativa mostram só a escolha do jogador no
-    /// quadro, nunca a verdade; os outros seguem a regra antiga (Verificada Por).</summary>
+    /// <summary>Com dedução ativa mostra só a escolha do jogador no quadro, nunca a verdade; senão, regra do Verificada Por.</summary>
     public string RotuloDaPista(Item pista)
     {
         if (pista == null || !pista.EhPista) return string.Empty;
@@ -288,9 +263,7 @@ public class InventoryManager : MonoBehaviour
         return pista.RotuloSituacao(PistaVerificada(pista));
     }
 
-    /// <summary>Verdadeiro se o jogador já descobriu a verdade desta pista. Caso com dedução ativa: nunca (o jogador
-    /// escolhe no quadro em que acreditar, e adquirir um item de "Verificada Por" ou verificações antigas do save não
-    /// revelam nada). Os outros casos: tem ou já teve um item de "Verificada Por".</summary>
+    /// <summary>Dedução ativa: nunca (a verdade não é revelada). Outros casos: tem ou já teve um item de "Verificada Por".</summary>
     public bool PistaVerificada(Item pista)
     {
         if (pista == null || !pista.EhPista) return false;
@@ -313,7 +286,6 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    /// <summary>Grava no GameManager as pistas que acabaram de ser verificadas e, se pedido, avisa o jogador.</summary>
     private void RegistrarVerificacoes(bool avisar)
     {
         var gm = GameManager.Instance;
@@ -321,14 +293,13 @@ public class InventoryManager : MonoBehaviour
 
         foreach (Item item in ItensNaGrade())
         {
-            // Dedução ativa: a verdade só vem do quadro, nunca de um aviso automático ao receber um item.
+            // Dedução ativa: a verdade só vem do quadro.
             if (!item.EhPista || Deducao.Aderente(item.caso)) continue;
             if (gm.pistasVerificadas.Contains(item.itemID) || !PistaVerificada(item)) continue;
 
             gm.pistasVerificadas.Add(item.itemID);
             if (!avisar) continue;
             string resultado = item.confiabilidade == Confiabilidade.Fato ? "Pista confirmada" : "Boato desmentido";
-            // Mesmo visual do "Você recebeu" (título dourado + nome) no popup de avisos.
             AvisoNaTela.Mostrar($"<size=75%><color=#FAD98C>{resultado}</color></size>\n{item.NomeExibicao}", item.itemImg);
         }
     }
@@ -340,7 +311,7 @@ public class InventoryManager : MonoBehaviour
         var scroll = inventoryGrid.GetComponentInParent<UnityEngine.UI.ScrollRect>();
         if (content == null || scroll == null || scroll.content != content) return;
 
-        // Rebuild before positioning: the fitter may change the content height.
+        // Rebuild antes de posicionar: o fitter pode mudar a altura do content.
         UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(content);
         Canvas.ForceUpdateCanvases();
         scroll.StopMovement();
@@ -381,7 +352,6 @@ public class InventoryManager : MonoBehaviour
         return false;
     }
 
-    // Item que entrou de verdade (não é a restauração ao trocar de cena): popup, verificações e histórico de evidências.
     private void AoReceberItemNovo(Item item)
     {
         if (GameManager.Instance != null) GameManager.Instance.RegistrarEvidencia(item);
@@ -389,7 +359,6 @@ public class InventoryManager : MonoBehaviour
         RegistrarVerificacoes(avisar: true);
     }
 
-    /// <summary>Item da grade com este itemID (ou null).</summary>
     public Item ItemNaGrade(string itemID)
     {
         foreach (Item item in ItensNaGrade())
@@ -397,10 +366,8 @@ public class InventoryManager : MonoBehaviour
         return null;
     }
 
-    /// <summary>Itens da grade (para listas como a de documentos de apoio da prensa).</summary>
     public List<Item> ItensDaGrade() => new List<Item>(ItensNaGrade());
 
-    // NOVO MÉTODO: Retorna verdadeiro se a pista/item já estiver no inventário
     public bool HasItem(string searchItemID)
     {
         if (string.IsNullOrEmpty(searchItemID) || inventoryGrid == null) return false;
@@ -419,14 +386,12 @@ public class InventoryManager : MonoBehaviour
 
    private void Start()
     {
-        // Limpa qualquer lixo que tenha ficado no Prefab no Unity Editor
+        // Descarta itens deixados no prefab antes de restaurar os da cena anterior.
         LimparInventarioVisual();
-        
-        // Em seguida, puxa os itens reais que vieram da cena anterior
+
         RestaurarInventario();
     }
 
-    // ARQUITETURA BLINDADA: Esvazia todos os slots antes de injetar os dados salvos
     public void LimparInventarioVisual()
     {
         if (inventoryGrid == null) return;
@@ -441,7 +406,6 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // ARQUITETURA: Salva o estado físico da UI nos dados imortais do GameManager
     public void SalvarEstadoAtual()
     {
         if (GameManager.Instance == null || inventoryGrid == null) return;
@@ -453,26 +417,23 @@ public class InventoryManager : MonoBehaviour
             UISlotHandler slot = inventoryGrid.transform.GetChild(i).GetComponent<UISlotHandler>();
             if (slot != null && slot.item != null && slot.item.itemAmt > 0)
             {
-                // Cria um clone limpo para não referenciar um item de uma UI que será destruída
 #if UNITY_EDITOR
-                // Interactive layout samples must not enter the saved inventory.
+                // Itens do InventoryLayoutPreview não entram no save.
                 if (slot.item.itemID != null && slot.item.itemID.StartsWith("__inventory_preview_", StringComparison.Ordinal)) continue;
 #endif
-                Item clone = slot.item.Clone();
+                Item clone = slot.item.Clone(); // a UI de origem será destruída
                 itensParaSalvar.Add(clone);
             }
         }
 
-        // Itens fora da grade também vão junto: o que ficou nas entradas/resultado da prensa e o que está
-        // "na mão" (tocado e ainda não solto). Sem isso, sair do porão com o panfleto na prensa o apagava —
-        // e sem panfleto a Marie não sai do escritório, a cutscene da Fase 1 não toca e a porta não abre.
+        // Também salva prensa e item na mão: perder o panfleto da prensa travava a Fase 1 (Marie, cutscene, porta).
         CraftingPress prensa = FindAnyObjectByType<CraftingPress>(FindObjectsInactive.Include);
         if (prensa != null)
             foreach (UISlotHandler slot in new[] { prensa.slotInput1, prensa.slotInput2, prensa.slotOutput })
                 if (slot != null && slot.item != null && slot.item.itemAmt > 0) itensParaSalvar.Add(slot.item.Clone());
         if (MouseManager.instance != null && MouseManager.instance.heldItem != null && MouseManager.instance.heldItem.itemAmt > 0)
             itensParaSalvar.Add(MouseManager.instance.heldItem.Clone());
-        // E o que não coube na grade na última restauração (continua guardado: nunca some ao trocar de cena ou salvar).
+        // E o que não coube na grade: nunca some ao trocar de cena ou salvar.
         foreach (Item foraDaGrade in GameManager.Instance.itensForaDaGrade)
             if (foraDaGrade != null && foraDaGrade.itemAmt > 0) itensParaSalvar.Add(foraDaGrade.Clone());
 
@@ -480,25 +441,23 @@ public class InventoryManager : MonoBehaviour
         Debug.Log($"[SISTEMA] Inventário Salvo: {itensParaSalvar.Count} itens.");
     }
 
-    // ARQUITETURA: Restaura os itens salvos nos slots vazios da nova cena
    public void RestaurarInventario()
     {
         GameManager gm = GameManager.Instance;
         if (gm == null || gm.inventarioSalvo == null) return;
 
-        // O que ficou fora da grade antes está dentro do inventarioSalvo (SalvarEstadoAtual) e tenta entrar de novo aqui.
+        // Os itens fora da grade já estão no inventarioSalvo (SalvarEstadoAtual) e tentam entrar de novo.
         gm.itensForaDaGrade.Clear();
         restaurandoInventario = true;
         foreach (Item itemSalvo in gm.inventarioSalvo)
         {
-            // Proteção contra o NullReferenceException: Ignora itens vazios no cofre
             if (itemSalvo == null) continue;
 
             Item clone = itemSalvo.Clone();
             if (!AddItem(clone)) gm.itensForaDaGrade.Add(clone); // grade cheia: guardado, não perdido
         }
         restaurandoInventario = false;
-        RegistrarVerificacoes(avisar: false); // verdade descoberta em outra cena continua valendo, sem repetir o popup
+        RegistrarVerificacoes(avisar: false); // sem repetir o popup de verificações de outra cena
         Debug.Log("[SISTEMA] Inventário Restaurado com segurança.");
         AvisarItensForaDaGrade();
 
@@ -516,8 +475,7 @@ public class InventoryManager : MonoBehaviour
             : $"Inventário cheio: {quantos} itens ficaram guardados na tipografia. Eles voltam quando houver espaço.");
     }
 
-    /// <summary>Põe na grade o que ficou de fora numa restauração com a grade cheia (sem popup: não é item novo).
-    /// Chamado quando a grade ganha espaço por arquivamento; ao trocar de cena a restauração já tenta de novo.</summary>
+    /// <summary>Chamado quando a grade ganha espaço por arquivamento; sem popup, não é item novo.</summary>
     public void GuardarItensForaDaGrade()
     {
         GameManager gm = GameManager.Instance;
@@ -527,8 +485,7 @@ public class InventoryManager : MonoBehaviour
         restaurandoInventario = false;
     }
 
-    /// <summary>Tira da grade (e das entradas da prensa e do que está guardado fora da grade) todos os itens que atendem
-    /// à condição. Devolve quantos foram removidos.</summary>
+    /// <summary>Remove da grade, das entradas da prensa e de fora da grade. Devolve quantos removeu.</summary>
     public int RemoverItens(Predicate<Item> condicao)
     {
         if (condicao == null || inventoryGrid == null) return 0;
@@ -549,12 +506,12 @@ public class InventoryManager : MonoBehaviour
         if (removidos > 0)
         {
             ConfigureInventory();
-            GuardarItensForaDaGrade(); // o espaço liberado recebe o que estava guardado
+            GuardarItensForaDaGrade();
         }
         return removidos;
     }
 
-    /// <summary>Verdadeiro se o item cabe agora (empilha num igual ou há slot vazio na grade).</summary>
+    /// <summary>Empilha num igual ou há slot vazio.</summary>
     public bool TemEspacoPara(Item item)
     {
         if (item == null || inventoryGrid == null) return false;
@@ -566,8 +523,7 @@ public class InventoryManager : MonoBehaviour
         return false;
     }
 
-    /// <summary>Tem o item na grade, nas entradas/saída da prensa, na mão (item tocado e ainda não solto) ou guardado
-    /// fora da grade por falta de espaço.</summary>
+    /// <summary>Grade, prensa, mão ou guardado fora da grade.</summary>
     public bool PossuiEmQualquerLugar(string itemID)
     {
         if (HasItem(itemID)) return true;

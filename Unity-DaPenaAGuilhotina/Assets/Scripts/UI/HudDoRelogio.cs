@@ -3,8 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Mostra as horas de investigação restantes no topo da tela, só enquanto o RelogioDeInvestigacao estiver ativo
-/// (cena de investigação do caso em andamento). Fica no prefab UI e se monta por código no primeiro uso.
+/// Horas de investigação restantes, visível só com o RelogioDeInvestigacao ativo. Monta-se por código no primeiro uso.
 /// </summary>
 public class HudDoRelogio : MonoBehaviour
 {
@@ -16,8 +15,7 @@ public class HudDoRelogio : MonoBehaviour
     private TextMeshProUGUI texto;
     private static HudDoRelogio atual;
 
-    /// <summary>Distância (unidades do canvas) do topo da tela até a base do relógio, ou 0 se ele não está na tela.
-    /// O popup de item recebido (mesmo lugar, topo central) desce para não cobrir as horas.</summary>
+    /// <summary>Distância do topo até a base do relógio (0 se oculto); o popup de item desce por ela.</summary>
     public static float BordaInferior
     {
         get
@@ -28,8 +26,7 @@ public class HudDoRelogio : MonoBehaviour
         }
     }
 
-    /// <summary>Retângulo do relógio em pixels de tela, se ele estiver visível. O aviso "E" dos objetos (canvas no mundo,
-    /// desenhado por baixo da UI) desce para não ficar atrás das horas.</summary>
+    /// <summary>Retângulo em pixels de tela; o aviso "E" (canvas no mundo, por baixo da UI) desvia dele.</summary>
     public static bool RetanguloNaTela(out Rect tela)
     {
         tela = default;

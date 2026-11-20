@@ -9,24 +9,20 @@ public enum ControleTutorial
     Inventario,
     Pausa,
     Continuar,
-    /// <summary>Cartão com os três controles principais (mover, interagir, inventário) — primeira tela do tutorial.</summary>
+    /// <summary>Cartão com mover, interagir e inventário (primeira tela do tutorial).</summary>
     Principais
 }
 
 /// <summary>
-/// Traduz "qual controle" em "como se faz neste aparelho". O tutorial é um só (universal): as mensagens
-/// usam marcadores como {interagir} ou {mover}, e aqui eles viram "o botão Interagir" no Android ou
-/// "a tecla E" no Windows. A fonte da verdade sobre "é toque?" é a mesma regra que decide se os
-/// controles mobile aparecem na tela (MobileUIManager), então texto e botões nunca discordam.
-///
-/// Marcadores aceitos nas mensagens: {mover} {interagir} {inventario} {pausa} {continuar}
-/// {toque} (verbo: "toque"/"clique"), {Toque} (com maiúscula) e {apontar} ("passe o mouse sobre"/"toque em").
+/// Traduz marcadores das mensagens para o aparelho atual ("{interagir}" → "a tecla E" / "o botão Interagir").
+/// "É toque?" vem de MobileUIManager.ControlesMobileAtivos, então texto e botões nunca discordam.
+/// Marcadores: {mover} {interagir} {inventario} {pausa} {continuar} {Continuar} {toque} {Toque} {apontar}.
 /// </summary>
 public static class DispositivoDeControle
 {
     public static bool EhToque => MobileUIManager.ControlesMobileAtivos;
 
-    /// <summary>Texto curto para desenhar dentro de uma "tecla" (glifo): "E", "I", "Esc", "A  D" / "Interagir"...</summary>
+    /// <summary>Texto curto para dentro da "tecla" do glifo.</summary>
     public static string Glifo(ControleTutorial controle)
     {
         bool toque = EhToque;
@@ -41,7 +37,6 @@ public static class DispositivoDeControle
         }
     }
 
-    /// <summary>Nome da ação, para o rótulo ao lado do glifo.</summary>
     public static string NomeDaAcao(ControleTutorial controle)
     {
         switch (controle)
@@ -55,7 +50,6 @@ public static class DispositivoDeControle
         }
     }
 
-    /// <summary>Frase completa usada no lugar do marcador: "{interagir}" -> "o botão Interagir" / "a tecla E".</summary>
     public static string Frase(ControleTutorial controle)
     {
         bool toque = EhToque;
@@ -70,7 +64,6 @@ public static class DispositivoDeControle
         }
     }
 
-    /// <summary>Substitui os marcadores de uma mensagem pelas frases do aparelho atual.</summary>
     public static string Substituir(string texto)
     {
         if (string.IsNullOrEmpty(texto) || texto.IndexOf('{') < 0) return texto;
@@ -84,7 +77,7 @@ public static class DispositivoDeControle
         sb.Replace("{Continuar}", Capitalizar(Frase(ControleTutorial.Continuar)));
         sb.Replace("{toque}", EhToque ? "toque" : "clique");
         sb.Replace("{Toque}", EhToque ? "Toque" : "Clique");
-        // Como ver a ficha de uma pista no inventário (FichaDaPista): hover no PC, dedo pressionado no celular.
+        // Ficha da pista: hover no PC, toque no celular.
         sb.Replace("{apontar}", EhToque ? "toque em" : "passe o mouse sobre");
         return sb.ToString();
     }

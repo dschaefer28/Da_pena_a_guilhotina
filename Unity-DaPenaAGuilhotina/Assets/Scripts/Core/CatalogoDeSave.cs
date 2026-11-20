@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Lista de todos os Items e Casos do projeto, para o SistemaDeSave transformar o ID gravado no arquivo de
-/// volta no ScriptableObject. Fica em Resources/CatalogoDeSave e é preenchido sozinho (CatalogoDeSaveEditor)
-/// ao dar Play e ao gerar o build — não precisa editar à mão.
+/// Resolve IDs do save em Items/Casos. Fica em Resources/CatalogoDeSave e é preenchido automaticamente
+/// pelo CatalogoDeSaveEditor ao dar Play e no build.
 /// </summary>
 public class CatalogoDeSave : ScriptableObject
 {

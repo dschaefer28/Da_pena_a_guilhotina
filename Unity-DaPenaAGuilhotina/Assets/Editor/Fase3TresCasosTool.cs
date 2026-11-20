@@ -6,14 +6,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Decisão do grupo (27/09): a Fase 3 passa a ter três casos, e o jogador escolhe e conclui um (como na Fase 2).
-/// Sai "O Padeiro de Notre-Dame" (Caso_Padeiro): os três que ficam cobrem as três tendências das barras
-/// (Champ de Mars puxa para o Povo, Varennes para o Estado, Assignats sobe os dois), e Champ de Mars guarda o exemplo
-/// numérico do Prompt 3 e Varennes a etapa complementar do Cocheiro.
-///
-/// Esta ferramenta tira o caso da Mesa de Casos e a oferta da Biblioteca (UI.prefab), remove as reações e as entradas
-/// dele nos NPCs e objetos da cena Fase3 e apaga os assets do caso (caso, receita, panfleto, pistas, alegações, oferta,
-/// documento de apoio e diálogos). A cota da fase (1 caso) está em GameManager.casosPorFase.
+/// Fase 3 com três casos (o jogador conclui um): retira o Caso_Padeiro do UI.prefab (mesa e biblioteca), da cena
+/// Fase3 (reações e objetos) e apaga os assets dele. Os três restantes cobrem as três tendências das barras
+/// (Champ de Mars: Povo; Varennes: Estado; Assignats: ambos).
 /// Idempotente: sem o caso, não faz nada. Para desfazer, recupere os arquivos pelo git.
 /// Menu: Ferramentas > Campanha > 6 - Retirar o caso do Padeiro (Fase 3 com três casos)
 /// </summary>
@@ -55,7 +50,6 @@ public static class Fase3TresCasosTool
         if (padeiro == null) return r.Append("O caso do Padeiro já foi retirado. Nada a fazer.").ToString();
         OfertaDaBiblioteca oferta = AssetDatabase.LoadAssetAtPath<OfertaDaBiblioteca>("Assets/ScriptableObjects/Items/Campanha/Biblioteca/Oferta_Padeiro.asset");
 
-        // 1. Referências no prefab UI (mesa e biblioteca).
         GameObject raiz = PrefabUtility.LoadPrefabContents(PrefabUI);
         try
         {
@@ -72,7 +66,6 @@ public static class Fase3TresCasosTool
             PrefabUtility.UnloadPrefabContents(raiz);
         }
 
-        // 2. Reações dos NPCs e entradas dos objetos na cena Fase3.
         SceneSetup[] configuracao = EditorSceneManager.GetSceneManagerSetup();
         try
         {
@@ -103,7 +96,6 @@ public static class Fase3TresCasosTool
             if (configuracao != null && configuracao.Length > 0) EditorSceneManager.RestoreSceneManagerSetup(configuracao);
         }
 
-        // 3. Assets do caso.
         var apagados = new List<string>();
         foreach (string caminho in Assets)
             if (AssetDatabase.LoadMainAssetAtPath(caminho) != null && AssetDatabase.DeleteAsset(caminho)) apagados.Add(System.IO.Path.GetFileNameWithoutExtension(caminho));

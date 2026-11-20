@@ -5,15 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// Mostra um popup temporário sempre que o jogador recebe um item novo no inventário
-/// (estante, prensa, etc.). A imagem e o texto vêm do próprio ScriptableObject do Item
-/// (campos "Item Img" e "Item Name"), então cada item pode ter sua própria mensagem
-/// sem precisar mexer em código.
-///
-/// Setup no Editor:
-/// 1. Crie um painel de UI (Image de fundo) dentro do Canvas da cena e deixe-o inativo por padrão.
-/// 2. Dentro dele, coloque uma Image (para o ícone do item) e um texto TMP (para a mensagem).
-/// 3. Coloque este script em qualquer GameObject do Canvas e arraste as referências abaixo.
+/// Popup de "item recebido" e dos avisos do AvisoNaTela, numa fila única. Ícone e nome vêm do próprio Item.
 /// </summary>
 public class ItemPickupNotificationUI : MonoBehaviour
 {
@@ -41,8 +33,7 @@ public class ItemPickupNotificationUI : MonoBehaviour
 
     private InventoryManager inventoryManagerAtual;
     private float? alturaBasePopup;
-    // Itens recebidos e avisos de texto (AvisoNaTela) dividem a mesma fila, para nunca se sobreporem.
-    // duracao 0 = duracaoExibicao; um aviso pode pedir mais tempo (AvisoNaTela.Mostrar(..., segundos)).
+    // Itens e avisos dividem a fila para nunca se sobreporem. duracao 0 = duracaoExibicao.
     private readonly Queue<(string texto, Sprite icone, float duracao)> filaDeItens = new Queue<(string, Sprite, float)>();
     private Coroutine exibicaoEmAndamento;
 
@@ -65,18 +56,16 @@ public class ItemPickupNotificationUI : MonoBehaviour
             inventoryManagerAtual.OnItemAdicionado -= HandleItemAdicionado;
             inventoryManagerAtual.OnInventoryToggled -= HandleInventarioAlternado;
         }
-        // Esquece a referência: senão, ao reativar com o mesmo inventário, VincularInventario achava que já
-        // estava inscrito e o popup parava de aparecer.
+        // Senão, ao reativar com o mesmo inventário, VincularInventario acharia que já está inscrito.
         inventoryManagerAtual = null;
         AvisoNaTela.OnAviso -= HandleAviso;
-        // Desativar mata a corrotina; sem zerar isso a fila nunca mais andaria.
+        // Desativar mata a corrotina; sem zerar, a fila nunca mais andaria.
         exibicaoEmAndamento = null;
         filaDeItens.Clear();
         if (painelPopup != null) painelPopup.SetActive(false);
     }
 
-    // Segue o mesmo padrão do GameManager/HUDManager: o InventoryManager é recriado a cada
-    // cena, então é preciso reconectar o evento sempre que a referência atual mudar.
+    // O InventoryManager é recriado a cada cena: reinscreve quando a referência muda.
     private void VincularInventario()
     {
         InventoryManager atual = GameManager.Instance != null
@@ -112,7 +101,7 @@ public class ItemPickupNotificationUI : MonoBehaviour
 
     private void Enfileirar(string texto, Sprite icone, float duracao = 0f)
     {
-        // Objeto inativo não roda corrotina (ex: UI da cena antiga durante a troca de cena).
+        // Objeto inativo não roda corrotina (ex.: UI da cena antiga na troca de cena).
         if (!isActiveAndEnabled) return;
 
         filaDeItens.Enqueue((texto, icone, duracao));
@@ -120,8 +109,6 @@ public class ItemPickupNotificationUI : MonoBehaviour
             exibicaoEmAndamento = StartCoroutine(ExibirFila());
     }
 
-    // Fila garante que, se dois itens forem recebidos quase juntos, o segundo popup só
-    // aparece depois que o primeiro terminar (em vez de sobrescrever ou piscar).
     private IEnumerator ExibirFila()
     {
         while (filaDeItens.Count > 0)
@@ -159,8 +146,7 @@ public class ItemPickupNotificationUI : MonoBehaviour
         if (textoMensagem != null)
         {
             textoMensagem.text = texto;
-            // O popup se ajusta ao texto (ContentSizeFitter), mas sem limite uma frase longa viraria uma
-            // linha só atravessando a tela: a largura do texto é a da frase, até larguraMaximaTexto.
+            // Largura da frase até larguraMaximaTexto; sem limite o ContentSizeFitter atravessaria a tela.
             larguraDoTexto = Mathf.Min(textoMensagem.GetPreferredValues(texto).x + 2f, larguraMaximaTexto);
         }
 
@@ -185,7 +171,7 @@ public class ItemPickupNotificationUI : MonoBehaviour
         LayoutElement le = textoMensagem != null ? textoMensagem.GetComponent<LayoutElement>() : null;
         if (le != null) le.preferredWidth = larguraDoTexto;
 
-        // Relógio de investigação no topo (mesmo lugar): o popup desce para baixo dele.
+        // Desce para baixo do relógio de investigação, que ocupa o mesmo topo.
         if (!alturaBasePopup.HasValue) { alturaBasePopup = rect.anchoredPosition.y; xBasePopup = rect.anchoredPosition.x; }
         float borda = HudDoRelogio.BordaInferior;
         float y = borda > 0f ? Mathf.Min(alturaBasePopup.Value, -(borda + margemAbaixoDoRelogio)) : alturaBasePopup.Value;
@@ -199,12 +185,9 @@ public class ItemPickupNotificationUI : MonoBehaviour
         if (painelPopup != null && painelPopup.activeSelf) Posicionar();
     }
 
-    // Com o inventário aberto, o topo central é o título "Inventário": o popup cobria o título. Nesse caso ele procura um
-    // lugar que não cubra nada do que o inventário mostra (textos, ícones e botões da lista, da prensa e, da Fase 3 em
-    // diante, do painel Suporte, à esquerda da lista) nem a HUD de status; o fundo e a moldura dos painéis podem ficar por
-    // baixo. Candidatos, nesta ordem: a faixa à esquerda da lista (abaixo da HUD) e a faixa à direita dela (no topo, acima
-    // da prensa). Fica o primeiro que não cobre nada; se nenhum estiver livre, o que cobre menos, contando a posição
-    // normal. Numa faixa mais estreita que a mensagem, ela quebra em mais linhas.
+    // Com o inventário aberto, evita cobrir seu conteúdo e a HUD de status (fundos e molduras podem ficar por baixo).
+    // Tenta a faixa à esquerda da lista e depois à direita; fica a primeira livre ou, senão, a que cobre menos
+    // (incluindo a posição normal). Faixa estreita quebra a mensagem em mais linhas.
     private void AfastarDoInventario(RectTransform rect, LayoutElement le)
     {
         InventoryManager inventario = inventoryManagerAtual;
@@ -218,7 +201,7 @@ public class ItemPickupNotificationUI : MonoBehaviour
         if (hud.HasValue) conteudo.Add(hud.Value);
 
         float melhorArea = AreaCoberta(NaTela(rect), conteudo);
-        if (melhorArea <= 0f) return; // a posição normal já não cobre nada
+        if (melhorArea <= 0f) return;
         Vector3 melhorPosicao = rect.position;
         float melhorLargura = larguraDoTexto;
 
@@ -244,7 +227,7 @@ public class ItemPickupNotificationUI : MonoBehaviour
         rect.position = melhorPosicao;
     }
 
-    // Põe o popup no topo da faixa [xMin, xMax], abaixo da HUD se ela estiver por cima. Falso se ele não couber na largura.
+    // Topo da faixa [xMin, xMax], abaixo da HUD se ela estiver por cima. Falso se não couber na largura.
     private bool PosicionarNaFaixa(RectTransform rect, LayoutElement le, float escala, float xMin, float xMax, float topo,
                                    Rect? hud, float margem)
     {
@@ -269,8 +252,7 @@ public class ItemPickupNotificationUI : MonoBehaviour
         return true;
     }
 
-    // O que o inventário mostra por cima dos fundos (textos, ícones, botões), em pixels de tela. Fundos e molduras de painel
-    // (gráficos que têm outros gráficos visíveis dentro) e imagens transparentes (bloqueios de clique) não contam.
+    // Gráficos-folha visíveis, em pixels de tela. Fundos/molduras (com gráficos dentro) e imagens transparentes não contam.
     private static List<Rect> ConteudoVisivel(Transform raiz)
     {
         var visiveis = new List<Graphic>();

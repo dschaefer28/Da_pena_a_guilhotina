@@ -2,16 +2,9 @@ public interface IInteractable
 {
     void Interact();
 
-    /// <summary>
-    /// Falso quando o objeto está na cena mas não aceita interação agora (ex: NPC que já entregou a
-    /// pista). O Player usa isso para escolher o alvo mais próximo entre os que realmente respondem, e o
-    /// aviso de interação (PromptDeInteracao) só aparece para esses.
-    /// </summary>
+    /// <summary>Falso quando não responde agora: fica fora da escolha do alvo e do PromptDeInteracao.</summary>
     bool PodeInteragir => true;
 
-    /// <summary>
-    /// Nome mostrado logo abaixo do aviso de interação ("E"/"Interagir"), ex: o nome do NPC. Vazio/null = só a tecla
-    /// (portas, mesa, prensa...).
-    /// </summary>
+    /// <summary>Nome abaixo do aviso de interação. Vazio/null = só a tecla.</summary>
     string NomeExibido => null;
 }

@@ -5,30 +5,23 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Linha editorial (teor) na prensa a partir da Fase 2. Desde 08/11/2026 são duas opções:
-///   Neutro — sem modificador: o efeito normal do caso (o lado do caso sobe, o outro cai);
-///   Sensacionalista — mais ouro, mas o lado que o caso favorece ganha menos que no Neutro e o outro cai o mesmo.
-/// O modificador do sensacionalista sai do lado do caso (versão Fatos da receita), com os mesmos parâmetros para os
-/// casos pró-povo e pró-Estado; nos mistos a perda é dividida entre as duas barras.
-/// - "4": liga a linha nas receitas das Fases 2 a 4 que nunca foram configuradas (valores editados ficam);
-/// - "4b": REDEFINE o sensacionalista de todas essas receitas com os valores abaixo, desliga o agravamento do desmentido
-///   e atualiza os textos da janela no UI.prefab.
-/// Ambas põem o LinhaEditorialDaPrensaUI no painel da prensa (UI.prefab), ao lado do SuportesDaPrensaUI.
-/// O tutorial não é tocado (usa receita exata, sem linha editorial).
+/// Linha editorial (teor) na prensa a partir da Fase 2: Neutro (efeito normal do caso) ou Sensacionalista
+/// (mais ouro; o lado favorecido ganha menos, o outro cai o mesmo).
+/// - "4": configura só as receitas das Fases 2 a 4 ainda vazias;
+/// - "4b": REDEFINE todas, zera o agravamento do desmentido e atualiza os textos da janela.
+/// Ambas garantem o LinhaEditorialDaPrensaUI na prensa do UI.prefab. O tutorial (Fase 1) não usa linha editorial.
 /// </summary>
 public static class LinhaEditorialSetupTool
 {
     private const string PrefabUI = "Assets/Prefabs/UI.prefab";
 
     /// <summary>Quanto o lado favorecido ganha a menos no sensacionalista (nos mistos, metade em cada barra).</summary>
-    public const int PerdaDoLadoFavorecido = 5; // 13/11/2026: era 10, metade junto com as receitas
-    /// <summary>Ouro a mais do sensacionalista.</summary>
+    public const int PerdaDoLadoFavorecido = 5;
     public const int OuroDoSensacionalista = 15;
 
     /// <summary>
-    /// Modificador do sensacionalista para a receita, pelo lado do caso na versão Fatos: barra que sobe = lado favorecido.
-    /// Pró-povo (+Povo/−Estado): Povo −5, Estado 0. Pró-Estado: Estado −5, Povo 0. Misto (as duas sobem) ou sem lado:
-    /// −2 em cada. Sempre +15 de ouro. Igual em todas as versões, para não depender da verdade das pistas.
+    /// Lado favorecido = barra que sobe na versão Fatos; misto ou sem lado divide a perda entre as duas.
+    /// Igual em todas as versões, para não depender da verdade das pistas.
     /// </summary>
     public static ReceitaDeCaso.ModificadorEditorial ModificadorSensacionalista(ReceitaDeCaso receita)
     {
@@ -109,7 +102,7 @@ public static class LinhaEditorialSetupTool
             }
             if (redefinirTextos)
             {
-                // O texto antigo do sensacionalista falava do desmentido agravado, que saiu.
+                // O texto antigo citava o agravamento do desmentido, que não existe mais.
                 alterados += Trocar(ref seletor.descricaoNeutro, LinhaEditorialDaPrensaUI.DescricaoNeutroPadrao);
                 alterados += Trocar(ref seletor.descricaoSensacionalista, LinhaEditorialDaPrensaUI.DescricaoSensacionalistaPadrao);
                 alterados += Trocar(ref seletor.rotuloDoAjuste, LinhaEditorialDaPrensaUI.RotuloDoAjustePadrao);

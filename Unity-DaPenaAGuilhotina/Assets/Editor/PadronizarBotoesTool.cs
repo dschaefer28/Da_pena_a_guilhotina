@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Aplica o EstiloDeBotao (sprite laranja com contorno claro, texto centralizado com respiro) a todos os botões das
-/// cenas abertas. Ignora botões transparentes (áreas de clique, como o "avançar" do diálogo e o "Pular tutorial").
+/// Aplica o EstiloDeBotao a todos os botões das cenas abertas. Ignora botões transparentes (áreas de clique,
+/// como o "avançar" do diálogo e o "Pular tutorial").
 /// </summary>
 public static class PadronizarBotoesTool
 {

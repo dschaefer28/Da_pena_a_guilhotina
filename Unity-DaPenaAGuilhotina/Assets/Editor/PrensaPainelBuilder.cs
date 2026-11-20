@@ -4,19 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Aplica o layout do painel da Prensa (UI_Inventory/PainelPrensa): mesma moldura e tipografia do
-/// inventário, leitura "Entrada 1 + Entrada 2 = Resultado" e botão Misturar grande, que só habilita
-/// com as duas entradas cheias (BotaoMisturarEstado). Mantém os GameObjects existentes (Slot_Ent1/2,
-/// Slot_Saida, Misturar) para não quebrar as referências do CraftingPress e o onClick do botão.
+/// Aplica o layout do painel da Prensa (UI_Inventory/PainelPrensa). Reaproveita Slot_Ent1/2, Slot_Saida e
+/// Misturar para não quebrar as referências do CraftingPress e o onClick do botão.
 /// Menu: Ferramentas > Inventário > 3. Reexecutável.
 /// </summary>
 public static class PrensaPainelBuilder
 {
     private const string CaminhoPrefab = "Assets/Prefabs/UI_Inventory.prefab";
 
-    // Painel à DIREITA do inventário (760x900 centralizado), alinhado ao topo dele: ocupa x 1380..1820 e
-    // y 140..860 do canvas 1920x1080. À esquerda ficam as barras do HUD (que o jogador precisa ver ao
-    // imprimir) e o joystick; à direita só o botão Pause (acima de y=130) e os botões mobile (abaixo de 870).
+    // À direita do inventário (x 1380..1820, y 140..860 em 1920x1080): a esquerda fica livre para a HUD, que o
+    // jogador precisa ver ao imprimir, e o joystick; não invade o Pause (y<130) nem os botões mobile (y>870).
     private const float LarguraPainel = 440f;
     private const float AlturaPainel = 720f;
     private const float PosicaoX = 640f;
@@ -141,7 +138,7 @@ public static class PrensaPainelBuilder
         if (fundo == null) fundo = slot.gameObject.AddComponent<Image>();
         fundo.sprite = quadrado;
         fundo.type = Image.Type.Sliced;
-        fundo.color = InventarioListaBuilder.CorFundoLinha; // mesmo tom das linhas do inventário
+        fundo.color = InventarioListaBuilder.CorFundoLinha;
         fundo.raycastTarget = true;
 
         if (slot.slotImg != null)

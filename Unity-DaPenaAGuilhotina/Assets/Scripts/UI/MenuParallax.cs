@@ -7,13 +7,12 @@ public class MenuParallax : MonoBehaviour
 
     private Vector2 startPosition;
     private Vector3 velocity;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     private void Start()
     {
         startPosition = transform.position;   
     }
 
-    // Update is called once per frame
     private void Update()
     {
         Vector2 offset = Camera.main.ScreenToViewportPoint(Input.mousePosition);

@@ -7,18 +7,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Prompt 2: cadastra o conteúdo da campanha (Fases 2, 3 e 4) sobre os sistemas existentes — casos, pistas,
-/// alegações iniciais, panfletos, receitas, diálogos, NPCs e objetos investigáveis nas cenas — e registra tudo na
-/// Mesa de Casos (UI.prefab) e no CatalogoDeSave.
-///
-/// CONTEÚDO PROVISÓRIO: textos e valores novos foram escritos para tornar a campanha jogável na ausência do GDD.
-/// Desde 27/09 o conteúdo narrativo segue o GDD e fica em NarrativaGddSetupTool (Ferramentas > Campanha > 8), que
-/// reescreve os casos criados aqui; esta ferramenta guarda a estrutura (NPCs, reações, objetos) e os valores.
-///
-/// Idempotente e conservador: assets são achados pelo caminho e cenas pelo "Id Da Interacao". Rodar de novo não
-/// duplica nada e NÃO sobrescreve textos/valores já preenchidos (edições feitas no Inspector são preservadas):
-/// só preenche o que estiver vazio e aplica, uma vez, as migrações dos NPCs da Fase 2.
-///
+/// Cria a estrutura da campanha (Fases 2 a 4): casos, pistas, receitas, diálogos, NPCs e objetos nas cenas, e registra
+/// na Mesa de Casos e no CatalogoDeSave. Os textos narrativos em vigor vêm de NarrativaGddSetupTool (ferramenta 8).
+/// Idempotente: só preenche campos vazios (edições do Inspector são preservadas). Recusa Play Mode e cenas sujas.
 /// Menu: Ferramentas > Campanha > 1 - Aplicar conteúdo da campanha (Fases 2 a 4)
 /// </summary>
 public static class CampanhaSetupTool
@@ -33,8 +24,6 @@ public static class CampanhaSetupTool
     private const string SpriteCarta = "Assets/Art/UI/Menu/vibrant-red-wax-seal-with-a-textured-surface-and-glossy-shine-cut-out-transparent-png.png";
     private const string SpritePanfleto = "Assets/Art/UI/Menu/pngtree-aged-parchment-with-faded-script-rests-on-wood-image_16688678.jpg";
     private const string SpriteMesa = "Assets/Art/Props/mesa.png";
-
-    // ===== Definições =====
 
     private class P // pista, alegação ou panfleto
     {
@@ -104,20 +93,13 @@ public static class CampanhaSetupTool
         DefinirFase4();
     }
 
-    // ----- Textos revisados na verificação (25/09) -----
-    // Os nomes do Prompt 2 seguiam um padrão que revelava a verdade ("Conversa sobre…" = boato; "Libelo/Folha/Cartaz" =
-    // calúnia; documentos = fato). Agora o nome é só o ASSUNTO; o que vem de pessoas é relato ("Segundo…" ou "X mostra…")
-    // e o que vem de objetos é documento, qualquer que seja a verdade. A confiabilidade se deduz pelo conteúdo e pela fonte.
-    // As definições abaixo guardam os textos ORIGINAIS: um asset que ainda tiver o nome original (nunca editado) recebe
-    // estes; um asset editado no Inspector não é tocado. itemID -> { nome, fonte, descrição }.
+    // O nome da pista não pode revelar a verdade: é só o assunto, e a confiabilidade se deduz pelo conteúdo e pela fonte.
+    // As definições dos casos abaixo guardam os nomes originais; um asset ainda com o nome original (nunca editado)
+    // recebe o texto daqui. itemID -> { nome, fonte, descrição }.
+    // Regra da dedução: fato do cliente × boato e fato do objeto × calúnia; em cada par só uma afirmação é verdadeira.
     private static readonly Dictionary<string, string[]> TextosRevisados = new Dictionary<string, string[]>
     {
-        // Fase 2 — dedução ativa desde o Prompt 7 (27/09): como nas Fases 3 e 4, fato do cliente × boato e fato do
-        // objeto × calúnia, e em cada par só uma afirmação é verdadeira. Os fatos ficaram como estavam (os das Joias são do
-        // roteiro do grupo); o boato e a calúnia de cada caso foram reescritos para contradizer o fato do mesmo assunto.
-        // Os textos anteriores estão em DeducaoSetupTool, que migra os assets que ainda os tinham.
-        // Fase 2 — Joias
-        // Roteiro "O colar da rainha" (27/09): as duas pistas vêm do joalheiro; a 2ª deixou de ser achada na taverna.
+        // Fase 2 — Joias (as duas pistas vêm do joalheiro)
         { "pista_joias_1", new[] { "Registro de compra", "Livro de vendas do joalheiro.", "Cópia da venda do colar em nome da rainha, negociada por um cardeal e uma intermediária. O joalheiro afirma que a rainha não compareceu." } },
         { "pista_joias_2", new[] { "Assinatura da encomenda", "Cópia da encomenda fornecida pelo joalheiro.", "A encomenda traz ‘Marie Antoinette de France’, enquanto os documentos oficiais citados na investigação usam ‘Marie Antoinette’. A diferença põe a autorização em dúvida." } },
         { "pista_joias_boato", new[] { "O segredo da Rainha", "Gazeteiro da esquina", "Segundo o gazeteiro, a própria Rainha compareceu à loja, disfarçada, para escolher o colar escondida do Rei, e depois negou tudo." } },
@@ -132,9 +114,6 @@ public static class CampanhaSetupTool
         { "pista_operario_2", new[] { "A ordem do comandante", "Cartaz arrancado de um muro", "Cartaz com a ordem do comandante: 'dispersar a multidão por todos os meios', afixado antes de qualquer violência." } },
         { "pista_operario_boato", new[] { "Os agitadores do duque", "Jean-Baptiste Réveillon", "Segundo Réveillon, ninguém ali pedia pão: a multidão veio armada, paga na véspera por agitadores do duque de Orléans, e a Guarda só atirou para se defender." } },
         { "pista_operario_calunia", new[] { "O fogo na fábrica", "Bilhete sem assinatura", "Bilhete deixado na taverna: a Guarda só recebeu ordem de agir depois que o operário ateou fogo à fábrica com as próprias mãos." } },
-        // Fases 3 e 4 — dedução ativa (Prompt 4, 27/09): cada caso tem dois pares de afirmações contraditórias, e
-        // em cada par só uma é verdadeira. Fato do cliente × boato; fato do objeto × calúnia. Os textos de antes
-        // (25/09) estão em DeducaoSetupTool, que migra os assets que ainda os tinham.
         // Fase 3 — Varennes
         { "pista_varennes_1", new[] { "A viagem da baronesa", "Cocheiro Joubert", "O cocheiro mostra o contrato em nome de uma 'baronesa de Korff': sessenta libras em moeda francesa por uma viagem de aluguel, sem dizer quem iria na berlinda." } },
         { "pista_varennes_2", new[] { "A parada em Sainte-Menehould", "Ata afixada pelo clube dos Cordeliers", "Ata no mural: em Sainte-Menehould, o mestre de posta Drouet reconheceu o Rei sozinho e galopou até Varennes num cavalo descansado da própria posta." } },
@@ -167,14 +146,11 @@ public static class CampanhaSetupTool
         { "pista_girondina_calunia", new[] { "A acusação do vizinho", "Parede de editais", "Cartaz na parede de editais: o vizinho que denunciou a viúva mantém a acusação, e ela tentou envenená-lo para que se calasse." } },
     };
 
-    /// <summary>Nome, fonte e descrição de referência de uma pista (os textos em vigor), ou null. Usado pela ferramenta
-    /// de dedução para migrar assets que ainda tinham os textos anteriores. Desde o conteúdo do GDD (ferramenta 8), os
-    /// textos em vigor são os de NarrativaGddSetupTool; a tabela TextosRevisados guarda os de 27/09.</summary>
+    /// <summary>Nome, fonte e descrição em vigor de uma pista (GDD primeiro), ou null. Usado pela migração da dedução.</summary>
     internal static string[] TextoDeReferencia(string itemID) =>
         NarrativaGddSetupTool.TextoDeItem(itemID) ?? (TextosRevisados.TryGetValue(itemID, out string[] texto) ? texto : null);
 
-    /// <summary>Falas de referência da reação de um NPC a um caso (ex.: "CocheiroJoubert", "Caso_Varennes"), ou null.
-    /// Null também para as reações do GDD (ferramenta 8): são diálogos com escolhas, não uma lista linear de falas.</summary>
+    /// <summary>Falas da reação de um NPC a um caso, ou null (também para reações do GDD, que têm escolhas).</summary>
     internal static string[] FalasDeReferencia(string npcId, string casoArquivo)
     {
         if (NarrativaGddSetupTool.GerenciaReacao(npcId, casoArquivo)) return null;
@@ -183,31 +159,28 @@ public static class CampanhaSetupTool
         return reacao != null ? reacao.falas : null;
     }
 
-    // Revelações corrigidas (texto histórico e afirmações discutíveis): texto original -> texto novo.
+    // Migração de revelações: texto antigo -> texto em vigor.
     private static readonly Dictionary<string, string> RevelacoesRevisadas = new Dictionary<string, string>
     {
         { "O incêndio começou com a Guarda, não com o operário. A calúnia manchou o nome da tipografia.",
           "Ninguém provou que o operário ateou fogo à fábrica: a acusação era anônima e falsa, e manchou o nome da tipografia." },
-        // Prompt 7: o boato de Réveillon passou a ser o dos "quinze soldos" (par com o discurso na assembleia).
         { "Descobriu-se que Réveillon nunca chamou a Guarda. O boato impresso desmoronou.", RevelacaoDoBoatoDeReveillon },
         { "Não se provou que Réveillon mandou a Guarda atirar: ele pediu proteção, não o fogo. O boato impresso desmoronou.", RevelacaoDoBoatoDeReveillon },
         { RevelacaoDoBoatoDeReveillonDoPrompt7, RevelacaoDoBoatoDeReveillon },
     };
 
-    /// <summary>Revelação da versão Com Boato do Caso de Réveillon (a ferramenta de dedução migra o asset). Revista com o
-    /// conteúdo do GDD: não afirma que Réveillon "nunca disse" os quinze soldos, o que as fontes não permitem garantir;
-    /// o que a ata desmente é que ele pediu só o corte dos salários.</summary>
+    /// <summary>Revelação Com Boato do Caso de Réveillon. Não afirma que ele "nunca disse" os quinze soldos (as fontes não
+    /// garantem); a ata só desmente que ele pediu apenas o corte dos salários.</summary>
     internal const string RevelacaoDoBoatoDeReveillon =
         "A ata da assembleia desmentiu o boato: Réveillon falou em baratear o pão junto com os salários; não pediu só o corte. " +
         "O panfleto que repetiu a versão dos operários desmoronou.";
 
-    // Texto do Prompt 7 (27/09) para a mesma revelação, trocado pelo acima.
+    // Versão anterior da mesma revelação, migrada para a de cima.
     private const string RevelacaoDoBoatoDeReveillonDoPrompt7 =
         "A ata da assembleia desmentiu o boato: Réveillon nunca disse que um operário vive com quinze soldos, e pediu o pão mais " +
         "barato junto com o corte. O panfleto que o repetiu desmoronou.";
 
-    // Prompt 7 (Fase 2 com dedução): nas Fases 3 e 4 o cliente cita, na fala, quem espalha o boato. Na Fase 2 as falas dos
-    // clientes são do roteiro do grupo, então a pista vai na carta do cliente (alegação), que o jogador lê ao aceitar o caso.
+    // Na Fase 2 as falas dos clientes são do roteiro do grupo: quem espalha o boato é citado na carta (alegação), não na fala.
     private static readonly Dictionary<string, string> AlegacoesComPista = new Dictionary<string, string>
     {
         { "alegacao_joias_1", "O joalheiro jura que acreditou estar negociando com a Rainha, e reclama que o gazeteiro da esquina conta outra história." },
@@ -218,8 +191,7 @@ public static class CampanhaSetupTool
     internal static string AlegacaoComPista(string itemID) =>
         !AlegacoesComPista.TryGetValue(itemID, out string texto) ? null : NarrativaGddSetupTool.TextoDeItem(itemID)?[2] ?? texto;
 
-    // Estimativas da mesa (Fase 2, anteriores ao Prompt 2) alinhadas à versão Fatos da receita:
-    // caso -> { ouro, povo, estado antigos } -> { novos }.
+    // Estimativas antigas da mesa (Fase 2) migradas para a versão Fatos da receita: caso -> { ouro, povo, estado antigos, novos }.
     private static readonly Dictionary<string, int[][]> EstimativasRevisadas = new Dictionary<string, int[][]>
     {
         { "Caso_Joalheiro", new[] { new[] { 50, -20, 0 }, new[] { 20, 50, -10 } } },
@@ -227,8 +199,7 @@ public static class CampanhaSetupTool
         { "Caso_Operario",  new[] { new[] { 5, 50, 0 },   new[] { 10, 60, -20 } } },
     };
 
-    // ----- Fase 2 (casos existentes; textos das pistas antigas só entram onde estiverem vazios) -----
-
+    // Fase 2: casos já existentes; os textos só entram onde estiverem vazios.
     private static void DefinirFase2()
     {
         const string F = "Fase2";
@@ -247,7 +218,6 @@ public static class CampanhaSetupTool
                 "Folha anônima: 'A Austríaca e o Cardeal eram amantes e dividiram o colar'."),
             alegacoes = new[]
             {
-                // Prompt 7: a carta do cliente aponta quem espalha o boato (as falas do joalheiro são do roteiro do grupo).
                 new P(Item(F, "Alegacao_Joias_1"), "alegacao_joias_1", "Carta do joalheiro: fui enganado", Confiabilidade.NaoEPista, "Carta do cliente",
                     AlegacaoComPista("alegacao_joias_1")),
                 new P(Item(F, "Alegacao_Joias_2"), "alegacao_joias_2", "Carta do joalheiro: a Coroa me deve", Confiabilidade.NaoEPista, "Carta do cliente",
@@ -313,10 +283,8 @@ public static class CampanhaSetupTool
         Npcs.Add(new N { cena = F, id = "Gazeteiro", nome = "Gazeteiro", falante = "Gazeteiro", x = 0f, cor = new Color(0.85f, 0.75f, 0.45f),
             padrao = new[] { "Gazetas! Notícias de Versalhes! Sobre isso não ouvi nada que valha um soldo." } });
 
-        // Dedução ativa (Prompt 7): quem espalha o boato aponta os objetos da cena (o do fato, quando há, e o da calúnia).
-        // Conteúdo do GDD (ferramenta 8): as falas vêm de NarrativaGddSetupTool, que também cria as escolhas de cada
-        // conversa; aqui ficam só a estrutura (quem entrega o quê) e a primeira fala, para criar a conversa se faltar.
-        // As reações dos clientes (joalheiro, Réveillon e operário no próprio caso) são do roteiro do grupo e já estão na cena.
+        // Só a estrutura (quem entrega o quê); falas e escolhas vêm de NarrativaGddSetupTool.
+        // As reações dos clientes ao próprio caso são do roteiro do grupo e já estão na cena.
         Reacoes.Add(new R { npc = "Gazeteiro", caso = Caso("Caso_Joalheiro"), item = Item(F, "Pista_Joias_Boato"), falas = Gdd("Gazeteiro", "Caso_Joalheiro") });
         Reacoes.Add(new R { npc = "Gazeteiro", caso = Caso("Caso_Reveillon"), item = Item(F, "Pista_Jean_Calunia"), falas = Gdd("Gazeteiro", "Caso_Reveillon") });
         Reacoes.Add(new R { npc = "Gazeteiro", caso = Caso("Caso_Operario"), falas = Gdd("Gazeteiro", "Caso_Operario") });
@@ -332,10 +300,8 @@ public static class CampanhaSetupTool
         Loots.Add(new L { cena = F, id = "MuroDeCartazes", nome = "Muro de Cartazes", sprite = SpritePanfleto, x = 40f, y = 0f, escala = 0.5f,
             porCaso = { { Caso("Caso_Joalheiro"), Item(F, "Pista_Joias_Calunia") }, { Caso("Caso_Operario"), SO + "Item_operario2.asset" } } });
         Loots.Add(new L { cena = F, id = "MesaDaTaverna", nome = "Quadro de Avisos", sprite = SpriteMesa, x = 68f, y = -2.1f, escala = 1.2f,
-            porCaso = { { Caso("Caso_Operario"), Item(F, "Pista_Operario_Calunia") } } }); // Joias: a assinatura agora vem do joalheiro
+            porCaso = { { Caso("Caso_Operario"), Item(F, "Pista_Operario_Calunia") } } });
     }
-
-    // ----- Fase 3 (1789–1792) -----
 
     private static C NovoCaso(string arquivo, string cena, int fase, RotaFinal rota, string titulo, string objetivo, string descricao,
         int ouro, int povo, int estado)
@@ -351,8 +317,7 @@ public static class CampanhaSetupTool
         return caso;
     }
 
-    // "O Padeiro de Notre-Dame" (Caso_Padeiro) saiu da campanha em 27/09 (decisão do grupo: a Fase 3 tem três casos e o
-    // jogador conclui um). Ferramentas > Campanha > 6 retira os assets e as reações dele nas cenas já configuradas.
+    // A Fase 3 tem três casos e o jogador conclui um (Caso_Padeiro foi retirado; ver Ferramentas > Campanha > 6).
     private static void DefinirFase3()
     {
         const string F = "Fase3";
@@ -423,7 +388,7 @@ public static class CampanhaSetupTool
         assignats.comCalunia = new V(25, 20, 65, -15, -15, "Morel nunca teve contato com emigrados. A calúnia custou caro à tipografia.");
         assignats.soAlegacoes = new V(5, 4, 14, -5, 0, "O panfleto só repetia a defesa do gravador. Os leitores esperavam provas.");
 
-        // Conteúdo do GDD (ferramenta 8): os IDs continuam os dos NPCs antigos, porque o save aponta para eles.
+        // IDs congelados (o save aponta para eles), embora os personagens tenham mudado com o GDD:
         // ViuvaFrancois = Médico, CocheiroJoubert = Kornmann, PeticionariaLacombe = Sobrevivente, GravadorMorel = Sirven;
         // GeorgesDanton é novo. Os arquivos de caso também: Varennes = Kornmann, ChampDeMars = Danton, Assignats = Sirven.
         Npcs.Add(new N { cena = F, id = "ViuvaFrancois", nome = "Médico", falante = "Médico", x = -8f, cor = new Color(0.55f, 0.45f, 0.6f),
@@ -437,8 +402,7 @@ public static class CampanhaSetupTool
         Npcs.Add(new N { cena = F, id = "GravadorMorel", nome = "Pierre-Paul Sirven", falante = "Pierre-Paul Sirven", x = 58f, cor = new Color(0.3f, 0.45f, 0.6f),
             padrao = GddPadrao(F, "GravadorMorel") });
 
-        // Dedução ativa: o cliente aponta quem espalha o boato (e a testemunha, quando não é ele quem entrega o fato), e quem
-        // espalha o boato aponta os dois objetos (o do fato e o da calúnia). Os outros lugares não têm nada.
+        // O cliente aponta quem espalha o boato (e a testemunha); quem espalha o boato aponta os dois objetos.
         void Reacao(string npc, C caso, P item) =>
             Reacoes.Add(new R { npc = npc, caso = caso.caminho, item = item?.caminho, falas = Gdd(npc, Path.GetFileNameWithoutExtension(caso.caminho)) });
         Reacao("GeorgesDanton", champ, null);
@@ -457,7 +421,7 @@ public static class CampanhaSetupTool
         Reacao("GravadorMorel", champ, null);
         Reacao("GravadorMorel", varennes, null);
 
-        // O balcão da padaria virou a mesa do "Café Popular" do GDD (o ID continua o mesmo).
+        // ID congelado: o objeto agora é a mesa do "Café Popular" do GDD.
         Loots.Add(new L { cena = F, id = "BalcaoDaPadaria", nome = "Mesa do Café", sprite = SpriteMesa, x = -16f, y = -2.1f, escala = 1.2f,
             porCaso = { { varennes.caminho, varennes.f2.caminho }, { champ.caminho, champ.calunia.caminho } } });
         Loots.Add(new L { cena = F, id = "MuralDosCordeliers", nome = "Mural dos Cordeliers", sprite = SpritePanfleto, x = 24f, y = 0f, escala = 0.5f,
@@ -466,8 +430,7 @@ public static class CampanhaSetupTool
             porCaso = { { assignats.caminho, assignats.f2.caminho }, { varennes.caminho, varennes.calunia.caminho } } });
     }
 
-    // ----- Fase 4 (1793, um caso por rota) -----
-
+    // Fase 4: um caso por rota final.
     private static void DefinirFase4()
     {
         const string F = "Fase4";
@@ -538,7 +501,7 @@ public static class CampanhaSetupTool
         girondina.comCalunia = new V(20, 20, 60, -15, -15, "O 'patriota envenenado' morreu de febre. A calúnia voltou-se contra a tipografia.");
         girondina.soAlegacoes = new V(4, 4, 12, -5, -5, "O panfleto só repetia a palavra da viúva. Não convenceu ninguém.");
 
-        // Conteúdo do GDD (ferramenta 8): RedatorMarchand = Desmoulins, ComissarioVautrin = Mercador, CidadaDelorme = Vergniaud,
+        // IDs congelados: RedatorMarchand = Desmoulins, ComissarioVautrin = Mercador, CidadaDelorme = Vergniaud,
         // Carcereiro = Brissot. Arquivos de caso: Jornalista = Manifesto da Clemência, Negociante = Mercador de Grãos,
         // Girondina = Extermínio da Oposição.
         Npcs.Add(new N { cena = F, id = "RedatorMarchand", nome = "Camille Desmoulins", falante = "Camille Desmoulins", x = -6f, cor = new Color(0.6f, 0.2f, 0.2f),
@@ -565,7 +528,7 @@ public static class CampanhaSetupTool
         Reacao("Carcereiro", jornalista, jornalista.boato);
         Reacao("Carcereiro", negociante, null);
 
-        // O arquivo da seção virou o arquivo do Comitê de Salvação Pública (ambiente da Fase 4 no GDD; o ID continua o mesmo).
+        // ID congelado: o objeto agora é o arquivo do Comitê de Salvação Pública.
         Loots.Add(new L { cena = F, id = "ArquivoDaSecao", nome = "Arquivo do Comitê", sprite = SpriteMesa, x = -15f, y = -2.1f, escala = 1.2f,
             porCaso = { { jornalista.caminho, jornalista.f2.caminho }, { girondina.caminho, girondina.f2.caminho } } });
         Loots.Add(new L { cena = F, id = "ParedeDeEditais", nome = "Parede de Editais", sprite = SpritePanfleto, x = 30f, y = 0f, escala = 0.5f,
@@ -573,8 +536,6 @@ public static class CampanhaSetupTool
         Loots.Add(new L { cena = F, id = "CaixaDeDenuncias", nome = "Caixa de Denúncias", sprite = SpriteDocumento, x = 74f, y = 0f, escala = 0.2f,
             porCaso = { { jornalista.caminho, jornalista.calunia.caminho }, { negociante.caminho, negociante.calunia.caminho } } });
     }
-
-    // ===== Execução =====
 
     [MenuItem("Ferramentas/Campanha/1 - Aplicar conteúdo da campanha (Fases 2 a 4)")]
     public static void AplicarPeloMenu() => Debug.Log(Aplicar());
@@ -590,7 +551,6 @@ public static class CampanhaSetupTool
         Definir();
         var contagem = new Contagem();
 
-        // 1. Assets
         foreach (C caso in Casos) GarantirCaso(caso, contagem);
         foreach (C caso in Casos) GarantirConteudoDoCaso(caso, contagem);
         // Guarda CAMINHOS, não referências: abrir outra cena descarrega assets não usados e a referência antiga vira nula.
@@ -610,7 +570,7 @@ public static class CampanhaSetupTool
         }
         foreach (C caso in Casos)
         {
-            // Rota de diálogo do cartão: a fala do "dono" do caso (a reação que entrega a pista F1).
+            // Rota de diálogo do cartão: a reação que entrega a F1.
             R dono = Reacoes.Find(r => r.caso == caso.caminho && r.item == caso.f1.caminho);
             if (caso.asset.npcDialogueRoute == null && dono != null)
             {
@@ -620,7 +580,6 @@ public static class CampanhaSetupTool
         }
         AssetDatabase.SaveAssets();
 
-        // 2. Cenas
         SceneSetup[] configuracaoOriginal = EditorSceneManager.GetSceneManagerSetup();
         try
         {
@@ -633,7 +592,6 @@ public static class CampanhaSetupTool
                 EditorSceneManager.RestoreSceneManagerSetup(configuracaoOriginal);
         }
 
-        // 3. Mesa de Casos e catálogo
         RegistrarNaMesa(contagem);
         CatalogoDeSaveEditor.Atualizar();
         AssetDatabase.SaveAssets();
@@ -648,8 +606,6 @@ public static class CampanhaSetupTool
     {
         public int assetsCriados, camposPreenchidos, npcsCriados, lootsCriados, reacoesAdicionadas, migracoes, casosNaMesa;
     }
-
-    // ----- Assets -----
 
     private static T CarregarOuCriar<T>(string caminho, Contagem contagem, out bool novo) where T : ScriptableObject
     {
@@ -692,7 +648,6 @@ public static class CampanhaSetupTool
         else if (EstimativasRevisadas.TryGetValue(caso.name, out int[][] estimativa) &&
                  caso.moneyReward == estimativa[0][0] && caso.publicOpinionReward == estimativa[0][1] && caso.stateOpinionReward == estimativa[0][2])
         {
-            // Estimativa da mesa que contradizia a receita (e nunca foi editada): passa a refletir a versão Fatos.
             caso.moneyReward = estimativa[1][0];
             caso.publicOpinionReward = estimativa[1][1];
             caso.stateOpinionReward = estimativa[1][2];
@@ -731,7 +686,7 @@ public static class CampanhaSetupTool
             EditorUtility.SetDirty(receita.panfletoPadrao);
             contagem.camposPreenchidos++;
         }
-        // Panfletos antigos sem nome de exibição apareciam com o nome do arquivo (ex.: "panfleto_joalheiro").
+        // Sem itemName o panfleto aparecia com o nome do arquivo.
         if (receita.panfletoPadrao != null && Vazio(receita.panfletoPadrao.itemName) && !Vazio(caso.caseTitle))
         {
             receita.panfletoPadrao.itemName = "Panfleto: " + caso.caseTitle.Trim();
@@ -779,7 +734,7 @@ public static class CampanhaSetupTool
         Item item = CarregarOuCriar<Item>(def.caminho, contagem, out bool novo);
         int antes = contagem.camposPreenchidos;
 
-        // Texto revisado: vale para assets novos e para os que ainda têm o nome original do Prompt 2 (nunca editados).
+        // Só migra assets ainda com o nome original (nunca editados).
         if (TextosRevisados.TryGetValue(def.id, out string[] revisado))
         {
             if (!Vazio(item.itemName) && item.itemName == def.nome)
@@ -815,8 +770,6 @@ public static class CampanhaSetupTool
         }
         return dialogo;
     }
-
-    // ----- Cenas -----
 
     private static void ConfigurarCena(string nomeDaCena, Dictionary<string, string> dialogos, Contagem contagem, StringBuilder relatorio)
     {
@@ -870,7 +823,7 @@ public static class CampanhaSetupTool
         }
     }
 
-    /// <summary>Cria um NPC na cena a partir do NPCBasic.prefab (mesma regra da ferramenta), para outras ferramentas.</summary>
+    /// <summary>Para outras ferramentas: cria um NPC a partir do NPCBasic.prefab.</summary>
     internal static NPCMovement CriarNpcNaCena(Scene cena, string id, string nome, float x, Color cor) =>
         CriarNpc(new N { id = id, nome = nome, x = x, cor = cor }, cena);
 
@@ -884,7 +837,7 @@ public static class CampanhaSetupTool
         var sr = go.GetComponent<SpriteRenderer>();
         if (sr != null)
         {
-            sr.color = def.cor; // placeholder: cápsula colorida, como Jean e o Operário (arte pendente)
+            sr.color = def.cor; // placeholder até a arte
             PrefabUtility.RecordPrefabInstancePropertyModifications(sr);
         }
         PrefabUtility.RecordPrefabInstancePropertyModifications(go.transform);
@@ -902,10 +855,8 @@ public static class CampanhaSetupTool
     {
         bool mudou = false;
 
-        // Migração ÚNICA dos NPCs: respondem a qualquer caso (sem casoObrigatorio), continuam acessíveis
-        // (disableAfterDialogue falso) e usam uma fala "pouco útil" como padrão — a fala do próprio caso já está na reação.
-        // "Única": só enquanto o NPC ainda não recebeu a fala padrão desta ferramenta. Depois disso, o que for
-        // mudado no Inspector (casoObrigatorio, disableAfterDialogue, recompensas) é preservado.
+        // Migração única (até o NPC receber a fala padrão desta ferramenta): responde a qualquer caso e continua
+        // acessível. Depois disso, edições do Inspector são preservadas.
         DialogueData padrao = AssetDatabase.LoadAssetAtPath<DialogueData>(dialogos[def.id + "|padrao"]);
         bool primeiraVez = padrao != null && npc.dialogoPadrao != padrao;
         if (primeiraVez)
@@ -923,8 +874,7 @@ public static class CampanhaSetupTool
         if (Vazio(npc.idDaInteracao)) { npc.idDaInteracao = def.id; mudou = true; }
         if (npc.reacoesDeCaso == null) npc.reacoesDeCaso = new List<CasoReacao>();
 
-        // A 2ª pista (F2) dos casos antigos saiu do "dono" e foi para um objeto da rua (mais oportunidades). Também só
-        // na primeira vez: se alguém devolver a F2 ao cliente depois, a ferramenta não desfaz.
+        // A F2 dos casos antigos passou do cliente para um objeto da rua (também só na primeira vez).
         for (int i = 0; primeiraVez && i < npc.reacoesDeCaso.Count; i++)
         {
             CasoReacao reacao = npc.reacoesDeCaso[i];
@@ -1004,12 +954,12 @@ public static class CampanhaSetupTool
         if (mudou) EditorUtility.SetDirty(loot);
     }
 
-    // Fase3 e Fase4 são a mesma rua da Fase2: um tom diferente de luz marca a passagem do tempo (arte pendente).
+    // Fase3 e Fase4 reusam a rua da Fase2: o tom marca a passagem do tempo.
     private static bool TingirCenario(Scene cena, string nomeDaCena)
     {
         Color tom;
-        if (nomeDaCena == "Fase3") tom = new Color(0.9f, 0.78f, 0.66f);      // entardecer de 1789–1792
-        else if (nomeDaCena == "Fase4") tom = new Color(0.66f, 0.7f, 0.82f); // inverno do Terror, 1793
+        if (nomeDaCena == "Fase3") tom = new Color(0.9f, 0.78f, 0.66f);
+        else if (nomeDaCena == "Fase4") tom = new Color(0.66f, 0.7f, 0.82f);
         else return false;
 
         bool mudou = false;
@@ -1024,8 +974,6 @@ public static class CampanhaSetupTool
         }
         return mudou;
     }
-
-    // ----- Mesa de Casos -----
 
     private static void RegistrarNaMesa(Contagem contagem)
     {

@@ -13,19 +13,17 @@ public class ResultadoDoPanfleto
     public int povo, estado, ouro;
     public int penalidadePovo, penalidadeEstado;
     public string textoRevelacao;
-    public List<string> pistas = new List<string>();          // itemIDs das duas pistas impressas
+    public List<string> pistas = new List<string>();          // itemIDs
     public List<string> suportes = new List<string>();        // itemIDs dos documentos de apoio que valeram
-    public List<string> qualificadores = new List<string>();  // IDs dos qualificadores aplicados
+    public List<string> qualificadores = new List<string>();
 
-    // Linha editorial (Prompt 5). Os valores acima já incluem estes: aqui fica só a parte de cada um, para o histórico.
+    // Parcelas já incluídas em povo/estado/ouro; separadas só para o histórico.
     public LinhaEditorial linha;
-    public int editorialPovo, editorialEstado, editorialOuro;   // modificador da linha somado a povo/estado/ouro
+    public int editorialPovo, editorialEstado, editorialOuro;
     public int agravamentoPovo, agravamentoEstado;              // parte da penalidade que veio do sensacionalista
-
-    // Soma dos qualificadores aplicados (documentos de apoio), também já incluída em povo/estado/ouro.
     public int apoioPovo, apoioEstado, apoioOuro;
 
-    // O que sobra é a parte da versão (as duas pistas): a janela de resultado da prensa mostra as três parcelas.
+    // Parcela da versão (as duas pistas): a janela de resultado da prensa mostra as três parcelas.
     public int VersaoPovo => povo - apoioPovo - editorialPovo;
     public int VersaoEstado => estado - apoioEstado - editorialEstado;
     public int VersaoOuro => ouro - apoioOuro - editorialOuro;
@@ -59,7 +57,7 @@ public static class CalculadoraDePanfleto
     }
 
     /// <summary>Etapas 1 e 2 (versão e apoio), sem a linha editorial. A prensa nunca imprime com isto; serve para
-    /// conferir cada etapa isoladamente (ex.: o exemplo numérico do Prompt 3).</summary>
+    /// conferir cada etapa isoladamente.</summary>
     public static ResultadoDoPanfleto CalcularAntesDaLinha(ReceitaDeCaso receita, Item a, Item b, IEnumerable<Item> suportesSelecionados)
     {
         if (receita == null || a == null || b == null) return null;

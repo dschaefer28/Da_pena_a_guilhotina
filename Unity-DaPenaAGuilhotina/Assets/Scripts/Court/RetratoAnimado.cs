@@ -2,12 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Anima o retrato de um juiz na bancada do tribunal: respira o tempo todo e pisca de vez em quando.
-///
-/// Os quadros seguem a ordem das spritesheets das caras (Art/Characters/Fase 4/Caras): a primeira metade é a respiração
-/// de olhos abertos (do repouso ao peito cheio) e a segunda metade são as mesmas poses, na ordem inversa, de olhos
-/// fechados. A respiração vai e volta pela primeira metade; a piscada troca o quadro pelo de olhos fechados da mesma
-/// pose, então o retrato não "pula" ao piscar.
+/// Retrato de juiz que respira e pisca. Layout da spritesheet (Art/Characters/Fase 4/Caras): primeira metade =
+/// poses de olhos abertos; segunda metade = as mesmas poses em ordem inversa, de olhos fechados.
 /// </summary>
 public class RetratoAnimado : MonoBehaviour
 {

@@ -5,33 +5,22 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Save em um único arquivo JSON (Application.persistentDataPath/save.json — funciona igual no Windows e no Android).
-///
-/// Guarda o que sobrevive entre cenas: os dados do GameManager, a etapa do tutorial, as cutscenes/dicas já
-/// vistas e a cena onde o jogador estava. O estado dos NPCs e objetos investigados (horas pagas, pistas recolhidas,
-/// recompensas entregues) vem do RegistroDaInvestigacao; o resto da cena (portas...) se monta sozinho a partir disso,
-/// do mesmo jeito que acontece ao subir do porão para o escritório.
-///
-/// Salvar: SistemaDeSave.Salvar() com a cena já rodando (ex: o TutorialStep com "Salvar Ao Concluir").
-/// Carregar: botão Continuar do menu (MenuPrincipalManager.Continuar) ou um slot da tela de saves (SlotsDeSaveUI). O
-/// GameManager e o TutorialManager da cena carregada puxam os dados em Awake/Start.
-///
-/// Slots: há <see cref="NumeroDeSlots"/> arquivos (save_slot1.json...). A partida grava sempre no slot ativo — o que foi
-/// escolhido no Novo Jogo ou carregado na tela de saves —, então um slot nunca sobrescreve outro. O save.json antigo
-/// (de antes dos slots) vira o slot 1 na primeira leitura.
+/// Save JSON por slot em persistentDataPath. Guarda GameManager, etapa do tutorial, chaves de progresso e cena;
+/// o estado das cenas se reconstrói a partir do RegistroDaInvestigacao. O Continuar entrega os dados ao
+/// GameManager/TutorialManager da cena carregada em Awake/Start. A partida grava sempre no slot ativo.
 /// </summary>
 public static class SistemaDeSave
 {
+    // Versões:
     // 2: fase atual e casos concluídos
-    // 3: registro da investigação por caso + ID estável (horas pagas, loot, recompensas de NPC)
-    // 4: biblioteca (compras), evidências obtidas e histórico completo de cada publicação
-    // 5: histórico guarda também o que foi aplicado de fato (depois do limite 0–100)
-    // 6: linha editorial da publicação (tom, modificador e agravamento) e da revelação pendente
-    // 7: dedução ativa (hipóteses do jogador por caso e pista, e quadros confirmados)
-    // 8: fim de jogo registrado depois do tribunal (desfecho da rota e destino do réu)
-    // 9: dedução por escolha: em cada par, a pista com que o jogador ficou e a descartada (as hipóteses e os quadros
-    //    confirmados da v7 deixam de existir e são ignorados)
-    // 10: ID da partida (o arquivo de casos resolvidos do menu separa as partidas por ele)
+    // 3: registro da investigação por caso + ID estável
+    // 4: biblioteca, evidências obtidas e histórico completo de publicação
+    // 5: valores efetivamente aplicados (após o limite 0–100)
+    // 6: linha editorial da publicação e da revelação
+    // 7: dedução por hipóteses (descontinuada na v9)
+    // 8: fim de jogo após o tribunal
+    // 9: dedução por escolha (pista mantida/descartada por par)
+    // 10: ID da partida
     public const int VersaoAtual = 10;
     private const string CenaPadrao = "Jogo";
 
@@ -47,7 +36,7 @@ public static class SistemaDeSave
     {
         public string caso;
         public NivelDoPanfleto nivel;
-        // v4: snapshot da publicação (saves antigos chegam sem isto e viram "legado")
+        // v4 (saves antigos viram "legado")
         public bool legado;
         public List<string> pistas = new List<string>();
         public List<string> suportes = new List<string>();
@@ -56,7 +45,7 @@ public static class SistemaDeSave
         // v5
         public bool aplicadoConhecido;
         public int povoAplicado, estadoAplicado, ouroAplicado;
-        // v6 (ausente em saves antigos = 0 = Neutra: publicação legada, neutra)
+        // v6
         public LinhaEditorial linha;
         public int editorialPovo, editorialEstado, editorialOuro, agravamentoPovo, agravamentoEstado;
     }
@@ -69,7 +58,7 @@ public static class SistemaDeSave
         public int povo;
         public int estado;
         public LinhaEditorial linha; // v6
-        public bool aplicada;        // penalidade já cobrada na impressão; ausente em saves antigos = cobrar no fim da fase
+        public bool aplicada;        // penalidade já cobrada na impressão (saves antigos)
     }
 
     [Serializable]
@@ -110,19 +99,18 @@ public static class SistemaDeSave
         public List<string> comprasDaBiblioteca = new List<string>();
         public List<string> evidenciasObtidas = new List<string>();
 
-        // v7 e v8 guardavam aqui as hipóteses (marcacoesDeDeducao) e os quadros confirmados (deducoesConfirmadas).
-        // Desde a v9 esses campos não existem mais: num save antigo, o JSON que os traz é ignorado.
+        // Campos de dedução da v7/v8 (marcacoesDeDeducao, deducoesConfirmadas) foram removidos; o JsonUtility os ignora.
 
-        // v8 (ausente em saves antigos = partida em andamento): o tribunal terminou e o jogo acabou. Não há o que continuar.
+        // v8
         public bool jogoConcluido;
         public RotaFinal desfechoRota;
         public bool desfechoReuAbsolvido;
         public string desfechoTitulo;
 
-        // v9 (ausente em saves antigos = nenhum par decidido)
+        // v9
         public List<EscolhaDeDeducao> escolhasDeDeducao = new List<EscolhaDeDeducao>();
 
-        // v10 (ausente em saves antigos = a partida ganha um ID novo ao continuar)
+        // v10 (ausente = ID novo ao continuar)
         public string idDaPartida;
     }
 
@@ -132,7 +120,6 @@ public static class SistemaDeSave
     private const string ChaveDoSlotAtivo = "save_slot_ativo"; // fora de ProgressoDoJogo: o Novo Jogo não o apaga
     private const string ArquivoAntigo = "save.json";
 
-    /// <summary>Slot (1 a NumeroDeSlots) onde a partida atual grava. Escolhido no Novo Jogo e ao carregar um save.</summary>
     public static int SlotAtivo
     {
         get => Mathf.Clamp(PlayerPrefs.GetInt(ChaveDoSlotAtivo, 1), 1, NumeroDeSlots);
@@ -146,7 +133,6 @@ public static class SistemaDeSave
     public static string CaminhoDoSlot(int slot) =>
         Path.Combine(Application.persistentDataPath, $"save_slot{Mathf.Clamp(slot, 1, NumeroDeSlots)}.json");
 
-    /// <summary>Arquivo do slot ativo (onde o próximo Salvar grava).</summary>
     public static string CaminhoDoArquivo => CaminhoDoSlot(SlotAtivo);
 
     public static bool ExisteSlot(int slot)
@@ -155,7 +141,6 @@ public static class SistemaDeSave
         return File.Exists(CaminhoDoSlot(slot));
     }
 
-    /// <summary>Algum slot tem save.</summary>
     public static bool ExisteSave
     {
         get
@@ -166,10 +151,9 @@ public static class SistemaDeSave
         }
     }
 
-    /// <summary>Algum slot tem uma partida que ainda não terminou (o botão Continuar do menu).</summary>
     public static bool ExistePartidaEmAndamento => SlotMaisRecenteEmAndamento() > 0;
 
-    /// <summary>Primeiro slot sem save, ou 0 se todos estão ocupados.</summary>
+    // 0 se todos estão ocupados.
     public static int PrimeiroSlotVazio()
     {
         for (int slot = 1; slot <= NumeroDeSlots; slot++)
@@ -177,7 +161,7 @@ public static class SistemaDeSave
         return 0;
     }
 
-    /// <summary>Slot com a partida em andamento salva por último (o que o Continuar abre), ou 0 se não houver.</summary>
+    // Slot que o Continuar abre, ou 0.
     public static int SlotMaisRecenteEmAndamento()
     {
         int melhor = 0;
@@ -191,7 +175,6 @@ public static class SistemaDeSave
         return melhor;
     }
 
-    /// <summary>Dados do save de um slot (para a tela de saves mostrar), ou nulo se estiver vazio ou ilegível.</summary>
     public static DadosDeSave LerSlot(int slot)
     {
         if (!ExisteSlot(slot)) return null;
@@ -209,7 +192,7 @@ public static class SistemaDeSave
         }
     }
 
-    /// <summary>Apaga o save do slot. O arquivo de casos resolvidos não é tocado (ele guarda as partidas à parte).</summary>
+    // Não afeta o ArquivoDeCasos.
     public static bool ExcluirSlot(int slot)
     {
         if (!ExisteSlot(slot)) return false;
@@ -226,7 +209,7 @@ public static class SistemaDeSave
         }
     }
 
-    // Antes dos slots havia um único save.json: ele vira o slot 1 (ou o primeiro vazio), sem perder nada.
+    // O save.json anterior aos slots vira o primeiro slot vazio.
     private static bool migracaoFeita;
     private static void MigrarSaveAntigo()
     {
@@ -253,10 +236,9 @@ public static class SistemaDeSave
         }
     }
 
-    /// <summary>Um save continua a partida se foi lido e o jogo não terminou no tribunal.</summary>
     public static bool PodeContinuar(DadosDeSave dados) => dados != null && !dados.jogoConcluido;
 
-    // Save lido pelo Continuar, esperando o GameManager/TutorialManager da cena nova nascerem.
+    // Aguardam o GameManager/TutorialManager da cena nova.
     private static DadosDeSave dadosPendentesGameManager;
     private static DadosDeSave dadosPendentesTutorial;
 
@@ -271,16 +253,13 @@ public static class SistemaDeSave
             return;
         }
 
-        // O inventário da tela é a fonte mais atual (o inventarioSalvo só é atualizado ao trocar de cena).
+        // inventarioSalvo só é atualizado ao trocar de cena.
         if (gm.inventoryManager != null) gm.inventoryManager.SalvarEstadoAtual();
 
         Gravar(DadosDaPartidaAtual(gm));
     }
 
-    /// <summary>
-    /// Fim de jogo (depois do veredito do tribunal): grava o estado final com o desfecho. Antes o save ficava parado no
-    /// checkpoint anterior ao tribunal, e o Continuar levava de volta para antes do julgamento de um jogo já terminado.
-    /// </summary>
+    // Grava o desfecho para o Continuar não reabrir um jogo já julgado.
     public static void RegistrarFimDeJogo(RotaFinal rota, bool reuAbsolvido, string tituloDoDesfecho)
     {
         GameManager gm = GameManager.Instance;
@@ -295,7 +274,6 @@ public static class SistemaDeSave
         Gravar(dados);
     }
 
-    /// <summary>Marca os dados como jogo concluído, com o desfecho (sem tocar em disco).</summary>
     public static void MarcarFimDeJogo(DadosDeSave dados, RotaFinal rota, bool reuAbsolvido, string tituloDoDesfecho)
     {
         dados.jogoConcluido = true;
@@ -315,16 +293,15 @@ public static class SistemaDeSave
 
     private static void Gravar(DadosDeSave dados)
     {
-        // Modo dev (apresentação): a partida montada ou alterada por atalhos nunca sobrescreve o slot do jogador.
         if (ModoDev.PartidaDeDemonstracao)
         {
             Debug.Log("[SistemaDeSave] Partida de demonstração (modo dev): nada foi gravado.");
             return;
         }
-        MigrarSaveAntigo(); // o save.json antigo não pode cair depois no slot que esta partida acabou de ocupar
+        MigrarSaveAntigo(); // antes de gravar, para o save.json antigo não cair depois neste slot
         try
         {
-            // Grava num arquivo temporário e só depois troca: se o jogo fechar no meio, o save antigo continua inteiro.
+            // Escrita via .tmp: se o jogo fechar no meio, o save anterior fica íntegro.
             string temporario = CaminhoDoArquivo + ".tmp";
             File.WriteAllText(temporario, JsonUtility.ToJson(dados, true));
             if (File.Exists(CaminhoDoArquivo)) File.Delete(CaminhoDoArquivo);
@@ -340,7 +317,7 @@ public static class SistemaDeSave
         }
     }
 
-    /// <summary>Monta os dados do save a partir do GameManager (sem tocar em disco, PlayerPrefs nem cena).</summary>
+    // Puro: não toca em disco, PlayerPrefs nem cena.
     public static DadosDeSave CapturarDados(GameManager gm, string cena, int etapaTutorial)
     {
         RegistroDaInvestigacao registro = gm.registroDaInvestigacao ?? new RegistroDaInvestigacao();
@@ -394,19 +371,16 @@ public static class SistemaDeSave
 
     // ===== Carregar =====
 
-    /// <summary>Continuar: carrega o slot com a partida em andamento salva por último.</summary>
     public static bool Carregar()
     {
         int slot = SlotMaisRecenteEmAndamento();
         return slot > 0 && Carregar(slot);
     }
 
-    /// <summary>Descarta a partida atual, restaura o save do slot e carrega a cena salva; dali em diante a partida grava
-    /// nesse slot. Falso se o slot não tiver save válido ou se o save for de um jogo já terminado.</summary>
     public static bool Carregar(int slot)
     {
         DadosDeSave dados = LerSlot(slot);
-        if (!PodeContinuar(dados)) return false; // sem save válido, ou o jogo já terminou no tribunal
+        if (!PodeContinuar(dados)) return false;
         SlotAtivo = slot;
 
         ProgressoDoJogo.ComecarNovoJogo();
@@ -424,7 +398,7 @@ public static class SistemaDeSave
         return true;
     }
 
-    /// <summary>Chamado pelo GameManager.Awake: se há um save sendo carregado, preenche os dados dele.</summary>
+    // Chamado pelo GameManager.Awake.
     public static void AplicarPendente(GameManager gm)
     {
         DadosDeSave dados = dadosPendentesGameManager;
@@ -442,14 +416,13 @@ public static class SistemaDeSave
         Debug.Log($"[SistemaDeSave] Save de {dados.dataHora} carregado na cena '{dados.cena}'.");
     }
 
-    /// <summary>Lê um JSON de save (qualquer versão). Nulo se estiver vazio ou inválido.</summary>
     public static DadosDeSave DesserializarDados(string json)
     {
         DadosDeSave dados = JsonUtility.FromJson<DadosDeSave>(json);
         return dados != null && dados.versao > 0 ? dados : null;
     }
 
-    /// <summary>Preenche o GameManager com os dados do save, migrando versões antigas sem apagar progresso.</summary>
+    // Migra versões antigas sem apagar progresso nem inventar valores.
     public static void AplicarDados(DadosDeSave dados, GameManager gm, CatalogoDeSave catalogo)
     {
         if (dados.versao > VersaoAtual)
@@ -495,14 +468,11 @@ public static class SistemaDeSave
             gm.panfletosPublicados.Add(new GameManager.PanfletoPublicado
             {
                 caso = BuscarCaso(catalogo, p.caso), nivel = p.nivel,
-                // Publicações de saves < 4 não guardavam pistas nem valores: ficam marcadas, sem nada inventado.
                 legado = p.legado || dados.versao < 4,
                 pistas = Copia(p.pistas), suportes = Copia(p.suportes), qualificadores = Copia(p.qualificadores),
                 povo = p.povo, estado = p.estado, ouro = p.ouro, penalidadePovo = p.penalidadePovo, penalidadeEstado = p.penalidadeEstado,
-                // v < 5 não guardava o aplicado: fica como desconhecido (nada é recalculado nem inventado).
                 aplicadoConhecido = dados.versao >= 5 && p.aplicadoConhecido,
                 povoAplicado = p.povoAplicado, estadoAplicado = p.estadoAplicado, ouroAplicado = p.ouroAplicado,
-                // v < 6 não tinha linha editorial: a publicação fica neutra, sem modificador nem agravamento inventados.
                 linha = dados.versao >= 6 ? p.linha : LinhaEditorial.Nenhuma,
                 editorialPovo = dados.versao >= 6 ? p.editorialPovo : 0, editorialEstado = dados.versao >= 6 ? p.editorialEstado : 0,
                 editorialOuro = dados.versao >= 6 ? p.editorialOuro : 0,
@@ -510,12 +480,10 @@ public static class SistemaDeSave
             });
         gm.comprasDaBiblioteca = Copia(dados.comprasDaBiblioteca);
         gm.evidenciasObtidas = Copia(dados.evidenciasObtidas);
-        if (dados.versao < 4) // save antigo: o que está no inventário foi obtido, com certeza (nada além disso é deduzido)
+        if (dados.versao < 4) // só o que está no inventário conta como obtido
             foreach (Item item in gm.inventarioSalvo) gm.RegistrarEvidencia(item);
 
-        // v < 9 não tinha escolhas: nenhum par fica decidido (hipóteses e quadros confirmados da v7 não viram escolha, e
-        // pistas "verificadas" pela regra antiga só valem nos casos sem dedução). Com escolhas, a pista descartada nunca
-        // volta ao inventário, mesmo que o save a traga.
+        // v < 9: nenhum par decidido. Pista descartada nunca volta ao inventário, mesmo que o save a traga.
         gm.escolhasDeDeducao = dados.versao >= 9 ? CopiaDasEscolhas(dados.escolhasDeDeducao) : new List<EscolhaDeDeducao>();
         gm.inventarioSalvo.RemoveAll(item => Deducao.Descartada(gm, item));
 
@@ -549,7 +517,7 @@ public static class SistemaDeSave
 
     private static List<string> Copia(List<string> lista) => lista != null ? new List<string>(lista) : new List<string>();
 
-    /// <summary>Publicação no formato do save (também usada pela ficha do panfleto, que monta o texto do arquivo de casos).</summary>
+    // Também usado pela ficha do panfleto.
     public static PanfletoSalvo ParaSalvar(GameManager.PanfletoPublicado p) => p == null ? null : new PanfletoSalvo
     {
         caso = p.caso != null ? p.caso.name : null, nivel = p.nivel, legado = p.legado,
@@ -571,11 +539,9 @@ public static class SistemaDeSave
     }
 
     /// <summary>
-    /// Save v1/v2: as horas pagas eram "cena/nomeDoGameObject" do caso em andamento, sem registro de loot nem de
-    /// recompensas. Migração determinística, sem reset: as chaves antigas continuam valendo para aquele caso
-    /// (RelogioDeInvestigacao as converte para o ID novo na primeira interação, sem cobrar), e o caso é marcado como
-    /// "estado legado" — lá, uma pista que o jogador ainda tem conta como já entregue, como na regra antiga.
-    /// Homônimos na mesma cena dividem a chave antiga: todos contam como pagos (o jogo antigo cobrava assim).
+    /// v1/v2 pagavam horas por "cena/nomeDoGameObject". As chaves antigas seguem valendo para o caso em andamento
+    /// (RelogioDeInvestigacao converte para o ID novo sem cobrar) e o caso fica em "estado legado". Homônimos na
+    /// mesma cena dividem a chave: todos contam como pagos.
     /// </summary>
     private static void MigrarRegistroDaInvestigacao(DadosDeSave dados, GameManager gm)
     {
@@ -598,8 +564,7 @@ public static class SistemaDeSave
             if (!registro.interacoesPagasLegadas.Contains(chave)) registro.interacoesPagasLegadas.Add(chave);
         }
 
-        // Save v1 não tinha relógio: um caso em andamento chegaria sem orçamento (tempo ilimitado). Recebe o
-        // orçamento do caso, uma vez, sem a perda por dívida (que só vale ao aceitar um caso novo).
+        // v1 não tinha relógio: concede o orçamento uma vez, sem a perda por dívida (só vale ao aceitar caso novo).
         if (dados.versao < 2 && gm.horasDoCaso <= 0)
         {
             gm.horasDoCaso = gm.horasRestantes = caso.horasDeInvestigacao > 0 ? caso.horasDeInvestigacao : gm.horasPorCaso;
@@ -611,7 +576,7 @@ public static class SistemaDeSave
                   $"listados na primeira interação. Horas restantes preservadas: {gm.horasRestantes}.");
     }
 
-    /// <summary>Chamado pelo TutorialManager.Start: a etapa salva substitui o PlayerPrefs "tutorial concluído".</summary>
+    // Chamado pelo TutorialManager.Start: a etapa salva prevalece sobre o PlayerPrefs "tutorial concluído".
     public static bool ConsumirEtapaDoTutorial(out int indice)
     {
         indice = dadosPendentesTutorial != null ? dadosPendentesTutorial.etapaTutorial : 0;
@@ -620,7 +585,7 @@ public static class SistemaDeSave
         return havia;
     }
 
-    /// <summary>Save da versão 1 (sem fases): deduz a fase pelos casos escolhidos e conclui os que já têm panfleto.</summary>
+    // v1 não tinha fases: deduz pela escolha de casos e conclui os que já têm panfleto.
     private static void MigrarProgressaoDeFases(GameManager gm, CatalogoDeSave catalogo)
     {
         foreach (var p in gm.panfletosPublicados)
@@ -628,7 +593,7 @@ public static class SistemaDeSave
 
         bool saiuDoTutorial = gm.casosJaSelecionados.Count > 0;
         gm.faseAtual = saiuDoTutorial ? 2 : 1;
-        // O panfleto do tutorial não fica em panfletosPublicados: quem já escolheu um caso concluiu o tutorial.
+        // O tutorial não fica em panfletosPublicados: escolher um caso implica tê-lo concluído.
         if (saiuDoTutorial)
             foreach (CaseData caso in catalogo.casos)
                 if (caso != null && caso.fase == 1 && !gm.casosConcluidos.Contains(caso)) gm.casosConcluidos.Add(caso);

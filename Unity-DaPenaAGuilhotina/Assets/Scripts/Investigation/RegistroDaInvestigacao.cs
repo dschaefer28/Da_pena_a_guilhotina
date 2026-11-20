@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Memória da investigação que sobrevive a troca de cena e ao save: o que já foi pago no relógio, o que já foi
-/// vasculhado e quais recompensas os NPCs já entregaram — sempre por CASO + INTERAÇÃO. Assim, voltar a uma cena
-/// não cobra horas de novo, nem devolve pistas já recebidas (mesmo que tenham sido gastas na prensa), e o mesmo
-/// NPC/objeto continua com estado próprio em outro caso.
-///
-/// Chave de interação = "cena/id" (IdDeInteracao). Chave completa = "caso|cena/id", onde caso = CaseData.name
-/// (o mesmo identificador que o SistemaDeSave já grava).
+/// Horas pagas, loot coletado e recompensas entregues, por CASO + INTERAÇÃO: voltar à cena não cobra nem entrega de
+/// novo (mesmo pistas já gastas), e cada caso tem estado próprio. Chave = "caso|cena/id", caso = CaseData.name.
 /// </summary>
 [Serializable]
 public class RegistroDaInvestigacao
 {
-    /// <summary>Etapa única de recompensa de uma reação de caso (CasoReacao tem uma lista de recompensas só).</summary>
+    /// <summary>Etapa única: CasoReacao tem uma só lista de recompensas.</summary>
     public const string EtapaReacao = "reacao";
 
     [Tooltip("\"caso|cena/id\" das interações que já cobraram horas no caso.")]
@@ -50,8 +45,7 @@ public class RegistroDaInvestigacao
         if (!interacoesPagas.Contains(chave)) interacoesPagas.Add(chave);
     }
 
-    /// <summary>Save v2: a mesma interação foi paga com a chave antiga (cena/nome do GameObject)?
-    /// Homônimos na mesma cena compartilham a chave antiga — exatamente como o jogo antigo cobrava.</summary>
+    /// <summary>Save v2 (chave cena/nome do GameObject): homônimos na mesma cena compartilham a chave, como no jogo antigo.</summary>
     public bool PagaNoSaveAntigo(CaseData caso, string chaveAntiga) =>
         caso != null && !string.IsNullOrEmpty(chaveAntiga) && interacoesPagasLegadas.Contains(Chave(caso, chaveAntiga));
 
@@ -92,13 +86,12 @@ public class RegistroDaInvestigacao
 }
 
 /// <summary>
-/// Identificador estável de NPCs e objetos investigáveis: o "Id Da Interacao" serializado no componente, único na
-/// cena. Vazio = caminho do objeto na hierarquia (o mesmo valor que Ferramentas > Investigação > Gerar IDs grava),
-/// com aviso. Nunca usa GetInstanceID (muda a cada execução) nem só o nome do GameObject (homônimos colidem).
+/// ID estável de NPCs e objetos investigáveis, único na cena. Vazio = caminho na hierarquia (o mesmo que
+/// Ferramentas > Investigação > Gerar IDs grava). Nunca GetInstanceID (muda a cada execução) nem só o nome (homônimos).
 /// </summary>
 public static class IdDeInteracao
 {
-    /// <summary>"cena/id" — a parte da chave que identifica a interação dentro do jogo inteiro.</summary>
+    /// <summary>"cena/id": identifica a interação no jogo inteiro.</summary>
     public static string ChaveDaCena(Component alvo, string idSerializado)
     {
         if (alvo == null) return string.Empty;
@@ -108,8 +101,7 @@ public static class IdDeInteracao
     public static string IdEfetivo(Component alvo, string idSerializado) =>
         string.IsNullOrWhiteSpace(idSerializado) ? IdPadrao(alvo.transform) : idSerializado.Trim();
 
-    /// <summary>ID usado quando o campo está vazio — e o mesmo que a ferramenta grava: o caminho na hierarquia e,
-    /// para o 2º, 3º... irmão com o mesmo nome, "#2", "#3" (pela ordem entre os irmãos).</summary>
+    /// <summary>Caminho na hierarquia; irmãos homônimos ganham "#2", "#3"... Deve bater com o que a ferramenta grava.</summary>
     public static string IdPadrao(Transform t)
     {
         if (t == null) return string.Empty;
@@ -143,7 +135,7 @@ public static class IdDeInteracao
         return caminho;
     }
 
-    /// <summary>Lista problemas de IDs (vazios ou repetidos) entre os componentes dados, todos da mesma cena.</summary>
+    /// <summary>IDs vazios ou repetidos; componentes de uma mesma cena.</summary>
     public static List<string> Problemas(IEnumerable<KeyValuePair<Component, string>> interacoes)
     {
         var problemas = new List<string>();
@@ -163,7 +155,6 @@ public static class IdDeInteracao
         return problemas;
     }
 
-    /// <summary>Coleta NPCs e objetos investigáveis de uma cena já carregada.</summary>
     public static List<KeyValuePair<Component, string>> InteracoesDaCena(UnityEngine.SceneManagement.Scene cena)
     {
         var lista = new List<KeyValuePair<Component, string>>();
@@ -178,7 +169,7 @@ public static class IdDeInteracao
         return lista;
     }
 
-    /// <summary>Avisa no Console sobre IDs vazios/repetidos da cena (chamado a cada cena carregada).</summary>
+    /// <summary>Chamado a cada cena carregada.</summary>
     public static void ValidarCena(UnityEngine.SceneManagement.Scene cena)
     {
         foreach (string problema in Problemas(InteracoesDaCena(cena)))

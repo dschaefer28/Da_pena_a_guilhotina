@@ -62,8 +62,7 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         if (objetoVazio != null) objetoVazio.SetActive(item == null);
     }
 
-    /// <summary>Mostra/esconde esta linha na lista sem desativar o GameObject (um slot inativo no meio
-    /// de um arrasto perderia o OnEndDrag). Sem LayoutElement/CanvasGroup (slots da prensa) não faz nada.</summary>
+    /// <summary>Esconde sem desativar o GameObject: um slot inativo no meio de um arrasto perderia o OnEndDrag.</summary>
     public void DefinirVisivelNaLista(bool visivel)
     {
         if (layoutElement == null) layoutElement = GetComponent<LayoutElement>();
@@ -96,7 +95,7 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         }
 
         MouseManager.instance.UpdateHeldItem(this);
-        AtualizarFicha(); // o item deste slot acabou de trocar (pegou, soltou ou trocou)
+        AtualizarFicha();
     }
 
     public void OnPointerDown(PointerEventData eventData) => suppressClick = false;
@@ -113,7 +112,7 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
     public void OnDrag(PointerEventData eventData)
     {
-        // MouseManager moves the held item's icon for both mouse and touch.
+        // Vazio de propósito: o MouseManager move o ícone (mouse e toque).
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -128,7 +127,7 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
     {
         if (!draggingItem) return;
         draggingItem = false;
-        // Cancelled drops, or the other item after a swap, return to the source.
+        // Drop cancelado, ou o outro item após uma troca, volta para a origem.
         if (MouseManager.instance != null && MouseManager.instance.heldItem != null)
             MouseManager.instance.UpdateHeldItem(this);
     }
@@ -146,7 +145,7 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
     private void AtualizarFicha()
     {
         if (item != null) FichaDaPista.Mostrar(item, transform as RectTransform);
-        // Slot ficou vazio porque o item foi para a mão (toque no celular): a ficha continua, do item segurado.
+        // Slot vazio porque o item foi para a mão (toque): a ficha segue com o item segurado.
         else if (MouseManager.instance != null && MouseManager.instance.heldItem != null)
             FichaDaPista.Mostrar(MouseManager.instance.heldItem, transform as RectTransform);
         else FichaDaPista.Esconder(transform as RectTransform);
@@ -157,7 +156,7 @@ public class UISlotHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         AtualizarFicha();
         if (item == null || somHover.IsNull) return;
 
-        // Instância manual para poder mexer em volume e pitch antes de tocar (sem exceção se o FMOD falhar)
+        // Instância manual para ajustar volume e pitch antes de tocar.
         if (!AudioSeguro.TentarCriar(somHover, out FMOD.Studio.EventInstance hover)) return;
         VolumeDoAudio.DefinirVolumeDaInstancia(hover, hoverVolume); // multiplicado pelo volume dos efeitos
         hover.setPitch(Random.Range(hoverPitchMin, hoverPitchMax));

@@ -3,9 +3,8 @@ using NUnit.Framework;
 using UnityEngine;
 
 /// <summary>
-/// Regras do Prompt 1 (estabilidade da investigação, publicação e save), sem cena: registro por caso/interação,
-/// IDs estáveis, guardas de domínio do GameManager e migração do save v2 → v3.
-/// Rodar em Window > General > Test Runner > EditMode.
+/// Investigação, publicação e save, sem cena: registro por caso/interação, IDs estáveis, guardas de domínio do
+/// GameManager e migração do save v2 → v3.
 /// </summary>
 public class InvestigacaoESaveTests
 {

@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>Botão "Fechar" do painel do inventário. Resolve o InventoryManager em runtime porque o
-/// botão vive dentro do prefab UI_Inventory e o manager fica fora dele (no prefab UI).</summary>
+/// <summary>Resolve o InventoryManager em runtime: o botão está no prefab UI_Inventory e o manager fica fora dele.</summary>
 [RequireComponent(typeof(Button))]
 public class BotaoFecharInventario : MonoBehaviour
 {

@@ -3,11 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Aviso flutuante que aparece sobre o objeto interagível mais próximo do jogador ("E" no Windows,
-/// "Interagir" no Android). Atende ao item do documento "ícone de feedback visual indicando
-/// interatividade" (alçapão) e vale para NPCs, portas, mesa e prensa. Coloque no mesmo GameObject
-/// do PlayerInteraction; o visual é montado em runtime (canvas em world space), sem arte externa.
-/// Quando o alvo tem nome (IInteractable.NomeExibido, ex: NPCs), uma etiqueta com o nome fica logo abaixo da tecla.
+/// Aviso flutuante (tecla + nome opcional) sobre o interagível mais próximo do jogador. Canvas world space montado
+/// em runtime; vai no mesmo GameObject do PlayerInteraction.
 /// </summary>
 [RequireComponent(typeof(PlayerInteraction))]
 // Depois das câmeras (CameraFollow, CinemachineBrain) no LateUpdate: o desvio do relógio projeta com a câmera do frame atual.
@@ -21,10 +18,9 @@ public class PromptDeInteracao : MonoBehaviour
     [Tooltip("Escala do aviso no mundo (1 unidade = 100 px do canvas).")]
     public float escala = 0.012f;
 
-    // Mesma cor/sprite do BotaoContinuar (UI.prefab), para bater com o resto da UI (GlifoDeControle).
+    // Mesma cor/sprite do BotaoContinuar (UI.prefab).
     private static readonly Color CorFundo = new Color(0.45f, 0.2f, 0.15f, 1f);
     private static readonly Color CorBorda = new Color(0.29f, 0.12f, 0.09f, 1f);
-    // Etiqueta do nome: placa escura translúcida e texto creme, legível sobre qualquer cenário.
     private static readonly Color CorFundoDoNome = new Color(0.12f, 0.07f, 0.05f, 0.85f);
     private static readonly Color CorTextoDoNome = new Color(1f, 0.95f, 0.85f, 1f);
     private const float EspacoEntreNomeETecla = 4f; // px do canvas
@@ -68,8 +64,7 @@ public class PromptDeInteracao : MonoBehaviour
 
         renderersDoAlvo = alvo.GetComponentsInChildren<Renderer>();
 
-        // Sem largura fixa: a borda acompanha o miolo. Forçar a tecla curta a um quadrado (48) deixava o miolo, que não
-        // encolhe abaixo de 66 (texto mínimo + margens), vazando para a direita da borda.
+        // Sem largura fixa: forçar um quadrado de 48 fazia o miolo (mín. 66) vazar da borda.
         texto.text = DispositivoDeControle.Glifo(ControleTutorial.Interagir);
 
         string nome = alvo.TryGetComponent<IInteractable>(out var interagivel) ? interagivel.NomeExibido : null;
@@ -78,11 +73,10 @@ public class PromptDeInteracao : MonoBehaviour
         etiquetaDoNome.gameObject.SetActive(comNome);
 
         canvas.gameObject.SetActive(true);
-        // A tecla nasce com o tamanho padrão (100 x 100) até o primeiro layout: o desvio do relógio e o empilhamento
-        // nome/tecla precisam do tamanho real. Cada um é raiz do próprio layout (o canvas não tem layout group).
+        // Antes do primeiro layout a tecla tem 100x100; o posicionamento precisa do tamanho real.
         LayoutRebuilder.ForceRebuildLayoutImmediate(tecla);
         if (comNome) LayoutRebuilder.ForceRebuildLayoutImmediate(etiquetaDoNome);
-        // O nome ocupa o lugar de baixo (logo acima da cabeça) e a tecla sobe para cima dele.
+        // Nome embaixo, tecla empilhada acima dele.
         tecla.anchoredPosition = new Vector2(0f, comNome ? etiquetaDoNome.rect.height + EspacoEntreNomeETecla : 0f);
         Posicionar();
     }
@@ -91,7 +85,6 @@ public class PromptDeInteracao : MonoBehaviour
     {
         if (alvoAtual == null) { if (canvas.gameObject.activeSelf) canvas.gameObject.SetActive(false); return; }
 
-        // Some enquanto um painel/diálogo estiver aberto (nesses momentos o Interagir não faz nada).
         bool visivel = jogador.PodeInteragirAgora;
         if (canvas.gameObject.activeSelf != visivel) canvas.gameObject.SetActive(visivel);
         if (visivel) Posicionar();
@@ -101,12 +94,10 @@ public class PromptDeInteracao : MonoBehaviour
     {
         if (alvoAtual == null) return;
 
-        // Prefere o topo real da arte (sprite) ao do colisor: o colisor de um NPC costuma cobrir só o
-        // corpo (menor que o capuz/cabelo), e a etiqueta acabava nascendo em cima do personagem.
+        // Topo da arte, não do colisor: o colisor de NPC cobre só o corpo e o aviso caía sobre a cabeça.
         Vector3 topo = TopoVisual(renderersDoAlvo, alvoAtual);
 
-        // O jogador precisa estar bem perto do alvo para interagir, então a etiqueta também não pode
-        // ficar abaixo da cabeça DELE (ex: jogador mais alto que a porta/mesa que está acessando).
+        // Nunca abaixo da cabeça do jogador (mais alto que porta/mesa).
         Vector3 topoJogador = TopoVisual(renderersDoJogador, jogador.gameObject);
         if (topoJogador.y > topo.y) topo.y = topoJogador.y;
 
@@ -117,8 +108,7 @@ public class PromptDeInteracao : MonoBehaviour
 
     private const float MargemNoTopoDaTela = 0.2f; // unidades do mundo
 
-    // Alvos altos (quadros/murais) têm o topo colado no limite da câmera: o aviso nascia acima dele, fora da tela, e o jogador
-    // nunca via que dava para interagir. Se o bloco (nome + tecla) passaria do topo visível, desce até caber.
+    // Alvos altos (murais) jogariam o aviso para fora da tela: desce até caber.
     private Vector3 ManterDentroDaTela(Vector3 posicao)
     {
         Camera cam = Camera.main;
@@ -132,14 +122,13 @@ public class PromptDeInteracao : MonoBehaviour
 
     private const float MargemAbaixoDoRelogio = 10f; // pixels de tela
 
-    // Ao chegar pela porta nas cenas de investigação, o topo da porta fica na altura do relógio de horas (topo central):
-    // o "E" aparecia atrás dele. Se a tecla cair sobre o relógio, desce até logo abaixo dele.
+    // O topo das portas coincide com o relógio de horas: se o aviso cair sobre ele, desce até logo abaixo.
     private Vector3 FugirDoRelogio(Vector3 posicao)
     {
         Camera cam = Camera.main;
         if (cam == null || !HudDoRelogio.RetanguloNaTela(out Rect relogio)) return posicao;
 
-        // Bloco inteiro (nome embaixo + tecla em cima), em px do canvas.
+        // Bloco inteiro em px do canvas.
         bool comNome = etiquetaDoNome.gameObject.activeSelf;
         float altura = tecla.anchoredPosition.y + tecla.rect.height;
         float largura = Mathf.Max(tecla.rect.width, comNome ? etiquetaDoNome.rect.width : 0f);
@@ -170,11 +159,10 @@ public class PromptDeInteracao : MonoBehaviour
     private void Montar()
     {
         var go = new GameObject("PromptInteracao", typeof(RectTransform), typeof(Canvas));
-        go.transform.SetParent(null, false); // fica solto no mundo para não herdar o flip/escala do jogador
+        go.transform.SetParent(null, false); // solto no mundo para não herdar flip/escala do jogador
         canvas = go.GetComponent<Canvas>();
         canvas.renderMode = RenderMode.WorldSpace;
-        // Cenário e personagens usam sorting layers acima de "Default" (cenario, personagem); o aviso
-        // precisa da camada mais alta do projeto para não ficar atrás da parede.
+        // Sorting layer mais alta: cenário e personagens ficam acima de "Default".
         var camadas = SortingLayer.layers;
         if (camadas.Length > 0) canvas.sortingLayerID = camadas[camadas.Length - 1].id;
         canvas.sortingOrder = 100;
@@ -193,7 +181,7 @@ public class PromptDeInteracao : MonoBehaviour
         imgBorda.type = Image.Type.Sliced;
         imgBorda.color = CorBorda;
         imgBorda.raycastTarget = false;
-        // Com o sprite padrão dos botões, a própria tecla tem moldura e face: o miolo vira só layout (sem imagem).
+        // Com o sprite dos botões a tecla já tem moldura e face: o miolo vira só layout.
         bool comSprite = EstiloDeBotao.Aplicar(imgBorda);
         tecla = rBorda;
         larguraTecla = borda.GetComponent<LayoutElement>();
@@ -209,7 +197,7 @@ public class PromptDeInteracao : MonoBehaviour
         fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
         fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-        // Miolo também é um layout group: assim a largura da tecla vem do texto (e não fica no mínimo).
+        // Miolo com layout group para a largura da tecla vir do texto.
         var miolo = new GameObject("Miolo", typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup));
         miolo.transform.SetParent(borda.transform, false);
         var imgMiolo = miolo.GetComponent<Image>();
@@ -241,7 +229,6 @@ public class PromptDeInteracao : MonoBehaviour
         MontarEtiquetaDoNome();
     }
 
-    // Placa com o nome do alvo, logo abaixo da tecla (base no ponto do aviso; a tecla sobe quando ela aparece).
     private void MontarEtiquetaDoNome()
     {
         var placa = new GameObject("Nome", typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));

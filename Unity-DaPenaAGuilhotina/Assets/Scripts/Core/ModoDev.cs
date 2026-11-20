@@ -4,16 +4,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Modo dev (apresentação do TCC na banca): monta na hora uma partida em qualquer ponto da campanha (início de uma fase
-/// ou o Tribunal de cada final) e oferece atalhos para a partida atual. O painel é o ModoDevUI (tecla F1).
-///
-/// Partida de demonstração: o que é aberto por aqui, e qualquer atalho usado numa partida normal, NÃO grava save nem
-/// entra no arquivo de casos resolvidos. Os slots ficam como estavam no último ponto de save. A partida volta a gravar no
-/// próximo Novo Jogo ou Carregar (ProgressoDoJogo.ComecarNovoJogo chama EncerrarDemonstracao).
-///
-/// O estado é montado com as regras do jogo, sem mudar nenhum asset: as pistas de cada caso vêm do CatalogoDeSave, o
-/// panfleto é calculado pela CalculadoraDePanfleto, as despesas e a rota vêm do GameManager. Nas fases já passadas o
-/// panfleto sai só com fatos, do caso que mais puxa para a rota pedida.
+/// Modo dev (painel ModoDevUI, F1): monta uma partida em qualquer ponto da campanha usando as regras do jogo e
+/// oferece atalhos. Qualquer uso marca a partida como demonstração: não grava save nem arquivo de casos até o
+/// próximo Novo Jogo/Carregar. Fases passadas recebem o caso só com fatos que mais puxa para a rota pedida.
 /// </summary>
 public static class ModoDev
 {
@@ -22,10 +15,10 @@ public static class ModoDev
     public const string CenaDoEscritorio = "Jogo";
     public const string CenaDoTribunal = "Tribunal";
 
-    /// <summary>Ouro mínimo de uma partida montada a partir da Fase 2 (dá para mostrar a Biblioteca sem dívida).</summary>
+    // Suficiente para mostrar a Biblioteca sem dívida.
     public const int OuroMinimo = 100;
 
-    /// <summary>A partida atual não grava save nem arquivo de casos (SistemaDeSave.Gravar e ArquivoDeCasos.Registrar).</summary>
+    // Lido por SistemaDeSave.Gravar e ArquivoDeCasos.Registrar.
     public static bool PartidaDeDemonstracao { get; private set; }
 
     private class Pedido
@@ -47,10 +40,8 @@ public static class ModoDev
         SceneManager.sceneLoaded += AoCarregarCena;
     }
 
-    /// <summary>Novo Jogo e Carregar: a partida volta a gravar.</summary>
     public static void EncerrarDemonstracao() => PartidaDeDemonstracao = false;
 
-    /// <summary>Daqui em diante a partida não grava mais (o save do slot fica no último ponto de save).</summary>
     public static void MarcarDemonstracao()
     {
         if (PartidaDeDemonstracao) return;
@@ -71,8 +62,7 @@ public static class ModoDev
 
     // ===== Ir para um ponto da campanha =====
 
-    /// <summary>Descarta a partida atual e abre uma de demonstração no destino: o escritório no início da fase ou o
-    /// Tribunal com o caso da Fase 4 da rota já publicado (só com fatos = réu absolvido; com boato = condenado).</summary>
+    // Tribunal: caso da Fase 4 da rota publicado só com fatos (absolvido) ou com boato (condenado).
     public static void IrPara(Destino destino, RotaFinal rota = RotaFinal.Nenhuma, bool reuAbsolvido = true)
     {
         if (FaseDe(destino) >= GameManager.UltimaFase && rota == RotaFinal.Nenhuma)
@@ -87,7 +77,7 @@ public static class ModoDev
             return;
         }
 
-        ProgressoDoJogo.ComecarNovoJogo(); // zera cutscenes/tutorial e descarta o GameManager e o TutorialManager atuais
+        ProgressoDoJogo.ComecarNovoJogo();
         MarcarDemonstracao();
         MarcarChavesDaPartida(FaseDe(destino));
         pendente = new Pedido { destino = destino, rota = rota, reuAbsolvido = reuAbsolvido, cena = cena };
@@ -96,9 +86,7 @@ public static class ModoDev
         CarregarCena(cena);
     }
 
-    // O que um jogador de verdade já teria visto ao chegar nesta fase: a cutscene de abertura e o tutorial (Fase 2+),
-    // as dicas das Fases 2 e 3 (Fase 3+) e a da Biblioteca (Fase 4). As chaves voltam ao normal no próximo Novo Jogo ou
-    // Carregar, que as apagam e restauram as do save.
+    // Marca cutscenes, tutorial e dicas que um jogador já teria visto ao chegar nesta fase.
     private static void MarcarChavesDaPartida(int fase)
     {
         var chaves = new List<string>();
@@ -114,8 +102,7 @@ public static class ModoDev
         PlayerPrefs.Save();
     }
 
-    // Depois do Awake/OnEnable dos objetos da cena nova e antes do Start: o inventário, a mesa, o FimDeFase e o tribunal
-    // já nascem com a partida montada.
+    // sceneLoaded roda após Awake/OnEnable e antes do Start: inventário, mesa, FimDeFase e tribunal já veem a partida montada.
     private static void AoCarregarCena(Scene cena, LoadSceneMode modo)
     {
         if (pendente == null || cena.name != pendente.cena) return;
@@ -136,17 +123,13 @@ public static class ModoDev
         Debug.Log($"[MODO DEV] Partida montada: {Resumo(gm).Replace('\n', ' ')}");
     }
 
-    /// <summary>
-    /// Monta a partida num GameManager recém-criado, sem tocar em disco nem na cena: o tutorial concluído, um caso por fase
-    /// já passada publicado só com fatos (o que mais puxa para a rota), as despesas de cada fase, a rota travada ao entrar
-    /// na Fase 4 e, no Tribunal, o caso da rota publicado na versão pedida. Devolve nulo ou o motivo da falha.
-    /// </summary>
+    // Não toca em disco nem na cena. Retorna null em sucesso ou o motivo da falha.
     public static string Preparar(GameManager gm, CatalogoDeSave catalogo, Destino destino, RotaFinal rota, bool reuAbsolvido)
     {
         if (gm == null || catalogo == null) return "sem GameManager ou catálogo.";
         int fase = FaseDe(destino);
         if (fase >= GameManager.UltimaFase && rota == RotaFinal.Nenhuma) return "a Fase 4 e o Tribunal precisam de uma rota.";
-        if (fase < 2) return null; // Fase 1: o jogo novo, como o Novo Jogo do menu (só não grava)
+        if (fase < 2) return null;
 
         CaseData tutorial = catalogo.casos.Find(c => c != null && c.fase == 1);
         if (tutorial != null) Concluir(gm, tutorial);
@@ -166,7 +149,7 @@ public static class ModoDev
         gm.faseAtual = fase;
         if (fase >= GameManager.UltimaFase)
         {
-            // Os casos escolhidos já puxam para a rota; se ainda assim as barras não chegarem lá, ficam no meio da faixa dela.
+            // Se os casos escolhidos não bastarem, força as barras para dentro da faixa da rota.
             if (gm.CalcularRota() != rota) DefinirBarrasDaRota(gm, rota);
             gm.DefinirRota();
             if (gm.rotaFinal != rota) return $"a rota travou em {gm.rotaFinal}, não em {rota}.";
@@ -196,8 +179,7 @@ public static class ModoDev
         gm.casoEscolhido = caso;
     }
 
-    /// <summary>Barras bem dentro da faixa da rota: A = Povo 75 × Estado 35; B = 35 × 75; C = 55 × 55. Com uma margem
-    /// maior que a padrão (20), A e B são empurradas até ela.</summary>
+    // A = Povo 75 × Estado 35; B = 35 × 75; C = 55 × 55. Margem acima da padrão (20) amplia A e B.
     public static void DefinirBarrasDaRota(GameManager gm, RotaFinal rota)
     {
         int margem = gm.MargemValida;
@@ -219,7 +201,7 @@ public static class ModoDev
 
     // ===== Casos, pistas e panfleto =====
 
-    // Quanto um desnível Povo − Estado serve à rota: A quer Povo alto, B quer Estado alto, C (e nenhuma) quer equilíbrio.
+    // A quer Povo alto, B quer Estado alto, C (e nenhuma) quer equilíbrio.
     private static int Nota(int desnivel, RotaFinal rota)
     {
         switch (rota)
@@ -230,7 +212,7 @@ public static class ModoDev
         }
     }
 
-    /// <summary>Caso da fase (sem rota própria, com receita) cuja versão só com fatos mais puxa para a rota. Empate: pelo nome.</summary>
+    // Caso sem rota própria cuja versão só com fatos mais puxa para a rota; empate desfeito pelo nome.
     public static CaseData CasoParaARota(CatalogoDeSave catalogo, int fase, RotaFinal rota)
     {
         CaseData melhor = null;
@@ -246,7 +228,6 @@ public static class ModoDev
         return melhor;
     }
 
-    /// <summary>Pistas do caso no catálogo (sem cartas do cliente nem documentos de apoio), sem repetir itemID.</summary>
     public static List<Item> PistasDoCaso(CatalogoDeSave catalogo, CaseData caso)
     {
         var lista = new List<Item>();
@@ -259,8 +240,7 @@ public static class ModoDev
         return lista;
     }
 
-    /// <summary>Duas pistas que a prensa aceitaria juntas (nunca as duas de um mesmo par contraditório) e que dão a versão
-    /// pedida. Sem par exato para uma versão com mentira, aceita qualquer outra com mentira (boato ou calúnia).</summary>
+    // Nunca as duas de um mesmo par contraditório. Sem par exato para versão com mentira, aceita boato ou calúnia.
     public static bool EscolherPistas(CaseData caso, List<Item> pistas, NivelDoPanfleto alvo, out Item a, out Item b)
     {
         a = b = null;
@@ -278,7 +258,6 @@ public static class ModoDev
         return a != null;
     }
 
-    // A linha editorial que mais puxa para a rota (receitas sem linha: neutra).
     private static LinhaEditorial LinhaParaARota(ReceitaDeCaso receita, Item a, Item b, RotaFinal rota)
     {
         if (!receita.ExigeLinhaEditorial) return LinhaEditorial.Nenhuma;
@@ -294,12 +273,7 @@ public static class ModoDev
         return melhor;
     }
 
-    /// <summary>
-    /// Publica o panfleto do caso como a prensa faria com as duas pistas que dão a versão pedida: as cartas e todas as
-    /// pistas do caso contam como achadas, cada par fica decidido pela pista impressa, o impacto vai para as barras e a
-    /// publicação (com a revelação, se for mentira) fica registrada. O panfleto vai para o inventário da cena, ou para o
-    /// inventário salvo se não houver cena. Não conclui o caso. Nulo se não houver receita ou pistas.
-    /// </summary>
+    // Simula a prensa: registra todas as pistas como achadas, decide os pares e aplica o impacto. Não conclui o caso.
     public static ResultadoDoPanfleto Publicar(GameManager gm, CatalogoDeSave catalogo, CaseData caso, NivelDoPanfleto alvo,
                                                RotaFinal rota, InventoryManager inventario)
     {
@@ -325,7 +299,7 @@ public static class ModoDev
         return resultado;
     }
 
-    // Cada par fica com a pista impressa dele (ou, se nenhuma das duas foi impressa, com o fato) e descarta a outra.
+    // Cada par mantém a pista impressa (ou, se nenhuma, o fato) e descarta a outra.
     private static void DecidirPares(GameManager gm, CaseData caso, Item a, Item b)
     {
         if (!Deducao.Aderente(caso)) return;
@@ -340,8 +314,7 @@ public static class ModoDev
 
     // ===== Atalhos na partida atual =====
 
-    /// <summary>O caso em andamento; sem um, aceita na mesa o caso da fase que mais puxa para a rota (como o jogador faria).
-    /// Nulo, com o motivo, se não houver caso para aceitar.</summary>
+    // Sem caso em andamento, aceita o que mais puxa para a rota.
     public static CaseData CasoAtualOuAceitar(GameManager gm, CatalogoDeSave catalogo, out string motivo)
     {
         motivo = null;
@@ -368,7 +341,6 @@ public static class ModoDev
         return gm.ConfirmarCaso(melhor) ? melhor : null;
     }
 
-    /// <summary>Entrega as pistas e os documentos de apoio do caso atual que o jogador ainda não achou. Devolve a mensagem.</summary>
     public static string ReceberPistas()
     {
         GameManager gm = GameManager.Instance;
@@ -402,7 +374,6 @@ public static class ModoDev
         return true;
     }
 
-    /// <summary>Publica e conclui o caso atual sem passar pela prensa (aceita um na mesa, se preciso). Devolve a mensagem.</summary>
     public static string ConcluirCasoAtual(bool soComFatos)
     {
         GameManager gm = GameManager.Instance;
@@ -417,7 +388,7 @@ public static class ModoDev
         ResultadoDoPanfleto resultado = Publicar(gm, catalogo, caso, soComFatos ? NivelDoPanfleto.Fatos : NivelDoPanfleto.ComBoato, gm.rotaFinal, inventario);
         if (resultado == null) return $"Não deu para montar o panfleto de '{Titulo(caso)}'.";
 
-        // O que a prensa teria consumido (as duas pistas impressas) e o que o quadro teria descartado sai do inventário.
+        // Remove o que a prensa teria consumido e o que o quadro teria descartado.
         List<string> impressas = resultado.pistas;
         if (inventario != null)
             inventario.RemoverItens(i => i != null && i.caso == caso && (impressas.Contains(i.itemID) || Deducao.Descartada(gm, i)));
@@ -452,7 +423,7 @@ public static class ModoDev
         return $"Modo dev: {gm.horasRestantes}h de investigação.";
     }
 
-    /// <summary>Leva ao escritório (onde a fase concluída é fechada pelo FimDeFase) guardando o inventário, como a porta.</summary>
+    // Guarda o inventário como a porta faria; o FimDeFase fecha a fase no escritório.
     public static void VoltarAoEscritorio()
     {
         GameManager gm = GameManager.Instance;
@@ -460,7 +431,6 @@ public static class ModoDev
         CarregarCena(CenaDoEscritorio);
     }
 
-    /// <summary>Vai ao Tribunal sem passar pelo Dupaty. Só na Fase 4, com o caso da rota publicado.</summary>
     public static string IrAoTribunal()
     {
         GameManager gm = GameManager.Instance;
@@ -496,7 +466,6 @@ public static class ModoDev
         }
     }
 
-    /// <summary>Situação da partida em duas linhas (o painel mostra isto).</summary>
     public static string Resumo(GameManager gm)
     {
         if (gm == null) return "Sem partida em andamento.";

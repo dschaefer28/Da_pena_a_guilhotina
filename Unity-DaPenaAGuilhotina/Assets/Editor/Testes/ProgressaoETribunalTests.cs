@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Prompt 6 (o que restava em 27/09): limites e margem da rota, rota travada, filtro da Fase 4, mesa e porta pela
+/// Limites e margem da rota, rota travada, filtro da Fase 4, mesa e porta pela
 /// regra de progresso do tutorial, inventário cheio ao restaurar sem perder itens, o checkpoint do Dupaty e o mínimo de
 /// provas para encerrar a defesa.
 /// </summary>
@@ -69,7 +69,7 @@ public class ProgressaoETribunalTests
     [Test]
     public void Rota_LimitesDaMargemPadrao()
     {
-        Assert.AreEqual(12, gm.margemDaRota); // 13/11/2026: valores das receitas pela metade, margem 20 → 12
+        Assert.AreEqual(12, gm.margemDaRota);
         var esperado = new Dictionary<int, RotaFinal>
         {
             { -13, RotaFinal.B_Tirano }, { -12, RotaFinal.B_Tirano }, { -11, RotaFinal.C_Equilibrio }, { 0, RotaFinal.C_Equilibrio },
@@ -195,7 +195,7 @@ public class ProgressaoETribunalTests
         Assert.AreEqual(1, gm.itensForaDaGrade.Count, "mas ficou guardado");
         Assert.IsTrue(inv.PossuiEmQualquerLugar("panfleto_do_caso"));
 
-        inv.SalvarEstadoAtual(); // trocar de cena ou salvar
+        inv.SalvarEstadoAtual(); // como ao trocar de cena ou salvar
         Assert.AreEqual(3, gm.inventarioSalvo.Count, "o item guardado vai junto");
         Assert.AreEqual(3, SistemaDeSave.CapturarDados(gm, "Jogo", 0).inventario.Count, "e entra no save");
 

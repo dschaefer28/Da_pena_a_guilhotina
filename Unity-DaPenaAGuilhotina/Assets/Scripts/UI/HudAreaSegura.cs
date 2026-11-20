@@ -1,9 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Mantém a HUD de status dentro da área segura da tela (notch, cantos arredondados e barras do sistema no
-/// celular). No PC a área segura é a tela inteira, então nada muda. Vai no retângulo ancorado no canto
-/// superior esquerdo: a posição do prefab vira a margem "base" e o recuo da área segura é somado a ela.
+/// Mantém a HUD de status (ancorada no canto superior esquerdo) dentro da área segura; a posição do prefab é a margem
+/// base e o recuo da área segura é somado a ela.
 /// </summary>
 [RequireComponent(typeof(RectTransform))]
 public class HudAreaSegura : MonoBehaviour
@@ -24,7 +23,7 @@ public class HudAreaSegura : MonoBehaviour
 
     private void OnEnable() => Aplicar();
 
-    // Checagem barata por frame: a área segura muda ao girar o aparelho ou redimensionar a janela.
+    // A área segura muda ao girar o aparelho ou redimensionar a janela.
     private void Update()
     {
         float escala = canvas != null ? canvas.rootCanvas.scaleFactor : 1f;
@@ -42,7 +41,6 @@ public class HudAreaSegura : MonoBehaviour
         ultimaEscala = escala;
         if (escala <= 0f) return;
 
-        // Recuo em pixels de tela convertido para unidades do Canvas (o CanvasScaler muda a escala por resolução).
         float esquerda = area.xMin / escala;
         float topo = (Screen.height - area.yMax) / escala;
         rect.anchoredPosition = posicaoBase + new Vector2(esquerda, -topo);

@@ -21,8 +21,7 @@ public class DialogueSystem : MonoBehaviour
     public event Action<string, string> OnDialogueLineStarted;
     public event Action<List<Choice>> OnChoicesAvailable;
     public event Action OnChoicesCleared;
-    // Avançar durante a escolha (tecla Interagir, botão virtual...) pede à HUD que confirme a opção
-    // selecionada: só ela sabe qual resposta está destacada.
+    // Avançar durante a escolha pede à HUD que confirme: só ela sabe qual opção está destacada.
     public event Action OnConfirmChoiceRequested;
 
     public bool IsDialogueActive { get; private set; }
@@ -36,7 +35,6 @@ public class DialogueSystem : MonoBehaviour
 
     void Awake() 
     {
-        // ARQUITETURA BLINDADA: Atualiza a referência global para o sistema de diálogos desta cena
         if (GameManager.Instance != null)
         {
             GameManager.Instance.dialogueSystem = this;
@@ -61,14 +59,10 @@ public class DialogueSystem : MonoBehaviour
 
     public void AdvanceDialogue()
     {
-        // Não faz nada quando não há diálogo em andamento: o botão "ButtonAvancar" do Canvas cobre a
-        // tela inteira e fica sempre ativo (mesmo sem diálogo aberto), então qualquer clique na tela
-        // chegava aqui. Antes disso chamava Next() e reabria a última conversa do zero a cada clique.
+        // "ButtonAvancar" cobre a tela e fica sempre ativo: sem diálogo, o clique não pode reabrir a conversa.
         if (state == STATE.DISABLED)
         {
-            // Segurança: se algo interrompeu Next() no meio (exceção de áudio, por exemplo), o
-            // diálogo nunca chegou a abrir mas a flag ficou ligada — e toda interação do jogador
-            // passava a cair aqui sem fazer nada. Destrava.
+            // Destrava se Next() foi interrompido (ex.: exceção de áudio) com a flag ligada.
             if (IsDialogueActive) EndDialogue();
             return;
         }
@@ -93,10 +87,7 @@ public class DialogueSystem : MonoBehaviour
         if (dialogueData == null || dialogueData.talkScript == null || dialogueData.talkScript.Count == 0)
         {
             Debug.LogWarning("ScriptableObject de diálogo vazio!");
-            // Não chama EndDialogue() aqui: como o diálogo nunca chegou a começar de verdade
-            // (OnDialogueStarted nunca disparou), avisar "terminou" (OnDialogueEnded) confundia
-            // quem escuta esse evento — o tutorial, por exemplo, avançava sozinho com essa
-            // interação vazia antes da conversa real acontecer.
+            // Sem EndDialogue(): OnDialogueStarted não disparou, e OnDialogueEnded faria o tutorial avançar sozinho.
             state = STATE.DISABLED;
             IsDialogueActive = false;
             return;
@@ -104,7 +95,6 @@ public class DialogueSystem : MonoBehaviour
 
         IsDialogueActive = true;
 
-        // FMOD: se os banks ainda não terminaram de carregar, a 1ª fala costuma sair muda
         if (currentText == 0 && !AudioSeguro.BanksCarregados)
         {
             Debug.LogWarning("[DialogueSystem] FMOD ainda não carregou todos os banks — " +
@@ -119,8 +109,7 @@ public class DialogueSystem : MonoBehaviour
         string speakerName = currentDialogue.name;
         string speakerText = currentDialogue.text;
 
-        // Áudio da fala é opcional: se o FMOD falhar (banks ausentes, evento renomeado, sistema não
-        // iniciado), a conversa segue muda em vez de travar o jogo (AudioSeguro nunca lança exceção).
+        // Áudio opcional: se o FMOD falhar, a conversa segue muda (AudioSeguro nunca lança exceção).
         if (AudioSeguro.TentarCriar(currentDialogue.dialogueAudio, out currentAudioInstance))
         {
             FMOD.RESULT startResult = currentAudioInstance.start();
@@ -143,7 +132,7 @@ public class DialogueSystem : MonoBehaviour
         Dialogue currentDialogue = dialogueData.talkScript[currentText - 1];
         if (currentDialogue.choices != null && currentDialogue.choices.Count > 0)
         {
-            // As respostas só aparecem no próximo avanço: primeiro o jogador lê a fala inteira.
+            // Respostas só no próximo avanço, para o jogador ler a fala inteira.
             state = STATE.AWAITING_REPLY;
         }
         else 
@@ -155,15 +144,13 @@ public class DialogueSystem : MonoBehaviour
     void EndDialogue()
     {
         StopCurrentAudio();
-        // Estado fica consistente ANTES de avisar os ouvintes: quem reage ao fim do diálogo (tutorial,
-        // popups) precisa ver IsDialogueActive == false, senão acha que ainda há conversa na tela.
+        // Estado consistente ANTES de avisar: os ouvintes precisam ver IsDialogueActive == false.
         state = STATE.DISABLED;
         currentText = 0;
         finished = false;
         IsDialogueActive = false;
 
-        // Cada ouvinte isolado: o NPC que entrega a pista se inscreve por último, então um erro em qualquer ouvinte
-        // anterior (HUD, tutorial...) fazia a conversa acabar sem entregar nada.
+        // Ouvintes isolados: o NPC que entrega a pista se inscreve por último e não pode ser barrado por erro anterior.
         Action fim = OnDialogueEnded;
         if (fim == null) return;
         foreach (Action ouvinte in fim.GetInvocationList())

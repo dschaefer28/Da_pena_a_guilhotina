@@ -1,14 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Gerencia o congelamento do jogo de forma centralizada, por CONTAGEM de solicitações.
-/// Enquanto houver pelo menos 1 solicitação ativa (inventário, prensa, menu de pause, diálogo...),
-/// Time.timeScale fica em 0. O jogo só volta a rodar quando TODAS as solicitações forem liberadas.
-///
-/// Isso elimina a "guerra do Time.timeScale": abrir o pause e o inventário juntos e fechar
-/// um deles não descongela mais o jogo por engano.
-///
-/// Coloque este script em um GameObject único na primeira cena (ele sobrevive à troca de cenas).
+/// Pause por contagem de solicitações: Time.timeScale fica em 0 enquanto houver qualquer UI modal aberta,
+/// para que fechar uma delas não descongele o jogo com outra ainda aberta.
 /// </summary>
 public class PauseManager : MonoBehaviour
 {
@@ -16,7 +10,6 @@ public class PauseManager : MonoBehaviour
 
     private int pauseRequests = 0;
 
-    /// <summary>True enquanto houver qualquer solicitação de pause ativa.</summary>
     public bool IsPaused => pauseRequests > 0;
 
     private void Awake()
@@ -36,21 +29,19 @@ public class PauseManager : MonoBehaviour
         if (Instance == this) Instance = null;
     }
 
-    /// <summary>Registra uma solicitação de pause. Chame ao ABRIR uma UI modal.</summary>
     public void PushPause()
     {
         pauseRequests++;
         ApplyTimeScale();
     }
 
-    /// <summary>Libera uma solicitação de pause. Chame ao FECHAR uma UI modal.</summary>
     public void PopPause()
     {
         pauseRequests = Mathf.Max(0, pauseRequests - 1);
         ApplyTimeScale();
     }
 
-    /// <summary>Zera todas as solicitações e descongela o jogo (use em troca de cena / carregar menu).</summary>
+    // Usado em troca de cena / volta ao menu.
     public void ResetPause()
     {
         pauseRequests = 0;
@@ -62,10 +53,7 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = pauseRequests > 0 ? 0f : 1f;
     }
 
-    /// <summary>
-    /// Atalho estático seguro: se não existir PauseManager na cena, cai no comportamento antigo
-    /// (mexe direto no Time.timeScale), então nada quebra se o objeto não tiver sido adicionado ainda.
-    /// </summary>
+    // Sem instância, recorre a Time.timeScale direto.
     public static void RequestPause(bool pause)
     {
         if (Instance != null)
@@ -79,7 +67,6 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    /// <summary>Atalho estático para zerar o pause mesmo sem instância.</summary>
     public static void ForceReset()
     {
         if (Instance != null) Instance.ResetPause();

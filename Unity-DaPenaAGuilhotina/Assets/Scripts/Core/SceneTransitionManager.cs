@@ -3,16 +3,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Setup necessário no Editor (não é feito por código):
-/// 1. Criar um GameObject persistente (pode ser o mesmo que já carrega o GameManager/PauseManager,
-///    ou um novo objeto na primeira cena) e adicionar este script nele.
-/// 2. Nesse mesmo objeto (ou em um filho), criar um Canvas com:
-///    - Render Mode "Screen Space - Overlay" e Sort Order acima de tudo (ex: 999);
-///    - uma Image preta cobrindo a tela inteira (anchors stretch, cor preta);
-///    - um CanvasGroup no mesmo GameObject da Image (ou no Canvas).
-/// 3. Arrastar esse CanvasGroup para o campo "Canvas Group" deste script no Inspector.
-/// O prefab (Assets/Prefabs/SceneTransitonManager) já vem assim, com o CanvasGroup em Alpha 0 para não cobrir a
-/// Game View no Editor. Não desligue o objeto do fade numa cena para enxergá-la: o jogo fica sem transições.
+/// Troca de cena com fade preto. Configurado no prefab Assets/Prefabs/SceneTransitonManager (CanvasGroup
+/// sobre Image preta em tela cheia, Alpha 0 no Editor).
 /// </summary>
 public class SceneTransitionManager : MonoBehaviour
 {
@@ -22,14 +14,12 @@ public class SceneTransitionManager : MonoBehaviour
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private float fadeDuration = 0.5f;
 
-    // Acima de todo canvas do jogo (popups 10, biblioteca 30–35, ficha 40, cutscenes 50): o preto da troca de cena
-    // cobre tudo, senão botões e popups ficavam boiando sobre a tela preta.
+    // Acima de todo canvas do jogo (popups 10, biblioteca 30–35, ficha 40, cutscenes 50).
     private const int OrdemAcimaDeTudo = 1000;
 
     private Coroutine transicaoEmAndamento;
 
-    /// <summary>Verdadeiro enquanto o preto da troca de cena cobre a tela, mesmo em parte (fade em andamento).
-    /// Uma cutscene que começa nesse momento já nasce preta (CutsceneLegendas), para o cenário não piscar.</summary>
+    // Inclui fade parcial; CutsceneLegendas usa para já nascer preta e não piscar o cenário.
     public static bool TelaCoberta => Instance != null && Instance.canvasGroup != null && Instance.canvasGroup.alpha > 0f;
 
     void Awake()
@@ -44,8 +34,7 @@ public class SceneTransitionManager : MonoBehaviour
 
         if (canvasGroup != null)
         {
-            // O objeto do fade já apareceu desligado numa cena (menu principal), e como a primeira cópia é a que
-            // sobrevive entre cenas, nenhum fade aparecia no jogo inteiro. Liga sempre; o alpha 0 o deixa invisível.
+            // Liga sempre: se a primeira cópia (a que persiste) viesse desligada, o jogo ficaria sem fade.
             canvasGroup.gameObject.SetActive(true);
             canvasGroup.alpha = 0f;
             canvasGroup.blocksRaycasts = false;
@@ -89,8 +78,7 @@ public class SceneTransitionManager : MonoBehaviour
         transicaoEmAndamento = null;
     }
 
-    // Cada frame avança no máximo este tempo do fade. Sem o limite, um frame lento (carregar a cena, salvar)
-    // consumia o fade inteiro e a tela ia de clara a escura (ou o contrário) de uma vez, como se não houvesse fade.
+    // Limita o avanço por frame para um frame lento (load, save) não consumir o fade inteiro de uma vez.
     private const float PassoMaximoPorFrame = 1f / 30f;
 
     private IEnumerator Fade(float from, float to)

@@ -1,7 +1,5 @@
 /// <summary>
-/// Janelas modais da HUD: Biblioteca, Quadro de dedução e Mesa de Casos. Enquanto uma delas está aberta, movimento,
-/// interação com o mundo, inventário e pause não respondem (a Biblioteca e o Quadro também pausam o jogo). Quem precisa
-/// dessa trava consulta aqui, em vez de conhecer cada janela.
+/// Ponto único de consulta: com uma janela modal aberta, movimento, interação, inventário e pause não respondem.
 /// </summary>
 public static class JanelasModais
 {

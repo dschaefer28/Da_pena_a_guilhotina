@@ -6,11 +6,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Preenche o "Id Da Interacao" de NPCMovement e LootInteractable nas cenas do build. Idempotente: IDs já
-/// preenchidos e únicos não mudam; só recebem ID os vazios e as cópias repetidas (a primeira na ordem da hierarquia
-/// fica com o ID). O ID gerado é IdDeInteracao.IdPadrao (caminho na hierarquia, com "#2", "#3"... para irmãos de
-/// mesmo nome) — o mesmo valor que o jogo usa quando o campo está vazio, então saves feitos antes de rodar a
-/// ferramenta continuam apontando para o mesmo NPC/objeto (salvo se o ID padrão já estiver ocupado por outro).
+/// Preenche o "Id Da Interacao" de NPCMovement e LootInteractable nas cenas do build. Idempotente: só recebem ID
+/// os vazios e os repetidos (o primeiro na hierarquia mantém). Usa IdDeInteracao.IdPadrao, o mesmo valor que o jogo
+/// assume com o campo vazio, para não invalidar saves antigos.
 /// </summary>
 public static class IdsDeInteracaoTool
 {
@@ -22,7 +20,7 @@ public static class IdsDeInteracaoTool
     [MenuItem("Ferramentas/Investigação/Validar IDs de interação (cenas do build)")]
     public static void ValidarPeloMenu() => Debug.Log(Executar(aplicar: false));
 
-    /// <summary>Roda nas cenas habilitadas do build e devolve um relatório. aplicar=false só lista problemas.</summary>
+    /// <summary>aplicar=false só lista problemas.</summary>
     public static string Executar(bool aplicar)
     {
         var relatorio = new StringBuilder("[IdsDeInteracao] ");
@@ -77,7 +75,7 @@ public static class IdsDeInteracaoTool
 
     private static int Preencher(List<KeyValuePair<Component, string>> interacoes, string nomeDaCena, StringBuilder relatorio)
     {
-        // IDs já preenchidos ficam reservados: um ID novo nunca colide com eles.
+        // Reserva os IDs preenchidos para que um ID novo nunca colida com eles.
         var usados = new HashSet<string>();
         foreach (var par in interacoes)
             if (!string.IsNullOrWhiteSpace(par.Value)) usados.Add(par.Value.Trim());
@@ -87,14 +85,12 @@ public static class IdsDeInteracaoTool
         foreach (var par in interacoes)
         {
             string atual = string.IsNullOrWhiteSpace(par.Value) ? null : par.Value.Trim();
-            // Primeiro dono de um ID preenchido fica com ele (repetidos seguintes recebem um novo).
             if (atual != null && jaMantidos.Add(atual))
             {
                 if (atual != par.Value) { Gravar(par.Key, atual); alterados++; } // só tira espaços das pontas
                 continue;
             }
 
-            // Mesmo valor que o jogo usa com o campo vazio (IdPadrao); só muda se já estiver ocupado por outro ID.
             string baseId = IdDeInteracao.CaminhoNaHierarquia(par.Key.transform);
             string novo = IdDeInteracao.IdPadrao(par.Key.transform);
             for (int n = 2; usados.Contains(novo); n++) novo = baseId + "#" + n;

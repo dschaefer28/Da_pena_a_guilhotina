@@ -2,9 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Habilita o botão "Misturar" da prensa só quando as duas entradas têm item. Em vez de checar todo
-/// frame, escuta o evento OnSlotAlterado do InventoryManager (único lugar onde um slot muda de item).
-/// Vive no prefab UI_Inventory, então resolve o manager em runtime.
+/// Habilita o botão "Misturar" só com as duas entradas preenchidas. Escuta OnSlotAlterado (único ponto onde um
+/// slot muda de item) em vez de checar por frame; vive no prefab UI_Inventory, por isso resolve o manager em runtime.
 /// </summary>
 [RequireComponent(typeof(Button))]
 public class BotaoMisturarEstado : MonoBehaviour

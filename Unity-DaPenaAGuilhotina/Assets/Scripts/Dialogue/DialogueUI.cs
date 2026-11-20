@@ -56,8 +56,7 @@ public class DialogueUI : MonoBehaviour
 
     void Awake()
     {
-        // ARQUITETURA BLINDADA: Busca o script irmão no mesmo GameObject.
-        // Isso previne qualquer falha de "Race Condition" com Singletons.
+        // Componente irmão em vez de singleton: evita depender da ordem de Awake.
         dialogueSystem = GetComponent<DialogueSystem>();
 
         if (dialogueSystem == null)
@@ -65,9 +64,7 @@ public class DialogueUI : MonoBehaviour
             Debug.LogError("DialogueSystem não encontrado no mesmo GameObject que o DialogueUI!");
         }
 
-        // Igual ao onClick do ButtonAvancar (clicar avança/pula a fala) — feito em código em vez de
-        // ligação no Inspector porque esse botão fica por cima do ButtonAvancar só na área do texto
-        // (precisa estar acima para o ScrollRect receber o scroll do mouse ali).
+        // Replica o onClick do ButtonAvancar na área do texto, onde ele fica coberto pelo ScrollRect.
         if (talkAdvanceButton != null && dialogueSystem != null)
             talkAdvanceButton.onClick.AddListener(dialogueSystem.AdvanceDialogue);
 
@@ -117,7 +114,7 @@ public class DialogueUI : MonoBehaviour
 
     void Update()
     {
-        if (background == null) return; // Segurança caso a imagem não esteja no Inspector
+        if (background == null) return;
 
         if (open)
         {
@@ -135,15 +132,13 @@ public class DialogueUI : MonoBehaviour
 
     private void HandleDialogueStarted()
     {
-        // MakeChoice reinicia o DialogueData e dispara OnDialogueStarted de novo no meio da conversa:
-        // com o painel já aberto isso é continuação, não reabre a caixa.
+        // MakeChoice dispara OnDialogueStarted de novo no meio da conversa: com o painel aberto, é continuação.
         if (open) return;
 
         Enable();
         firstLinePending = true;
 
-        // Desliga o raycast dos controles mobile enquanto o diálogo está aberto,
-        // para que o toque chegue nos botões de escolha em vez de ser interceptado.
+        // Senão os controles mobile interceptam o toque nos botões de escolha.
         if (MobileControlsManager.Instance != null)
             MobileControlsManager.Instance.SetControlsInteractable(false);
     }
@@ -153,7 +148,7 @@ public class DialogueUI : MonoBehaviour
         lineName = name;
         lineIsProtagonist = IsProtagonist(name);
 
-        // No meio de um flip, quem aplica a fala é a própria transição (no ponto em que o painel está fechado).
+        // No meio de um flip, a própria transição aplica a fala com o painel fechado.
         if (IsTransitioning) return;
 
         if (firstLinePending || lineIsProtagonist == protagonistSide)
@@ -164,7 +159,6 @@ public class DialogueUI : MonoBehaviour
         }
         else
         {
-            // Falas seguidas de falantes de lados diferentes (ex: pensamento do protagonista) também viram o painel.
             StartTransition(lineIsProtagonist, ShowLine);
         }
     }
@@ -181,7 +175,6 @@ public class DialogueUI : MonoBehaviour
         SetContentAlpha(1f);
         firstLinePending = false;
 
-        // Devolve o raycast pros controles mobile assim que o diálogo fecha.
         if (MobileControlsManager.Instance != null)
             MobileControlsManager.Instance.SetControlsInteractable(true);
     }
@@ -197,16 +190,14 @@ public class DialogueUI : MonoBehaviour
         }
         LinkChoiceNavigation();
 
-        // Vez do protagonista: o painel vira e as respostas ocupam o lugar da fala.
         StartTransition(true, ShowChoices);
     }
 
     private void HandleChoicesCleared() { ClearChoices(); }
 
-    // ===== Ações comuns (teclado, mouse, toque ou botão virtual chamam estas) =====
+    // ===== Ações comuns =====
 
-    /// <summary>Confirma a resposta destacada. Chamado pelo avanço do DialogueSystem durante a escolha
-    /// (tecla Interagir) e disponível para um botão virtual no futuro.</summary>
+    /// <summary>Chamado pelo avanço do DialogueSystem durante a escolha.</summary>
     public void ConfirmarResposta()
     {
         if (!open || !showingChoices || IsTransitioning || activeButtons.Count == 0) return;
@@ -220,15 +211,14 @@ public class DialogueUI : MonoBehaviour
     {
         if (!showingChoices || IsTransitioning || dialogueSystem == null) return;
 
-        // Sem próxima fala a conversa termina: fecha direto, sem flip.
+        // Sem próxima fala: fecha direto, sem flip.
         if (nextTalk == null || nextTalk.talkScript == null || nextTalk.talkScript.Count == 0)
         {
             dialogueSystem.MakeChoice(nextTalk);
             return;
         }
 
-        // MakeChoice só roda com o painel fechado no meio do flip: a digitação e o áudio da próxima fala
-        // começam quando a caixa já está do lado de quem fala.
+        // MakeChoice no meio do flip: digitação e áudio só começam com a caixa já do lado de quem fala.
         bool proximoLado = IsProtagonist(nextTalk.talkScript[0].name);
         StartTransition(proximoLado, () =>
         {
@@ -244,9 +234,6 @@ public class DialogueUI : MonoBehaviour
         ApplySide(lineIsProtagonist);
         SetName(lineName);
         ShowContent(false);
-        // Cada fala nova começa lida a partir do topo, mesmo que a anterior tenha ficado rolada
-        // para baixo. verticalNormalizedPosition é proporcional (0-1), então isso vale tanto para
-        // falas curtas quanto para falas longas, independente de quando o layout for recalculado.
         if (talkScrollRect != null) talkScrollRect.verticalNormalizedPosition = 1f;
     }
 
@@ -274,7 +261,7 @@ public class DialogueUI : MonoBehaviour
         }
         if (nameText != null)
         {
-            // Só a posição e o alinhamento do nome acompanham a aba espelhada; o texto nunca é espelhado.
+            // O texto do nome nunca é espelhado: só posição e alinhamento acompanham a aba.
             nameText.rectTransform.anchoredPosition = protagonista
                 ? new Vector2(-nameBasePosition.x, nameBasePosition.y)
                 : nameBasePosition;
@@ -287,7 +274,6 @@ public class DialogueUI : MonoBehaviour
         showingChoices = respostas;
         SetGroupVisible(talkGroup, !respostas);
         SetGroupVisible(choicesGroup, respostas);
-        // Durante a escolha o clique na tela não avança: só as opções respondem.
         if (advanceButton != null) advanceButton.interactable = !respostas;
     }
 
@@ -303,7 +289,7 @@ public class DialogueUI : MonoBehaviour
         float metade = Mathf.Max(0.01f, flipDuration * 0.5f);
         SetInteractable(false);
 
-        // 1ª metade: conteúdo some (antes da arte ficar estreita) e, se trocar de lado, a arte fecha no eixo X.
+        // 1ª metade: conteúdo some antes de a arte fechar no eixo X.
         for (float t = 0f; t < 1f; t += Time.deltaTime / metade)
         {
             SetContentAlpha(1f - Mathf.Clamp01(t / 0.6f));
@@ -315,10 +301,10 @@ public class DialogueUI : MonoBehaviour
 
         noMeio?.Invoke();
         if (!open) { transition = null; yield break; } // a ação encerrou a conversa
-        SetInteractable(false); // ShowContent reativa o grupo visível; continua travado até o fim do flip
+        SetInteractable(false); // ShowContent reativa o grupo visível; travado até o fim do flip
         SetContentAlpha(0f);
 
-        // 2ª metade: a arte abre já espelhada para o novo lado e o conteúdo novo aparece com ela quase aberta.
+        // 2ª metade: a arte abre espelhada e o conteúdo aparece com ela quase aberta.
         for (float t = 0f; t < 1f; t += Time.deltaTime / metade)
         {
             SetContentAlpha(Mathf.Clamp01((t - 0.4f) / 0.6f));
@@ -357,7 +343,7 @@ public class DialogueUI : MonoBehaviour
         if (advanceButton != null) advanceButton.interactable = ativo && !showingChoices;
     }
 
-    // ===== Seleção (Enter = UI/Submit e setas = UI/Navigate do Input System agem sobre o selecionado) =====
+    // ===== Seleção (UI/Submit e UI/Navigate agem sobre o selecionado) =====
 
     private void SelectForCurrentState()
     {
@@ -374,8 +360,8 @@ public class DialogueUI : MonoBehaviour
         }
     }
 
-    // Um clique no vazio tira a seleção; sem ela o Enter pararia de funcionar. Com o pause aberto, os
-    // botões do diálogo não podem ficar selecionados, senão o Enter do menu avançaria a conversa por trás.
+    // Clique no vazio tira a seleção e o Enter pararia. Com o pause aberto, desseleciona para o Enter
+    // do menu não avançar a conversa por trás.
     private void KeepSelection()
     {
         EventSystem es = EventSystem.current;
@@ -416,8 +402,8 @@ public class DialogueUI : MonoBehaviour
 
         RectTransform alvo = (RectTransform)opcao.transform;
         Bounds b = RectTransformUtility.CalculateRelativeRectTransformBounds(content, alvo);
-        float topo = -b.max.y;    // distância do topo do content até o topo da opção
-        float base_ = -b.min.y;   // ... até a base da opção
+        float topo = -b.max.y;
+        float base_ = -b.min.y;
         float rolado = (1f - choicesScrollRect.verticalNormalizedPosition) * sobra;
         if (topo < rolado) rolado = topo;
         else if (base_ > rolado + viewport.rect.height) rolado = base_ - viewport.rect.height;
@@ -435,7 +421,7 @@ public class DialogueUI : MonoBehaviour
 
     private static bool PauseAberto() => PauseMenu.Instance != null && PauseMenu.Instance.IsOpen;
 
-    // ===== API existente =====
+    // ===== API pública =====
 
     public void SetName(string name) { nameText.text = name; }
 
@@ -470,7 +456,7 @@ public class DialogueUI : MonoBehaviour
 
     // ===== Utilidades =====
 
-    // Setas navegam só entre as respostas (a navegação automática pularia para botões de outras HUDs).
+    // Navegação explícita: a automática pularia para botões de outras HUDs.
     private void LinkChoiceNavigation()
     {
         for (int i = 0; i < activeButtons.Count; i++)

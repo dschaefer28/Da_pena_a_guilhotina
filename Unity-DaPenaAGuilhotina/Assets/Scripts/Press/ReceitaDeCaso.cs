@@ -8,15 +8,13 @@ public enum NivelDoPanfleto
     Fatos,    // Fato + Fato
     ComBoato, // Fato + Boato
     Calunia,  // Boato + Boato, ou qualquer pista Calúnia
-    Alegacoes // legado: publicações de saves em que as cartas do cliente ainda iam para a prensa (hoje são só leitura)
+    Alegacoes // legado: saves antigos em que cartas do cliente iam para a prensa
 }
 
 /// <summary>
-/// Mecânica "Fato x Boato" (documento, Fase 2: "risco de coletar informações erradas e prejudicar a receita
-/// do panfleto"). Diferente de Recipe (par exato de itens), aqui QUALQUER par de pistas do caso vira panfleto:
-/// a prensa nunca recusa, mas a versão muda. Boatos rendem mais na hora e cobram depois — quando a mentira é
-/// exposta no fim da fase (FimDeFase / GameManager.EncerrarFase). Ligada ao caso pelo campo CaseData.receitaDoPanfleto.
-/// Os valores finais são compostos pela CalculadoraDePanfleto: versão → apoio → linha editorial.
+/// Mecânica "Fato x Boato": ao contrário de Recipe (par exato), qualquer par de pistas do caso vira panfleto e só a
+/// versão muda. Boatos rendem mais na hora e cobram quando a mentira é exposta no fim da fase (GameManager.EncerrarFase).
+/// Valores finais compostos pela CalculadoraDePanfleto.
 /// </summary>
 [CreateAssetMenu(fileName = "ReceitaDeCaso", menuName = "ScriptableObjects/Receita de Caso (Fato x Boato)")]
 public class ReceitaDeCaso : ScriptableObject
@@ -44,10 +42,8 @@ public class ReceitaDeCaso : ScriptableObject
     }
 
     /// <summary>
-    /// Regra explícita de reforço por documento de apoio (Prompt 3): se o jogador selecionar na prensa um dos
-    /// "Suportes Aceitos", com qualidade mínima, os valores abaixo são SOMADOS à versão impressa. Cada qualificador
-    /// vale uma vez por publicação, e cada documento serve a um qualificador só (sem empilhar o mesmo bônus).
-    /// Não é multiplicador universal: cada receita define os seus.
+    /// Reforço por documento de apoio: um dos suportes aceitos, com qualidade mínima, soma os valores à versão.
+    /// Cada qualificador vale uma vez por publicação e cada documento serve a um qualificador só.
     /// </summary>
     [Serializable]
     public class Qualificador
@@ -100,10 +96,8 @@ public class ReceitaDeCaso : ScriptableObject
     }
 
     /// <summary>
-    /// Linha editorial (teor da publicação): somada DEPOIS da versão e do apoio, igual em todas as versões — assim a
-    /// escolha nunca depende nem revela a verdade das pistas. Duas opções (08/11/2026): Neutro, sem modificador (o efeito
-    /// normal do caso), e Sensacionalista, com o modificador abaixo. Desligada = publicação sem linha (compatibilidade
-    /// com receitas antigas); ligada = a prensa exige uma das duas opções antes de publicar.
+    /// Somada depois da versão e do apoio, igual em todas as versões, para nunca depender nem revelar a verdade das
+    /// pistas. Desligada = publicação sem linha (receitas antigas).
     /// </summary>
     [Serializable]
     public class ConfiguracaoEditorial
@@ -119,7 +113,7 @@ public class ReceitaDeCaso : ScriptableObject
                  "Determinístico (sem sorteio). Na versão Fatos nada é cobrado. 0 = desligado (padrão desde 08/11/2026).")]
         [Min(0)] public int agravamentoPercentual;
 
-        /// <summary>Modificador da linha: Neutro = zero; Sensacionalista = o configurado; linhas legadas ou nenhuma = nulo.</summary>
+        /// <summary>Neutro = zero; Sensacionalista = o configurado; legadas ou nenhuma = nulo.</summary>
         public ModificadorEditorial De(LinhaEditorial linha)
         {
             switch (linha)
@@ -130,7 +124,7 @@ public class ReceitaDeCaso : ScriptableObject
             }
         }
 
-        /// <summary>Nunca foi preenchida (asset anterior ao Prompt 5): a ferramenta de setup só configura estas.</summary>
+        /// <summary>Nunca preenchida: a ferramenta de setup só configura estas.</summary>
         public bool Vazia => !ativa && (sensacionalista == null || sensacionalista.Zerado) && agravamentoPercentual == 0;
     }
 
@@ -140,19 +134,14 @@ public class ReceitaDeCaso : ScriptableObject
     [Header("Linha editorial (Fase 2 em diante)")]
     public ConfiguracaoEditorial linhaEditorial = new ConfiguracaoEditorial();
 
-    /// <summary>A prensa só publica este caso com uma das linhas editoriais escolhida pelo jogador (Neutro ou Sensacionalista).</summary>
     public bool ExigeLinhaEditorial => linhaEditorial != null && linhaEditorial.ativa;
 
-    /// <summary>Verdadeiro se algum qualificador desta receita aceita o documento (informação conhecida: não
-    /// depende da confiabilidade das pistas).</summary>
+    /// <summary>Não depende da confiabilidade das pistas (seguro para a prévia).</summary>
     public bool AceitaComoSuporte(Item suporte) =>
         suporte != null && suporte.caso == caso && qualificadores != null && qualificadores.Exists(q => q != null && q.Aceita(suporte));
 
     /// <summary>
-    /// Versão do panfleto pela verdade REAL das duas pistas:
-    ///   qualquer Calúnia → Calúnia;
-    ///   senão, pelo número de boatos (0 = Fatos, 1 = Com Boato, 2 = Calúnia).
-    /// As cartas do cliente não chegam aqui: são só leitura (Item.EhLeitura) e a prensa as recusa antes.
+    /// Pela verdade real das pistas: qualquer Calúnia → Calúnia; senão pelo número de boatos (0 Fatos, 1 ComBoato, 2 Calúnia).
     /// </summary>
     public static NivelDoPanfleto Classificar(Item a, Item b)
     {

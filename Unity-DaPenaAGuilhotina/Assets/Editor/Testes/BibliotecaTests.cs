@@ -4,8 +4,8 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Prompt 3: biblioteca, qualidade e documentos de apoio. Usa os assets reais do Champ de Mars para o exemplo
-/// numérico e objetos temporários para as regras de compra.
+/// Biblioteca, qualidade e documentos de apoio. Usa os assets reais do Champ de Mars para o exemplo numérico e
+/// objetos temporários para as regras de compra.
 /// </summary>
 public class BibliotecaTests
 {
@@ -43,7 +43,7 @@ public class BibliotecaTests
         Item ata = Carregar<Item>(Pasta + "Fase3/Apoio_ChampDeMars_Biblioteca.asset");
         Item deOutroCaso = Carregar<Item>(Pasta + "Fase3/Apoio_Assignats_Biblioteca.asset");
 
-        // O exemplo do Prompt 3 é a etapa "versão → apoio"; a linha editorial (Prompt 5) soma depois (LinhaEditorialTests).
+        // Só a etapa "versão → apoio"; a linha editorial soma depois (ver LinhaEditorialTests).
         ResultadoDoPanfleto sem = CalculadoraDePanfleto.CalcularAntesDaLinha(receita, f1, f2, null);
         Assert.AreEqual(NivelDoPanfleto.Fatos, sem.nivel);
         AssertValores(sem, 10, -5, 30, "sem apoio");

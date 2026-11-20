@@ -14,10 +14,9 @@ public class CraftingPress : MonoBehaviour
 
     private Dictionary<string, Recipe> recipeDictionary;
 
-    // NOVO: Evento Observer disparado toda vez que a prensa gera um panfleto novo (usado pelo tutorial).
     public event Action OnPanfletoGerado;
 
-    /// <summary>Último panfleto impresso nesta prensa (o tutorial usa para saber quando o jogador o guardou).</summary>
+    /// <summary>O tutorial usa para saber quando o jogador guardou o panfleto.</summary>
     public Item UltimoPanfleto { get; private set; }
 
     private void Start()
@@ -30,7 +29,6 @@ public class CraftingPress : MonoBehaviour
         {
             if (recipe == null) continue;
 
-            // Ignora receitas mal configuradas em vez de estourar NullReference ao montar o dicionário
             if (!recipe.IsValid())
             {
                 Debug.LogWarning($"[CraftingPress] Receita '{recipe.name}' ignorada: ingredientes ou resultado ausentes.", this);
@@ -58,29 +56,26 @@ public class CraftingPress : MonoBehaviour
     private InventoryManager Inventario =>
         GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
 
-    // Trava de reentrada: protege contra uma impressão aninhada (ex.: um ouvinte do OnPanfletoGerado que chamasse
-    // CombineItems). Cliques repetidos em sequência são barrados pela regra de domínio (GameManager.PodePublicarCaso).
+    // Trava contra impressão aninhada (ouvinte de OnPanfletoGerado chamando CombineItems). Cliques repetidos são
+    // barrados por GameManager.PodePublicarCaso.
     private bool imprimindo;
 
     /// <summary>
-    /// Linha editorial (Prompt 5): o par é de um caso que exige escolha e ele passou em todas as validações, mas nada
-    /// foi consumido. A UI da prensa (LinhaEditorialDaPrensaUI) mostra as duas opções e responde com
-    /// ImprimirComLinhaEditorial; cancelar é só não responder. Recebe apenas a receita: a escolha não pode depender
-    /// da verdade das pistas.
+    /// Par validado, nada consumido, falta a linha editorial. A UI responde com ImprimirComLinhaEditorial; cancelar é
+    /// não responder. Só recebe a receita: a escolha não pode depender da verdade das pistas.
     /// </summary>
     public event Action<ReceitaDeCaso> OnLinhaEditorialPedida;
 
     /// <summary>
-    /// Panfleto de caso publicado (depois de aplicado, registrado e de o caso ser concluído): a receita, o resultado do
-    /// cálculo e o que mudou de fato nas barras (x = Povo, y = Estado, z = Ouro, já com o limite 0–100). A janela da
-    /// linha editorial usa para mostrar as parcelas — pistas, apoio e linha — que formam o total.
+    /// Disparado após aplicar, registrar e concluir o caso. Vector3Int = variação real nas barras (Povo, Estado, Ouro),
+    /// já com o limite 0–100.
     /// </summary>
     public event Action<ReceitaDeCaso, ResultadoDoPanfleto, Vector3Int> OnPanfletoDeCasoPublicado;
 
-    /// <summary>Botão Misturar (onClick no UI_Inventory.prefab). Casos com linha editorial pedem a escolha antes.</summary>
+    /// <summary>onClick do botão Misturar no UI_Inventory.prefab.</summary>
     public void CombineItems() => Tentar(LinhaEditorial.Nenhuma);
 
-    /// <summary>Imprime com a linha editorial escolhida. Valida tudo de novo a partir do estado atual dos slots.</summary>
+    /// <summary>Revalida tudo a partir do estado atual dos slots.</summary>
     public void ImprimirComLinhaEditorial(LinhaEditorial linha) => Tentar(linha);
 
     private void Tentar(LinhaEditorial linha)
@@ -115,7 +110,6 @@ public class CraftingPress : MonoBehaviour
 
         if (recipeDictionary.TryGetValue(attemptKey, out Recipe validRecipe) && validRecipe.resultItem != null)
         {
-            // Receita exata (ex: o panfleto do tutorial): conclui o caso em andamento, uma única vez.
             GameManager gm = GameManager.Instance;
             CaseData caso = gm.casoEscolhido;
             if (PistaDeOutroCaso(slotInput1.item, caso) || PistaDeOutroCaso(slotInput2.item, caso))
@@ -123,8 +117,7 @@ public class CraftingPress : MonoBehaviour
                 AvisoNaTela.Mostrar("Essas pistas não são do caso que estou investigando.");
                 return;
             }
-            // Receitas exatas só concluem casos sem receita de caso (o tutorial). Um caso com ReceitaDeCaso é
-            // publicado pela regra Fato x Boato: itens sem caso (ex.: os do tutorial) não podem concluí-lo por aqui.
+            // Receitas exatas só concluem casos sem ReceitaDeCaso (o tutorial); os demais seguem a regra Fato x Boato.
             if (caso != null && caso.receitaDoPanfleto != null)
             {
                 AvisoNaTela.Mostrar("Essa combinação não forma um panfleto.");
@@ -147,9 +140,8 @@ public class CraftingPress : MonoBehaviour
     private static bool PistaDeOutroCaso(Item item, CaseData caso) => item.caso != null && item.caso != caso;
 
     /// <summary>
-    /// Regra Fato x Boato (ReceitaDeCaso): duas pistas diferentes do caso atual sempre imprimem, e a
-    /// confiabilidade delas escolhe a versão. Retorna true se tratou a mistura (imprimindo ou explicando o
-    /// porquê de não imprimir); false devolve o par para as receitas exatas (Recipe).
+    /// Regra Fato x Boato: duas pistas diferentes do caso atual sempre imprimem; a confiabilidade escolhe a versão.
+    /// True se tratou a mistura (imprimindo ou avisando); false devolve o par para as receitas exatas.
     /// </summary>
     private bool TentarPanfletoDeCaso(LinhaEditorial linha)
     {
@@ -177,14 +169,13 @@ public class CraftingPress : MonoBehaviour
             AvisoNaTela.Mostrar("Essas pistas são de casos diferentes.");
             return true;
         }
-        // Só o caso em andamento, e uma única vez: validado ANTES de consumir as pistas.
+        // Validado antes de consumir as pistas.
         if (!GameManager.Instance.PodePublicarCaso(a.caso, out string motivo))
         {
             AvisoNaTela.Mostrar(motivo);
             return true;
         }
-        // Dedução ativa: de cada par contraditório só vai para a prensa a afirmação que o jogador escolheu no quadro.
-        // A recusa depende só de o par estar decidido, nunca da verdade das pistas.
+        // Par contraditório precisa estar decidido no quadro; a recusa nunca depende da verdade das pistas.
         Item semEscolha = Deducao.AguardandoEscolha(GameManager.Instance, a) ? a : Deducao.AguardandoEscolha(GameManager.Instance, b) ? b : null;
         if (semEscolha != null)
         {
@@ -201,9 +192,8 @@ public class CraftingPress : MonoBehaviour
 
         if (receita.ExigeLinhaEditorial && !LinhasEditoriais.Escolhivel(linha))
         {
-            // Tudo validado e nada consumido: falta só a escolha. A saída ocupada é conferida já, para não pedir o tom
-            // e recusar depois. Sem olhar a versão (a recusa não pode variar com a verdade das pistas): qualquer item
-            // na saída recusa — o panfleto deste caso nunca está lá, porque cada caso é publicado uma vez só.
+            // Confere a saída antes de pedir o tom, sem olhar a versão: qualquer item lá recusa (o panfleto deste caso
+            // nunca está lá, pois cada caso é publicado uma vez).
             if (slotOutput.item != null)
             {
                 AvisoNaTela.Mostrar("Tire o panfleto pronto da prensa primeiro.");
@@ -214,7 +204,6 @@ public class CraftingPress : MonoBehaviour
             return true;
         }
 
-        // Cálculo único (versão → apoio → linha editorial); nada nos assets é alterado.
         ResultadoDoPanfleto resultado = CalculadoraDePanfleto.Calcular(receita, a, b, SuportesSelecionadosNoInventario(), linha);
         if (resultado == null) return true; // defensivo: a linha já foi conferida acima
         if (resultado.panfleto == null)
@@ -233,17 +222,16 @@ public class CraftingPress : MonoBehaviour
         return true;
     }
 
-    // ===== Documentos de apoio (Prompt 3): selecionados à parte, nunca consumidos =====
+    // ===== Documentos de apoio: selecionados à parte, nunca consumidos =====
 
     private readonly List<string> idsDeSuporte = new List<string>();
     private CaseData casoDaSelecao;
 
-    /// <summary>Disparado quando a seleção de apoio muda (a UI de suporte e a prévia escutam).</summary>
     public event Action OnSuportesAlterados;
 
     public bool SuporteSelecionado(Item suporte) => suporte != null && idsDeSuporte.Contains(suporte.itemID);
 
-    /// <summary>Marca/desmarca um documento de apoio do caso em andamento. Falso se não for elegível.</summary>
+    /// <summary>Falso se o documento não for do caso em andamento.</summary>
     public bool AlternarSuporte(Item suporte)
     {
         GameManager gm = GameManager.Instance;
@@ -263,7 +251,7 @@ public class CraftingPress : MonoBehaviour
         OnSuportesAlterados?.Invoke();
     }
 
-    /// <summary>Seleção resolvida contra o inventário atual: só documentos que o jogador ainda tem, do caso em andamento.</summary>
+    /// <summary>Só documentos que o jogador ainda tem, do caso em andamento.</summary>
     public List<Item> SuportesSelecionadosNoInventario()
     {
         DescartarSelecaoDeOutroCaso();
@@ -296,13 +284,11 @@ public class CraftingPress : MonoBehaviour
         bool foiParaOInventario = ProduceItem(panfleto);
         UltimoPanfleto = panfleto;
 
-        // Dispara a consequência matemática da receita (GDD)
         aplicado = GameManager.Instance.AplicarImpactoPanfleto(povo, estado, ouro);
 
         OnPanfletoGerado?.Invoke();
 
-        // No inventário, o AddItem já mostrou o popup de "item recebido"; só o que ficou no slot de saída
-        // (inventário cheio) precisa do aviso manual.
+        // AddItem já mostra o popup; só o que ficou na saída (inventário cheio) precisa do aviso manual.
         if (!foiParaOInventario) Inventario.NotificarItemRecebido(panfleto);
         return true;
     }
@@ -330,8 +316,8 @@ public class CraftingPress : MonoBehaviour
         }
     }
 
-    /// <summary>O panfleto vai direto para o inventário (fechar a prensa com ele no Resultado o deixava esquecido lá).
-    /// Só com o inventário cheio ele fica no slot de saída, como antes. Verdadeiro = foi para o inventário.</summary>
+    /// <summary>Vai direto para o inventário (senão ficava esquecido na prensa); só com ele cheio fica na saída.
+    /// Verdadeiro = foi para o inventário.</summary>
     private bool ProduceItem(Item resultPrefab)
     {
         if (resultPrefab == null) return false;

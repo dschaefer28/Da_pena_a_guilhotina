@@ -3,16 +3,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 
 /// <summary>
-/// Documento (Fase 2, "Dificuldade de Investigação"): o risco de "conversar com as pessoas erradas" vem do tempo.
-/// Cada caso tem um orçamento de horas (GameManager.horasDoCaso). A primeira conversa com cada NPC e cada objeto
-/// investigado gastam horas; repetir a mesma interação no mesmo caso é de graça. Sem horas, o jogador precisa
-/// voltar à tipografia com as pistas que conseguiu.
-///
-/// Só vale na cena de investigação do caso em andamento (CaseData.nextSceneName): no escritório, no porão e no
-/// tutorial as interações não custam nada, sem precisar configurar as cenas.
-///
-/// O que já foi pago fica em GameManager.registroDaInvestigacao por caso + "cena/Id Da Interacao" (IdDeInteracao):
-/// sair e voltar da cena, salvar/carregar e reabrir a UI não cobram de novo; homônimos têm IDs próprios.
+/// Orçamento de horas por caso: a primeira interação com cada NPC/objeto custa horas, repetir no mesmo caso é grátis.
+/// Só vale na cena de investigação do caso em andamento (CaseData.nextSceneName). Pagamentos ficam no
+/// RegistroDaInvestigacao e sobrevivem a troca de cena e save.
 /// </summary>
 public static class RelogioDeInvestigacao
 {
@@ -28,7 +21,6 @@ public static class RelogioDeInvestigacao
         }
     }
 
-    /// <summary>Verdadeiro se esta interação já foi paga no caso atual (repetir não custa nada).</summary>
     public static bool JaPaga(Component alvo, string idDaInteracao)
     {
         GameManager gm = GameManager.Instance;
@@ -37,7 +29,7 @@ public static class RelogioDeInvestigacao
                gm.registroDaInvestigacao.PagaNoSaveAntigo(gm.casoEscolhido, IdDeInteracao.ChaveAntiga(alvo));
     }
 
-    /// <summary>Cobra o tempo de uma interação. Falso (com aviso) se não houver horas suficientes.</summary>
+    /// <summary>Falso (com aviso) se não houver horas suficientes.</summary>
     public static bool TentarGastar(Component alvo, string idDaInteracao, int custo)
     {
         if (!Ativo || custo <= 0 || alvo == null) return true;
@@ -48,7 +40,7 @@ public static class RelogioDeInvestigacao
         string chave = IdDeInteracao.ChaveDaCena(alvo, idDaInteracao);
         if (registro.InteracaoPaga(caso, chave)) return true;
 
-        // Save v2: a interação foi paga com a chave antiga (cena/nome). Converte para a chave nova sem cobrar.
+        // Save v2: paga com a chave antiga (cena/nome); migra para a nova sem cobrar.
         string chaveAntiga = IdDeInteracao.ChaveAntiga(alvo);
         if (registro.PagaNoSaveAntigo(caso, chaveAntiga))
         {
@@ -76,8 +68,7 @@ public static class RelogioDeInvestigacao
 
     public static void NotificarMudanca() => OnHorasMudaram?.Invoke();
 
-    // Save v2: a chave antiga (cena/nome) não distingue homônimos. Todos contam como pagos (como no jogo antigo);
-    // aqui a ambiguidade fica registrada com os IDs novos envolvidos.
+    // A chave antiga não distingue homônimos: todos contam como pagos; só registra a ambiguidade.
     private static void AvisarHomonimos(Component alvo, string chaveAntiga)
     {
         var ids = new System.Collections.Generic.List<string>();

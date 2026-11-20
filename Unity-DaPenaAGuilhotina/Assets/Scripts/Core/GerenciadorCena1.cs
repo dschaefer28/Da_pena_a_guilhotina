@@ -23,8 +23,8 @@ public class GerenciadorCena1 : MonoBehaviour
         VerificarEstadoDaCena();
     }
 
-    // Se alguém arrastar o PREFAB da Marie (asset) em vez do objeto da cena, SetActive(false) desativaria o
-    // asset no projeto e a Marie da cena continuaria lá. Troca pelo objeto de mesmo nome que está na cena.
+    // Referência a prefab (asset) faria SetActive(false) desativar o asset, não o NPC da cena: troca pelo
+    // objeto de mesmo nome na cena.
     private void CorrigirReferenciasDeCena()
     {
         if (npcsParaSumir == null) return;
@@ -51,11 +51,8 @@ public class GerenciadorCena1 : MonoBehaviour
     }
 
     /// <summary>
-    /// Regra de progresso (Prompt 7): com o tutorial concluído (caso da Fase 1 impresso, ou o jogo já numa fase
-    /// posterior), Marie sai do escritório e Dupaty deixa de conversar (na Fase 4 ele atende pelo CheckpointDoTribunal).
-    /// Não depende de o panfleto do tutorial ainda estar no inventário, que continua valendo só como reserva de saves
-    /// antigos. Sem disputa de ordem com o save: o Continuar aplica os dados no Awake do GameManager, antes de qualquer
-    /// Start, e esta checagem lê só o GameManager (inventarioSalvo, não a grade da cena, que se monta no Start dela).
+    /// Tutorial encerrado: Marie sai do escritório e Dupaty deixa de conversar (na Fase 4 atende pelo
+    /// CheckpointDoTribunal). Lê só o GameManager, já preenchido pelo save no Awake, antes de qualquer Start.
     /// </summary>
     public static bool TutorialEncerrado(GameManager gm, CaseData casoTutorial, Item panfleto)
     {
@@ -64,7 +61,7 @@ public class GerenciadorCena1 : MonoBehaviour
         if (casoTutorial != null && gm.casosConcluidos.Contains(casoTutorial)) return true;
         // Um caso da mesa já foi aceito: só acontece depois do tutorial.
         if (casoTutorial != null && gm.casoEscolhido != null && gm.casoEscolhido != casoTutorial) return true;
-        // Reserva para saves antigos: o panfleto do tutorial no inventário salvo.
+        // Compatibilidade com saves antigos.
         if (panfleto != null && gm.inventarioSalvo != null)
             foreach (Item item in gm.inventarioSalvo)
                 if (item != null && item.itemID == panfleto.itemID) return true;
@@ -76,14 +73,12 @@ public class GerenciadorCena1 : MonoBehaviour
         GameManager gm = GameManager.Instance;
         if (!TutorialEncerrado(gm, casoTutorial, panfletoCraftado)) return;
 
-        // Documento (Interlúdio, "Correção de Despawn"): ao subir do porão com o panfleto, a Marie já deve ter saído da
-        // cena — e continua fora depois de salvar e carregar.
         Debug.Log("[CENA 1] Tutorial concluído: escondendo os NPCs do caso tutorial e silenciando o mentor.");
         if (npcsParaSilenciar != null)
             foreach (NPCMovement npc in npcsParaSilenciar)
                 if (npc != null) npc.DisableInteraction();
         if (npcsParaSumir != null)
             foreach (GameObject npc in npcsParaSumir)
-                if (npc != null) npc.SetActive(false); // desativa o boneco por completo
+                if (npc != null) npc.SetActive(false);
     }
 }

@@ -2,9 +2,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Ao voltar para a cena do escritório, o jogador não nasce mais na mesa: vindo do porão ele aparece sobre o alçapão
-/// por onde desceu, e vindo da rua (Fase2/3/4) aparece na porta por onde saiu. Entrar pelo menu principal (novo jogo,
-/// carregar save) ou vir de outra cena não muda a posição. Roda sozinho, sem nada a configurar nas cenas.
+/// Ao voltar ao escritório, posiciona o jogador no alçapão (vindo do porão) ou na porta (vindo de uma cena "Fase").
+/// Outras origens mantêm a posição da cena. Auto-registrado, sem configuração nas cenas.
 /// </summary>
 public static class PontoDeChegadaNaCena
 {
@@ -37,7 +36,7 @@ public static class PontoDeChegadaNaCena
         Vector2? destino = null;
         if (cenaAnterior == alcapao.nomeCenaPorao)
         {
-            // Só o X: o centro do alçapão fica abaixo do chão onde o jogador anda, e ele era empurrado para cima.
+            // Só o X: o centro do alçapão fica abaixo do chão.
             destino = new Vector2(CentroDe(alcapao.gameObject).x, jogador.transform.position.y);
         }
         else if (cenaAnterior.StartsWith("Fase"))
@@ -75,7 +74,7 @@ public static class PontoDeChegadaNaCena
         Rigidbody2D rb = jogador.GetComponent<Rigidbody2D>();
         if (rb != null) rb.position = destino;
 
-        // A câmera suaviza até o jogador; sem isso ela cruzaria a sala a partir da mesa.
+        // Sem isso a câmera cruzaria a sala suavizando até o jogador.
         CameraFollow seguidor = Object.FindFirstObjectByType<CameraFollow>();
         if (seguidor != null && seguidor.target != null)
             seguidor.transform.position = seguidor.target.position + seguidor.offset;

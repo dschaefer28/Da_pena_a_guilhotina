@@ -4,10 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Monta, no prefab UI, o popup do tutorial no rodapé da tela (fora do caminho do inventário, da prensa,
-/// do HUD e dos botões mobile), com título, coluna de glifos de controle, texto e botão Continuar no
-/// mesmo estilo dos painéis. Também deixa no prefab o Canvas próprio do popup (antes era um override
-/// só da cena Jogo), liga os campos do TutorialStepUI e cria o objeto das cutscenes de legenda.
+/// Monta, no prefab UI, o popup do tutorial no rodapé (título, glifos de controle, texto e Continuar), com Canvas
+/// próprio no prefab, liga os campos do TutorialStepUI e cria o objeto das cutscenes de legenda.
 /// Menu: Ferramentas > Tutorial > 1. Reexecutável.
 /// </summary>
 public static class TutorialPopupBuilder
@@ -20,7 +18,7 @@ public static class TutorialPopupBuilder
     private const float MargemInferior = 16f;
     private const float Margem = 28f;
     private const float LarguraGlifos = 230f;
-    private static readonly Vector2 TamanhoBotao = new Vector2(200f, 56f); // 56: o texto respira dentro da face do sprite
+    private static readonly Vector2 TamanhoBotao = new Vector2(200f, 56f);
 
     [MenuItem("Ferramentas/Tutorial/1 - Aplicar layout do popup do tutorial (UI.prefab)")]
     public static void Aplicar()
@@ -41,8 +39,7 @@ public static class TutorialPopupBuilder
             Sprite moldura = ObterMoldura();
             Sprite quadrado = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
 
-            // O pai dos popups era um retângulo de 100x100 perdido no meio da tela; os popups se ancoram
-            // nele, então ele precisa cobrir a tela inteira para "rodapé" e "canto" fazerem sentido.
+            // Os popups se ancoram no pai, então ele precisa cobrir a tela inteira.
             RectTransform rItens = (RectTransform)itens;
             rItens.anchorMin = Vector2.zero;
             rItens.anchorMax = Vector2.one;
@@ -56,7 +53,7 @@ public static class TutorialPopupBuilder
 
             ConfigurarPopupItem(itens, moldura, fonteTitulo);
 
-            // Busca em profundidade: depois da primeira execução, TextoEtapa/IconeEtapa passam a viver dentro de "Corpo".
+            // Busca em profundidade: após a primeira execução, TextoEtapa/IconeEtapa ficam dentro de "Corpo".
             TextMeshProUGUI texto = Achar(popup, "TextoEtapa")?.GetComponent<TextMeshProUGUI>();
             Image icone = Achar(popup, "IconeEtapa")?.GetComponent<Image>();
             Button botao = Achar(popup, "BotaoContinuar")?.GetComponent<Button>();
@@ -80,8 +77,7 @@ public static class TutorialPopupBuilder
             stepUI.botaoPular = ConfigurarBotaoPular(popup, fonteTitulo);
             stepUI.containerGlifos = glifos;
             stepUI.fonteGlifos = fonteTitulo;
-            // Revelações apontam para objetos de cena (botões mobile): ficam como override em cada cena,
-            // nunca no prefab. A lista antiga do prefab tinha IDs que já não existem.
+            // Revelações apontam para objetos de cena: ficam como override em cada cena, nunca no prefab.
             stepUI.revelacoes = new System.Collections.Generic.List<RevelacaoDeEtapa>();
 
             ConfigurarCutscenes(raiz.transform, fonteTitulo);
@@ -218,7 +214,7 @@ public static class TutorialPopupBuilder
         le.flexibleWidth = 1f;
         le.minWidth = 300f;
 
-        // Tamanhos da EB Garamond (27/10/2026); o popup cresce para o texto caber (TutorialStepUI.CrescerParaOTexto).
+        // O popup cresce para o texto caber (TutorialStepUI.CrescerParaOTexto).
         texto.fontSize = 27f;
         texto.enableAutoSizing = true;
         texto.fontSizeMin = 22f;
@@ -233,7 +229,6 @@ public static class TutorialPopupBuilder
     private static void ConfigurarIcone(Image icone, RectTransform glifos)
     {
         if (icone == null) return;
-        // Ícone opcional da etapa fica na coluna da esquerda, junto dos glifos; some quando a etapa não tem imagem.
         icone.transform.SetParent(glifos.parent, false);
         icone.transform.SetSiblingIndex(1);
         LayoutElement le = icone.GetComponent<LayoutElement>();
@@ -324,9 +319,8 @@ public static class TutorialPopupBuilder
         }
     }
 
-    // Aviso curto no alto, centralizado: longe da HUD (canto superior esquerdo), do popup do tutorial e da
-    // caixa de diálogo (rodapé) e dos botões mobile. Mesma moldura e fonte do popup do tutorial; o tamanho
-    // acompanha o texto (ItemPickupNotificationUI limita a largura).
+    // No alto e centralizado para não cobrir HUD, tutorial, diálogo e botões mobile; a largura é limitada pelo
+    // ItemPickupNotificationUI.
     private static void ConfigurarPopupItem(Transform itens, Sprite moldura, TMP_FontAsset fonte)
     {
         RectTransform popup = itens.Find("PopupItemRecebido") as RectTransform;
@@ -351,7 +345,6 @@ public static class TutorialPopupBuilder
         {
             fundo.color = new Color(0.13f, 0.11f, 0.12f, 0.95f);
         }
-        // Aviso não bloqueia clique/toque no que estiver por baixo.
         fundo.raycastTarget = false;
 
         HorizontalLayoutGroup hl = popup.GetComponent<HorizontalLayoutGroup>();
@@ -420,7 +413,6 @@ public static class TutorialPopupBuilder
         popup.gameObject.SetActive(false);
     }
 
-    // Link discreto no canto inferior esquerdo (o Continuar fica no direito): útil em playtest e na apresentação.
     private static Button ConfigurarBotaoPular(RectTransform popup, TMP_FontAsset fonte)
     {
         Transform t = popup.Find("BotaoPular");
@@ -433,7 +425,6 @@ public static class TutorialPopupBuilder
         r.sizeDelta = new Vector2(220f, TamanhoBotao.y);
         r.localScale = Vector3.one;
 
-        // Image transparente só para receber o clique/toque.
         Image alvo = r.GetComponent<Image>();
         if (alvo == null) alvo = r.gameObject.AddComponent<Image>();
         alvo.sprite = null;

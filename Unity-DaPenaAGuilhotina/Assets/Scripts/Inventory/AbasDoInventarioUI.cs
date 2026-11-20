@@ -3,10 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Abas no topo do inventário: "Pistas" (pistas, documentos de apoio, cartas) e "Panfletos" (o que saiu da prensa).
-/// Os botões são objetos do UI_Inventory.prefab, com o onClick ligando em MostrarPistas/MostrarPanfletos; este script
-/// só pinta a aba ativa e escreve a contagem. O filtro da lista fica no InventoryManager, que vive fora do prefab
-/// (por isso é buscado em runtime, como no BotaoFecharInventario).
+/// Abas "Pistas" (pistas, apoio, cartas) e "Panfletos". Só pinta a aba ativa e a contagem; o filtro fica no
+/// InventoryManager, buscado em runtime por viver fora do UI_Inventory.prefab.
 /// </summary>
 public class AbasDoInventarioUI : MonoBehaviour
 {

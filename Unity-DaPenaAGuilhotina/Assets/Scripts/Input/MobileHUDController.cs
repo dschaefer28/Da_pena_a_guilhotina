@@ -8,7 +8,6 @@ public class MobileHUDController : MonoBehaviour
 
     void Start()
     {
-        // Conecta este script aos eventos nativos do seu Sistema de Diálogos
         if (GameManager.Instance != null && GameManager.Instance.dialogueSystem != null)
         {
             GameManager.Instance.dialogueSystem.OnDialogueStarted += EsconderHUD;
@@ -18,7 +17,6 @@ public class MobileHUDController : MonoBehaviour
 
     void OnDestroy()
     {
-        // Desconecta os eventos quando o objeto é destruído para evitar Memory Leaks
         if (GameManager.Instance != null && GameManager.Instance.dialogueSystem != null)
         {
             GameManager.Instance.dialogueSystem.OnDialogueStarted -= EsconderHUD;

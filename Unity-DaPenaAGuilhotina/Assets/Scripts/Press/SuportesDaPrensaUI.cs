@@ -5,13 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Campo "Suporte" da prensa (Prompt 3): lista os documentos de apoio do caso em andamento que estão no inventário,
-/// para o jogador marcar/desmarcar (não são consumidos), e mostra uma PRÉVIA que nunca revela a classificação
-/// oculta das pistas: só o que o jogador já sabe (nomes, tendência estimada do caso, se o documento é aceito
-/// como apoio). O cálculo real fica na CalculadoraDePanfleto.
-///
-/// Vai no PainelPrensa (UI.prefab) e se monta por código, ao lado esquerdo do inventário. Aparece a partir da fase
-/// em que existem documentos de apoio (padrão: Fase 3); no tutorial e na Fase 2 a prensa segue igual.
+/// Campo "Suporte" da prensa: marca documentos de apoio do caso (não consumidos) e mostra uma prévia que nunca revela
+/// a classificação oculta das pistas. Vai no PainelPrensa (UI.prefab) e se monta por código a partir de faseMinima.
 /// </summary>
 [RequireComponent(typeof(CraftingPress))]
 public class SuportesDaPrensaUI : MonoBehaviour
@@ -87,8 +82,7 @@ public class SuportesDaPrensaUI : MonoBehaviour
         previa.text = MontarPrevia(gm, caso, receita);
     }
 
-    // Só informação conhecida: nomes nas entradas, tendência estimada da mesa e quantos apoios aceitos estão marcados.
-    // Nada aqui depende da confiabilidade real das pistas (a prévia não pode funcionar como detector de boatos).
+    // Nada aqui pode depender da confiabilidade real das pistas: a prévia não pode virar detector de boatos.
     private string MontarPrevia(GameManager gm, CaseData caso, ReceitaDeCaso receita)
     {
         var sb = new StringBuilder("<b>Prévia</b>\n");
@@ -97,8 +91,6 @@ public class SuportesDaPrensaUI : MonoBehaviour
         sb.Append(a != null && b != null ? $"Entradas: {a.NomeExibicao} + {b.NomeExibicao}\n" : "Coloque duas pistas nas entradas.\n");
         sb.Append($"<size=90%>Tendência estimada do caso: {Seta(caso.publicOpinionReward)} Povo  {Seta(caso.stateOpinionReward)} Estado</size>\n");
 
-        // Reforços contados por regra da receita, não por documento (documentos equivalentes não somam), e sem
-        // olhar a versão (verdade das pistas).
         List<Item> selecionados = prensa.SuportesSelecionadosNoInventario();
         int reforcos = CalculadoraDePanfleto.ReforcosPossiveis(receita, selecionados);
         if (selecionados.Count == 0) sb.Append("<size=90%>Sem apoio selecionado.</size>\n");
@@ -132,7 +124,7 @@ public class SuportesDaPrensaUI : MonoBehaviour
         v.padding = new RectOffset(20, 20, 20, 20); v.spacing = 12f;
         v.childControlWidth = v.childControlHeight = true; v.childForceExpandWidth = true; v.childForceExpandHeight = false;
 
-        // Tamanhos revistos com a EB Garamond (27/10/2026): nada abaixo de ~22 na referência de 1080 (15 px em 720).
+        // Mínimo de ~22 na referência de 1080 (EB Garamond).
         Texto("Titulo", painel, 34f, "<b>Suporte (opcional)</b>");
         Texto("Dica", painel, 25f, "<color=#B0A48C>Documentos de apoio do caso. Não são gastos na impressão.</color>");
 
@@ -157,8 +149,7 @@ public class SuportesDaPrensaUI : MonoBehaviour
         AjustarLargura();
     }
 
-    // Fica entre a borda esquerda da tela e o inventário (que ocupa o centro). Em telas estreitas, encolhe.
-    // Verticalmente: base alinhada à da prensa e topo abaixo da HUD de status (canto superior esquerdo).
+    // Entre a borda esquerda e o inventário (encolhe em telas estreitas); base alinhada à prensa, topo abaixo da HUD_Status.
     private void AjustarLargura()
     {
         var pai = (RectTransform)transform;           // PainelPrensa (à direita do inventário)

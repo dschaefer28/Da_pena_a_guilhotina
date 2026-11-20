@@ -8,17 +8,16 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Separa o slider único de Volume das telas de Opções (menu principal e pause do UI.prefab) em Música e Efeitos
-/// (VolumeDoAudio): o slider antigo vira o de Música (rótulo MÚSICA), uma cópia dele vira o de Efeitos, e as três
-/// linhas (Música, Efeitos, Velocidade do texto) são redistribuídas no espaço entre o título e o Voltar.
+/// Separa o slider de Volume das telas de Opções (menu principal e pause do UI.prefab) em Música (o slider antigo)
+/// e Efeitos (cópia dele), ligados ao VolumeDoAudio.
 /// Menu: Ferramentas > Áudio > Separar volume de Música e Efeitos. Reexecutável.
 /// </summary>
 public static class VolumeSeparadoSetupTool
 {
     private const string CaminhoPrefabUI = "Assets/Prefabs/UI.prefab";
     private const string CenaMenu = "Assets/Scenes/menu principal.unity";
-    private const float Passo = 120f;       // distância entre uma linha e a próxima
-    private const float RotuloAcima = 50f;  // o rótulo fica acima do slider, como já estava
+    private const float Passo = 120f;
+    private const float RotuloAcima = 50f;
     private const float SubirNaPrimeiraVez = 30f;
 
     [MenuItem("Ferramentas/Áudio/Separar volume de Música e Efeitos")]

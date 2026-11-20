@@ -3,11 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Ficha que aparece ao lado de um slot do inventário/prensa quando o ponteiro passa sobre ele (no celular,
-/// enquanto o dedo está pressionado). Mostra nome, fonte, descrição e a situação da pista (Fato x Boato),
-/// que é o que o jogador lê para decidir o que imprimir.
-/// Não precisa de setup: é montada por código no primeiro uso, no Canvas do próprio slot (mesmo padrão do
-/// CutsceneLegendas). Chamada pelo UISlotHandler.
+/// Ficha de hover (no celular, enquanto o dedo segura) com nome, fonte, descrição e situação Fato x Boato da pista.
+/// Montada por código no primeiro uso, no Canvas raiz do slot.
 /// </summary>
 public class FichaDaPista : MonoBehaviour
 {
@@ -37,8 +34,7 @@ public class FichaDaPista : MonoBehaviour
         instancia.Exibir(item, ancora);
     }
 
-    /// <summary>Mostra um texto pronto ao lado de qualquer elemento de UI que não é slot (ex.: as provas do tribunal).
-    /// Fica até o Esconder ou até o elemento sumir.</summary>
+    /// <summary>Texto pronto para elementos que não são slot; fica até Esconder ou até a âncora sumir.</summary>
     public static void MostrarTexto(string texto, RectTransform ancora)
     {
         if (string.IsNullOrWhiteSpace(texto) || ancora == null) return;
@@ -52,7 +48,7 @@ public class FichaDaPista : MonoBehaviour
         instancia.Exibir(null, ancora, texto);
     }
 
-    /// <summary>Esconde a ficha. Com uma âncora, só esconde se a ficha estiver mostrando aquele slot.</summary>
+    /// <summary>Com âncora, só esconde se a ficha estiver mostrando aquele slot.</summary>
     public static void Esconder(RectTransform ancora)
     {
         if (instancia == null) return;
@@ -63,12 +59,11 @@ public class FichaDaPista : MonoBehaviour
 
     private void Update()
     {
-        // Inventário fechado (ou slot escondido) com o ponteiro ainda "em cima": não sobra ficha solta na tela.
+        // Slot escondido sem PointerExit (inventário fechado): não deixar ficha solta.
         if (ancoraAtual == null || !ancoraAtual.gameObject.activeInHierarchy) { Esconder(null); return; }
-        if (itemAtual == null) return; // texto pronto (MostrarTexto): quem chamou esconde
+        if (itemAtual == null) return; // MostrarTexto: quem chamou esconde
 
-        // A ficha vale enquanto o item ainda estiver no slot OU na mão do jogador. No celular não existe
-        // "passar o mouse": o toque pega o item, e é segurando a pista que o jogador lê a ficha.
+        // Vale com o item no slot OU na mão: no celular o toque pega o item e a ficha é lida segurando-o.
         UISlotHandler slot = ancoraAtual.GetComponent<UISlotHandler>();
         Item naMao = MouseManager.instance != null ? MouseManager.instance.heldItem : null;
         bool noSlot = slot != null && slot.item == itemAtual;
@@ -114,7 +109,7 @@ public class FichaDaPista : MonoBehaviour
             string situacao = inventario != null ? inventario.RotuloDaPista(item) : item.RotuloSituacao(false);
             sb.Append("\n\n<size=85%>Situação: ").Append(situacao).Append("</size>");
 
-            // Dedução ativa: a afirmação contrária aparece só quando as duas já foram descobertas.
+            // A contrária só aparece quando as duas já foram descobertas.
             Item contraria = Deducao.Contradicao(GameManager.Instance, item);
             if (contraria != null)
                 sb.Append("\n<size=85%><color=#C8B89A>Contradiz: ").Append(contraria.NomeExibicao).Append("</color></size>");
@@ -123,9 +118,8 @@ public class FichaDaPista : MonoBehaviour
     }
 
     /// <summary>
-    /// Ficha do panfleto: de qual caso é, o que defende (o teor do caso; sem caso, a descrição do item) e, depois de
-    /// publicado, o mesmo texto do arquivo de casos: o que afirmou (pistas impressas), o apoio citado, o tom e o efeito
-    /// nas barras. Nunca diz qual afirmação era verdadeira nem qual versão saiu.
+    /// Caso, teor e, se publicado, os detalhes do arquivo de casos. Regra: nunca revela qual afirmação era
+    /// verdadeira nem qual versão saiu.
     /// </summary>
     public static string TextoDoPanfleto(Item panfleto, GameManager gm, CatalogoDeSave catalogo)
     {
@@ -148,7 +142,7 @@ public class FichaDaPista : MonoBehaviour
         return sb.ToString();
     }
 
-    // Ao lado direito do slot; se não couber, do lado esquerdo. Verticalmente, centrada e presa dentro da tela.
+    // À direita do slot, ou à esquerda se não couber; centrada na vertical e presa à tela.
     private void Posicionar(RectTransform ancora)
     {
         Canvas canvas = areaDoCanvas.GetComponent<Canvas>();
@@ -191,19 +185,18 @@ public class FichaDaPista : MonoBehaviour
         r.pivot = Vector2.zero;
         r.sizeDelta = new Vector2(Largura, 0f);
 
-        // Canvas próprio: fica acima do inventário e da prensa, abaixo das cutscenes (50) e do fade de cena.
+        // Acima do inventário e da prensa, abaixo das cutscenes (50) e do fade de cena.
         var canvas = go.GetComponent<Canvas>();
         canvas.overrideSorting = true;
         canvas.sortingOrder = 40;
 
-        // Não pode bloquear o ponteiro: senão a ficha "rouba" o hover do slot e fica piscando.
+        // Sem bloquear raycast: senão rouba o hover do slot e pisca.
         var grupo = go.GetComponent<CanvasGroup>();
         grupo.blocksRaycasts = false;
         grupo.interactable = false;
 
         var fundo = go.GetComponent<Image>();
-        // Opaca: o projeto usa espaço de cor Linear, e com alpha 0,96 o texto de baixo (a fala da bancada, os botões
-        // vizinhos no tribunal) ainda aparecia através da ficha.
+        // Opaca: em espaço de cor Linear, até alpha 0,96 deixava o texto de baixo vazar.
         fundo.color = new Color(0.12f, 0.1f, 0.086f, 1f);
         fundo.raycastTarget = false;
 

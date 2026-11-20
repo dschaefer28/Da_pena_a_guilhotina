@@ -5,11 +5,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Troca, em todos os prefabs e cenas do projeto, a fonte "Cinzel-VariableFont_wght SDF" (atlas de 512px
-/// com 97 caracteres, sem á/é/ç...) pela "Cinzel-Regular SDF" (Latin-1 completo). Sem ela, o TextMesh Pro
-/// desenhava os acentos em LiberationSans no meio das palavras.
-/// Só altera valores que pertencem ao próprio objeto: em instâncias de prefab, um valor herdado é corrigido
-/// no prefab de origem, não como override. Rode com o Play Mode desligado e a cena atual salva.
+/// Troca "Cinzel-VariableFont_wght SDF" (atlas sem acentos) por "Cinzel-Regular SDF" (Latin-1) em todos os prefabs
+/// e cenas. Valores herdados são corrigidos no prefab de origem, nunca como override.
+/// Recusa Play Mode e cena suja.
 /// </summary>
 public static class TrocaFonteUI
 {
@@ -90,7 +88,7 @@ public static class TrocaFonteUI
         {
             if (texto.font != velha) continue;
 
-            // Valor herdado de outro prefab: será corrigido lá, não vira override aqui.
+            // Valor herdado: será corrigido no prefab de origem.
             if (PrefabUtility.IsPartOfPrefabInstance(texto))
             {
                 SerializedProperty prop = new SerializedObject(texto).FindProperty("m_fontAsset");

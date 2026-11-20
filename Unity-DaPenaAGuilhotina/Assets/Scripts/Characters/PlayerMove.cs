@@ -53,14 +53,13 @@ public class PlayerMove : MonoBehaviour
     {
         bool isMoving = PodeMover() && move != Vector2.zero;
 
-        // Parado (diálogo, janela aberta) não vira com a tecla segurada: senão desfazia o OlharParaX do começo da conversa.
+        // Parado não vira com a tecla segurada: desfaria o OlharParaX do início da conversa.
         if (spriteRenderer != null && PodeMover())
         {
             if (move.x > 0) spriteRenderer.flipX = false;
             else if (move.x < 0) spriteRenderer.flipX = true;
         }
 
-        // O som dos passos vem dos Animation Events do clipe walk (PassosDoJogador), então só toca enquanto anda.
         if (anim != null)
         {
             anim.SetBool("isWalking", isMoving);
@@ -69,8 +68,7 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Diálogo não pausa Time.timeScale (a digitação do texto depende dele rodando), então sem essa
-        // trava o jogador andava livremente durante uma conversa com um NPC.
+        // Diálogo não pausa Time.timeScale (a digitação depende dele), então a trava é explícita.
         float velocidadeX = PodeMover() ? move.x * moveSpeed : 0f;
         rb.linearVelocity = new Vector2(velocidadeX, rb.linearVelocity.y);
     }
@@ -82,7 +80,6 @@ public class PlayerMove : MonoBehaviour
         return dialogo == null || !dialogo.IsDialogueActive;
     }
 
-    /// <summary>Vira o sprite para o ponto x do mundo (ex.: o NPC com quem começou a conversar).</summary>
     public void OlharParaX(float x)
     {
         if (spriteRenderer == null) return;

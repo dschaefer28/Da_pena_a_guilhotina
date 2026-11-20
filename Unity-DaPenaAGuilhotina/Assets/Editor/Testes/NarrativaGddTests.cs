@@ -14,7 +14,7 @@ public class NarrativaGddTests
 {
     private static readonly string[] CenasDaCampanha = { "Fase2", "Fase3", "Fase4" };
 
-    // Personagens, lugares e assuntos dos casos provisórios de 25–27/09 que o conteúdo do GDD substituiu.
+    // Personagens, lugares e assuntos dos casos provisórios que o conteúdo do GDD substituiu.
     private static readonly string[] TextosAntigos =
     {
         "Marchand", "Garnier", "Delorme", "Vautrin", "Joubert", "Lacombe", "Morel", "Viúva François", "Carcereiro",
@@ -28,7 +28,7 @@ public class NarrativaGddTests
         return ui.GetComponentInChildren<CaseSelectionUI>(true).availableCases.FindAll(c => c != null && c.fase >= 2);
     }
 
-    /// <summary>Abre as cenas das Fases 2 a 4 (aditivas, sem salvar), entrega os NPCs e objetos de cada uma e as fecha.</summary>
+    /// <summary>Abre as cenas das Fases 2 a 4 de forma aditiva e as fecha sem salvar.</summary>
     private static void ParaCadaCena(System.Action<string, List<NPCMovement>, List<LootInteractable>> acao)
     {
         foreach (string nome in CenasDaCampanha)

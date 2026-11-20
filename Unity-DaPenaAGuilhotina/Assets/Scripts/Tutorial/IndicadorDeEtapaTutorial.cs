@@ -1,13 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Mostra um SpriteRenderer (ex: uma seta) só enquanto a etapa atual do TutorialManager for "Etapa Id".
-/// Diferente do TutorialStepUI (que revela botões e nunca mais os esconde), este indicador some de novo
-/// assim que o tutorial avança para a próxima etapa — ideal para setas/marcadores que só fazem sentido
-/// enquanto o jogador ainda não chegou no lugar indicado.
-///
-/// Setup no Editor: coloque este script no mesmo GameObject do SpriteRenderer da seta e preencha
-/// "Etapa Id" com o mesmo texto usado no TutorialManager (ex: "ir_para_porao").
+/// Mostra o SpriteRenderer só enquanto a etapa atual do tutorial for "Etapa Id".
+/// Ao contrário do TutorialStepUI, volta a esconder quando o tutorial avança.
 /// </summary>
 [RequireComponent(typeof(SpriteRenderer))]
 public class IndicadorDeEtapaTutorial : MonoBehaviour
@@ -31,8 +26,7 @@ public class IndicadorDeEtapaTutorial : MonoBehaviour
 
     void Start()
     {
-        // Reforça a inscrição aqui (igual o TutorialStepUI faz), caso o TutorialManager ainda não
-        // tivesse rodado seu Awake (e definido Instance) no momento em que este objeto foi habilitado.
+        // O TutorialManager pode não ter rodado Awake quando este objeto foi habilitado.
         Inscrever();
 
         if (TutorialManager.Instance == null)

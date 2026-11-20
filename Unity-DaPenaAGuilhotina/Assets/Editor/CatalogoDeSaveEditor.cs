@@ -7,7 +7,7 @@ using UnityEngine;
 
 /// <summary>
 /// Mantém o Resources/CatalogoDeSave com todos os Items e Casos do projeto. Roda sozinho ao dar Play e antes
-/// do build, então um item novo já entra no save sem ninguém precisar lembrar de registrar.
+/// do build, para que nenhum item novo fique fora do save.
 /// </summary>
 [InitializeOnLoad]
 public class CatalogoDeSaveEditor : IPreprocessBuildWithReport

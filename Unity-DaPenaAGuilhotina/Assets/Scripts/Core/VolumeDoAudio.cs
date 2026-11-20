@@ -4,24 +4,17 @@ using FMODUnity;
 using UnityEngine;
 
 /// <summary>
-/// Volumes separados de Música e de Efeitos (tudo o que não é música: sons, vozes, ambiente).
-///
-/// O projeto FMOD (audioJogofmod) não tem buses de Música/Efeitos: todo evento sai direto no Master Bus, e os banks
-/// são gerados no FMOD Studio 2.02 de quem cuida do áudio (o 2.03 instalado aqui só abre o projeto migrando, e banks
-/// 2.03 não carregam no plugin 2.02 do Unity). Por isso a separação é feita aqui, pelo bank de cada evento: o que
-/// está SÓ no bank "Musicas" é música; o resto é efeito (o crowdAmbience também está em Sons, então é efeito).
-///
-/// A cada frame, logo antes do RuntimeManager do FMOD (ordem 100) mandar os comandos da frame, toda instância viva
-/// (PlayOneShot, StudioEventEmitter, instância criada à mão) recebe o volume da sua categoria. Como o ajuste vai no
-/// mesmo envio que o start, um som novo já começa no volume certo. Se um dia o projeto FMOD ganhar buses de Música e
-/// Efeitos, basta trocar este ajuste por Bus.setVolume.
+/// Volumes de Música e Efeitos. O projeto FMOD não tem buses separados (só Master, e os banks vêm do Studio 2.02),
+/// então a categoria sai do bank: evento SÓ no bank "Musicas" é música, o resto é efeito.
+/// Roda antes do RuntimeManager (ordem 100) para o volume ir no mesmo envio do start. Com buses no FMOD,
+/// trocar por Bus.setVolume.
 /// </summary>
 [DefaultExecutionOrder(99)]
 public class VolumeDoAudio : MonoBehaviour
 {
     public const string ChaveMusica = "opt_volume_musica";
     public const string ChaveEfeitos = "opt_volume_efeitos";
-    /// <summary>Slider único de antes (mexia no Master Bus): vira o valor inicial dos dois para quem já tinha ajustado.</summary>
+    // Slider único legado: valor inicial dos dois volumes.
     public const string ChaveAntiga = "opt_volume";
     public const string BankDeMusicas = "bank:/Musicas";
 
@@ -33,17 +26,13 @@ public class VolumeDoAudio : MonoBehaviour
 
     private static float Ler(string chave) => Mathf.Clamp01(PlayerPrefs.GetFloat(chave, PlayerPrefs.GetFloat(ChaveAntiga, 1f)));
 
-    /// <summary>
-    /// Regra da categoria: música é o evento que está no bank Musicas e em nenhum outro. Recebe, por evento, os
-    /// caminhos dos banks onde ele aparece.
-    /// </summary>
     public static bool EhMusica(ICollection<string> banksDoEvento) =>
         banksDoEvento.Count == 1 && banksDoEvento.Contains(BankDeMusicas);
 
-    // Instâncias que tocam abaixo do normal (o hover do inventário toca a 50%): o volume final é base x categoria.
+    // Volume final = base da instância x categoria (ex.: hover do inventário a 50%).
     private static readonly Dictionary<IntPtr, float> volumeBase = new Dictionary<IntPtr, float>();
 
-    /// <summary>Use no lugar de EventInstance.setVolume, que seria sobrescrito pelo volume da categoria.</summary>
+    // Use no lugar de EventInstance.setVolume, que seria sobrescrito pelo volume da categoria.
     public static void DefinirVolumeDaInstancia(FMOD.Studio.EventInstance instancia, float volume01) =>
         volumeBase[instancia.handle] = volume01;
 
@@ -55,8 +44,8 @@ public class VolumeDoAudio : MonoBehaviour
         go.AddComponent<VolumeDoAudio>();
     }
 
-    // NonSerialized: num recompile durante o Play o Unity preservaria o contador mas não as listas (o struct do FMOD
-    // não é serializável), e as listas vazias nunca seriam refeitas. Assim tudo volta junto ao estado inicial.
+    // NonSerialized: num recompile em Play o Unity preservaria o contador mas não as listas (structs FMOD), e elas
+    // nunca seriam refeitas.
     [NonSerialized] private readonly List<FMOD.Studio.EventDescription> musicas = new List<FMOD.Studio.EventDescription>();
     [NonSerialized] private readonly List<FMOD.Studio.EventDescription> efeitos = new List<FMOD.Studio.EventDescription>();
     [NonSerialized] private readonly List<IntPtr> paraRemover = new List<IntPtr>();
@@ -67,9 +56,8 @@ public class VolumeDoAudio : MonoBehaviour
     {
         if (!AudioSeguro.Disponivel || !RuntimeManager.IsInitialized) return;
 
-        // Refeito quando entra bank novo ou algum evento da lista deixou de valer (bank recarregado, FMOD reiniciado).
-        // No celular os banks carregam aos poucos: enquanto algum não terminou, classifica o que já existe e tenta de
-        // novo na próxima frame.
+        // Reclassifica com bank novo ou evento invalidado; no celular os banks carregam aos poucos, então repete
+        // até todos terminarem.
         FMOD.Studio.System sistema = RuntimeManager.StudioSystem;
         if (sistema.getBankCount(out int quantos) == FMOD.RESULT.OK && (quantos != banksClassificados || listaVencida))
             banksClassificados = Classificar(sistema, musicas, efeitos) ? quantos : -1;
@@ -78,7 +66,7 @@ public class VolumeDoAudio : MonoBehaviour
         LimparVolumesBase();
     }
 
-    /// <summary>Separa os eventos dos banks carregados em música e efeitos. Falso se algum bank ainda está carregando.</summary>
+    // Falso se algum bank ainda está carregando.
     public static bool Classificar(FMOD.Studio.System sistema, List<FMOD.Studio.EventDescription> musicas,
         List<FMOD.Studio.EventDescription> efeitos)
     {
@@ -110,7 +98,7 @@ public class VolumeDoAudio : MonoBehaviour
         return todosCarregados;
     }
 
-    /// <summary>Falso se algum evento da lista não é mais válido.</summary>
+    // Falso se algum evento da lista não é mais válido.
     private static bool Aplicar(List<FMOD.Studio.EventDescription> eventos, float volumeDaCategoria)
     {
         bool todosValidos = true;

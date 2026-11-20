@@ -7,9 +7,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Aplica o layout de lista ao prefab UI_Inventory: painel maior, uma coluna, linhas altas com
-/// ícone + nome + quantidade, cabeçalho com botão Fechar e texto "Espaço livre" nas linhas vazias.
-/// Menu: Ferramentas > Inventário. Pode rodar de novo sempre que linhas forem adicionadas ao prefab.
+/// Aplica o layout de lista (uma coluna, ícone + nome + quantidade) ao prefab UI_Inventory.
+/// Menu: Ferramentas > Inventário. Reexecutável.
 /// </summary>
 public static class InventarioListaBuilder
 {
@@ -82,9 +81,8 @@ public static class InventarioListaBuilder
     }
 
     /// <summary>
-    /// As cenas Jogo/Porao (e o prefab UI) acumularam linhas extras e overrides de tamanho/posição por cima
-    /// do UI_Inventory. Este passo remove essas linhas locais e reverte só os componentes de layout/visual
-    /// do painel, para que o prefab volte a mandar. Salva as cenas; rode com o Play Mode desligado.
+    /// Remove linhas locais e reverte overrides de layout/visual do UI_Inventory no UI.prefab e nas cenas Jogo/Porao,
+    /// para que o prefab volte a mandar. Salva as cenas; rode fora do Play Mode.
     /// </summary>
     [MenuItem("Ferramentas/Inventário/2 - Sincronizar UI.prefab e cenas com o UI_Inventory")]
     public static void SincronizarCenas()
@@ -169,8 +167,7 @@ public static class InventarioListaBuilder
         return removidos;
     }
 
-    // Só layout/visual: referências (UISlotHandler.inventoryManager, eventos FMOD, ícones do preview)
-    // podem viver como override legítimo do prefab pai e são preservadas.
+    // Só layout/visual: referências (inventoryManager, eventos FMOD, ícones) são overrides legítimos e ficam.
     private static int ReverterOverridesDeLayout(Transform painel)
     {
         int revertidos = 0;
@@ -187,8 +184,7 @@ public static class InventarioListaBuilder
         c is RectTransform || c is Image || c is TextMeshProUGUI || c is GridLayoutGroup ||
         c is ContentSizeFitter || c is ScrollRect || c is RectMask2D || c is LayoutElement || c is CanvasGroup;
 
-    // Fonte única do jogo desde 27/10/2026 (ver EBGaramondSetupTool): EB Garamond com Latin-1 completo. Um atlas
-    // sem á/é/ç faria o TMP desenhar esses glifos em outra fonte, no meio das palavras.
+    // Precisa de Latin-1 completo: sem á/é/ç no atlas, o TMP desenha esses glifos com a fonte de fallback.
     private const string CaminhoFonte = EBGaramondSetupTool.CaminhoRegular;
 
     internal static TMP_FontAsset ObterFonte(RectTransform conteudo)
@@ -285,7 +281,7 @@ public static class InventarioListaBuilder
         viewport.offsetMax = new Vector2(-Margem, -(AlturaCabecalho + AlturaDasAbas(viewport.parent)));
     }
 
-    // As abas Pistas/Panfletos (objeto "Abas" no prefab, logo abaixo do cabeçalho) empurram a lista para baixo.
+    // O objeto "Abas" (Pistas/Panfletos) fica abaixo do cabeçalho e empurra a lista para baixo.
     private static float AlturaDasAbas(Transform painel)
     {
         RectTransform abas = painel != null ? painel.Find("Abas") as RectTransform : null;

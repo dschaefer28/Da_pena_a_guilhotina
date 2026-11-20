@@ -12,29 +12,13 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.LowLevel;
 
 /// <summary>
-/// Padronização tipográfica com a EB Garamond (27/10/2026). Os três passos são idempotentes; rode na ordem,
-/// fora do Play Mode, com as cenas abertas salvas.
-///
-/// 1 - Gerar Font Assets: cria (ou regenera no lugar, mantendo GUID e sub-assets) os TMP Font Assets SDF
-///     estáticos a partir de Assets/Art/Fonts/EBGaramond/Sources (origem e licença em License/).
-///     Regular e SemiBold em atlas 2048 e Italic em 1024 (só aparece em poucos textos pequenos); amostragem
-///     automática (a maior que cabe no atlas), padding de 9% da amostragem, render SDF8 (distância calculada
-///     com 8x de resolução: serifas e traços finos mais fiéis que no SDFAA), kerning e marcas do GPOS.
-///     Caracteres: ASCII, Latin-1 (português completo), Œ œ Ÿ, pontuação tipográfica, ← → ▲ ▼, ﬁ ﬂ e tudo o que
-///     o conteúdo do jogo usa (prefabs, cenas, ScriptableObjects e literais de Assets/Scripts). A lista final
-///     fica em FontAssets/EBGaramond - caracteres.txt (formato do "Characters from File" do Font Asset Creator).
-///     Pesos pela tabela de pesos do TMP: Negrito (estilo B ou tag b) desenha a SemiBold e Itálico desenha a
-///     Italic, sem negrito nem inclinação sintéticos. Símbolos do conteúdo que a EB Garamond não tem (hoje só
-///     o ●) vêm de um asset estático com apenas esses glifos, gerado da LiberationSans do TMP: letras nunca
-///     caem nele.
-/// 2 - Aplicar em todo o jogo: fonte padrão do TMP Settings, todos os textos TMP de prefabs e cenas, os
-///     campos TMP_FontAsset dos scripts (fonte, fonteGlifos...), o kerning ('kern') de todo texto, o peso de
-///     alguns textos (fala do diálogo sem negrito; títulos em SemiBold) e os ajustes de layout que a troca de
-///     métricas exigiu (escala uniforme no diálogo, tamanhos nos cartões da Mesa e nos botões de toque). Em
-///     instância de prefab só altera o valor que é da própria instância (override); o herdado é corrigido no
-///     prefab de origem. Não toca em _Recovery.
-/// 3 - Auditar: lista textos e campos fora da EB Garamond, materiais de outro atlas, caracteres do conteúdo
-///     sem glifo, escalas não uniformes e Auto Size com mínimo baixo.
+/// Padronização tipográfica com a EB Garamond. Três passos idempotentes, na ordem, fora do Play Mode e com as cenas salvas:
+/// 1 - Gerar Font Assets: TMP SDF estáticos (SDF8, regenerados no lugar mantendo GUID) com o conjunto base mais todo
+///     caractere usado pelo conteúdo do jogo. Negrito/Itálico usam SemiBold/Italic pela tabela de pesos (nada sintético).
+///     Símbolos sem glifo na EB Garamond vêm de um asset de apoio gerado da LiberationSans; letras nunca caem nele.
+/// 2 - Aplicar em todo o jogo: fonte padrão, textos TMP de prefabs e cenas, campos TMP_FontAsset, kerning, pesos e
+///     ajustes de layout. Em instância de prefab só altera overrides; o herdado é corrigido no prefab de origem.
+/// 3 - Auditar: lista textos, materiais e caracteres fora do padrão.
 /// </summary>
 public static class EBGaramondSetupTool
 {
@@ -86,10 +70,7 @@ public static class EBGaramondSetupTool
         new RegraDePeso { origem = "Assets/Scenes/menu principal.unity", caminho = "MenuCanvas/painelConfirmarNovoJogo/Image/titulo", por = FontStyles.Bold, motivo = "título do painel (SemiBold)" },
     };
 
-    /// <summary>
-    /// Textos com escala X diferente da Y (letras comprimidas na horizontal). Passam a ter X = Y; a largura do
-    /// retângulo (âncoras no centro) é compensada para ocupar no Canvas o mesmo espaço de antes.
-    /// </summary>
+    /// <summary>Textos com escala X ≠ Y passam a X = Y; a largura do retângulo compensa para ocupar o mesmo espaço.</summary>
     private static readonly (string origem, string caminho)[] EscalasParaUniformizar =
     {
         ("Assets/Prefabs/UI.prefab", "DialogePanel/name"),
@@ -97,11 +78,8 @@ public static class EBGaramondSetupTool
     };
 
     /// <summary>
-    /// Tamanhos revistos para a EB Garamond, cuja altura-x (~0,40 em) é bem menor que a das versaletes da Cinzel
-    /// (~0,60 em). Cartões da Mesa e popup do tutorial: a pedido do grupo (27/10/2026), nada abaixo de ~22 na
-    /// referência de 1080 (15 px em 720), com a hierarquia mantida (título > cabeçalho > linhas > aviso). Os rótulos dos
-    /// botões de toque estavam em VT323, que desenha bem menor no mesmo tamanho: em EB Garamond passavam das bordas.
-    /// Só troca se o tamanho atual for um dos antigos; com auto size, ajusta também o mínimo e o máximo.
+    /// Tamanhos revistos: a altura-x da EB Garamond é bem menor que a da fonte anterior. Regra: nada abaixo de ~22 na
+    /// referência de 1080. Só troca se o tamanho atual for um dos antigos; com auto size, ajusta também mínimo e máximo.
     /// </summary>
     private static readonly (string origem, string caminho, float para, float[] antigos, float autoMin, float autoMax)[] Tamanhos =
     {
@@ -163,7 +141,6 @@ public static class EBGaramondSetupTool
                 log.AppendLine($"  símbolo {Descrever(c)} (ex.: {doConteudo[c]}) vem de '{Path.GetFileNameWithoutExtension(CaminhoSimbolos)}'.");
         }
 
-        // Tabela de pesos: Negrito -> SemiBold (sem negrito sintético) e Itálico -> Italic.
         regular.fontWeightTable[4].italicTypeface = italic;
         regular.fontWeightTable[6].regularTypeface = semiBold;
         regular.fontWeightTable[7].regularTypeface = semiBold;
@@ -465,7 +442,6 @@ public static class EBGaramondSetupTool
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        // Campos TMP_FontAsset dos scripts do jogo (BibliotecaUI.fonte, TutorialStepUI.fonteGlifos...).
         foreach (MonoBehaviour mb in raiz.GetComponentsInChildren<MonoBehaviour>(true))
         {
             if (mb == null || mb is TMP_Text || mb.GetType().Assembly.GetName().Name != "Assembly-CSharp") continue;
@@ -513,9 +489,8 @@ public static class EBGaramondSetupTool
     }
 
     /// <summary>
-    /// Overrides de instância gravados com fonte ou material de outra família. Ao carregar, o TMP troca em memória o
-    /// material que não é do atlas da fonte, então o SerializedObject já mostra o novo; mas o arquivo continuaria
-    /// apontando para a fonte antiga (e o atlas dela iria para o build).
+    /// Overrides de instância com fonte ou material de outra família. O TMP corrige o material só em memória, então o
+    /// arquivo continuaria apontando para a fonte antiga (e o atlas dela iria para o build).
     /// </summary>
     private static int CorrigirOverridesGravados(GameObject raiz, TMP_FontAsset regular, string origem, StringBuilder log)
     {
@@ -612,7 +587,6 @@ public static class EBGaramondSetupTool
                 }
         log.AppendLine($"  {textos} textos TMP em prefabs e cenas; {problemas} fora do padrão.");
 
-        // Caracteres do conteúdo.
         SortedDictionary<int, string> doConteudo = CaracteresDoConteudo();
         foreach (KeyValuePair<int, string> c in doConteudo)
         {

@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-/// <summary>Liga uma etapa do tutorial (pelo ID) aos objetos desta cena que devem ficar visíveis a partir dela.</summary>
 [Serializable]
 public class RevelacaoDeEtapa
 {
@@ -20,14 +19,8 @@ public class RevelacaoDeEtapa
 }
 
 /// <summary>
-/// Componente local de cena que mostra o popup do tutorial e revela botões/objetos aos poucos, de acordo
-/// com a etapa atual do TutorialManager (persistente entre cenas). Vive no prefab UI (existe em todas as
-/// cenas); só a lista "Revelacoes" é configurada por cena, porque aponta para objetos daquela cena.
-///
-/// Universal (Windows/Android): o texto passa por DispositivoDeControle.Substituir e a etapa pode
-/// destacar um controle como "tecla" desenhada (GlifoDeControle). Segue as práticas de tutorial
-/// contextual: uma ação por etapa, popup fora do caminho (rodapé), some durante diálogos e cutscenes
-/// e volta sozinho, e no PC também avança com Enter/Espaço.
+/// Popup do tutorial e revelação progressiva de UI conforme a etapa do TutorialManager. Vive no prefab UI;
+/// só "Revelacoes" é configurada por cena. Some com a tela ocupada e volta sozinho.
 /// </summary>
 public class TutorialStepUI : MonoBehaviour
 {
@@ -52,9 +45,9 @@ public class TutorialStepUI : MonoBehaviour
     public List<RevelacaoDeEtapa> revelacoes;
 
     private string etapaExibidaAtualmente;
-    private bool popupDispensado;   // jogador clicou Continuar numa etapa de evento: não reabrir sozinho
+    private bool popupDispensado;   // Ocultar numa etapa de evento: não reabrir sozinho
     private DialogueSystem dialogoObservado;
-    private bool mostrandoDica;     // o popup mostra a dica da vez (TutorialManager.DicaPendente), não a etapa
+    private bool mostrandoDica;     // popup mostra TutorialManager.DicaPendente, não a etapa
     private int frameEmQueApareceu = -1;
 
     void OnEnable()
@@ -81,17 +74,15 @@ public class TutorialStepUI : MonoBehaviour
         if (textoMensagem == null) Debug.LogWarning("[TutorialStepUI] 'Texto Mensagem' não foi atribuído no Inspector.", this);
 
         if (painelPopup != null) painelPopup.SetActive(false);
-        mostrandoDica = false; // uma dica pedida antes deste Start continua na fila e volta pelo Update
+        mostrandoDica = false; // dica pedida antes deste Start continua na fila e volta pelo Update
         if (botaoContinuar != null) botaoContinuar.onClick.AddListener(OnContinuarClicado);
         if (botaoPular != null) botaoPular.onClick.AddListener(OnPularClicado);
 
-        // Os botões do popup têm 46 de altura (≈3 mm num celular): a área de toque cresce além do desenho,
-        // para os lados e para cima (sobre o texto, que não é clicável), sem mudar o visual.
+        // Botões de 46 de altura (~3 mm no celular): amplia só a área de toque.
         AumentarAreaDeToque(botaoContinuar);
         AumentarAreaDeToque(botaoPular);
 
-        // Reforça a inscrição aqui (além do OnEnable) para o caso de o TutorialManager ainda
-        // não existir/estar pronto no momento em que este objeto foi habilitado.
+        // O TutorialManager pode não estar pronto no OnEnable.
         Inscrever();
 
         var dialogo = GameManager.Instance != null ? GameManager.Instance.dialogueSystem : FindAnyObjectByType<DialogueSystem>();
@@ -107,8 +98,7 @@ public class TutorialStepUI : MonoBehaviour
 
         ValidarEtapaIds();
 
-        // Sincroniza imediatamente com o progresso já salvo (ex: o jogador voltou do porão pro
-        // escritório e os botões de inventário/pause já ensinados precisam continuar visíveis).
+        // Reaplica revelações já alcançadas ao voltar para a cena.
         HandleEtapaAlterada(TutorialManager.Instance.EtapaAtualId);
     }
 
@@ -116,9 +106,7 @@ public class TutorialStepUI : MonoBehaviour
     {
         if (painelPopup == null) return;
 
-        // O popup sai da frente enquanto a tela estiver ocupada (conversa, cutscene, pause, Biblioteca, Quadro de pistas ou
-        // Mesa de Casos) e volta sozinho depois: por baixo do pause ele ainda aceitaria o Enter, e por cima da mesa cobria
-        // os cartões. Dicas pedidas nesse meio-tempo esperam na fila do TutorialManager.
+        // Com a tela ocupada o popup sai da frente (sob o pause ainda aceitaria o Enter) e volta depois.
         if (TelaOcupada())
         {
             if (painelPopup.activeSelf) EsconderPorOcupacao();
@@ -126,16 +114,14 @@ public class TutorialStepUI : MonoBehaviour
         }
         if (!painelPopup.activeSelf)
         {
-            // Painel escondido não mostra dica nenhuma. Ex.: o relógio pediu a dica do tempo no Start dele, antes do Start
-            // deste popup, que esconde o painel ao montar a cena: sem isto a dica ficava presa como "na tela".
+            // Dica pedida antes do nosso Start (que esconde o painel) ficaria presa como "na tela".
             mostrandoDica = false;
             ReexibirSePrecisar();
             return;
         }
 
-        // No PC, Enter/Espaço equivalem ao clique em Continuar (o texto da etapa diz isso). No frame em que o popup
-        // apareceu, não: o Enter que fechou a conversa (e fez o popup voltar) pularia a dica sem ela ser lida. Nem quando
-        // outro controle da UI está com o foco do teclado (ex.: "Cancelar" da linha editorial): o mesmo Enter agiria nos dois.
+        // Enter/Espaço = Continuar, exceto no frame em que o popup apareceu (o Enter que fechou a conversa o pularia)
+        // ou com outro controle focado (o mesmo Enter agiria nos dois).
         if (DispositivoDeControle.EhToque || Time.frameCount == frameEmQueApareceu || OutroControleComFoco()) return;
         var teclado = Keyboard.current;
         if (teclado != null && (teclado.enterKey.wasPressedThisFrame || teclado.numpadEnterKey.wasPressedThisFrame || teclado.spaceKey.wasPressedThisFrame))
@@ -151,20 +137,17 @@ public class TutorialStepUI : MonoBehaviour
         TutorialManager.Instance.OnDicaSolicitada += HandleDicaSolicitada;
     }
 
-    // ===== Dicas contextuais (fora do roteiro, ex: Fato x Boato) =====
+    // ===== Dicas contextuais (fila no TutorialManager) =====
 
-    // A fila fica no TutorialManager: aqui só se mostra a dica da vez quando a tela estiver livre.
     private void HandleDicaSolicitada(string texto)
     {
         if (!mostrandoDica) MostrarDicaSePossivel();
     }
 
-    /// <summary>Algo na tela pede o foco do jogador: o popup (etapa ou dica) espera.</summary>
     private bool TelaOcupada() =>
         (dialogoObservado != null && dialogoObservado.IsDialogueActive) || CutsceneLegendas.EmExibicao ||
         JanelasModais.AlgumaAberta || (PauseMenu.Instance != null && PauseMenu.Instance.IsOpen);
 
-    // A dica recebida no fim de uma conversa espera o diálogo/cutscene sair da tela, como as etapas.
     private bool MostrarDicaSePossivel()
     {
         string dica = TutorialManager.Instance != null ? TutorialManager.Instance.DicaPendente : null;
@@ -195,14 +178,14 @@ public class TutorialStepUI : MonoBehaviour
         return foco != null && foco.activeInHierarchy && !foco.transform.IsChildOf(painelPopup.transform);
     }
 
-    // A dica que estava na tela continua a primeira da fila: volta quando a tela ficar livre de novo.
+    // A dica continua a primeira da fila e volta quando a tela ficar livre.
     private void EsconderPorOcupacao()
     {
         mostrandoDica = false;
         painelPopup.SetActive(false);
     }
 
-    // O título ("Titulo", criado pelo TutorialPopupBuilder) diferencia etapa do roteiro de dica avulsa.
+    // "Titulo" é criado pelo TutorialPopupBuilder.
     private void DefinirTitulo(string titulo)
     {
         Transform t = painelPopup != null ? painelPopup.transform.Find("Titulo") : null;
@@ -210,7 +193,7 @@ public class TutorialStepUI : MonoBehaviour
         if (tmp != null) tmp.text = titulo;
     }
 
-    // Pular pede um segundo toque: no celular um toque sem querer no canto do popup apagaria o tutorial inteiro.
+    // Pular pede um segundo toque: evita pular o tutorial por toque acidental no celular.
     private const float JanelaConfirmarPular = 3f;
     private float confirmarPularAte = -1f;
 
@@ -229,8 +212,7 @@ public class TutorialStepUI : MonoBehaviour
 
     private const string TextoPularPadrao = "<u>Pular tutorial</u>";
 
-    // Nas etapas de ação (falar, abrir, imprimir, descer...) o botão só esconde a mensagem: a etapa espera a ação de
-    // verdade. Com o rótulo "Continuar" o jogador achava que tinha avançado e ficava sem a instrução, que não volta.
+    // Nas etapas de ação o botão só esconde a mensagem; "Continuar" daria a entender que avançou.
     private const string TextoContinuar = "Continuar";
     private const string TextoOcultar = "Ocultar";
 
@@ -250,11 +232,11 @@ public class TutorialStepUI : MonoBehaviour
     {
         Graphic alvo = botao != null ? botao.targetGraphic : null;
         if (alvo == null) return;
-        // (esquerda, baixo, direita, cima): valores negativos aumentam a área clicável.
+        // (esq, baixo, dir, cima): negativos ampliam a área clicável.
         if (alvo.raycastPadding == Vector4.zero) alvo.raycastPadding = new Vector4(-16f, -12f, -16f, -24f);
     }
 
-    // Layout do rodapé como veio do prefab (TutorialPopupBuilder); PosicionarPopup parte sempre dele.
+    // Layout original do prefab; PosicionarPopup parte sempre dele.
     private bool layoutOriginalSalvo;
     private Vector2 ancoraMinOriginal, ancoraMaxOriginal, pivoOriginal, posicaoOriginal, tamanhoOriginal;
 
@@ -273,7 +255,6 @@ public class TutorialStepUI : MonoBehaviour
         }
         popup.anchorMin = ancoraMinOriginal; popup.anchorMax = ancoraMaxOriginal; popup.pivot = pivoOriginal;
         popup.anchoredPosition = posicaoOriginal; popup.sizeDelta = tamanhoOriginal;
-        // Fora do modo compacto, a coluna da esquerda volta a mostrar os glifos e o ícone da etapa.
         if (containerGlifos != null) containerGlifos.gameObject.SetActive(glifosDaEtapa);
         if (imagemIcone != null) imagemIcone.gameObject.SetActive(iconeDaEtapa);
 
@@ -282,9 +263,7 @@ public class TutorialStepUI : MonoBehaviour
         EvitarControlesDeToque();
     }
 
-    // No rodapé, o popup cresce para cima (pivô embaixo) até o texto caber no tamanho normal da fonte, em vez de o auto
-    // size encolher as etapas longas (fonte maior desde 27/10/2026). O topo não passa da HUD; acima disso, o auto size
-    // volta a encolher.
+    // Cresce para cima até o texto caber sem auto size, limitado pela HUD do topo.
     private void CrescerParaOTexto(RectTransform popup)
     {
         if (textoMensagem == null || popup.pivot.y != 0f || !(popup.parent is RectTransform pai)) return;
@@ -300,16 +279,13 @@ public class TutorialStepUI : MonoBehaviour
         popup.sizeDelta = new Vector2(popup.sizeDelta.x, altura);
     }
 
-    // O que a etapa na tela mostra na coluna da esquerda (MontarGlifos / MostrarPopup / dica).
+    // Conteúdo da coluna da esquerda na etapa atual.
     private bool glifosDaEtapa;
     private bool iconeDaEtapa;
 
-    // Faixa do topo ocupada pela HUD de status (retrato e barras), que o popup compacto não pode cobrir.
     private const float AlturaDaHudDoTopo = 270f;
 
-    // Com a prensa aberta (etapas do porão) o inventário ocupa o centro da tela de cima a baixo, e o popup do
-    // rodapé cobria justamente a lista onde a etapa manda clicar na pista. Nesse caso ele vai para a faixa
-    // livre à esquerda do inventário (abaixo da HUD) e volta ao rodapé quando o inventário fecha.
+    // Com o inventário aberto, move o popup para a faixa livre à esquerda dele (senão cobriria as pistas).
     private void AfastarDoInventario(RectTransform popup)
     {
         InventoryManager inventario = GameManager.Instance != null ? GameManager.Instance.inventoryManager : FindAnyObjectByType<InventoryManager>();
@@ -324,16 +300,13 @@ public class TutorialStepUI : MonoBehaviour
         float escala = canvas != null ? canvas.rootCanvas.scaleFactor : 1f;
         float bordaEsquerda = RetanguloNaTela((RectTransform)popup.parent).xMin;
         float livre = (telaInventario.xMin - bordaEsquerda) / escala - 2f * MargemTela;
-        if (livre < LarguraMinimaAoLado) return; // tela estreita demais: melhor sobrepor do que espremer o texto
+        if (livre < LarguraMinimaAoLado) return; // melhor sobrepor do que espremer o texto
 
         popup.anchorMin = popup.anchorMax = popup.pivot = Vector2.zero;
         popup.anchoredPosition = new Vector2(MargemTela, MargemTela);
         float largura = Mathf.Min(tamanhoOriginal.x, livre);
 
-        // Estreito, a coluna de glifos (230) deixava ao texto menos que a largura mínima dele e o texto vazava da moldura.
-        // No modo compacto a coluna só fica se ainda couber ao lado do texto; senão some (o inventário está aberto; a etapa
-        // volta completa quando ele fechar). O popup cresce na altura até o texto caber no tamanho normal da fonte, sem
-        // passar da HUD do topo.
+        // A coluna de glifos só fica se o texto ainda couber na largura mínima ao lado dela.
         float altura = tamanhoOriginal.y;
         if (textoMensagem != null && popup.parent is RectTransform pai)
         {
@@ -354,8 +327,7 @@ public class TutorialStepUI : MonoBehaviour
         else EsconderColunaEsquerda();
         popup.sizeDelta = new Vector2(largura, altura);
 
-        // Da Fase 3 em diante a prensa mostra o painel Suporte justamente nessa faixa: se o popup compacto cair sobre
-        // qualquer coisa que o inventário desenha, ele não vai para lá (volta ao rodapé, como antes desta regra).
+        // Da Fase 3 em diante o painel Suporte ocupa essa faixa: se sobrepor algo do inventário, volta ao rodapé.
         if (SobrepoeOInventario(RetanguloNaTela(popup), inventario.inventoryUI.transform))
         {
             popup.anchorMin = ancoraMinOriginal; popup.anchorMax = ancoraMaxOriginal; popup.pivot = pivoOriginal;
@@ -379,7 +351,6 @@ public class TutorialStepUI : MonoBehaviour
         if (imagemIcone != null) imagemIcone.gameObject.SetActive(false);
     }
 
-    // Largura ocupada à esquerda do texto no corpo (glifos e ícone visíveis, com o espaçamento do layout).
     private float LarguraDaColunaEsquerda(RectTransform corpo)
     {
         var layout = corpo.GetComponent<HorizontalLayoutGroup>();
@@ -393,7 +364,7 @@ public class TutorialStepUI : MonoBehaviour
         return total;
     }
 
-    // Área do texto e da coluna de glifos no popup (TutorialPopupBuilder: "Corpo"); sem ela, o próprio popup.
+    // "Corpo" do TutorialPopupBuilder; sem ele, o próprio popup.
     private RectTransform CorpoDoPopup(RectTransform popup)
     {
         RectTransform corpo = textoMensagem != null ? textoMensagem.transform.parent as RectTransform : null;
@@ -414,15 +385,14 @@ public class TutorialStepUI : MonoBehaviour
         if (inventarioObservado != null) inventarioObservado.OnInventoryToggled += HandleInventarioAlternado;
     }
 
-    // Em telas mais quadradas (tablets 4:3) o popup do rodapé cobria o botão Inventário — justamente na etapa
-    // que pede para tocá-lo. Se o popup encostar num controle de toque visível, ele sobe até ficar acima dele.
+    // Em telas 4:3 o popup cobria os controles de toque: sobe até ficar acima deles.
     private static readonly string[] ControlesDeToque = { "JoystickBG", "InteractButton", "InventoryButton" };
 
     private void EvitarControlesDeToque()
     {
         RectTransform popup = painelPopup != null ? painelPopup.transform as RectTransform : null;
         if (popup == null || MobileControlsManager.Instance == null || !DispositivoDeControle.EhToque) return;
-        float yBase = popup.anchoredPosition.y; // PosicionarPopup já devolveu o popup à posição de partida
+        float yBase = popup.anchoredPosition.y;
 
         Rect telaPopup = RetanguloNaTela(popup);
         float topoDosControles = float.NegativeInfinity;
@@ -439,8 +409,7 @@ public class TutorialStepUI : MonoBehaviour
         float subir = (topoDosControles - telaPopup.yMin) / escala + 12f;
         popup.anchoredPosition = new Vector2(popup.anchoredPosition.x, yBase + subir);
 
-        // O popup compacto pode ter crescido na altura contando com a base no rodapé: depois de subir acima do joystick,
-        // o topo não pode passar da HUD (o texto encolhe pelo auto size, que já está ligado).
+        // Depois de subir, o topo não pode passar da HUD (o auto size encolhe o texto).
         if (popup.parent is RectTransform pai && popup.pivot.y == 0f && popup.anchorMin.y == 0f)
         {
             float topoMaximo = pai.rect.height - AlturaDaHudDoTopo - MargemTela;
@@ -476,11 +445,8 @@ public class TutorialStepUI : MonoBehaviour
         }
     }
 
-    // O popup sai da frente enquanto uma conversa ou cutscene estiver na tela e volta depois,
-    // se a etapa ainda for a mesma e o jogador não a tiver dispensado.
     private void HandleDialogoComecou()
     {
-        // Dica interrompida por uma conversa continua na fila (reaparece quando a conversa acabar).
         if (painelPopup != null) EsconderPorOcupacao();
     }
     private void HandleDialogoTerminou() => ReexibirSePrecisar();
@@ -495,8 +461,6 @@ public class TutorialStepUI : MonoBehaviour
         if (etapa != null && etapa.etapaId == TutorialManager.Instance.EtapaAtualId) MostrarPopup(etapa);
     }
 
-    // Avisa no Console se algum "Etapa Id" digitado em Revelacoes não bate com nenhuma etapa
-    // real do TutorialManager — a causa mais comum de "o botão não aparece" é um erro de digitação aqui.
     private void ValidarEtapaIds()
     {
         if (revelacoes == null) return;
@@ -517,7 +481,7 @@ public class TutorialStepUI : MonoBehaviour
         popupDispensado = false;
         AplicarRevelacoes();
 
-        // Uma dica na tela tem prioridade: a etapa nova aparece quando o jogador fechar a dica.
+        // Dica na tela tem prioridade sobre a etapa nova.
         if (mostrandoDica && painelPopup != null && painelPopup.activeSelf) return;
         mostrandoDica = false;
 
@@ -528,15 +492,12 @@ public class TutorialStepUI : MonoBehaviour
             return;
         }
 
-        // Numa conversa, cutscene, pause ou janela aberta, espera terminar (Update/ReexibirSePrecisar) em vez de
-        // aparecer por cima.
         if (TelaOcupada()) { if (painelPopup != null) painelPopup.SetActive(false); return; }
 
         MostrarPopup(etapa);
     }
 
-    // Revela permanentemente (nunca esconde) tudo que pertence a uma etapa já alcançada — não só a etapa
-    // exata que acabou de começar — para sobreviver a troca de cena (Jogo -> Porao -> Jogo de novo).
+    // Revela (nunca esconde) tudo de etapas já alcançadas, para sobreviver à troca de cena.
     private void AplicarRevelacoes()
     {
         if (revelacoes == null || TutorialManager.Instance == null) return;
@@ -586,7 +547,7 @@ public class TutorialStepUI : MonoBehaviour
 
         for (int i = containerGlifos.childCount - 1; i >= 0; i--)
         {
-            // Destroy só age no fim do frame; desativar antes evita a linha antiga aparecer junto da nova.
+            // Destroy só age no fim do frame.
             GameObject antigo = containerGlifos.GetChild(i).gameObject;
             antigo.SetActive(false);
             Destroy(antigo);
@@ -596,7 +557,6 @@ public class TutorialStepUI : MonoBehaviour
         bool algum = false;
         if (controle == ControleTutorial.Principais)
         {
-            // Três linhas no cartão: teclas menores para caberem na coluna do popup.
             GlifoDeControle.Criar(containerGlifos, ControleTutorial.Mover, fonte, 36f);
             GlifoDeControle.Criar(containerGlifos, ControleTutorial.Interagir, fonte, 36f);
             GlifoDeControle.Criar(containerGlifos, ControleTutorial.Inventario, fonte, 36f);
@@ -618,7 +578,7 @@ public class TutorialStepUI : MonoBehaviour
             mostrandoDica = false;
             if (TutorialManager.Instance != null) TutorialManager.Instance.ConcluirDica();
             if (painelPopup != null) painelPopup.SetActive(false);
-            ReexibirSePrecisar(); // a próxima dica da fila, ou a etapa que esperava atrás da dica
+            ReexibirSePrecisar(); // próxima dica da fila ou a etapa que esperava
             return;
         }
 
@@ -631,8 +591,6 @@ public class TutorialStepUI : MonoBehaviour
         }
         else
         {
-            // Etapas que avançam por evento/cena: o botão só esconde a mensagem; o TutorialManager
-            // continua esperando a ação real acontecer para avançar de fato.
             popupDispensado = true;
             if (painelPopup != null) painelPopup.SetActive(false);
         }

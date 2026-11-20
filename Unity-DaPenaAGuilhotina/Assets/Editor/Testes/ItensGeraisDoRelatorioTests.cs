@@ -8,8 +8,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Relatório de testes de 28/09, itens 7, 12, 20, 21 e 23: retomada do tutorial ao carregar um save antigo, fim de jogo
-/// registrado no save, nome da cena do menu, limite da câmera do porão e ouvinte do FMOD nas câmeras.
+/// Retomada do tutorial ao carregar um save antigo, fim de jogo registrado no save, nome da cena do menu, limite da
+/// câmera do porão e ouvinte do FMOD nas câmeras.
 /// </summary>
 public class ItensGeraisDoRelatorioTests
 {
@@ -22,12 +22,12 @@ public class ItensGeraisDoRelatorioTests
         criados.Clear();
     }
 
-    // ===== Item 7: tutorial ao carregar =====
+    // ===== Tutorial ao carregar =====
 
     [Test]
     public void Tutorial_SaveComTutorialConcluido_VaiAoMenosAteAMesa()
     {
-        // Save v6 real de 26/09: etapa 7 ("desça ao porão") gravada na Fase 2, com o caso do tutorial já concluído.
+        // Save v6 real: etapa 7 ("desça ao porão") gravada na Fase 2, com o caso do tutorial já concluído.
         Assert.AreEqual(14, TutorialManager.EtapaAoCarregar(7, 15, 14, tutorialConcluido: true));
         // Etapa salva depois da mesa (tutorial terminado) não volta para trás.
         Assert.AreEqual(15, TutorialManager.EtapaAoCarregar(15, 15, 14, tutorialConcluido: true));
@@ -51,7 +51,7 @@ public class ItensGeraisDoRelatorioTests
         });
     }
 
-    // ===== Item 21: fim de jogo =====
+    // ===== Fim de jogo =====
 
     [Test]
     public void Save_FimDeJogo_RegistradoENaoContinua()
@@ -86,7 +86,7 @@ public class ItensGeraisDoRelatorioTests
         Assert.IsFalse(SistemaDeSave.PodeContinuar(null));
     }
 
-    // ===== Item 23: nome da cena do menu =====
+    // ===== Nome da cena do menu =====
 
     [Test]
     public void Menu_NomeDaCenaIgualAoDoBuild()
@@ -97,7 +97,7 @@ public class ItensGeraisDoRelatorioTests
         Assert.IsTrue(achou, $"Nenhuma cena do build se chama exatamente '{PauseMenu.CenaDoMenu}'.");
     }
 
-    // ===== Itens 12 e 20: câmeras =====
+    // ===== Câmeras =====
 
     [Test]
     public void Porao_CameraLimitadaASala()

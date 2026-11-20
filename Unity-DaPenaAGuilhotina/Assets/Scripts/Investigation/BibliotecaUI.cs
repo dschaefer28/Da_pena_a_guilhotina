@@ -6,13 +6,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// Biblioteca (Prompt 3, a partir da Fase 3): botão na HUD que abre o catálogo de documentos à venda — nome,
-/// descrição, preço, caso a que servem e estado (disponível, comprado, outro caso...). A compra é feita pelo
-/// GameManager.ComprarNaBiblioteca (sem crédito, sem cobrança parcial, uma vez por oferta+caso).
-///
-/// Fica no prefab UI (objeto "Biblioteca") e se monta por código no primeiro uso, como o HudDoRelogio. Enquanto
-/// aberta: jogo pausado (timeScale 0), movimento e interação bloqueados, controles de toque desligados, Esc/botão
-/// fecha e restaura tudo. As ofertas são assets OfertaDaBiblioteca editáveis na lista abaixo.
+/// Biblioteca (Fase 3+): catálogo de documentos de apoio à venda, montado por código no primeiro uso. A compra é do
+/// GameManager.ComprarNaBiblioteca (sem fiado, sem cobrança parcial, uma vez por oferta+caso).
+/// Aberta, pausa o jogo (timeScale 0) e desliga os controles de toque.
 /// </summary>
 public class BibliotecaUI : MonoBehaviour
 {
@@ -25,14 +21,13 @@ public class BibliotecaUI : MonoBehaviour
              "Vazio = retângulo de cor lisa.")]
     public Sprite spriteDoBotao;
 
-    /// <summary>Verdadeiro com a janela aberta (PauseMenu, inventário, jogador e interação consultam).</summary>
     public static bool Aberta { get; private set; }
     private static int frameEmQueFechou = -1;
     /// <summary>O Esc que fechou a biblioteca não pode abrir o pause no mesmo frame.</summary>
     public static bool BloqueiaPausa => Aberta || frameEmQueFechou == Time.frameCount;
 
     private static readonly Color CorTexto = new Color(0.93f, 0.9f, 0.84f);
-    // Opaco: no espaço de cor Linear do projeto, alpha 0,97 ainda deixava o cenário aparecer por trás.
+    // Opaco: em espaço de cor Linear, alpha 0,97 ainda deixava o cenário vazar.
     private static readonly Color CorPainel = new Color(0.11f, 0.08f, 0.07f, 1f);
     private static readonly Color CorLinha = new Color(0.18f, 0.13f, 0.11f, 1f);
     private static readonly Color CorBotao = new Color(0.36f, 0.25f, 0.16f, 1f);
@@ -46,7 +41,7 @@ public class BibliotecaUI : MonoBehaviour
     private float timeScaleAoAbrir = 1f;
     private bool dicaPedida;
 
-    // Play Mode sem recarregar domínio: o estado estático não pode vazar de uma sessão para a outra.
+    // Play Mode sem domain reload: o estado estático não pode vazar entre sessões.
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ZerarEstado()
     {
@@ -69,7 +64,7 @@ public class BibliotecaUI : MonoBehaviour
     private void Update()
     {
         GameManager gm = GameManager.Instance;
-        // Some com qualquer outro modal aberto: não fica por cima do pause nem oferece um clique que seria recusado.
+        // Some com outro modal aberto: não fica por cima nem oferece um clique que seria recusado.
         bool outroModal = CutsceneLegendas.EmExibicao || CaseSelectionUI.Aberta || QuadroDeDeducaoUI.Aberto ||
                           (PauseMenu.Instance != null && PauseMenu.Instance.IsOpen) ||
                           (gm != null && gm.dialogueSystem != null && gm.dialogueSystem.IsDialogueActive) ||
@@ -78,7 +73,7 @@ public class BibliotecaUI : MonoBehaviour
         if (botaoAbrir != null && botaoAbrir.gameObject.activeSelf != (visivel && !Aberta))
             botaoAbrir.gameObject.SetActive(visivel && !Aberta);
 
-        // Primeira vez que o botão aparece (Prompt 7): a dica explica a Biblioteca antes de o jogador abri-la.
+        // A dica explica a Biblioteca na primeira vez que o botão aparece.
         if (visivel && !dicaPedida && TutorialManager.Instance != null)
         {
             dicaPedida = true;
@@ -171,7 +166,7 @@ public class BibliotecaUI : MonoBehaviour
 
         string titulo = string.IsNullOrWhiteSpace(oferta.titulo) ? oferta.item.NomeExibicao : oferta.titulo;
         string casoTitulo = string.IsNullOrWhiteSpace(oferta.caso.caseTitle) ? oferta.caso.name : oferta.caso.caseTitle.Trim();
-        // Tamanhos revistos com a EB Garamond (27/10/2026): nada abaixo de ~22 na referência de 1080 (15 px em 720).
+        // EB Garamond: nada abaixo de ~22 na referência de 1080.
         var textos = Texto("Textos", linha.transform, 28f,
             $"<b>{titulo}</b>  <size=80%><color=#C9A94E>qualidade superior</color></size>\n" +
             $"<size=90%>{oferta.descricao}</size>\n<size=80%><color=#B0A48C>Serve ao caso: {casoTitulo}</color></size>",
@@ -192,8 +187,7 @@ public class BibliotecaUI : MonoBehaviour
             default: situacao = "<color=#9E9E9E>Indisponível</color>"; break;
         }
         var preco = Texto("Preco", linha.transform, 28f, $"<b>{oferta.preco} de ouro</b>\n<size=80%>{situacao}</size>", TextAlignmentOptions.Center);
-        // Sem largura mínima, a descrição (largura preferida enorme) espremia o preço e o botão até quebrar as palavras
-        // no meio ("COM/PRAR", "OUR/O"). A descrição é que encolhe e quebra em mais linhas.
+        // Largura mínima: senão a descrição espreme preço e botão até quebrar palavras no meio.
         preco.GetComponent<LayoutElement>().minWidth = 240f;
         preco.GetComponent<LayoutElement>().preferredWidth = 260f;
 
@@ -206,7 +200,7 @@ public class BibliotecaUI : MonoBehaviour
 
     private void Comprar(OfertaDaBiblioteca oferta, Button botao)
     {
-        botao.interactable = false; // duplo clique: o segundo nem chega aqui
+        botao.interactable = false; // contra duplo clique
         GameManager gm = GameManager.Instance;
         GameManager.ResultadoDaCompra resultado = gm.ComprarNaBiblioteca(oferta);
         switch (resultado)
@@ -234,10 +228,8 @@ public class BibliotecaUI : MonoBehaviour
             if (modelo != null) fonte = modelo.font;
         }
 
-        // Botão no canto superior direito, logo abaixo do botão de pause do celular (no PC, no topo): mesma coluna,
-        // tamanho e fonte do Pause e do Quadro de pistas, dentro da área segura.
         Button abrir = Botao("BotaoBiblioteca", raiz, "Biblioteca");
-        // Canvas próprio acima do canvas dos controles de toque, para o toque chegar ao botão.
+        // Canvas próprio acima do dos controles de toque, para o toque chegar ao botão.
         var canvasBotao = abrir.gameObject.AddComponent<Canvas>();
         canvasBotao.overrideSorting = true;
         canvasBotao.sortingOrder = 30;
@@ -247,7 +239,6 @@ public class BibliotecaUI : MonoBehaviour
         abrir.onClick.AddListener(Abrir);
         botaoAbrir.gameObject.SetActive(false);
 
-        // Janela modal: fundo escurecido que bloqueia cliques no jogo + painel central.
         janela = new GameObject("JanelaBiblioteca", typeof(RectTransform), typeof(Canvas), typeof(GraphicRaycaster), typeof(Image));
         janela.transform.SetParent(raiz, false);
         var rtJanela = (RectTransform)janela.transform;
@@ -267,8 +258,7 @@ public class BibliotecaUI : MonoBehaviour
         v.padding = new RectOffset(32, 32, 24, 24); v.spacing = 14f;
         v.childControlWidth = v.childControlHeight = true; v.childForceExpandWidth = true; v.childForceExpandHeight = false;
 
-        // Altura fixa e sem esticar os filhos na altura (como no Quadro de pistas): antes o título inflava a faixa e o
-        // Fechar esticava junto (200 x 267), deixando uma faixa vazia sob o título.
+        // Altura fixa, sem esticar filhos: senão o título infla a faixa e o Fechar estica junto.
         var cabecalho = new GameObject("Cabecalho", typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
         cabecalho.transform.SetParent(painel.transform, false);
         var leCabecalho = cabecalho.GetComponent<LayoutElement>();
@@ -292,7 +282,6 @@ public class BibliotecaUI : MonoBehaviour
             "reforçam o panfleto do caso a que servem. Um documento caro não garante que as suas pistas sejam verdadeiras.</color>",
             TextAlignmentOptions.MidlineLeft);
 
-        // Lista com rolagem (mouse, arrasto e toque).
         var area = new GameObject("Lista", typeof(RectTransform), typeof(Image), typeof(RectMask2D), typeof(ScrollRect), typeof(LayoutElement));
         area.transform.SetParent(painel.transform, false);
         area.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.25f);
@@ -332,8 +321,7 @@ public class BibliotecaUI : MonoBehaviour
         return tmp;
     }
 
-    // Com o sprite "button": 1 pixel da arte = 1/EscalaDaMoldura unidades do canvas (a moldura fica com a espessura dos
-    // botões de Pause/Inventário/Interagir, de 60 de altura para 43 px de arte).
+    // Iguala a espessura da moldura à dos botões de Pause/Inventário/Interagir (60 de altura para 43 px de arte).
     private const float EscalaDaMoldura = 0.7f;
 
     private Button Botao(string nome, Transform pai, string rotulo)
@@ -346,12 +334,10 @@ public class BibliotecaUI : MonoBehaviour
         bool comSprite = spriteDoBotao != null;
         if (comSprite)
         {
-            // Fatiado (9-slice): só o miolo estica, então a moldura não deforma em botões de outras proporções.
             fundo.sprite = spriteDoBotao;
             fundo.type = Image.Type.Sliced;
             fundo.pixelsPerUnitMultiplier = EscalaDaMoldura;
-            // Estados padrão do Button (pressionado e desativado), como em Pause/Inventário/Interagir. A tinta não
-            // clareia o sprite além da cor dele, então o realce e o foco do teclado escurecem um pouco em vez de clarear.
+            // A tinta não clareia além da cor do sprite: realce e foco escurecem um pouco.
             ColorBlock cores = botao.colors;
             cores.highlightedColor = cores.selectedColor = new Color(0.88f, 0.88f, 0.88f, 1f);
             botao.colors = cores;
@@ -370,9 +356,8 @@ public class BibliotecaUI : MonoBehaviour
         rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero;
         if (comSprite)
         {
-            // Uma linha só, dentro da face: se o texto não couber, encolhe um pouco em vez de encostar na moldura.
             texto.textWrappingMode = TextWrappingModes.NoWrap;
-            EstiloDeBotao.AjustarRotulo(texto); // recuos e respiro padrão de todos os botões
+            EstiloDeBotao.AjustarRotulo(texto);
         }
         return botao;
     }

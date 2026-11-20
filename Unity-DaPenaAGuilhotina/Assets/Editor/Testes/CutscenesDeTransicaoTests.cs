@@ -1,8 +1,8 @@
 using NUnit.Framework;
 
 /// <summary>
-/// Legendas de transição (abertura e passagem entre fases, 29/10/2026): tempo de leitura de cada bloco pelo número de
-/// palavras (1 s de margem + 1 s a cada 3 palavras, no mínimo 5 s), contado com o texto já inteiro na tela.
+/// Legendas de transição: tempo de leitura de cada bloco pelo número de palavras (1 s de margem + 1 s a cada 3
+/// palavras, no mínimo 5 s), contado com o texto já inteiro na tela.
 /// </summary>
 public class CutscenesDeTransicaoTests
 {

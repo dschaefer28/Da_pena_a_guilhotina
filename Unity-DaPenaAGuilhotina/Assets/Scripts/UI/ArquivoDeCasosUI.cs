@@ -4,13 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Painel "Casos resolvidos" do menu principal: lista os casos concluídos numa partida (um botão por caso, na ordem das
-/// fases) e mostra o texto do caso escolhido — relato do cliente, o que o jogador fez e o desfecho (ArquivoDeCasos).
-/// As setas trocam entre as partidas guardadas; abre sempre na mais recente.
-///
-/// Todo o visual (moldura, botões, textos, rolagem) já existe na cena, montado por
-/// Ferramentas > Menu principal > Criar painel Casos resolvidos. Este script só preenche os textos e liga/desliga os
-/// botões que já estão lá.
+/// Painel "Casos resolvidos" do menu principal: casos concluídos por partida, na ordem das fases.
+/// O visual é montado por Ferramentas > Menu principal > Criar painel Casos resolvidos; aqui só se preenchem textos.
 /// </summary>
 public class ArquivoDeCasosUI : MonoBehaviour
 {
@@ -87,7 +82,7 @@ public class ArquivoDeCasosUI : MonoBehaviour
             ArquivoDeCasos.PartidaArquivada partida = partidas[partidaAtual];
             CatalogoDeSave catalogo = CatalogoDeSave.Instancia;
             casosVisiveis.AddRange(partida.casos);
-            // Na ordem das fases (o tutorial primeiro); casos da mesma fase ficam na ordem em que foram concluídos.
+            // Ordem das fases (tutorial primeiro).
             casosVisiveis.Sort((a, b) => FaseDe(a, catalogo).CompareTo(FaseDe(b, catalogo)));
             if (casosVisiveis.Count > Capacidade)
                 Debug.LogWarning($"[ArquivoDeCasosUI] A partida tem {casosVisiveis.Count} casos e o painel só tem {Capacidade} botões; os últimos não aparecem.");

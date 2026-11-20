@@ -1,11 +1,8 @@
 using UnityEditor;
 
 /// <summary>
-/// Um único ajuste, para o projeto inteiro, de como o jogo se comporta no Editor: como PC (tecla E, A/D,
-/// sem botões na tela) ou como celular (joystick e botões Interagir/Inventário/Pause). Vale para todas as
-/// cenas ao mesmo tempo, então o tutorial nunca mais fica diferente entre Jogo e Porão. Nos builds o
-/// aparelho decide sozinho (Windows = teclado, Android = toque). Com o Device Simulator aberto, o Editor
-/// já se comporta como celular mesmo com esta opção desmarcada.
+/// Ajuste global (EditorPrefs) de controles no Editor: PC (teclado) ou celular (joystick e botões na tela).
+/// Não afeta builds (a plataforma decide); com o Device Simulator aberto o Editor já se comporta como celular.
 /// </summary>
 public static class ControlesNoEditorMenu
 {

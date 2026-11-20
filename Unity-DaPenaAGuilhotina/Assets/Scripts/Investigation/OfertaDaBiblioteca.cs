@@ -1,10 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Um documento à venda na biblioteca (Prompt 3, a partir da Fase 3). Editável como asset; a lista de ofertas
-/// fica no componente BibliotecaUI do prefab UI. A compra é registrada por oferta + caso (GameManager.comprasDaBiblioteca)
-/// e entrega o "Item" uma única vez. O preço não diz nada sobre a verdade: documentos da biblioteca não são pistas
-/// (não entram nos dois slots) e só reforçam o panfleto por regras explícitas da receita do caso.
+/// Documento à venda na biblioteca. Compra registrada por oferta + caso e entregue uma única vez. O preço não diz nada
+/// sobre a verdade: não é pista e só reforça o panfleto por regras da receita do caso.
 /// </summary>
 [CreateAssetMenu(fileName = "Oferta", menuName = "ScriptableObject/Oferta da Biblioteca")]
 public class OfertaDaBiblioteca : ScriptableObject

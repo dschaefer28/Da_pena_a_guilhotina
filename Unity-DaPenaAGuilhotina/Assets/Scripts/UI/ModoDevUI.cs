@@ -7,12 +7,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Painel do modo dev (ModoDev), para a apresentação: F1 abre e fecha em qualquer cena, inclusive no menu principal; no
-/// celular, cinco toques seguidos no canto superior esquerdo da tela. No Editor também há Ferramentas > Modo dev.
-///
-/// Montado por código num objeto que sobrevive às trocas de cena: nenhuma cena ou prefab precisa dele.
-/// Seções: os três finais direto no Tribunal (com o destino do réu), o início de cada fase e, numa partida em andamento,
-/// atalhos (barras, horas, pistas, concluir o caso, viajar). Tudo o que sai daqui vira partida de demonstração: não grava.
+/// Painel do modo dev: F1 em qualquer cena, ou cinco toques no canto superior esquerdo no celular.
+/// Montado por código num objeto DontDestroyOnLoad. Partidas abertas por aqui são de demonstração e não gravam.
 /// </summary>
 public class ModoDevUI : MonoBehaviour
 {
@@ -20,8 +16,7 @@ public class ModoDevUI : MonoBehaviour
     private const int ToquesParaAbrir = 5;
     private const float JanelaDosToques = 3f;
 
-    // O projeto usa espaço de cor Linear: com alpha < 1, um painel escuro ainda deixa ver bem o que está atrás. O painel é
-    // opaco; o fundo escurece a tela sem esconder em que cena o jogador está.
+    // Em espaço Linear alpha < 1 deixa ver demais o que está atrás: o painel é opaco, só o fundo é translúcido.
     private static readonly Color CorFundo = new Color(0f, 0f, 0f, 0.85f);
     private static readonly Color CorPainel = new Color(0.10f, 0.07f, 0.06f, 1f);
     private static readonly Color CorTexto = new Color(0.91f, 0.85f, 0.71f);
@@ -54,7 +49,6 @@ public class ModoDevUI : MonoBehaviour
         instancia = go.AddComponent<ModoDevUI>();
     }
 
-    /// <summary>Abre ou fecha o painel (a tecla, o gesto e o menu do Editor chamam isto).</summary>
     public static void Alternar()
     {
         if (instancia == null) Criar();
@@ -72,7 +66,6 @@ public class ModoDevUI : MonoBehaviour
         if (Aberto && Time.unscaledTime >= proximaAtualizacao) Atualizar();
     }
 
-    // Cinco toques no canto superior esquerdo (15% da largura e da altura) em até 3 segundos.
     private bool GestoNoCanto()
     {
         Touchscreen tela = Touchscreen.current;
@@ -110,8 +103,6 @@ public class ModoDevUI : MonoBehaviour
         MarcarReu();
     }
 
-    // ===== Ações =====
-
     private void IrPara(ModoDev.Destino destino, RotaFinal rota = RotaFinal.Nenhuma)
     {
         DefinirAberto(false);
@@ -147,8 +138,6 @@ public class ModoDevUI : MonoBehaviour
         rotulo.text = marcado ? $"<b>» {texto} «</b>" : texto;
     }
 
-    // ===== Montagem =====
-
     private void Montar()
     {
         var canvasGo = new GameObject("Canvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
@@ -161,7 +150,7 @@ public class ModoDevUI : MonoBehaviour
         scaler.referenceResolution = new Vector2(1920f, 1080f);
         scaler.matchWidthOrHeight = 0.5f;
 
-        // Fundo escuro em tela cheia: bloqueia os cliques no jogo enquanto o painel está aberto.
+        // Fundo em tela cheia também bloqueia os cliques no jogo.
         raiz = Retangulo("Fundo", canvasGo.transform);
         Esticar(raiz);
         raiz.gameObject.AddComponent<Image>().color = CorFundo;
@@ -276,7 +265,7 @@ public class ModoDevUI : MonoBehaviour
         return rt;
     }
 
-    // Texto dentro de um layout: sem auto-size (o layout lê a altura preferida do TMP).
+    // Sem auto-size: o layout lê a altura preferida do TMP.
     private static TextMeshProUGUI Texto(Transform pai, string texto, float tamanho, Color cor, TextAlignmentOptions alinhamento)
     {
         RectTransform rt = Retangulo("Texto", pai);

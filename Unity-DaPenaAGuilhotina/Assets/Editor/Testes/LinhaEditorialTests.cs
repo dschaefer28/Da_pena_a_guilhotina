@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Linha editorial (teor). Duas opções desde 08/11/2026: Neutro (efeito normal do caso) e Sensacionalista (mais ouro,
+/// Linha editorial (teor). Duas opções: Neutro (efeito normal do caso) e Sensacionalista (mais ouro,
 /// o lado do caso ganha menos). Cálculo único versão → apoio → linha, agravamento opcional só da consequência que já
 /// existe, compatibilidade sem linha, histórico/revelação e save v6. A prensa com a janela de escolha está em ComponentesTests.
 /// </summary>
@@ -137,7 +137,7 @@ public class LinhaEditorialTests
         Assert.AreEqual(-5, neutro.penalidadeEstado);
         Assert.AreEqual(0, neutro.agravamentoPovo);
 
-        receita.linhaEditorial.agravamentoPercentual = 0; // padrão dos casos reais desde 08/11/2026
+        receita.linhaEditorial.agravamentoPercentual = 0; // padrão dos casos reais
         ResultadoDoPanfleto semAgravamento = Calcular(fato1, boato, LinhaEditorial.Sensacionalista);
         Assert.AreEqual(-10, semAgravamento.penalidadePovo, "com 0% o desmentido do sensacionalista pesa o mesmo");
         Assert.AreEqual(0, semAgravamento.agravamentoPovo);
@@ -154,7 +154,7 @@ public class LinhaEditorialTests
         Assert.IsNull(Calcular(fato1, fato2, LinhaEditorial.DefesaDoPovo), "linha legada não é mais opção");
         Assert.IsNull(Calcular(fato1, fato2, LinhaEditorial.AgradarOPoder), "linha legada não é mais opção");
 
-        receita.linhaEditorial = new ReceitaDeCaso.ConfiguracaoEditorial(); // como um asset anterior ao Prompt 5
+        receita.linhaEditorial = new ReceitaDeCaso.ConfiguracaoEditorial(); // asset sem linha editorial configurada
         Assert.IsTrue(receita.linhaEditorial.Vazia);
         ResultadoDoPanfleto neutro = Calcular(fato1, boato, LinhaEditorial.Sensacionalista);
         Assert.AreEqual(LinhaEditorial.Nenhuma, neutro.linha, "sem linha configurada a escolha é ignorada");

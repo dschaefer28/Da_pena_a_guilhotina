@@ -45,7 +45,7 @@ public class MouseManager : MonoBehaviour
             if (!dragIcon.gameObject.activeSelf) dragIcon.gameObject.SetActive(true);
             if (dragIcon.sprite != heldItem.itemImg) dragIcon.sprite = heldItem.itemImg;
 
-            // ARQUITETURA UNIVERSAL: Pointer.current capta Mouse (Windows) e Toque (Android)
+            // Pointer.current cobre mouse e toque.
             if (Pointer.current != null)
             {
                 var parent = dragIcon.rectTransform.parent as RectTransform;
@@ -59,7 +59,7 @@ public class MouseManager : MonoBehaviour
         }
         else
         {
-            if (heldItem != null && heldItem.itemAmt <= 0) heldItem = null; // stack zerado: solta o item fantasma
+            if (heldItem != null && heldItem.itemAmt <= 0) heldItem = null; // solta o item fantasma de stack zerado
             if (dragIcon.gameObject.activeSelf) dragIcon.gameObject.SetActive(false);
         }
     }

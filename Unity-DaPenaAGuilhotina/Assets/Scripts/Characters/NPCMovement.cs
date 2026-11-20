@@ -19,7 +19,7 @@ public struct CasoReacao
     public DialogueData dialogoComPista;
     
     [Tooltip("Lista de itens entregues ao jogador ao fim do diálogo (Ex: Decreto/Papel).")]
-    public List<Item> recompensasDoDialogo; // Transformado em Lista
+    public List<Item> recompensasDoDialogo;
 
     [Tooltip("Opcional. Fala curta depois que todas as recompensas desta reação já foram entregues (ex: 'Vá para o porão'). " +
              "Vazio = repete a fala da reação, sem entregar nada de novo.")]
@@ -83,12 +83,10 @@ public class NPCMovement : MonoBehaviour, IInteractable
     public GameObject visualIndicator;
     public UnityEvent OnDialogueComplete;
 
-    // Itens que o NPC vai dar ao fim da conversa atual, e de qual caso/etapa eles são
     private List<Item> recompensasPendentes = new List<Item>();
     private CaseData casoDaConversa;
     private string etapaDaConversa;
     private bool aguardandoFimDoDialogo;
-    // Inventário da cena observado para avisar quando o jogador acha o requisito de uma etapa complementar.
     private InventoryManager inventarioObservado;
     private bool entregandoRecompensas;
 
@@ -96,7 +94,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
     {
         UpdateVisualFeedback();
         ObservarRequisitosDasEtapas();
-        // Volta à cena (ou save carregado) com uma etapa já liberada e não recebida: lembra o jogador.
+        // Volta à cena/save com etapa liberada e não recebida: lembra o jogador.
         if (EtapaLiberadaParaVoltar(null)) AvisarEtapaLiberada();
     }
 
@@ -110,8 +108,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
     /// <summary>"cena/id" desta interação (ver IdDeInteracao).</summary>
     public string ChaveDaInteracao => IdDeInteracao.ChaveDaCena(this, idDaInteracao);
 
-    // Usado pelo Player (alvo mais próximo) e pelo aviso de interação: só conta como interagível
-    // enquanto ainda responde. Mesma regra dos dois primeiros "return" de Interact().
+    // Mesma regra dos dois primeiros "return" de Interact().
     public bool PodeInteragir =>
         canInteract && (casoObrigatorio == null || GameManager.Instance == null || GameManager.Instance.casoEscolhido == casoObrigatorio);
 
@@ -166,7 +163,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
                         recompensasDaEtapa = complementar.recompensas;
                         etapa = complementar.id;
                     }
-                    // Tudo desta reação já entregue: a fala curta (se houver) no lugar de repetir a conversa inteira.
+                    // Tudo entregue: fala curta no lugar de repetir a conversa inteira.
                     else if (reacao.dialogoDepoisDaEntrega != null && recompensasDaEtapa != null &&
                              recompensasDaEtapa.Exists(r => r != null && !string.IsNullOrEmpty(r.itemID)) &&
                              !TemRecompensaPendente(recompensasDaEtapa, casoAtual, etapa))
@@ -180,7 +177,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
             }
         }
 
-        // Sem fala para tocar a interação não acontece: não cobra horas nem deixa o fim do diálogo pendurado.
+        // Sem fala, não cobra horas nem deixa o fim do diálogo pendurado.
         if (dialogoParaTocar == null || dialogoParaTocar.talkScript == null || dialogoParaTocar.talkScript.Count == 0)
         {
             Debug.LogWarning($"[NPC] {gameObject.name}: nenhum diálogo configurado para este estado do jogo.", this);
@@ -189,10 +186,10 @@ public class NPCMovement : MonoBehaviour, IInteractable
 
         casoDaConversa = casoAtual;
         etapaDaConversa = etapa;
-        // Recompensas só para o caso em andamento: um caso concluído (ou nenhum) só conversa.
+        // Caso concluído (ou nenhum) só conversa.
         PrepararRecompensas(GameManager.Instance.CasoAtualEmAndamento ? recompensasDaEtapa : null);
 
-        // Inventário cheio (não há descarte): se nada do que o NPC entregaria cabe, a conversa não cobra horas.
+        // Inventário cheio (não há descarte): se nada cabe, a conversa não cobra horas.
         InventoryManager inventario = GameManager.Instance.inventoryManager;
         if (recompensasPendentes.Count > 0 && inventario != null && !recompensasPendentes.Exists(inventario.TemEspacoPara))
         {
@@ -213,7 +210,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
     private void IniciarConversa(DialogueSystem dialogueSystem, DialogueData dialogo)
     {
         dialogueSystem.dialogueData = dialogo;
-        dialogueSystem.OnDialogueEnded -= HandleDialogueEnded; // nunca inscrever duas vezes
+        dialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
         dialogueSystem.OnDialogueEnded += HandleDialogueEnded;
         aguardandoFimDoDialogo = true;
         VirarUmParaOOutro();
@@ -236,10 +233,10 @@ public class NPCMovement : MonoBehaviour, IInteractable
         if (sprite == null) return;
 
         float dx = jogador.transform.position.x - transform.position.x;
-        if (Mathf.Abs(dx) < 0.01f) return; // em cima um do outro: nenhum lado faz sentido
+        if (Mathf.Abs(dx) < 0.01f) return;
 
         if (!virado) { flipXOriginal = sprite.flipX; virado = true; }
-        sprite.flipX = dx < 0f;          // jogador à esquerda -> NPC olha para a esquerda
+        sprite.flipX = dx < 0f;
         jogador.OlharParaX(transform.position.x);
     }
 
@@ -250,7 +247,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
         if (voltarADirecaoOriginal && sprite != null) sprite.flipX = flipXOriginal;
     }
 
-    /// <summary>Reação configurada para o caso (a primeira da lista, como em Interact).</summary>
+    /// <summary>A primeira da lista, como em Interact.</summary>
     private bool ReacaoDoCaso(CaseData caso, out CasoReacao reacao)
     {
         reacao = default;
@@ -260,9 +257,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
         return false;
     }
 
-    // Playtest: o jogador falava uma vez com cada NPC e saía sem o documento da etapa complementar (Kornmann na Fase 3,
-    // Vergniaud na Fase 4), porque ela só abria numa SEGUNDA conversa, sem nada que o indicasse. Agora, se ao fim da
-    // conversa houver uma etapa já liberada, a conversa continua nela (a interação já foi paga, não cobra de novo).
+    // Etapa já liberada continua na mesma conversa (já paga): senão exigiria uma segunda conversa sem nada que a indicasse.
     private bool ContinuarNaEtapaLiberada(DialogueSystem dialogueSystem)
     {
         GameManager gm = GameManager.Instance;
@@ -278,7 +273,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
         InventoryManager inventario = gm.inventoryManager;
         if (recompensasPendentes.Count == 0 || (inventario != null && !recompensasPendentes.Exists(inventario.TemEspacoPara)))
         {
-            // Sem espaço: a etapa espera a próxima conversa (que avisa do inventário cheio e não cobra).
+            // Sem espaço: a etapa espera a próxima conversa.
             recompensasPendentes.Clear();
             return false;
         }
@@ -300,22 +295,20 @@ public class NPCMovement : MonoBehaviour, IInteractable
         inventarioObservado.OnItemAdicionado += AoReceberItem;
     }
 
-    // O jogador já conversou com este NPC e acabou de achar o que libera uma etapa dele: sem o aviso, nada indica que
-    // vale voltar (quem ainda não conversou recebe a etapa na primeira conversa, ver ContinuarNaEtapaLiberada).
+    // Avisa quem já conversou com o NPC que vale voltar; quem não conversou recebe a etapa na primeira conversa.
     private void AoReceberItem(Item item)
     {
-        // O item veio deste mesmo NPC: a conversa já segue para a etapa (ContinuarNaEtapaLiberada), sem aviso.
+        // Item vindo deste NPC: a conversa já segue para a etapa.
         if (entregandoRecompensas) return;
         if (item != null && EtapaLiberadaParaVoltar(item)) AvisarEtapaLiberada();
     }
 
-    /// <summary>Há etapa complementar liberada e não entregue, num NPC com quem o jogador já conversou neste caso.
-    /// Com <paramref name="requisito"/>, só conta a etapa que exige esse item.</summary>
+    /// <summary>Etapa liberada e não entregue num NPC já pago neste caso. Com <paramref name="requisito"/>, só a que o exige.</summary>
     private bool EtapaLiberadaParaVoltar(Item requisito)
     {
         GameManager gm = GameManager.Instance;
         if (gm == null || !gm.CasoAtualEmAndamento || !gameObject.activeInHierarchy || !PodeInteragir) return false;
-        if (!RelogioDeInvestigacao.JaPaga(this, idDaInteracao)) return false; // ainda não conversou neste caso
+        if (!RelogioDeInvestigacao.JaPaga(this, idDaInteracao)) return false;
         return ReacaoDoCaso(gm.casoEscolhido, out CasoReacao reacao) &&
                EtapaComplementarPendente(reacao, gm.casoEscolhido, out _, requisito);
     }
@@ -331,20 +324,18 @@ public class NPCMovement : MonoBehaviour, IInteractable
         return false;
     }
 
-    /// <summary>Mesmo critério para escolher a etapa e para entregar: não registrado como entregue neste
-    /// caso/interação/etapa e, num caso vindo de save v2 (sem registro), o jogador ainda não tem o item.</summary>
+    /// <summary>Mesmo critério para escolher a etapa e para entregar. Em save v2 (sem registro), vale ainda não ter o item.</summary>
     private bool AindaPendente(Item item, CaseData caso, string etapa)
     {
         if (item == null || string.IsNullOrEmpty(item.itemID)) return false;
         GameManager gm = GameManager.Instance;
         if (gm.registroDaInvestigacao.RecompensaEntregue(caso, ChaveDaInteracao, etapa, item.itemID)) return false;
-        if (Deducao.Descartada(gm, item)) return false; // descartada no quadro de dedução: não volta
+        if (Deducao.Descartada(gm, item)) return false;
         return !(gm.registroDaInvestigacao.CasoComEstadoLegado(caso) && gm.inventoryManager != null &&
                  gm.inventoryManager.PossuiEmQualquerLugar(item.itemID));
     }
 
-    /// <summary>Primeira etapa complementar com todos os pré-requisitos já obtidos e alguma recompensa ainda não entregue.
-    /// Com <paramref name="soComRequisito"/>, só considera as etapas que exigem esse item.</summary>
+    /// <summary>Primeira etapa com requisitos obtidos e recompensa pendente. Com <paramref name="soComRequisito"/>, só as que o exigem.</summary>
     private bool EtapaComplementarPendente(CasoReacao reacao, CaseData caso, out EtapaComplementar pendente, Item soComRequisito = null)
     {
         pendente = default;
@@ -375,8 +366,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
         return false;
     }
 
-    /// <summary>Lista o que ainda não foi entregue NESTE caso/interação/etapa. Não depende do que está no
-    /// inventário agora: uma pista gasta na prensa não volta ao revisitar o NPC.</summary>
+    /// <summary>Não depende do inventário atual: pista gasta na prensa não volta ao revisitar o NPC.</summary>
     private void PrepararRecompensas(List<Item> itensConfigurados)
     {
         recompensasPendentes.Clear();
@@ -403,8 +393,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
         DialogueSystem dialogueSystem = gm != null ? gm.dialogueSystem : null;
         if (dialogueSystem != null) dialogueSystem.OnDialogueEnded -= HandleDialogueEnded;
 
-        // Entrega item por item e só registra o que entrou de fato. Inventário cheio: o que faltou fica para
-        // a próxima conversa (que não cobra horas de novo, já está paga).
+        // Só registra o que entrou; com inventário cheio, o resto fica para a próxima conversa (já paga).
         bool faltouEntregar = false;
         if (recompensasPendentes.Count > 0 && gm != null && gm.inventoryManager != null)
         {
@@ -430,14 +419,12 @@ public class NPCMovement : MonoBehaviour, IInteractable
         }
         recompensasPendentes.Clear();
 
-        // Etapa complementar já liberada: a conversa segue nela. Os avisos de fim (eventos, tutorial, desligar) ficam
-        // para o fim da conversa inteira, quando este método rodar de novo.
+        // Eventos de fim ficam para quando a conversa inteira terminar (este método roda de novo).
         if (!faltouEntregar && ContinuarNaEtapaLiberada(dialogueSystem)) return;
 
         VoltarADirecaoOriginal();
 
-        // Só desliga quem foi configurado para isso (disableAfterDialogue); com entrega pendente, continua
-        // acessível para o jogador voltar e receber o resto.
+        // Com entrega pendente continua acessível para o jogador voltar.
         if (disableAfterDialogue && !faltouEntregar) DisableInteraction();
 
         if (!blockEvents)
@@ -445,7 +432,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
             OnDialogueComplete?.Invoke();
         }
 
-        // Tutorial: "fale com ... até o fim" só conta conversa com NPC (depois dos eventos acima, que liberam o próximo).
+        // Depois dos eventos acima, que liberam o próximo passo do tutorial.
         if (TutorialManager.Instance != null) TutorialManager.Instance.NotificarConversaComNpcTerminada();
     }
 

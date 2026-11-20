@@ -11,13 +11,11 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Cena "menu principal": cria a tela de saves (SlotsDeSaveUI) que o JOGAR abre, no mesmo padrão dos outros painéis do
-/// menu. A tela é uma cópia do painel de CRÉDITOS (moldura fundohud, título, VOLTAR e sons); cada slot é um cartão com
-/// o mesmo sprite fundohud em 9-slice, título e detalhe na fonte do título e botões copiados do VOLTAR (sprite button).
-/// A pergunta "Excluir o save?" é uma cópia da pergunta do Novo Jogo (mesma moldura, SIM e NÃO).
-/// Nenhum visual é criado em runtime: o SlotsDeSaveUI só preenche textos e liga/desliga botões.
-/// Idempotente: o que já existe fica como está (para refazer, apague "painelSaves" e "painelConfirmarExclusaoSave").
-/// Recusa rodar em Play Mode ou com cena suja; restaura a cena que estava aberta.
+/// Cena "menu principal": cria a tela de saves que o JOGAR abre (cópia do painel de CRÉDITOS, cartões em fundohud
+/// 9-slice) e a pergunta "Excluir o save?" (cópia da do Novo Jogo). Nenhum visual é criado em runtime: o
+/// SlotsDeSaveUI só preenche textos e liga/desliga botões.
+/// Idempotente (para refazer, apague "painelSaves" e "painelConfirmarExclusaoSave"). Recusa Play Mode e cena suja;
+/// restaura a cena aberta.
 /// Menu: Ferramentas > Menu principal > Criar tela de Saves
 /// </summary>
 public static class SlotsDeSaveSetupTool
@@ -69,8 +67,7 @@ public static class SlotsDeSaveSetupTool
         return r.ToString();
     }
 
-    // O fundohud_0 não tinha borda de 9-slice (todos os usos são Simple, que ignoram a borda): o cartão precisa dela para
-    // esticar sem deformar o contorno.
+    // O cartão precisa da borda 9-slice para esticar sem deformar; os usos Simple existentes a ignoram.
     private static string GarantirBordaDaMoldura()
     {
         var importador = AssetImporter.GetAtPath(SpriteDaMoldura) as TextureImporter;
@@ -182,7 +179,6 @@ public static class SlotsDeSaveSetupTool
         so.ApplyModifiedProperties();
         EditorUtility.SetDirty(menu);
 
-        // JOGAR continua chamando MenuPrincipalManager.Jogar, que agora abre esta tela.
         return $"criada a partir do painel de CRÉDITOS com {cartoes.Count} slots e a pergunta de exclusão (cópia da do Novo Jogo).";
     }
 
@@ -191,7 +187,7 @@ public static class SlotsDeSaveSetupTool
     {
         GameObject cartao = Object.Instantiate(moldura.gameObject, painel);
         cartao.name = $"Slot{indice + 1}";
-        foreach (Transform filho in cartao.transform) Object.DestroyImmediate(filho.gameObject); // a moldura não tem filhos, mas por garantia
+        foreach (Transform filho in cartao.transform) Object.DestroyImmediate(filho.gameObject);
         var imagem = cartao.GetComponent<Image>();
         imagem.type = Image.Type.Sliced;
         imagem.pixelsPerUnitMultiplier = EscalaDaBordaNoCartao;
@@ -217,7 +213,6 @@ public static class SlotsDeSaveSetupTool
         return (titulo, detalhe, carregar, novo, excluir);
     }
 
-    // Cópia da pergunta do Novo Jogo, com os textos e o SIM/NÃO religados ao SlotsDeSaveUI.
     private static GameObject CriarPergunta(GameObject modelo, SlotsDeSaveUI ui, out TMP_Text titulo, out Button nao)
     {
         titulo = null;
@@ -255,7 +250,7 @@ public static class SlotsDeSaveSetupTool
         return pergunta;
     }
 
-    // ===== Utilidades (mesmo padrão do ArquivoDeCasosSetupTool) =====
+    // ===== Utilidades =====
 
     private static TMP_Text CopiarTexto(TMP_Text modelo, Transform pai, string nome, string texto, float fonte, Vector2 posicao, Vector2 tamanho)
     {

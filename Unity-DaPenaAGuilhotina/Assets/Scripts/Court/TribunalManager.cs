@@ -8,19 +8,13 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 /// <summary>
-/// Documento (Fase 4, "Sistema de Julgamento"): o jogador apresenta as provas do caso da Fase 4 (pistas obtidas,
-/// documentos comprados e o panfleto publicado) diante da bancada, e a barra de irritação dos juízes reage a cada
-/// uma. A reação muda conforme a prova (fatos acalmam, boatos irritam), mas o destino do JOGADOR é travado pela
-/// rota, isto é, pelas barras ao fim da Fase 3 (ilusão de agência):
-///   A (Guilhotina): a última prova faz a barra explodir e o jogador é condenado;
+/// Julgamento da Fase 4. A barra de irritação reage a cada prova, mas o destino do JOGADOR é travado pela rota
+/// (barras ao fim da Fase 3; ilusão de agência):
+///   A (Guilhotina): a barra explode e o jogador é condenado;
 ///   B (Tirano):     a barra nunca chega perto do limite e o jogador sobrevive;
-///   C (Equilíbrio): a bancada perde o interesse, a barra termina no meio e o jogador é esquecido pela história.
-/// O destino do RÉU vem do panfleto do caso da Fase 4: só com fatos, ele é absolvido; com boato, calúnia ou só
-/// alegações, condenado ("pista melhor, panfleto melhor"). Isso muda a fala do veredito e a 1ª linha da cutscene.
-/// Depois do veredito toca a cutscene do final da rota e a tela de fim, que volta ao menu.
-///
-/// A HUD é montada por código (placeholder até as artes): basta este componente num objeto da cena Tribunal.
-/// Aberta direto no Editor, sem rota definida, a cena usa a "Rota De Teste".
+///   C (Equilíbrio): a barra termina no meio e o jogador é esquecido.
+/// O destino do RÉU vem do panfleto do caso: só fatos = absolvido; boato, calúnia ou só alegações = condenado.
+/// HUD montada por código. Sem rota definida (cena aberta no Editor), usa rotaDeTeste.
 /// </summary>
 public class TribunalManager : MonoBehaviour
 {
@@ -62,7 +56,7 @@ public class TribunalManager : MonoBehaviour
         public string nome;
         public Sprite icone;
         public Confiabilidade confiabilidade;
-        public string ficha; // texto ao passar o mouse (FichaDaProva); vazio nos argumentos de reserva
+        public string ficha; // vazio nos argumentos de reserva
         public Button botao;
     }
 
@@ -124,8 +118,7 @@ public class TribunalManager : MonoBehaviour
 
     public List<DesfechoDaRota> desfechos = DesfechosPadrao();
 
-    /// <summary>Textos padrão dos três finais (provisórios, para revisão do grupo). Também usados pela ferramenta
-    /// de Editor que atualiza a cena Tribunal.</summary>
+    /// <summary>Também usado pela ferramenta de Editor que atualiza a cena Tribunal.</summary>
     public static List<DesfechoDaRota> DesfechosPadrao() => new List<DesfechoDaRota>
     {
         new DesfechoDaRota
@@ -184,10 +177,8 @@ public class TribunalManager : MonoBehaviour
     private static readonly Color CorTexto = new Color(0.91f, 0.85f, 0.71f);
     private static readonly Color CorPainel = new Color(0.10f, 0.07f, 0.06f, 0.92f);
     private static readonly Color CorBotao = new Color(0.25f, 0.18f, 0.13f);
-    // Botão de ação (mesma cor do "Continuar" do tutorial) com moldura dourada: o "Encerrar a defesa" parecia texto solto.
     private static readonly Color CorBotaoDeAcao = new Color(0.45f, 0.20f, 0.15f);
     private static readonly Color CorMoldura = new Color(0.98f, 0.85f, 0.55f);
-    // Prova já apresentada: fundo esverdeado e opaco, com a etiqueta "Apresentada" (antes só ficava um pouco mais escura).
     private static readonly Color CorApresentada = new Color(0.20f, 0.27f, 0.15f);
     private static readonly Color CorTintaApresentada = new Color(0.55f, 0.85f, 0.5f);
     private static readonly Color CorCalma = new Color(0.42f, 0.56f, 0.31f);
@@ -242,8 +233,7 @@ public class TribunalManager : MonoBehaviour
     {
         CatalogoDeSave catalogo = CatalogoDeSave.Instancia;
         List<Item> itens = ProvasDoCaso(gm, caso, catalogo);
-        // Sem caso (cena aberta direto no Editor): usa o que está no inventário. Com um caso, nunca: um item de outro
-        // caso não vira argumento — sem provas registradas, ficam os argumentos de reserva.
+        // Inventário só sem caso (cena aberta no Editor): item de outro caso nunca vira argumento.
         if (itens.Count == 0 && caso == null && gm != null && gm.inventarioSalvo != null)
             foreach (Item item in gm.inventarioSalvo)
                 if (item != null && item.itemAmt > 0) itens.Add(item);
@@ -267,10 +257,8 @@ public class TribunalManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Documento (Fase 4, "Fase de Argumentação"): as provas coletadas, os documentos comprados e o panfleto gerado
-    /// DO CASO julgado. Vem do histórico (GameManager.evidenciasObtidas), porque a prensa consome as duas pistas
-    /// impressas; panfletos de casos anteriores não entram. Pistas descartadas no quadro de dedução também não (o jogador
-    /// abriu mão delas), nem as cartas do cliente (só leitura). Vazio se não houver caso ou catálogo.
+    /// Pistas, documentos e panfleto publicado DO CASO julgado, pelo histórico (a prensa consome as pistas).
+    /// Excluem-se pistas descartadas na dedução e itens só de leitura.
     /// </summary>
     public static List<Item> ProvasDoCaso(GameManager gm, CaseData caso, CatalogoDeSave catalogo)
     {
@@ -293,8 +281,7 @@ public class TribunalManager : MonoBehaviour
         return itens;
     }
 
-    /// <summary>Destino do réu: absolvido se o panfleto do caso foi publicado só com fatos; condenado com boato,
-    /// calúnia ou só alegações. Nulo se o caso não tem panfleto publicado.</summary>
+    /// <summary>Absolvido só com panfleto de fatos. Nulo se o caso não tem panfleto publicado.</summary>
     public static bool? ReuAbsolvido(GameManager gm, CaseData caso)
     {
         if (gm == null || caso == null) return null;
@@ -306,9 +293,7 @@ public class TribunalManager : MonoBehaviour
     // ===== Ficha da prova (passar o mouse) =====
 
     /// <summary>
-    /// Texto da ficha que aparece ao passar o mouse numa prova: o que ela é, de onde veio, o que diz e para que lado pesa
-    /// (Item.pesoNoJulgamento, lido do conteúdo, nunca da verdade da pista). O panfleto publicado do caso mostra as
-    /// afirmações das pistas que o jogador imprimiu, e o lado vem delas. Nulo sem item.
+    /// O lado vem de Item.pesoNoJulgamento (conteúdo, nunca a verdade da pista); no panfleto, das pistas impressas.
     /// </summary>
     public static string FichaDaProva(Item item, CaseData caso, GameManager gm, CatalogoDeSave catalogo)
     {
@@ -338,7 +323,7 @@ public class TribunalManager : MonoBehaviour
         return sb.ToString();
     }
 
-    /// <summary>As pistas que o jogador imprimiu, se o item é o panfleto publicado do caso; nulo se não é.</summary>
+    /// <summary>Nulo se o item não é o panfleto publicado do caso.</summary>
     private static List<Item> PistasDoPanfletoPublicado(Item item, CaseData caso, GameManager gm, CatalogoDeSave catalogo)
     {
         if (gm == null || caso == null || caso.receitaDoPanfleto == null) return null;
@@ -358,7 +343,6 @@ public class TribunalManager : MonoBehaviour
         return pistas;
     }
 
-    /// <summary>O lado do panfleto é o das pistas impressas: todas a favor, todas contra, ou dos dois lados.</summary>
     private static PesoNoJulgamento PesoDoPanfleto(List<Item> impressas)
     {
         bool aFavor = false, contra = false;
@@ -389,7 +373,7 @@ public class TribunalManager : MonoBehaviour
     private void Apresentar(Prova prova)
     {
         if (ocupado || vereditoIniciado || prova.botao == null || !prova.botao.interactable) return;
-        FichaDaPista.Esconder(null); // a reação da bancada é o que importa agora (a ficha volta ao passar o mouse de novo)
+        FichaDaPista.Esconder(null);
         prova.botao.interactable = false;
         MarcarComoApresentada(prova);
         apresentados++;
@@ -412,18 +396,16 @@ public class TribunalManager : MonoBehaviour
         StartCoroutine(AnimarBarra(alvo));
     }
 
-    // Sem a transição de cor do botão desativado (que só a escurecia um pouco e a deixava translúcida): fundo e etiqueta
-    // próprios, que continuam iguais quando o veredito desativa as outras provas.
+    // Visual próprio em vez da transição de desativado, para não mudar quando o veredito desativa as outras provas.
     private static void MarcarComoApresentada(Prova prova)
     {
         prova.botao.transition = Selectable.Transition.None;
         var fundo = prova.botao.GetComponent<Image>();
         if (fundo != null)
         {
-            // O "interactable = false" já começou a animar o tom de desativado (cinza, alpha 0,45), e trocar a transição
-            // para None não para essa animação: sem isto o fundo verde ficava escuro e translúcido.
+            // Trocar a transição para None não interrompe o CrossFade de desativado já iniciado pelo interactable = false.
             fundo.CrossFadeColor(Color.white, 0f, true, true);
-            // Sobre o sprite laranja a cor é tinta (multiplica): um verde claro deixa a prova esverdeada sem perder a moldura.
+            // Sobre o sprite a cor multiplica: verde claro tinge sem perder a moldura.
             bool comSprite = fundo.sprite != null && fundo.sprite == EstiloDeBotao.Sprite;
             fundo.color = comSprite ? CorTintaApresentada : CorApresentada;
         }
@@ -437,8 +419,7 @@ public class TribunalManager : MonoBehaviour
         StartCoroutine(Veredito("<i>Você encerra a sua defesa.</i>\n"));
     }
 
-    /// <summary>Encerrar a defesa exige um mínimo de provas apresentadas (nunca mais que o total de argumentos): não dá
-    /// para pular o julgamento com um clique. O veredito que vem depois é o mesmo de apresentar todas.</summary>
+    /// <summary>Exige um mínimo de provas (limitado ao total); o veredito é o mesmo de apresentar todas.</summary>
     public static bool PodeEncerrar(int apresentados, int totalDeArgumentos, int minimo) =>
         apresentados >= Mathf.Clamp(minimo, 1, Mathf.Max(1, totalDeArgumentos));
 
@@ -460,7 +441,7 @@ public class TribunalManager : MonoBehaviour
         }
     }
 
-    /// <summary>Tendência da barra pelo andamento do julgamento (0 = início, 1 = última prova).</summary>
+    /// <summary>progresso: 0 = início, 1 = última prova.</summary>
     private float Curva(float progresso)
     {
         switch (rota)
@@ -471,7 +452,7 @@ public class TribunalManager : MonoBehaviour
         }
     }
 
-    /// <summary>A "reação" à qualidade da prova: só muda o caminho da barra, nunca o desfecho.</summary>
+    /// <summary>Só muda o caminho da barra, nunca o desfecho.</summary>
     private static float Ajuste(Confiabilidade confiabilidade)
     {
         float ajuste;
@@ -493,20 +474,20 @@ public class TribunalManager : MonoBehaviour
         {
             case RotaFinal.A_Guilhotina: return Limite;
             case RotaFinal.B_Tirano: return Mathf.Min(irritacao, 25f);
-            default: return 50f; // C: indiferença, os juízes perdem o interesse no impressor
+            default: return 50f; // C: indiferença
         }
     }
 
     private IEnumerator Veredito(string cabecalho)
     {
-        if (vereditoIniciado) yield break; // última prova e "Encerrar" no mesmo instante: um veredito só
+        if (vereditoIniciado) yield break; // última prova e "Encerrar" no mesmo frame
         vereditoIniciado = true;
         ocupado = true;
         foreach (Prova p in provas)
         {
             if (p.botao == null) continue;
             p.botao.interactable = false;
-            // Sem ficha durante o veredito: ela fica acima da HUD e cobriria a tela final.
+            // A ficha fica acima da HUD e cobriria a tela final.
             var ficha = p.botao.GetComponent<FichaAoPassar>();
             if (ficha != null) ficha.enabled = false;
         }
@@ -532,8 +513,7 @@ public class TribunalManager : MonoBehaviour
             if (!string.IsNullOrWhiteSpace(doReu)) legendas.Add(new CutsceneLegendas.Linha { texto = doReu, duracao = 5f });
             if (desfecho.legendas != null) legendas.AddRange(desfecho.legendas);
         }
-        // Sem fade de saída: a tela final (preta) entra no mesmo frame em que o preto da cutscene sai, e o tribunal não
-        // pisca entre as duas.
+        // terminarNoPreto: a tela final entra no mesmo frame e o tribunal não pisca entre as duas.
         if (legendas.Count > 0) cutscene.Tocar(legendas, () => MostrarFim(desfecho), terminarNoPreto: true);
         else MostrarFim(desfecho);
     }
@@ -556,7 +536,7 @@ public class TribunalManager : MonoBehaviour
         ocupado = estavaOcupado;
     }
 
-    // Final A: a barra "explode" (documento): treme e pisca no limite.
+    // Final A: a barra treme e pisca no limite.
     private IEnumerator Explodir()
     {
         Vector2 posicao = barraMoldura.anchoredPosition;
@@ -586,7 +566,6 @@ public class TribunalManager : MonoBehaviour
         {
             bool pode = PodeEncerrar(apresentados, totalDeArgumentos, minimoParaEncerrar);
             botaoEncerrar.interactable = pode;
-            // Desativado, o botão diz por quê (antes só ficava apagado e parecia um texto qualquer).
             int faltam = Mathf.Clamp(minimoParaEncerrar, 1, Mathf.Max(1, totalDeArgumentos)) - apresentados;
             var rotulo = botaoEncerrar.transform.Find("Face/Rotulo")?.GetComponent<TextMeshProUGUI>();
             if (rotulo != null)
@@ -599,8 +578,7 @@ public class TribunalManager : MonoBehaviour
 
     private void MostrarFim(DesfechoDaRota desfecho)
     {
-        // Fim de jogo registrado no save (relatório de 28/09, item 21). Só numa campanha de verdade: com a cena aberta
-        // direto no Editor (rota de teste) nada é gravado.
+        // Com a cena aberta direto no Editor (rota de teste), nada é gravado.
         GameManager gm = GameManager.Instance;
         if (gm != null && gm.rotaFinal != RotaFinal.Nenhuma)
             SistemaDeSave.RegistrarFimDeJogo(rota, reuAbsolvido, desfecho != null ? desfecho.titulo : null);
@@ -664,7 +642,6 @@ public class TribunalManager : MonoBehaviour
             : "Tribunal Revolucionário";
         Texto("Titulo", raiz, new Vector2(0.05f, 0.9f), new Vector2(0.95f, 0.98f), 44f, titulo);
 
-        // Bancada
         RectTransform bancada = Vazio("Bancada", raiz, new Vector2(0.15f, 0.64f), new Vector2(0.85f, 0.88f));
         var layout = bancada.gameObject.AddComponent<HorizontalLayoutGroup>();
         layout.spacing = 40f; layout.childAlignment = TextAnchor.MiddleCenter;
@@ -689,18 +666,15 @@ public class TribunalManager : MonoBehaviour
             Texto("Nome", cartao, new Vector2(0f, 0.02f), new Vector2(1f, 0.28f), 30f, juiz.nome);
         }
 
-        // Barra de irritação
         Texto("RotuloBarra", raiz, new Vector2(0.2f, 0.585f), new Vector2(0.8f, 0.625f), 26f, "Irritação da bancada");
         barraMoldura = Painel("Barra", raiz, new Vector2(0.2f, 0.54f), new Vector2(0.8f, 0.58f), new Color(0.03f, 0.02f, 0.02f));
         barraFill = Painel("Preenchimento", barraMoldura, Vector2.zero, new Vector2(0f, 1f), CorCalma);
         barraImagem = barraFill.GetComponent<Image>();
 
-        // Reação da bancada
         RectTransform caixa = Painel("Reacao", raiz, new Vector2(0.1f, 0.36f), new Vector2(0.9f, 0.52f), CorPainel);
         textoReacao = Texto("Texto", caixa, new Vector2(0.03f, 0.08f), new Vector2(0.97f, 0.92f), 30f, string.Empty);
         textoReacao.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // Provas (rolagem vertical para inventários grandes)
         Texto("RotuloProvas", raiz, new Vector2(0.05f, 0.3f), new Vector2(0.75f, 0.34f), 26f, "Suas provas").alignment = TextAlignmentOptions.MidlineLeft;
         RectTransform area = Painel("Provas", raiz, new Vector2(0.05f, 0.04f), new Vector2(0.75f, 0.3f), CorPainel);
         area.gameObject.AddComponent<RectMask2D>();
@@ -726,7 +700,7 @@ public class TribunalManager : MonoBehaviour
         EstiloDeBotaoDeAcao(botaoEncerrar);
         botaoEncerrar.onClick.AddListener(EncerrarDefesa);
 
-        // Cutscene própria: montada inativa para receber a fonte antes do Awake.
+        // Montada inativa para receber a fonte antes do Awake.
         var cutsceneGo = new GameObject("Cutscenes", typeof(RectTransform));
         cutsceneGo.SetActive(false);
         cutsceneGo.transform.SetParent(raiz, false);
@@ -776,7 +750,7 @@ public class TribunalManager : MonoBehaviour
         cores.disabledColor = new Color(0.5f, 0.5f, 0.5f, 0.45f);
         botao.colors = cores;
 
-        // Dentro da face do sprite: a moldura e a sombra ficam fora do ícone e do texto.
+        // Ícone e texto dentro da face, fora da moldura e da sombra do sprite.
         RectTransform face = Vazio("Face", rt, Vector2.zero, Vector2.one);
         if (comSprite)
         {
@@ -797,7 +771,7 @@ public class TribunalManager : MonoBehaviour
         return botao;
     }
 
-    // Desativado, cinza opaco (não some no fundo escuro do salão). Sem o sprite padrão, fundo de ação e moldura dourada.
+    // Desativado em cinza opaco para não sumir no fundo escuro do salão.
     private static void EstiloDeBotaoDeAcao(Button botao)
     {
         var fundo = botao.GetComponent<Image>();

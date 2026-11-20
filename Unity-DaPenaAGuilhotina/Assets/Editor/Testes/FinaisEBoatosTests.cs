@@ -3,8 +3,7 @@ using NUnit.Framework;
 using UnityEngine;
 
 /// <summary>
-/// Correções da verificação de 26/09/2026: os boatos publicados são expostos no fim da fase ANTES da rota ser
-/// travada; o Tribunal usa as provas do caso julgado (inclusive as pistas gastas na prensa) e o destino do réu
+/// Os boatos publicados são expostos no fim da fase ANTES da rota ser travada; o Tribunal usa as provas do caso julgado (inclusive as pistas gastas na prensa) e o destino do réu
 /// vem do panfleto desse caso; os três finais têm textos para os dois destinos do réu.
 /// </summary>
 public class FinaisEBoatosTests
@@ -78,8 +77,8 @@ public class FinaisEBoatosTests
         Assert.AreEqual(-50, gm.capitalAtual);
     }
 
-    // 13/11/2026 (pedido do usuário): o desmentido NÃO é cobrado na impressão. Ele entra nos números no fim da fase
-    // (a rota precisa dele), mas a HUD segura a queda até o FimDeFase mostrá-la depois da cutscene, com o aviso.
+    // O desmentido NÃO é cobrado na impressão. Entra nos números no fim da fase (a rota precisa dele), mas a HUD
+    // segura a queda até o FimDeFase mostrá-la depois da cutscene, com o aviso.
     [Test]
     public void PanfletoComMentira_CobradoNoFimDaFase_EHudSeguraAteDepoisDaCutscene()
     {
@@ -112,7 +111,7 @@ public class FinaisEBoatosTests
         Assert.AreEqual(48, gm.opiniaoPublicaAtual, "sem cobrança dupla");
     }
 
-    // 13/11/2026: ganho que bate no teto não faz o desmentido punir mais (80 + 40 - 45 = 75, não 100 - 45 = 55).
+    // Ganho que bate no teto não faz o desmentido punir mais (80 + 40 - 45 = 75, não 100 - 45 = 55).
     [Test]
     public void PanfletoComMentira_GanhoNoTeto_TerminaNoSaldoDoPanfleto()
     {

@@ -8,14 +8,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Relatório de testes de 28/09, itens 12 e 20. Nas cenas, não em cópias:
-/// - Porão: o limite da câmera (CinemachineConfiner2D) apontava para "CameraConfiner", instância de um prefab que não
-///   existe mais (STATUS §3.2), com um polígono que passava das paredes (x de −12,5 a 14,4): a câmera mostrava o vazio
-///   além delas. Troca por um objeto de cena "LimitesDaCamera" com o retângulo da sala: das faces externas das duas
-///   paredes invisíveis (os colisores altos da cena) e do topo delas até a base do chão.
-/// - Menu e Tribunal: a câmera ganha o FMOD Studio Listener (sem ele o FMOD avisava no console e o som 3D não tinha
-///   ouvinte). Vale para toda cena do build cuja câmera principal ainda não tenha um.
-/// Idempotente. Recusa rodar em Play Mode ou com cena suja; restaura a cena que estava aberta.
+/// - Porão: o CinemachineConfiner2D passa a usar "LimitesDaCamera", retângulo da sala (faces externas das paredes
+///   invisíveis até a base do chão), no lugar do "CameraConfiner" de prefab perdido, que deixava ver além das paredes.
+/// - Toda cena do build: a câmera principal ganha o FMOD Studio Listener, se ainda não tiver (sem ele o som 3D não tem ouvinte).
+/// Idempotente. Recusa Play Mode e cena suja; restaura a cena aberta.
 /// Menu: Ferramentas > Cenas > Aplicar limite da câmera do porão e FMOD Studio Listener
 /// </summary>
 public static class CamerasECenasTool
@@ -60,7 +56,7 @@ public static class CamerasECenasTool
         return r.ToString();
     }
 
-    /// <summary>Retângulo da sala do porão (paredes invisíveis e chão), em coordenadas do mundo.</summary>
+    /// <summary>Retângulo da sala em coordenadas do mundo: paredes = colisores altos não-trigger; base = sprites "chão*".</summary>
     public static bool RetanguloDaSala(Scene cena, out Rect sala)
     {
         sala = default;
@@ -123,7 +119,6 @@ public static class CamerasECenasTool
             feito.Add("confinador da câmera ligado a ele");
         }
 
-        // A instância do prefab perdido ("CameraConfiner") não é mais usada por ninguém.
         foreach (GameObject raiz in cena.GetRootGameObjects())
             if (raiz.name == "CameraConfiner" && PrefabUtility.IsPrefabAssetMissing(raiz))
             {

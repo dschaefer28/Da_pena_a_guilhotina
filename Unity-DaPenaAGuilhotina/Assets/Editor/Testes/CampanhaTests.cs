@@ -4,8 +4,8 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Prompt 2: conteúdo e progressão. Usa os assets reais do projeto (casos, receitas, mesa, catálogo, cenas) e
-/// objetos temporários para as regras da prensa e da mesa.
+/// Conteúdo e progressão. Usa os assets reais (casos, receitas, mesa, catálogo, cenas) e objetos temporários para as
+/// regras da prensa e da mesa.
 /// </summary>
 public class CampanhaTests
 {
@@ -80,7 +80,7 @@ public class CampanhaTests
         }
     }
 
-    // ===== Balanceamento (17/10) =====
+    // ===== Balanceamento =====
 
     private static int Desnivel(ReceitaDeCaso.Versao v, bool depoisDaRevelacao) =>
         (v.povo + (depoisDaRevelacao ? v.penalidadePovo : 0)) - (v.estado + (depoisDaRevelacao ? v.penalidadeEstado : 0));
@@ -102,8 +102,8 @@ public class CampanhaTests
             int agravamento = r.linhaEditorial.agravamentoPercentual;
             ReceitaDeCaso.ModificadorEditorial sens = r.linhaEditorial.sensacionalista;
 
-            // Teor (08/11/2026): Neutro = efeito normal do caso; Sensacionalista = mais ouro, o lado do caso ganha menos
-            // e o outro cai o mesmo (ou mais). Mesmos parâmetros para casos pró-povo e pró-Estado.
+            // Neutro = efeito normal; Sensacionalista = mais ouro, o lado do caso ganha menos e o outro cai o mesmo
+            // (ou mais). Mesmos parâmetros para casos pró-povo e pró-Estado.
             Assert.Greater(sens.ouro, 0, $"{caso.name}: o sensacionalista rende mais ouro");
             Assert.LessOrEqual(sens.ouro, 15, $"{caso.name}: mas pouco a mais");
             Assert.LessOrEqual(sens.povo, 0, $"{caso.name}: o sensacionalista nunca sobe o Povo além do Neutro");
@@ -221,7 +221,7 @@ public class CampanhaTests
             Assert.IsFalse(gm.ConfirmarCaso(fase3[i]));
         }
 
-        gm.EncerrarFase(); // o que o FimDeFase faz ao voltar ao escritório
+        gm.EncerrarFase(); // como o FimDeFase ao voltar ao escritório
         Assert.AreEqual(4, gm.faseAtual, "a Fase 4 começa");
         Assert.AreNotEqual(RotaFinal.Nenhuma, gm.rotaFinal);
         foreach (CaseData caso in fase3) Assert.IsFalse(CaseSelectionUI.CasoVisivel(caso, gm), "os casos da Fase 3 saem da mesa");

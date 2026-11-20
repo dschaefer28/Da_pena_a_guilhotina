@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>Mecânica "Fato x Boato" (Fase 2 em diante): o quanto uma pista é verdadeira. O jogador não vê isso direto:
-/// nos casos com dedução ativa (todos da campanha, Fases 2 a 4) só descobre conferindo o Quadro de pistas; nos outros, ao
-/// juntar um item de "Verificada Por" (ver InventoryManager.PistaVerificada).</summary>
+/// <summary>Verdade escondida da pista (Fato x Boato). Com dedução ativa (Fases 2 a 4) só se descobre no Quadro de
+/// pistas; nos outros casos, por um item de "Verificada Por".</summary>
 public enum Confiabilidade
 {
     NaoEPista, // itens do tutorial, panfletos, cartas do cliente etc.: a prensa usa só as receitas exatas (Recipe)
@@ -13,8 +12,8 @@ public enum Confiabilidade
     Calunia
 }
 
-/// <summary>Para que lado uma prova pesa no julgamento da Fase 4, pelo que ela DIZ (o conteúdo), nunca pela verdade
-/// escondida (Confiabilidade). Aparece na ficha das provas do tribunal e não muda a barra nem o veredito.</summary>
+/// <summary>Peso da prova no julgamento (Fase 4) pelo que ela DIZ, nunca pela Confiabilidade. Só informativo na ficha:
+/// não muda a barra nem o veredito.</summary>
 public enum PesoNoJulgamento
 {
     NaoDefinido, // a ficha do tribunal não mostra a linha "Pesa"
@@ -24,8 +23,7 @@ public enum PesoNoJulgamento
     Contexto     // explica a lei ou a situação, sem acusar nem defender
 }
 
-/// <summary>Qualidade da evidência (Prompt 3). INDEPENDENTE da Confiabilidade: um documento caro pode ser boato, e o
-/// preço nunca muda a verdade. Só entra no cálculo por regras explícitas da receita (ReceitaDeCaso.qualificadores).</summary>
+/// <summary>Independente da Confiabilidade: o preço nunca muda a verdade. Só pesa via ReceitaDeCaso.qualificadores.</summary>
 public enum QualidadeDaEvidencia
 {
     Comum,
@@ -82,29 +80,24 @@ public class Item : ScriptableObject
     [Tooltip("Panfleto impresso na prensa: fica na aba Panfletos do inventário, separado das pistas e documentos.")]
     public bool ehPanfleto;
 
-    /// <summary>Panfleto pronto (vai para a aba Panfletos do inventário).</summary>
     public bool EhPanfleto => ehPanfleto;
 
-    /// <summary>Nome pronto para exibição em UI (usa itemName se configurado, senão cai no nome do asset).</summary>
     public string NomeExibicao => string.IsNullOrWhiteSpace(itemName) ? name : itemName;
 
-    /// <summary>Documento de apoio de um caso (vai no campo Suporte da prensa).</summary>
     public bool EhSuporte => documentoDeSuporte && caso != null;
 
-    /// <summary>Etiqueta do documento de apoio (informação conhecida: qualidade, não verdade).</summary>
+    /// <summary>Mostra a qualidade, nunca a verdade.</summary>
     public string RotuloDeApoio =>
         !EhSuporte ? string.Empty
         : qualidade == QualidadeDaEvidencia.Superior ? "<color=#C9A94E>apoio · qualidade superior</color>" : "<color=#9E9E9E>apoio</color>";
 
-    /// <summary>Carta do cliente (CaseData.alegacoesIniciais): documento só de leitura. Chega ao aceitar o caso e sai
-    /// ao concluí-lo; não é pista, não vai para a prensa nem para o tribunal, e nunca é "verificada".</summary>
+    /// <summary>Carta do cliente (CaseData.alegacoesIniciais): só leitura, entra ao aceitar e sai ao concluir o caso.
+    /// Nunca é pista, não vai para a prensa nem para o tribunal.</summary>
     public bool EhLeitura => caso != null && caso.EhAlegacao(this);
 
-    /// <summary>Verdadeiro para pistas que entram na regra Fato x Boato da prensa. Uma carta do cliente nunca é pista,
-    /// mesmo que o asset ainda tenha uma confiabilidade (o validador da campanha acusa).</summary>
+    /// <summary>Carta do cliente nunca é pista, mesmo com confiabilidade definida no asset.</summary>
     public bool EhPista => caso != null && confiabilidade != Confiabilidade.NaoEPista && !EhLeitura;
 
-    /// <summary>Etiqueta colorida (rich text) da situação da pista para o inventário e a ficha.</summary>
     public string RotuloSituacao(bool verificada)
     {
         if (!EhPista) return string.Empty;
@@ -117,7 +110,6 @@ public class Item : ScriptableObject
         }
     }
 
-    /// <summary>Verdadeiro se os dois itens representam o mesmo tipo (mesmo itemID não-vazio).</summary>
     public bool Matches(Item other)
     {
         return other != null
@@ -130,8 +122,7 @@ public class Item : ScriptableObject
     {
         if (itemAmt < 0) itemAmt = 0;
 
-        // Avisos só para assets salvos: clones de runtime (DontSave) e itens criados pelos testes ficam na memória e
-        // passam de novo por aqui ao dar Play, repetindo avisos sobre objetos que o jogador nunca vê.
+        // Só assets salvos: clones de runtime e itens de teste repassam por aqui ao dar Play.
         if (!UnityEditor.EditorUtility.IsPersistent(this)) return;
 
         if (string.IsNullOrWhiteSpace(itemID))
@@ -151,9 +142,6 @@ public class Item : ScriptableObject
 
 public static class ScriptableObjectExtension
 {
-    /// <summary>
-    /// Creates and returns a clone of any given scriptable object.
-    /// </summary>
     public static T Clone<T>(this T scriptableObject) where T : ScriptableObject
     {
         if (scriptableObject == null)
@@ -163,8 +151,8 @@ public static class ScriptableObjectExtension
         }
 
         T instance = UnityEngine.Object.Instantiate(scriptableObject);
-        instance.name = scriptableObject.name; // remove (Clone) from name
-        instance.hideFlags = HideFlags.DontSave; // clone é só de runtime, nunca deve ser serializado
+        instance.name = scriptableObject.name; // sem o sufixo "(Clone)"
+        instance.hideFlags = HideFlags.DontSave; // só runtime, nunca serializado
         return instance;
     }
 }

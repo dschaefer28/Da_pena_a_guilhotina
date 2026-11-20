@@ -1,10 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Ferramenta de desenvolvimento: com "Show Preview" marcado, enche o inventário com itens de
-/// exemplo ao entrar no Play Mode, para testar o layout da lista com nomes longos e pilhas.
-/// Só existe no Editor e nunca entra no save (os itens têm o prefixo "__inventory_preview_").
-/// Desmarque para testar o jogo de verdade.
+/// Dev only: com "Show Preview", enche o inventário com itens de exemplo no Play Mode para testar o layout.
+/// Só no Editor; itens com prefixo "__inventory_preview_" nunca entram no save.
 /// </summary>
 [DisallowMultipleComponent]
 public class InventoryLayoutPreview : MonoBehaviour

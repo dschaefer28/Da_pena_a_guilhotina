@@ -9,7 +9,6 @@ using UnityEngine.UI;
 /// <summary>
 /// Exercita os COMPONENTES reais (não só as regras do GameManager): relógio, NPCMovement, LootInteractable,
 /// CraftingPress e compra com o AddItem de verdade, sobre um inventário e uma prensa mínimos montados aqui.
-/// Cobre os itens de aceite dos Prompts 1–3 que antes só tinham verificação em Play Mode.
 /// </summary>
 public class ComponentesTests
 {
@@ -81,8 +80,8 @@ public class ComponentesTests
         gm.faseAtual = 3;
         gm.casoEscolhido = null;
         gm.casosPorFase = new[] { 1, 1, 3, 1 };
-        // Estes testes medem a cobrança (1h por interação nova), não o orçamento: fixam 4h para as contas ficarem legíveis.
-        // O orçamento real (8h nas Fases 2 a 4) é conferido em TutorialEUiTests e no validador.
+        // Mede a cobrança (1h por interação nova), não o orçamento: 4h fixas deixam as contas legíveis.
+        // O orçamento real (8h nas Fases 2 a 4) é conferido em TutorialEUiTests.
         gm.horasPorCaso = 4;
 
         GameObject grade = Go("Grade");
@@ -140,7 +139,7 @@ public class ComponentesTests
         return loot;
     }
 
-    // Na Fase 4 a mesa só aceita o caso da rota travada (Prompt 6).
+    // Na Fase 4 a mesa só aceita o caso da rota travada.
     private void NaFase4(CaseData caso)
     {
         caso.fase = 4;
@@ -291,7 +290,7 @@ public class ComponentesTests
     [Test]
     public void Npc_EtapaComplementar_RequisitoJaObtido_SegueNaMesmaConversa_SemCobrarDeNovo()
     {
-        // Playtest: quem achava o depoimento antes de falar com o Kornmann falava uma vez e nunca recebia o recibo.
+        // Regressão: achar o depoimento antes de falar com o Kornmann não pode impedir a entrega do recibo.
         NPCMovement npc = CocheiroComEtapa(out Item depoimento, out DialogueData falaNormal, out DialogueData falaEtapa);
         var avisos = new List<string>();
         System.Action<string, Sprite> ouvir = (texto, icone) => { if (texto.Contains("Cocheiro")) avisos.Add(texto); };
@@ -395,7 +394,7 @@ public class ComponentesTests
         TerminarDialogo();
         Assert.AreEqual(1, inv.ItemNaGrade("decreto").itemAmt, "a fala curta não entrega de novo");
 
-        // Campo vazio: comportamento anterior (repete a conversa, sem entregar).
+        // Campo vazio: repete a conversa, sem entregar.
         NPCMovement outro = Npc("Outro", casoA, null, Pista("carta", null, Confiabilidade.NaoEPista));
         CasoReacao r2 = outro.reacoesDeCaso[0];
         r2.pistaNecessaria = relato; r2.dialogoComPista = conversa;
@@ -467,8 +466,7 @@ public class ComponentesTests
     [Test]
     public void Prensa_DuploCliqueNaoRepublica_EOutroCasoNaoConsome()
     {
-        // Caso da Fase 4: as sobras ficam na prensa ao concluir (antes da Fase 4 seriam arquivadas), então o
-        // 2º clique encontra pistas nas entradas e quem barra é a regra de publicação única.
+        // Na Fase 4 as sobras ficam na prensa ao concluir: o 2º clique acha pistas e quem barra é a publicação única.
         NaFase4(casoA);
         Receita(casoA);
         Item f1 = Pista("f1", casoA), f2 = Pista("f2", casoA), deB1 = Pista("b1", casoB), deB2 = Pista("b2", casoB);
@@ -508,8 +506,8 @@ public class ComponentesTests
         apoio.documentoDeSuporte = true; apoio.qualidade = QualidadeDaEvidencia.Superior;
         r.qualificadores.Add(new ReceitaDeCaso.Qualificador { id = "q", suportesAceitos = new List<Item> { apoio }, povo = 1 });
         gm.ConfirmarCaso(casoA);
-        // Cartas definidas depois de aceitar: aqui as peças vêm à mão, sem a entrega automática. A primeira imita um asset
-        // antigo, ainda marcado como Boato: mesmo assim é só leitura.
+        // Cartas definidas depois de aceitar (sem entrega automática). A primeira imita um asset antigo marcado como
+        // Boato: mesmo assim é só leitura.
         Item carta = Pista("aleg", casoA, Confiabilidade.Boato);
         casoA.alegacoesIniciais = new List<Item> { carta, Pista("aleg2", casoA, Confiabilidade.NaoEPista) };
         Assert.IsTrue(carta.EhLeitura);
@@ -569,7 +567,7 @@ public class ComponentesTests
         Assert.IsTrue(inv.HasItem("prova"), "o caso da Fase 4 leva as provas ao tribunal");
     }
 
-    // ===== Linha editorial (Prompt 5) =====
+    // ===== Linha editorial =====
 
     private ReceitaDeCaso ReceitaComLinha(CaseData caso)
     {
@@ -685,7 +683,7 @@ public class ComponentesTests
         Assert.AreEqual(20, gm.capitalAtual);
     }
 
-    // ===== Dedução ativa (Prompt 4) =====
+    // ===== Dedução ativa =====
 
     [Test]
     public void Prensa_CasoComDeducao_ParSemEscolhaNaoImprime_DepoisDaEscolhaAVersaoVemDaVerdade()

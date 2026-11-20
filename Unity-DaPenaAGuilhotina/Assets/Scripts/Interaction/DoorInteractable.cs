@@ -32,8 +32,7 @@ public class DoorInteractable : MonoBehaviour, IInteractable
     [Tooltip("O que o personagem pensa se tentar passar sem o item?")]
     public DialogueData pensamentoBloqueado;
 
-    /// <summary>Falso enquanto a porta estiver trancada (tutorial em andamento ou item obrigatório ausente): o aviso de
-    /// interação (PromptDeInteracao) só aparece sobre a porta quando ela realmente responde.</summary>
+    /// <summary>Falso enquanto trancada (tutorial em andamento ou item obrigatório ausente).</summary>
     public bool PodeInteragir
     {
         get
@@ -56,7 +55,7 @@ public class DoorInteractable : MonoBehaviour, IInteractable
                 GameManager.Instance.dialogueSystem.dialogueData = pensamentoBloqueado;
                 GameManager.Instance.dialogueSystem.Next();
             }
-            return; // Corta a viagem
+            return;
         }
 
         string destino = cenaDestino;

@@ -3,20 +3,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Padrão visual único dos botões: o sprite laranja com contorno claro ("button_0", o do "Aceitar Caso" da Mesa de
-/// Casos), fatiado (9-slice) para a moldura não deformar em botões de outras proporções. O asset fica em
-/// Resources/EstiloDeBotao para que a UI montada em runtime (Tribunal, prensa, glifos de tecla) e as ferramentas do
-/// editor usem o mesmo sprite sem precisar de campo serializado em cada script.
+/// Sprite único dos botões (9-slice). Fica em Resources/EstiloDeBotao para a UI montada por código e as ferramentas
+/// de Editor usarem sem campo serializado.
 /// </summary>
 [CreateAssetMenu(fileName = "EstiloDeBotao", menuName = "Da Pena/Estilo de Botão")]
 public class EstiloDeBotao : ScriptableObject
 {
     public Sprite sprite;
 
-    // Mesma escala da moldura usada na Biblioteca e no Quadro (1 px do sprite ≈ 1,43 unidades de UI).
+    // Mesma escala da moldura da Biblioteca e do Quadro.
     public const float EscalaDaMoldura = 0.7f;
 
-    // A face do sprite não é centrada: moldura de 7 px de cada lado, 9 px de sombra embaixo e 3 px de brilho em cima.
+    // Face do sprite descentrada: moldura de 7 px nos lados, 9 px de sombra embaixo e 3 px de brilho em cima.
     public static Vector2 RecuoEsquerdaBaixo => new Vector2(7f / EscalaDaMoldura + 4f, 9f / EscalaDaMoldura);
     public static Vector2 RecuoDireitaCima => new Vector2(7f / EscalaDaMoldura + 4f, 3f / EscalaDaMoldura);
 
@@ -49,7 +47,7 @@ public class EstiloDeBotao : ScriptableObject
         {
             botao.targetGraphic = fundo;
             botao.transition = Selectable.Transition.ColorTint;
-            // A tinta não clareia o sprite além da cor dele: realce e foco do teclado escurecem um pouco em vez de clarear.
+            // ColorTint não clareia além da cor do sprite: realce escurece.
             ColorBlock cores = ColorBlock.defaultColorBlock;
             cores.highlightedColor = cores.selectedColor = new Color(0.88f, 0.88f, 0.88f, 1f);
             botao.colors = cores;
@@ -57,7 +55,7 @@ public class EstiloDeBotao : ScriptableObject
         return true;
     }
 
-    // Respiro do texto além da face, igual em todos os botões (antes o texto encostava na moldura em cima e embaixo).
+    // Respiro do texto além da face.
     public const float RespiroHorizontal = 10f;
     public const float RespiroVertical = 5f;
 
@@ -65,10 +63,7 @@ public class EstiloDeBotao : ScriptableObject
     public static RectOffset RecuosDoRotulo() =>
         Recuos(Mathf.RoundToInt(RespiroHorizontal), Mathf.RoundToInt(RespiroVertical));
 
-    /// <summary>
-    /// Rótulo esticado no botão: branco, centralizado pela altura real das letras (Midline: caixa-alta não fica
-    /// deslocada), dentro da face do sprite com o respiro padrão, e encolhe um pouco se não couber.
-    /// </summary>
+    /// <summary>Rótulo esticado na face do botão. Midline para caixa-alta não ficar deslocada.</summary>
     public static void AjustarRotulo(TMP_Text rotulo, float tamanho = 0f)
     {
         if (rotulo == null) return;
@@ -82,7 +77,7 @@ public class EstiloDeBotao : ScriptableObject
         rt.offsetMax = -(RecuoDireitaCima + respiro);
     }
 
-    /// <summary>Só alinhamento e tamanho (para rótulos posicionados por layout group ou por âncoras próprias).</summary>
+    /// <summary>Só alinhamento e tamanho, para rótulos posicionados por layout group.</summary>
     public static void ConfigurarTexto(TMP_Text rotulo, float tamanho = 0f)
     {
         if (rotulo == null) return;

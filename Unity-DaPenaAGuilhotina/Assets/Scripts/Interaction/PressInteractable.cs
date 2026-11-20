@@ -12,21 +12,18 @@ public class PressInteractable : MonoBehaviour, IInteractable
 
     private void Start()
     {
-        // Fallback: usa o inventário global se não foi ligado no Inspector
         if (inventoryManager == null && GameManager.Instance != null)
             inventoryManager = GameManager.Instance.inventoryManager;
 
-        // Padrão Observer: A Prensa começa a "escutar" o inventário
         if (inventoryManager != null)
         {
-            inventoryManager.OnInventoryToggled -= HandleInventoryToggled; // evita inscrição dupla
+            inventoryManager.OnInventoryToggled -= HandleInventoryToggled;
             inventoryManager.OnInventoryToggled += HandleInventoryToggled;
         }
     }
 
     private void OnDestroy()
     {
-        // Boa Prática: Evita Memory Leaks ao destruir o objeto
         if (inventoryManager != null)
         {
             inventoryManager.OnInventoryToggled -= HandleInventoryToggled;
@@ -43,7 +40,6 @@ public class PressInteractable : MonoBehaviour, IInteractable
 
         bool vaiAbrir = !pressUIPanel.activeSelf;
 
-        // Não deixa abrir a prensa com o jogo pausado (mesma regra do inventário).
         if (vaiAbrir && PauseMenu.Instance != null && PauseMenu.Instance.IsOpen)
         {
             Debug.Log("Não é possível abrir a prensa com o jogo pausado.");
@@ -54,14 +50,12 @@ public class PressInteractable : MonoBehaviour, IInteractable
         if (vaiAbrir && TutorialManager.Instance != null)
             TutorialManager.Instance.NotificarEvento(TutorialManager.EVENTO_PRENSA_ABERTA);
 
-        // Mesmo tratamento do PauseMenu: desliga o raycast dos controles mobile enquanto
-        // a prensa está aberta, para o toque ir pros botões da UI em vez do joystick/botões.
+        // Como no PauseMenu: sem raycast nos controles mobile, o toque vai para a UI da prensa.
         if (MobileControlsManager.Instance != null)
             MobileControlsManager.Instance.SetControlsInteractable(!vaiAbrir);
 
         if (inventoryManager != null && inventoryManager.inventoryUI != null)
         {
-            // Abre ou fecha o inventário apenas se ele estiver dessincronizado da prensa
             if (inventoryManager.inventoryUI.activeSelf != vaiAbrir)
             {
                 inventoryManager.ToggleInventory();
@@ -73,10 +67,9 @@ public class PressInteractable : MonoBehaviour, IInteractable
         }
     }
 
-    // Método disparado automaticamente sempre que o jogador usar o atalho do inventário
+    // Fechar o inventário pelo atalho fecha a prensa junto.
     private void HandleInventoryToggled(bool isInventoryOpen)
     {
-        // Se o jogador FECHOU o inventário no atalho, e a prensa estava aberta, força o fechamento.
         if (!isInventoryOpen && pressUIPanel != null && pressUIPanel.activeSelf)
         {
             pressUIPanel.SetActive(false);
@@ -87,12 +80,9 @@ public class PressInteractable : MonoBehaviour, IInteractable
     {
         if(pressUIPanel != null) pressUIPanel.SetActive(false);
 
-        // Garante que os controles mobile voltam a receber toque mesmo se a prensa for
-        // fechada por este botão (e não pelo atalho de inventário).
         if (MobileControlsManager.Instance != null)
             MobileControlsManager.Instance.SetControlsInteractable(true);
 
-        // Se a prensa foi fechada pelo próprio botão "X" dela, fecha o inventário junto
         if(inventoryManager != null && inventoryManager.inventoryUI != null && inventoryManager.inventoryUI.activeSelf)
         {
             inventoryManager.ToggleInventory();

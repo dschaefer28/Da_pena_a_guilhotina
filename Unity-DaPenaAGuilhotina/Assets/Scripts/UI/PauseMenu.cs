@@ -16,11 +16,10 @@ public class PauseMenu : MonoBehaviour
     public Slider sliderVelocidadeTexto;
 
     private const string TextSpeedKey = "opt_textspeed";
-    // Mesmos valores usados em TypeTextAnimation.Awake() pra converter o slider (0-1) em delay (segundos).
+    // Precisam bater com TypeTextAnimation.Awake().
     private const float TypeDelayLento = 0.12f;
     private const float TypeDelayRapido = 0.01f;
 
-    /// <summary>True enquanto o menu de pause estiver aberto na tela.</summary>
     public bool IsOpen => container != null && container.activeSelf;
 
     void Awake()
@@ -40,10 +39,8 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        // Lê a tecla Escape
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            // Lógica de "Toggle": Se já estiver aberto, fecha. Se estiver fechado, abre.
             if (container.activeSelf)
             {
                 ResumirButton();
@@ -58,15 +55,13 @@ public class PauseMenu : MonoBehaviour
 
     private void Pausar()
     {
-        // Biblioteca, quadro de dedução ou Mesa de Casos aberta (ou fechada pelo mesmo Esc neste frame): o Esc era da
-        // janela, não do pause.
+        // Janela modal aberta (ou fechada pelo mesmo Esc neste frame): o Esc era dela.
         if (JanelasModais.BloqueiaPausa) return;
 
-        // Cutscene na tela: ela já congela o jogo e, ao terminar, devolve o timeScale. Um pause aberto por baixo dela
-        // ficaria na tela com o jogo andando depois da cutscene.
+        // A cutscene devolve o timeScale ao terminar: um pause por baixo ficaria aberto com o jogo andando.
         if (CutsceneLegendas.EmExibicao) return;
 
-        // Não deixa pausar com o inventário aberto (evita os dois modais brigando pela tela/raycast).
+        // Dois modais brigariam pela tela e pelo raycast.
         var inventoryManager = GameManager.Instance != null ? GameManager.Instance.inventoryManager : null;
         if (inventoryManager != null && inventoryManager.inventoryUI != null && inventoryManager.inventoryUI.activeSelf)
         {
@@ -77,7 +72,6 @@ public class PauseMenu : MonoBehaviour
         container.SetActive(true);
         Time.timeScale = 0;
 
-        // Desliga o raycast dos controles mobile enquanto o menu de pause está aberto.
         if (MobileControlsManager.Instance != null)
             MobileControlsManager.Instance.SetControlsInteractable(false);
     }
@@ -87,7 +81,6 @@ public class PauseMenu : MonoBehaviour
         container.SetActive(false);
         Time.timeScale = 1;
 
-        // Devolve o raycast pros controles mobile assim que o menu fecha.
         if (MobileControlsManager.Instance != null)
             MobileControlsManager.Instance.SetControlsInteractable(true);
     }
@@ -95,43 +88,33 @@ public class PauseMenu : MonoBehaviour
     public void ConfigButton()
     {
         opções.SetActive(true);
-        // Removi o Time.timeScale = 1 daqui.
 
-        // Mostra os sliders já na posição salva (senão sempre reabriam no valor padrão 0.429).
         if (sliderMusica != null) sliderMusica.SetValueWithoutNotify(VolumeDoAudio.Musica);
         if (sliderEfeitos != null) sliderEfeitos.SetValueWithoutNotify(VolumeDoAudio.Efeitos);
         if (sliderVelocidadeTexto != null)
             sliderVelocidadeTexto.SetValueWithoutNotify(PlayerPrefs.GetFloat(TextSpeedKey, 0.5f));
     }
 
-    // Ligados no OnValueChanged dos sliders de Música e de Efeitos da tela de Opções (o VolumeDoAudio aplica na hora).
     public void OnMusicaSliderChanged(float valor01) => VolumeDoAudio.DefinirMusica(valor01);
     public void OnEfeitosSliderChanged(float valor01) => VolumeDoAudio.DefinirEfeitos(valor01);
 
-    // Ligado no OnValueChanged do slider de Velocidade de Texto da tela de Opções.
     public void OnTextSpeedSliderChanged(float valor01)
     {
         PlayerPrefs.SetFloat(TextSpeedKey, valor01);
 
-        // Aplica na hora em qualquer TypeTextAnimation já existente na cena atual
-        // (o valor salvo também é lido por ela mesma no Awake, pra cenas futuras).
+        // Cenas futuras leem o valor salvo no Awake; aqui aplica na cena atual.
         var typeText = FindAnyObjectByType<TypeTextAnimation>();
         if (typeText != null)
             typeText.typeDelay = Mathf.Lerp(TypeDelayLento, TypeDelayRapido, valor01);
     }
 
-    /// <summary>
-    /// Botão "Voltar" da tela de opções do menu de pause: fecha as opções e volta
-    /// pro menu de pause (sem alterar Time.timeScale, que continua 0 até o jogador
-    /// dar Resumir). Antes esse botão não tinha nenhum método pra chamar.
-    /// </summary>
+    // Não mexe no timeScale: o jogo continua pausado até o Resumir.
     public void VoltarOpcoesButton()
     {
         if (opções != null) opções.SetActive(false);
     }
 
-    /// <summary>Nome exato da cena do menu (Build Settings: Assets/Scenes/menu principal.unity). Antes o pause pedia
-    /// "Menu principal": funcionava só porque a busca de cena por nome ignora maiúsculas.</summary>
+    /// <summary>Nome exato da cena em Build Settings (Assets/Scenes/menu principal.unity).</summary>
     public const string CenaDoMenu = "menu principal";
 
     public void MainMenuButton()
@@ -146,7 +129,6 @@ public class PauseMenu : MonoBehaviour
 
     public void TogglePauseMobile()
     {
-        // Se o menu já estiver aberto, fecha. Se estiver fechado, pausa.
         if (container.activeSelf)
         {
             ResumirButton();

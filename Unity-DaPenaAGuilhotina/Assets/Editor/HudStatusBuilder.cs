@@ -4,14 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Monta, no prefab UI, a HUD de status com a arte separada em três peças: o retrato do protagonista com os
-/// arabescos (iconbar), o trilho de cima (barra1, Opinião do Povo) e o de baixo (barra2, Opinião do Estado).
-/// Os sliders ficam dentro do vão transparente de cada trilho, com rótulo, o ouro logo abaixo e os textos de
-/// "+X/-X" que o HUDManager anima.
-/// Os objetos Slider_OpiniãoPublica, Slider_OpiniãoEstado e Texto_Capital são reaproveitados (só mudam de
-/// pai e de layout), então as referências do HUDManager continuam valendo.
-/// Tudo é ancorado em proporção dentro do painel, e o painel fica no canto superior esquerdo com o
-/// HudAreaSegura: o CanvasScaler cuida da resolução (PC ou celular) e o notch não cobre a HUD.
+/// Monta, no prefab UI, a HUD de status: retrato (iconbar) e dois trilhos (barra1 Povo, barra2 Estado) com os
+/// sliders no vão de cada trilho, o ouro e os textos "+X/-X". Os sliders e o Texto_Capital existentes são
+/// reaproveitados (só mudam de pai/layout) para manter as referências do HUDManager.
+/// Ancoragem proporcional ao painel; o HudAreaSegura afasta o painel do notch.
 /// Menu: Ferramentas > HUD > Aplicar moldura das barras de status. Reexecutável.
 /// </summary>
 public static class HudStatusBuilder
@@ -70,7 +66,7 @@ public static class HudStatusBuilder
 
             RectTransform painel = GarantirPainel(raiz.transform, hud.publicOpinionSlider.transform);
 
-            // Moldura única da arte antiga (barra.png, apagada): substituída pelas três peças abaixo.
+            // Moldura única da arte antiga, substituída pelas três peças.
             Transform antiga = painel.Find("Moldura");
             if (antiga != null) Object.DestroyImmediate(antiga.gameObject);
 
@@ -83,8 +79,7 @@ public static class HudStatusBuilder
                 new Rect(TrilhoX, TrilhoEstadoY, TrilhoEstadoLargura * EscalaTrilho, TrilhoEstadoAltura * EscalaTrilho));
             Image imgRetrato = GarantirImagem(painel, "Retrato", retrato, new Rect(0f, 0f, RetratoLargura, RetratoAltura));
 
-            // Ordem de desenho: barras (sliders) atrás, trilhos por cima delas, retrato por cima de tudo
-            // (esconde a ponta inclinada dos trilhos); os textos abaixo entram depois.
+            // Sliders atrás, trilhos por cima, retrato por cima de tudo (esconde a ponta inclinada dos trilhos).
             hud.publicOpinionSlider.transform.SetSiblingIndex(0);
             hud.stateOpinionSlider.transform.SetSiblingIndex(1);
             imgPovo.transform.SetSiblingIndex(2);
@@ -119,25 +114,21 @@ public static class HudStatusBuilder
         return null;
     }
 
-    // Vão do trilho convertido para unidades de desenho do painel.
     private static Rect VaoTela(float trilhoY, Rect vao) =>
         new Rect(TrilhoX + vao.x * EscalaTrilho, trilhoY + vao.y * EscalaTrilho, vao.width * EscalaTrilho, vao.height * EscalaTrilho);
 
-    // Painel com a proporção do desenho, preso ao canto superior esquerdo da tela com margem. O HudAreaSegura
-    // soma o recuo do notch/cantos do celular a essa margem.
     private static RectTransform GarantirPainel(Transform raizUI, Transform sliderAntigo)
     {
         RectTransform painel = raizUI.Find("HUD_Status") as RectTransform;
         if (painel == null)
         {
-            // Nasce no lugar da hierarquia onde os sliders ficavam (mesma ordem de desenho em relação aos painéis).
+            // Herda a posição dos sliders na hierarquia para manter a ordem de desenho.
             painel = InventarioListaBuilder.CriarRect("HUD_Status", raizUI);
             if (sliderAntigo.parent == raizUI) painel.SetSiblingIndex(sliderAntigo.GetSiblingIndex());
         }
         painel.anchorMin = painel.anchorMax = new Vector2(0f, 1f);
         painel.pivot = new Vector2(0f, 1f);
-        // Valores inteiros: com frações a Unity regravava a posição nas cenas com erro de arredondamento
-        // e cada cena ficava com um override falso da HUD.
+        // Valores inteiros: frações geravam overrides falsos por arredondamento em cada cena.
         painel.sizeDelta = new Vector2(Mathf.Round(LarguraPainel * Escala), Mathf.Round(AlturaPainel * Escala));
         painel.anchoredPosition = new Vector2(MargemTela.x, -MargemTela.y);
         painel.localScale = Vector3.one;
@@ -155,11 +146,11 @@ public static class HudStatusBuilder
         img.type = Image.Type.Simple;
         img.preserveAspect = false; // a área já tem a proporção exata do sprite
         img.color = Color.white;
-        img.raycastTarget = false;  // não rouba toque/clique do jogo
+        img.raycastTarget = false;
         return img;
     }
 
-    // Ancoragem normalizada a partir de unidades de desenho (x da esquerda, y do topo): escala junto com o painel.
+    // Unidades de desenho (x da esquerda, y do topo) -> âncoras normalizadas.
     private static void Ancorar(RectTransform r, Rect area)
     {
         r.anchorMin = new Vector2(area.xMin / LarguraPainel, 1f - area.yMax / AlturaPainel);
@@ -213,7 +204,7 @@ public static class HudStatusBuilder
         tmp.fontSizeMin = 14f;
         tmp.fontSizeMax = 26f;
         tmp.textWrappingMode = TextWrappingModes.NoWrap;
-        // Começa depois da parte que o retrato cobre e respira um pouco dentro do vão.
+        // Começa depois da parte que o retrato cobre.
         Ancorar(tmp.rectTransform, new Rect(vao.x + 160f, vao.y + 30f, vao.width - 200f, vao.height - 60f));
         tmp.transform.SetAsLastSibling();
     }
@@ -233,7 +224,7 @@ public static class HudStatusBuilder
         capital.transform.SetAsLastSibling();
     }
 
-    // "+15" / "-10" logo à direita dos trilhos, na altura de cada linha. Começa escondido (o HUDManager liga).
+    // Começa escondido; o HUDManager liga ao animar.
     private static TextMeshProUGUI GarantirDelta(RectTransform painel, string nome, Rect linha, TMP_FontAsset fonte)
     {
         Transform t = painel.Find(nome);

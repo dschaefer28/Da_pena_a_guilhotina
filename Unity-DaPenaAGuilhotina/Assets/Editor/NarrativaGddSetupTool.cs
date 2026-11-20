@@ -7,26 +7,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Conteúdo narrativo das Fases 2, 3 e 4 alinhado ao GDD ("Da Pena à Guilhotina", IFPR, 2026), com a planilha
-/// "30 Casos Reais" como referência histórica. Troca textos, diálogos, NPCs e reações dos nove casos da campanha,
-/// sem mexer em mecânicas: os arquivos de caso, os itemID, os IDs de interação, as rotas, as receitas (valores), os
-/// preços e as regras de bloqueio continuam os mesmos. O save guarda casos pelo nome do asset e pistas pelo itemID,
-/// por isso os arquivos mantêm os nomes antigos (ex.: Caso_Varennes é o caso de Kornmann). A correspondência está em
-/// docs/MATRIZ_DE_CASOS_TCC.md.
-///
-///   Fase 2: O Colar da Rainha (Caso_Joalheiro), Os Trabalhadores de Réveillon (Caso_Reveillon) e O Operário Acusado
-///           (Caso_Operario), as duas perspectivas do motim de abril de 1789.
-///   Fase 3: O Julgamento de Georges Danton (Caso_ChampDeMars), Adultério e Poder Ministerial (Caso_Varennes) e
-///           Morte no Poço e Intolerância (Caso_Assignats). NPCs: Danton (novo), Kornmann, Sirven, Sobrevivente, Médico.
-///   Fase 4: O Manifesto da Clemência (Caso_Jornalista, rota A), O Caso do Pequeno Mercador de Grãos (Caso_Negociante,
-///           rota B) e O Extermínio da Oposição (Caso_Girondina, rota C). NPCs: Desmoulins, Mercador, Vergniaud, Brissot.
-///
-/// Dedução (mesma regra das ferramentas 5 e 7): as duas pistas de cada caso no GDD são os dois fatos; o boato contradiz
-/// o fato da testemunha/cliente e a calúnia contradiz o fato do objeto. O cliente aponta quem espalha o boato (e a
-/// testemunha, quando não é ele quem entrega a pista), e quem espalha o boato aponta os dois objetos.
-///
-/// Idempotente e conservadora: um caso só é reescrito se ainda tiver o título anterior ao GDD; com o título do GDD,
-/// nada é tocado (edições feitas depois no Inspector ficam); com outro título, o caso é listado como "mantido".
+/// Conteúdo narrativo do GDD para os nove casos das Fases 2 a 4 (textos, diálogos, NPCs, reações), sem mexer em
+/// mecânicas. O save guarda casos pelo nome do asset e pistas pelo itemID, por isso arquivos e IDs mantêm os nomes
+/// antigos (ex.: Caso_Varennes é o caso de Kornmann); correspondência em docs/MATRIZ_DE_CASOS_TCC.md.
+/// Dedução: o boato contradiz o fato da testemunha/cliente e a calúnia, o fato do objeto. O cliente aponta quem espalha
+/// o boato, e este aponta os dois objetos.
+/// Idempotente: só reescreve casos que ainda têm o título anterior ao GDD; os demais são listados como "mantido".
 /// Menu: Ferramentas > Campanha > 8 - Aplicar conteúdo narrativo do GDD (Fases 2 a 4)
 /// </summary>
 public static class NarrativaGddSetupTool
@@ -44,18 +30,15 @@ public static class NarrativaGddSetupTool
     private const string DRev = "Assets/ScriptableObjects/Dialogues/JeanBaptisteReveillon/";
     private const string DOpe = "Assets/ScriptableObjects/Dialogues/Operário/";
 
-    // Falantes (o nome aparece na caixa de diálogo; o do protagonista vira a caixa para o lado dele).
+    // O nome do protagonista vira a caixa de diálogo para o lado dele.
     private const string J = "Julien Valois";
     private const string JOA = "Joalheiro", REV = "Jean Réveillon", OPE = "Operário", GAZ = "Gazeteiro";
     private const string DAN = "Georges Danton", KOR = "Guillaume Kornmann", SIR = "Pierre-Paul Sirven", SOB = "Sobrevivente", MED = "Médico";
     private const string DES = "Camille Desmoulins", MER = "Mercador", VER = "Pierre Vergniaud", BRI = "Jacques-Pierre Brissot";
 
-    // Casos (arquivo sem extensão)
     private const string Joias = "Caso_Joalheiro", Reveillon = "Caso_Reveillon", Operario = "Caso_Operario";
     private const string Danton = "Caso_ChampDeMars", Kornmann = "Caso_Varennes", Sirven = "Caso_Assignats";
     private const string Desmoulins = "Caso_Jornalista", Mercador = "Caso_Negociante", Girondinos = "Caso_Girondina";
-
-    // ===== Modelo =====
 
     private sealed class CasoGdd
     {
@@ -119,16 +102,12 @@ public static class NarrativaGddSetupTool
         DefinirFase4();
     }
 
-    // ===== Fase 2 (1789) =====
-
     private static void DefinirFase2()
     {
         const string F = "Fase2";
 
         // ----- O Colar da Rainha -----
-        // GDD: o duque de Orléans procura a tipografia para manchar a reputação da Rainha e manda na carta o retrato
-        // "Marie Antoinette in a Chemise Dress". O joalheiro é testemunha; as falas dele são o roteiro do grupo (27/09),
-        // que já segue o GDD e não muda aqui.
+        // As falas do joalheiro (testemunha) são o roteiro do grupo e não mudam aqui.
         Casos.Add(new CasoGdd
         {
             arquivo = Joias, cena = F, tituloAnterior = "Caso das Joias", titulo = "O Colar da Rainha",
@@ -194,7 +173,6 @@ public static class NarrativaGddSetupTool
         It(Reveillon, SO + "panfleto_jean.asset", "panfleto_jean", "Panfleto: Os Trabalhadores de Réveillon", "Tipografia",
             "Panfleto da tipografia sobre Réveillon e o motim do faubourg Saint-Antoine.");
 
-        // Diálogo do cliente: sequências 1 a 3 do GDD, com as duas escolhas de cada uma levando a respostas diferentes.
         No(Reveillon, DRev + "Jean_Dialogo.asset")
             .F(REV, "Ah, outro não! Eu não mandei atirar em ninguém!")
             .Op("Senhor, apenas vim em busca de resposta e da verdade.", DRev + "resposta jean.asset")
@@ -315,7 +293,7 @@ public static class NarrativaGddSetupTool
             .F(GAZ, "O massacre do faubourg? Cada folha conta um número de mortos: vinte e cinco, cem, trezentos... Eu vendo todas.")
             .F(GAZ, "Mas sobre o seu operário não ouvi nada que valha um soldo.");
 
-        // Reações (todo NPC responde a todo caso; a fala padrão fica para quando não há caso).
+        // Todo NPC responde a todo caso; a fala padrão é para quando não há caso.
         R(F, "Joalheiro", Joias, DJoa + "Joalheiro_Dialogo.asset", DJoa + "respostaJoalheiro1.asset", SO + "Item_joalheiro1.asset", SO + "Item_joalheiro2.asset");
         R(F, "Joalheiro", Reveillon, D2 + "Joalheiro_Caso_Reveillon.asset");
         R(F, "Joalheiro", Operario, D2 + "Joalheiro_Caso_Operario.asset");
@@ -329,7 +307,6 @@ public static class NarrativaGddSetupTool
         R(F, "Gazeteiro", Reveillon, D2 + "Gazeteiro_Caso_Reveillon.asset", null, P2 + "Pista_Jean_Calunia.asset");
         R(F, "Gazeteiro", Operario, D2 + "Gazeteiro_Caso_Operario.asset");
 
-        // Objetos da rua (sem mudança de estrutura na Fase 2).
         var banca = new ObjetoGdd { cena = F, id = "BancaDePanfletos" };
         banca.porCaso.Add(new[] { Reveillon, SO + "Item_Jean2.asset" });
         var muro = new ObjetoGdd { cena = F, id = "MuroDeCartazes" };
@@ -340,13 +317,11 @@ public static class NarrativaGddSetupTool
         Objetos.AddRange(new[] { banca, muro, taverna });
     }
 
-    // ===== Fase 3 (1791–1792) =====
-
     private static void DefinirFase3()
     {
         const string F = "Fase3";
 
-        // IDs de interação e arquivos de diálogo seguem os NPCs antigos (o save aponta para eles):
+        // IDs e arquivos de diálogo congelados (o save aponta para eles):
         // ViuvaFrancois = Médico, CocheiroJoubert = Kornmann, PeticionariaLacombe = Sobrevivente, GravadorMorel = Sirven.
         Personagens.Add(new PersonagemGdd { caso = Sirven, cena = F, id = "ViuvaFrancois", nomeAnterior = "Viúva François", nome = "Médico", padrao = D3 + "ViuvaFrancois_Padrao.asset" });
         Personagens.Add(new PersonagemGdd { caso = Kornmann, cena = F, id = "CocheiroJoubert", nomeAnterior = "Cocheiro Joubert", nome = "Guillaume Kornmann", padrao = D3 + "CocheiroJoubert_Padrao.asset" });
@@ -445,9 +420,7 @@ public static class NarrativaGddSetupTool
             .F(SIR, "Não sei nada do que houve lá, senhor. Mas desejo sorte a esse Danton.");
 
         // ----- Adultério e Poder Ministerial (Caso_Varennes) -----
-        // Na história, Beaumarchais foi ADVERSÁRIO de Kornmann: em 1781 ajudou a tirar a senhora Kornmann da reclusão, e o
-        // mémoire de Bergasse (1787) o acusou por isso. A "colaboração com Beaumarchais" do GDD vira essa intervenção real,
-        // que Julien usa para "associar o caso a Beaumarchais" e fazer Paris falar (fala do GDD).
+        // Historicamente Beaumarchais foi adversário de Kornmann: a "colaboração" do GDD vira a intervenção real de 1781.
         Casos.Add(new CasoGdd
         {
             arquivo = Kornmann, cena = F, tituloAnterior = "A Carruagem de Varennes", titulo = "Adultério e Poder Ministerial",
@@ -526,7 +499,7 @@ public static class NarrativaGddSetupTool
             .F(SIR, "Não conheço esse senhor Kornmann. Não posso ajudar.");
 
         // ----- Morte no Poço e Intolerância (Caso_Assignats) -----
-        // O caso Sirven é de 1762–1771 (Castres); o GDD o traz para a Fase 3. Os textos não dão ano ao caso.
+        // O caso Sirven é de 1762–1771; como o GDD o põe na Fase 3, os textos não dão ano.
         Casos.Add(new CasoGdd
         {
             arquivo = Sirven, cena = F, tituloAnterior = "Os Assignats Falsos", titulo = "Morte no Poço e Intolerância",
@@ -604,7 +577,6 @@ public static class NarrativaGddSetupTool
             .F(SOB, "Uma moça morta num poço e o pai acusado... É sempre o mais fraco que paga.")
             .F(SOB, "Não conheço essa família, senhor. Não posso ajudar.");
 
-        // Reações
         R(F, "GeorgesDanton", Danton, D3 + "GeorgesDanton_Caso_ChampDeMars.asset");
         R(F, "GeorgesDanton", Kornmann, D3 + "GeorgesDanton_Caso_Varennes.asset", null, P3 + "Pista_Varennes_Boato.asset");
         R(F, "GeorgesDanton", Sirven, D3 + "GeorgesDanton_Caso_Assignats.asset");
@@ -621,7 +593,7 @@ public static class NarrativaGddSetupTool
         R(F, "GravadorMorel", Danton, D3 + "GravadorMorel_Caso_ChampDeMars.asset");
         R(F, "GravadorMorel", Kornmann, D3 + "GravadorMorel_Caso_Varennes.asset");
 
-        // Objetos: cada um guarda o fato de um caso e a calúnia de outro. O balcão vira a mesa do "Café Popular" do GDD.
+        // Cada objeto guarda o fato de um caso e a calúnia de outro.
         var mesa = new ObjetoGdd { caso = Kornmann, cena = F, id = "BalcaoDaPadaria", nomeAnterior = "Balcão da Padaria", nome = "Mesa do Café" };
         mesa.porCaso.Add(new[] { Kornmann, P3 + "Pista_Varennes_Depoimento.asset" });
         mesa.porCaso.Add(new[] { Danton, P3 + "Pista_Champ_Calunia.asset" });
@@ -634,9 +606,7 @@ public static class NarrativaGddSetupTool
         Objetos.AddRange(new[] { mesa, mural, caixa });
     }
 
-    // ===== Fase 4 (outono de 1793) =====
-    // A fase condensa num só momento o julgamento dos girondinos (24 a 30 de outubro de 1793), o Máximo geral (setembro)
-    // e a campanha de clemência de Desmoulins (que, na história, começa em dezembro de 1793).
+    // A Fase 4 condensa num só momento eventos de setembro a dezembro de 1793.
 
     private static void DefinirFase4()
     {
@@ -867,7 +837,6 @@ public static class NarrativaGddSetupTool
             .F(MER, "Os deputados girondinos? Na fila do pão ninguém fala de outra coisa, e ninguém entende nada.")
             .F(MER, "Eu só queria que dividissem a farinha, cidadão.");
 
-        // Reações
         R(F, "RedatorMarchand", Desmoulins, D4 + "RedatorMarchand_Caso_Jornalista.asset", D4 + "RedatorMarchand_Caso_Jornalista_Depois.asset", P4 + "Pista_Jornalista_Exemplares.asset");
         R(F, "RedatorMarchand", Mercador, D4 + "RedatorMarchand_Caso_Negociante.asset", null, P4 + "Pista_Negociante_Boato.asset");
         R(F, "RedatorMarchand", Girondinos, D4 + "RedatorMarchand_Caso_Girondina.asset", null, P4 + "Pista_Girondina_Boato.asset");
@@ -881,7 +850,6 @@ public static class NarrativaGddSetupTool
         R(F, "Carcereiro", Desmoulins, D4 + "Carcereiro_Caso_Jornalista.asset", null, P4 + "Pista_Jornalista_Boato.asset");
         R(F, "Carcereiro", Mercador, D4 + "Carcereiro_Caso_Negociante.asset");
 
-        // Objetos: o arquivo da seção vira o arquivo do Comitê de Salvação Pública (ambiente da Fase 4 no GDD).
         var arquivo = new ObjetoGdd { caso = Desmoulins, cena = F, id = "ArquivoDaSecao", nomeAnterior = "Arquivo da Seção", nome = "Arquivo do Comitê" };
         arquivo.porCaso.Add(new[] { Desmoulins, P4 + "Pista_Jornalista_Certificado.asset" });
         arquivo.porCaso.Add(new[] { Girondinos, P4 + "Pista_Girondina_Retratacao.asset" });
@@ -894,9 +862,9 @@ public static class NarrativaGddSetupTool
         Objetos.AddRange(new[] { arquivo, parede, caixa });
     }
 
-    // ===== Consultas usadas pelas outras ferramentas (textos de referência em vigor) =====
+    // Consultas usadas por outras ferramentas (textos em vigor).
 
-    /// <summary>Nome, fonte e descrição de uma pista, alegação, panfleto ou documento no conteúdo do GDD, ou null.</summary>
+    /// <summary>Nome, fonte e descrição de um item do GDD, ou null.</summary>
     internal static string[] TextoDeItem(string itemID)
     {
         Garantir();
@@ -904,14 +872,13 @@ public static class NarrativaGddSetupTool
         return i != null ? new[] { i.nome, i.fonte, i.descricao } : null;
     }
 
-    /// <summary>Verdadeiro se a reação (id do NPC na cena + arquivo do caso) é definida por esta ferramenta.</summary>
     internal static bool GerenciaReacao(string npcId, string casoArquivo)
     {
         Garantir();
         return Reacoes.Exists(r => r.npc == npcId && r.caso == casoArquivo);
     }
 
-    /// <summary>Textos da primeira fala (nó de entrada) da reação, ou null.</summary>
+    /// <summary>Textos do nó de entrada da reação, ou null.</summary>
     internal static string[] FalasDaEntrada(string npcId, string casoArquivo)
     {
         Garantir();
@@ -919,7 +886,6 @@ public static class NarrativaGddSetupTool
         return r != null ? FalasDoNo(r.entrada) : null;
     }
 
-    /// <summary>Textos das falas de um nó de diálogo definido aqui (pelo caminho), ou null.</summary>
     internal static string[] FalasDoNo(string caminho)
     {
         Garantir();
@@ -935,14 +901,11 @@ public static class NarrativaGddSetupTool
         return null;
     }
 
-    /// <summary>Descrição do documento da biblioteca do caso (ex.: "Caso_Varennes"), ou null.</summary>
     internal static string DescricaoDaOferta(string casoArquivo)
     {
         Garantir();
         return Casos.Find(c => c.arquivo == casoArquivo)?.ofertaDescricao;
     }
-
-    // ===== Execução =====
 
     private class Contagem
     {
@@ -977,7 +940,7 @@ public static class NarrativaGddSetupTool
         var cont = new Contagem();
         if (migrar.Count > 0)
         {
-            // 1. Diálogos: primeiro garante que todos os nós existem (as opções apontam de um para outro), depois escreve.
+            // Cria todos os nós antes de escrever: as opções apontam umas para as outras.
             foreach (NoGdd no in Nos)
                 if (migrar.Contains(no.caso) && AssetDatabase.LoadAssetAtPath<DialogueData>(no.caminho) == null)
                 {
@@ -990,14 +953,12 @@ public static class NarrativaGddSetupTool
             AssetDatabase.SaveAssets();
             foreach (NoGdd no in Nos) if (migrar.Contains(no.caso)) EscreverNo(no, cont, r);
 
-            // 2. Itens (pistas, alegações, panfletos, documentos de apoio).
             foreach (ItemGdd item in Itens) if (migrar.Contains(item.caso)) EscreverItem(item, cont, r);
 
-            // 3. Casos, revelações das receitas e ofertas da biblioteca.
             foreach (CasoGdd c in Casos) if (migrar.Contains(c.arquivo)) EscreverCaso(c, cont, r);
             AssetDatabase.SaveAssets();
 
-            // 4. Cenas: NPCs, reações e objetos. Guarda caminhos: abrir outra cena descarrega assets não usados.
+            // Guarda caminhos: abrir outra cena descarrega assets não usados.
             SceneSetup[] configuracao = EditorSceneManager.GetSceneManagerSetup();
             try
             {
@@ -1037,7 +998,7 @@ public static class NarrativaGddSetupTool
         {
             var linha = new Dialogue { name = no.falas[i][0], text = no.falas[i][1], choices = new List<Choice>() };
             if (dialogo.talkScript != null && i < dialogo.talkScript.Count) linha.dialogueAudio = dialogo.talkScript[i].dialogueAudio;
-            if (i == no.falas.Count - 1) // opções só na última fala (é quando a resposta do protagonista aparece)
+            if (i == no.falas.Count - 1) // opções só na última fala
                 foreach (string[] opcao in no.opcoes)
                 {
                     DialogueData destino = AssetDatabase.LoadAssetAtPath<DialogueData>(opcao[1]);
@@ -1118,8 +1079,6 @@ public static class NarrativaGddSetupTool
         return true;
     }
 
-    // ----- Cenas -----
-
     private static void ConfigurarCena(string nomeDaCena, HashSet<string> migrar, Contagem cont, StringBuilder r)
     {
         if (!Casos.Exists(c => c.cena == nomeDaCena && migrar.Contains(c.arquivo))) return;
@@ -1135,7 +1094,7 @@ public static class NarrativaGddSetupTool
         }
         bool mudou = false;
 
-        // NPCs: o novo (Danton) nasce do NPCBasic.prefab, como os outros NPCs da campanha; os antigos só mudam de nome.
+        // NPC novo (Danton) nasce do NPCBasic.prefab; os antigos só mudam de nome.
         foreach (PersonagemGdd p in Personagens.FindAll(x => x.cena == nomeDaCena && migrar.Contains(x.caso)))
         {
             if (!npcs.TryGetValue(p.id, out NPCMovement npc))
@@ -1143,7 +1102,7 @@ public static class NarrativaGddSetupTool
                 if (!p.novo) { r.AppendLine($"  AVISO {nomeDaCena}: NPC '{p.id}' não encontrado."); continue; }
                 npc = CampanhaSetupTool.CriarNpcNaCena(cena, p.id, p.nome, p.x, p.cor);
                 npc.canInteract = true;
-                npc.disableAfterDialogue = false; // responde a todo caso e continua acessível, como os demais
+                npc.disableAfterDialogue = false;
                 npc.custoEmHoras = 1;
                 PrefabUtility.RecordPrefabInstancePropertyModifications(npc);
                 npcs[p.id] = npc;
@@ -1167,7 +1126,7 @@ public static class NarrativaGddSetupTool
             }
         }
 
-        // Reações: entrada, fala depois da entrega e recompensas; pré-requisitos e etapas complementares são preservados.
+        // Pré-requisitos e etapas complementares das reações são preservados.
         foreach (ReacaoGdd def in Reacoes.FindAll(x => x.cena == nomeDaCena && migrar.Contains(x.caso)))
         {
             if (!npcs.TryGetValue(def.npc, out NPCMovement npc)) { r.AppendLine($"  AVISO {nomeDaCena}: NPC '{def.npc}' não encontrado para '{def.caso}'."); continue; }
@@ -1196,7 +1155,7 @@ public static class NarrativaGddSetupTool
             mudou = true;
         }
 
-        // Objetos: nome e, para cada caso reescrito, exatamente a entrada definida (ou nenhuma, se o objeto é vazio nele).
+        // Para cada caso reescrito, o objeto fica exatamente com a entrada definida (ou nenhuma).
         foreach (ObjetoGdd def in Objetos.FindAll(x => x.cena == nomeDaCena))
         {
             if (!objetos.TryGetValue(def.id, out LootInteractable loot)) { r.AppendLine($"  AVISO {nomeDaCena}: objeto '{def.id}' não encontrado."); continue; }

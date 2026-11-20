@@ -3,29 +3,24 @@ using FMODUnity;
 using UnityEngine;
 
 /// <summary>
-/// Fachada para o FMOD que nunca deixa um problema de áudio derrubar o gameplay.
-/// O RuntimeManager lança exceção quando o sistema não inicializa (ERR_MEMORY, banks ausentes no
-/// build, evento renomeado...). Antes, essa exceção estourava no meio de NPCMovement.Interact /
-/// DialogueSystem.Next e deixava o diálogo "ativo" para sempre: toda interação seguinte caía em
-/// AdvanceDialogue e nada mais respondia. Aqui o som simplesmente não toca e o jogo segue.
+/// Fachada para o FMOD que engole as exceções do RuntimeManager (sistema não inicializado, banks ausentes,
+/// evento renomeado): uma exceção no meio de Interact/DialogueSystem.Next travava o diálogo como "ativo".
 /// </summary>
 public static class AudioSeguro
 {
     private static bool sistemaIndisponivel;
     private static bool jaAvisou;
 
-    /// <summary>Verdadeiro enquanto o FMOD respondeu normalmente nesta sessão.</summary>
     public static bool Disponivel => !sistemaIndisponivel;
 
-    // Fora do Play Mode (ferramentas e testes do Editor) o RuntimeManager não existe: acessá-lo só gera erro no
-    // console. Num build o jogo está sempre em Play, então nada muda para o jogador.
+    // Fora do Play Mode (ferramentas e testes do Editor) o RuntimeManager não existe.
     private static bool SemRuntime => sistemaIndisponivel || !Application.isPlaying;
 
     public static bool BanksCarregados
     {
         get
         {
-            if (SemRuntime) return true; // não há o que esperar
+            if (SemRuntime) return true;
             try { return RuntimeManager.HaveAllBanksLoaded; }
             catch (Exception e) { Registrar(e); return true; }
         }
@@ -45,7 +40,6 @@ public static class AudioSeguro
         catch (Exception e) { Registrar(e); }
     }
 
-    /// <summary>Cria a instância do evento. Retorna falso (sem exceção) se o FMOD ou o evento não existirem.</summary>
     public static bool TentarCriar(EventReference evento, out FMOD.Studio.EventInstance instancia)
     {
         instancia = default;
@@ -74,7 +68,7 @@ public static class AudioSeguro
 
     private static void Registrar(Exception e)
     {
-        // Sem sistema, não adianta tentar de novo a cada chamada (só geraria custo e spam de log).
+        // Sem sistema, desliga as próximas chamadas para evitar custo e spam de log.
         if (e is SystemNotInitializedException) sistemaIndisponivel = true;
         if (jaAvisou) return;
         jaAvisou = true;

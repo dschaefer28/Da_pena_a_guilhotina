@@ -6,21 +6,19 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Confere se a campanha é jogável do jeito que está nos assets e cenas (sem alterar nada):
-/// quantidade de casos por fase, exatamente um caso por rota na Fase 4, receitas/panfletos/cartas do cliente (só leitura) completas,
-/// registro na Mesa de Casos e no CatalogoDeSave, a dedução ativa das Fases 2, 3 e 4 (pares coerentes), o orçamento de
-/// horas (8h nas Fases 2 a 4) e — por caso, na cena dele — as oportunidades de investigação, o caminho mínimo até duas
-/// pistas Fato dentro do orçamento com dívida e quantas horas custa descobrir o quadro de dedução inteiro.
+/// Confere, sem alterar nada, se a campanha é jogável: casos por fase (um por rota na Fase 4), receitas, panfletos e
+/// cartas, registro na Mesa e no CatalogoDeSave, dedução, orçamento de horas e, por caso na cena dele, oportunidades,
+/// caminho mínimo até dois Fatos e custo do quadro de dedução inteiro.
 /// Menu: Ferramentas > Campanha > 2 - Validar campanha. Também roda no teste EditMode CampanhaTests.
 /// </summary>
 public static class ValidadorDaCampanha
 {
     public const int CasosEsperadosFase2 = 3;
-    public const int CasosEsperadosFase3 = 3; // decisão do grupo (27/09): um caso entre três, como na Fase 2
+    public const int CasosEsperadosFase3 = 3;
     public const int OportunidadesMinimas = 6;
-    public const int OportunidadesMaximas = 8; // conteúdo do GDD: a Fase 3 tem 5 NPCs (Danton, Kornmann, Sirven, Sobrevivente, Médico) + 3 objetos
-    public const int HorasEsperadasPorCaso = 8; // decisão do grupo: 8h no relógio nas Fases 2, 3 e 4 (eram 6h desde 27/09)
-    public const int PrimeiraFaseComDeducao = 2; // decisão do grupo (27/09): o quadro de dedução vale desde a Fase 2
+    public const int OportunidadesMaximas = 8; // GDD: a Fase 3 tem 5 NPCs + 3 objetos
+    public const int HorasEsperadasPorCaso = 8; // Fases 2 a 4
+    public const int PrimeiraFaseComDeducao = 2;
 
     public class Resultado
     {
@@ -87,7 +85,7 @@ public static class ValidadorDaCampanha
         ValidarLinhaEditorial(ui, casos, r);
         ValidarDeducao(ui, casos, r);
 
-        // Oportunidades: abre cada cena de investigação uma vez (aditiva, sem salvar) e avalia os casos dela.
+        // Abre cada cena de investigação uma vez (aditiva, sem salvar) e avalia os casos dela.
         var porCena = new Dictionary<string, List<CaseData>>();
         foreach (CaseData caso in casos)
         {
@@ -124,11 +122,11 @@ public static class ValidadorDaCampanha
         return r;
     }
 
-    /// <summary>Horas do relógio para o caso: o valor do caso, ou o padrão do GameManager (mesma regra de GameManager.IniciarRelogio).</summary>
+    /// <summary>Mesma regra de GameManager.IniciarRelogio: valor do caso ou padrão do GameManager.</summary>
     public static int HorasDoCaso(CaseData caso, GameManager gm) =>
         caso != null && caso.horasDeInvestigacao > 0 ? caso.horasDeInvestigacao : (gm != null ? gm.horasPorCaso : 0);
 
-    // Prompt 7: 8h no relógio para todo caso das Fases 2, 3 e 4 (a conversão continua 1h por interação nova).
+    // 8h para todo caso das Fases 2 a 4 (1h por interação nova).
     private static void ValidarOrcamento(List<CaseData> casos, GameManager gm, Resultado r)
     {
         foreach (CaseData caso in casos)
@@ -155,7 +153,7 @@ public static class ValidadorDaCampanha
             if (disponiveis < exigidos) r.problemas.Add($"Fase {fase} exige {exigidos} caso(s) concluídos, mas só há {disponiveis}.");
         }
 
-        // Fase 4: com a rota travada, a mesa mostra só o caso daquela rota (GameManager.CasoDaRotaAtual). Exatamente 1.
+        // Fase 4: com a rota travada, a mesa mostra só o caso dela (GameManager.CasoDaRotaAtual); exige exatamente 1.
         foreach (RotaFinal rota in new[] { RotaFinal.A_Guilhotina, RotaFinal.B_Tirano, RotaFinal.C_Equilibrio })
         {
             int visiveis = 0;
@@ -173,7 +171,7 @@ public static class ValidadorDaCampanha
         r.resumo.Add($"Casos na mesa — Fase 2: {porFase[2]}, Fase 3: {porFase[3]}, Fase 4: {porFase[4]} (um por rota).");
     }
 
-    // Prompt 3: ofertas coerentes, documentos de apoio do caso certo e aceitos por um qualificador da receita.
+    // Documentos de apoio do caso certo e aceitos por um qualificador da receita.
     private static void ValidarBiblioteca(GameObject ui, List<CaseData> casos, CatalogoDeSave catalogo, Resultado r)
     {
         BibliotecaUI biblioteca = ui.GetComponentInChildren<BibliotecaUI>(true);
@@ -215,8 +213,8 @@ public static class ValidadorDaCampanha
         r.resumo.Add($"Biblioteca: {porCaso} oferta(s).");
     }
 
-    // Todo caso da Fase 2 em diante exige a escolha explícita do teor (08/11/2026): Neutro (efeito normal do caso) ou
-    // Sensacionalista (+ouro, o lado do caso ganha menos, o outro perde o mesmo ou mais). O tutorial fica simples.
+    // Da Fase 2 em diante: Neutro (efeito normal) ou Sensacionalista (+ouro; o lado do caso ganha menos, o outro
+    // perde o mesmo ou mais).
     private static void ValidarLinhaEditorial(GameObject ui, List<CaseData> casos, Resultado r)
     {
         if (ui.GetComponentInChildren<LinhaEditorialDaPrensaUI>(true) == null)
@@ -244,7 +242,6 @@ public static class ValidadorDaCampanha
                 r.problemas.Add($"'{receita.name}': Sensacionalista precisa de ouro adicional (rode Ferramentas > Campanha > 4b).");
                 continue;
             }
-            // Comparado ao Neutro: nenhuma barra sobe; a barra que o caso faz subir (lado favorecido) sobe menos.
             if (s.povo > 0 || s.estado > 0)
                 r.problemas.Add($"'{receita.name}': Sensacionalista não pode subir Povo nem Estado além do Neutro.");
             bool favorecePovo = receita.soFatos.povo > 0, favoreceEstado = receita.soFatos.estado > 0;
@@ -254,9 +251,7 @@ public static class ValidadorDaCampanha
         r.resumo.Add($"Linha editorial: {ativas} receita(s) com Neutro e Sensacionalista.");
     }
 
-    // Prompt 4 (Prompt 7: desde a Fase 2): dedução ativa em todo caso das Fases 2, 3 e 4, com pares coerentes (exatamente
-    // um Fato por par, pistas do próprio caso, sem alegações nem documentos de apoio, sem repetir pista), e o botão do
-    // quadro aparecendo já na Fase 2. O tutorial (Fase 1) segue a regra antiga.
+    // Fases 2 a 4: pares com exatamente um Fato, pistas do próprio caso, sem alegações, apoios ou pistas repetidas.
     private static void ValidarDeducao(GameObject ui, List<CaseData> casos, Resultado r)
     {
         QuadroDeDeducaoUI quadro = ui.GetComponentInChildren<QuadroDeDeducaoUI>(true);
@@ -280,8 +275,7 @@ public static class ValidadorDaCampanha
         r.resumo.Add($"Dedução ativa: {aderentes} caso(s).");
     }
 
-    // Etapas complementares: id estável, único por reação, diferente do id reservado da etapa normal; requisitos e
-    // recompensas preenchidos; recompensas do próprio caso.
+    // Id estável, único por reação e diferente do id reservado da etapa normal; recompensas do próprio caso.
     private static void ValidarEtapasComplementares(string cena, List<KeyValuePair<Component, string>> interacoes, Resultado r)
     {
         foreach (var par in interacoes)
@@ -307,7 +301,7 @@ public static class ValidadorDaCampanha
         }
     }
 
-    // Prefixos que marcavam a verdade no nome (Prompt 2, revisado): um boato/calúnia não pode ser reconhecido pelo nome.
+    // Um boato/calúnia não pode ser reconhecido pelo nome.
     private static readonly string[] PrefixosQueRevelam = { "Conversa sobre", "Libelo", "Folha:", "Cartaz:", "Denúncia:", "Bilhete", "Boato", "Calúnia", "Rumor" };
 
     private static void ValidarItensDoProjeto(Resultado r)
@@ -339,7 +333,7 @@ public static class ValidadorDaCampanha
         ReceitaDeCaso receita = caso.receitaDoPanfleto;
         if (receita == null) { r.problemas.Add($"'{n}' sem Receita Do Panfleto: nada pode ser impresso."); return; }
         if (receita.caso != caso) r.problemas.Add($"A receita '{receita.name}' aponta para outro caso ('{(receita.caso != null ? receita.caso.name : "-")}').");
-        // Só Alegações é legado (cartas impressas em saves antigos), mas continua precisando de panfleto para o tribunal.
+        // Só Alegações é legado (saves antigos), mas ainda precisa de panfleto para o tribunal.
         foreach (NivelDoPanfleto nivel in new[] { NivelDoPanfleto.Fatos, NivelDoPanfleto.ComBoato, NivelDoPanfleto.Calunia, NivelDoPanfleto.Alegacoes })
         {
             Item panfleto = receita.PanfletoDe(receita.VersaoDe(nivel));
@@ -434,8 +428,7 @@ public static class ValidadorDaCampanha
 
     private static bool TemFala(DialogueData dialogo) => dialogo != null && dialogo.talkScript != null && dialogo.talkScript.Count > 0;
 
-    // Menor soma de custos das fontes que, juntas, entregam todas as pistas do quadro de dedução (poucas fontes: busca
-    // por subconjuntos). Também avisa de pistas do caso fora do quadro — uma pista sem contradição seria um indício.
+    // Busca por subconjuntos (poucas fontes). Também avisa de pistas fora do quadro: sem contradição, seriam um indício.
     private static int CustoDoQuadroInteiro(List<Fonte> fontes, CaseData caso, Resultado r)
     {
         var conjunto = new HashSet<string>();
@@ -462,7 +455,7 @@ public static class ValidadorDaCampanha
         return melhor;
     }
 
-    // Menor soma de custos para juntar duas pistas Fato DIFERENTES do caso (uma fonte pode dar as duas).
+    // Duas pistas Fato DIFERENTES; uma fonte pode dar as duas.
     private static int CaminhoMinimoAteDoisFatos(List<Fonte> fontes, CaseData caso)
     {
         var fatosPorFonte = new List<HashSet<string>>();

@@ -18,11 +18,10 @@ public class PlayerInteraction : MonoBehaviour
     private ContactFilter2D filtroComTriggers;
     private readonly List<Collider2D> contatos = new List<Collider2D>();
 
-    /// <summary>Objeto interagível mais próximo que responde agora (ou null). Alimenta o PromptDeInteracao.</summary>
+    /// <summary>Alimenta o PromptDeInteracao.</summary>
     public GameObject InteragivelMaisProximo { get; private set; }
     public event Action<GameObject> OnInteragivelMaisProximoAlterado;
 
-    /// <summary>Falso enquanto pause, inventário/prensa ou cutscene estiverem abertos (o Interagir não age no mundo).</summary>
     public bool PodeInteragirAgora
     {
         get
@@ -75,7 +74,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
-        // Lista minúscula (1-3 objetos): recalcular todo frame é barato e mantém o aviso de interação sempre certo.
+        // Poucos contatos: recalcular todo frame é barato e mantém o aviso sempre certo.
         GameObject atual = GetClosestInteractable();
         if (atual != InteragivelMaisProximo)
         {
@@ -84,7 +83,7 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    // === MÉTODOS PÚBLICOS (Chamados pelos Botões do Canvas no Android e pelas teclas no Windows) ===
+    // Chamados pelos botões do Canvas (mobile) e pelas teclas.
 
     public void ToggleInventoryMobile()
     {
@@ -102,11 +101,9 @@ public class PlayerInteraction : MonoBehaviour
 
     public void InteractMobile()
     {
-        // Pause aberto: nem o mundo nem a conversa por trás dele respondem ao Interagir (antes o E avançava o diálogo
-        // escondido pelo menu).
+        // Antes do diálogo: com o pause aberto, nem a conversa por trás dele avança.
         if (PauseMenu.Instance != null && PauseMenu.Instance.IsOpen) return;
 
-        // Diálogo em andamento: o mesmo botão/tecla avança a conversa.
         var dialogo = GameManager.Instance != null ? GameManager.Instance.dialogueSystem : null;
         if (dialogo != null && dialogo.IsDialogueActive)
         {
@@ -114,8 +111,6 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        // Mesma trava do pause/inventário: não deixa interagir com o mundo (portas, prensa, NPCs...)
-        // enquanto o menu de pause, o inventário/prensa ou uma cutscene estiverem abertos.
         if (!PodeInteragirAgora) return;
 
         GameObject closestInteractable = GetClosestInteractable();
@@ -125,9 +120,7 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    // === LÓGICA DE FÍSICA ===
-    // Antes o alcance era o próprio corpo encostando no trigger do objeto, então o player quase entrava nas coisas.
-    // Agora a área é o corpo alargado margemDeAlcance para cada lado, consultada a cada frame.
+    // Corpo alargado só na horizontal, para não pegar objetos de outro andar.
     private Bounds AreaDeInteracao()
     {
         Bounds area = corpo.bounds;
@@ -146,12 +139,11 @@ public class PlayerInteraction : MonoBehaviour
         Physics2D.OverlapBox(area.center, area.size, 0f, filtroComTriggers, contatos);
         foreach (var col in contatos)
         {
-            // Só o trigger do objeto conta como a área dele, como antes (o colisor sólido não).
+            // Só o trigger define a área do objeto, não o colisor sólido.
             if (!col.isTrigger) continue;
             GameObject obj = col.gameObject;
 
-            // Ignora quem está no alcance mas não responde agora (NPC que já entregou a pista, etc.),
-            // senão ele "rouba" o Interagir de um objeto útil logo ao lado.
+            // Quem não responde agora não pode "roubar" o Interagir de um objeto útil ao lado.
             if (!obj.TryGetComponent<IInteractable>(out var interactable) || !interactable.PodeInteragir) continue;
 
             float dist = Vector2.SqrMagnitude((Vector2)(transform.position - obj.transform.position));
@@ -164,7 +156,6 @@ public class PlayerInteraction : MonoBehaviour
         return closest;
     }
 
-    // Retângulo amarelo na Scene view com o Player selecionado: mostra até onde ele alcança.
     private void OnDrawGizmosSelected()
     {
         if (corpo == null) corpo = GetComponent<Collider2D>();

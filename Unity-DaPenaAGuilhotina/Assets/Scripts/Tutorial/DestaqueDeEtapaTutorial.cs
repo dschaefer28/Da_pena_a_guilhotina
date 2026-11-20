@@ -1,10 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Versão de UI do IndicadorDeEtapaTutorial: enquanto a etapa atual do TutorialManager for "Etapa Id", este
-/// RectTransform pulsa (escala), chamando a atenção para ele. Usado no HUD_Status do prefab UI na etapa que
-/// explica as barras ao abrir a prensa (documento, Fase 1: "HUD de tutorial focada em status").
-/// Usa tempo real: a prensa aberta pausa o jogo (timeScale 0).
+/// Pulsa este RectTransform enquanto a etapa atual do tutorial for "Etapa Id" (ex.: HUD_Status na etapa da prensa).
+/// Usa tempo real porque a prensa aberta pausa o jogo (timeScale 0).
 /// </summary>
 [RequireComponent(typeof(RectTransform))]
 public class DestaqueDeEtapaTutorial : MonoBehaviour

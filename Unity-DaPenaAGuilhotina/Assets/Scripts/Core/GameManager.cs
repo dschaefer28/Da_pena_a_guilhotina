@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement; // NOVO: Permite gerenciar eventos de carregamento de cena
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,8 +14,7 @@ public class GameManager : MonoBehaviour
              "A Mesa de Casos (CaseSelectionUI) usa isso para bloquear cartões já selecionados.")]
     public List<CaseData> casosJaSelecionados = new List<CaseData>();
 
-    /// <summary>Identifica a partida (Novo Jogo = ID novo; o Continuar recupera o do save). O arquivo de casos
-    /// resolvidos do menu separa as partidas por ele. Não é serializado: o prefab nunca guarda um ID.</summary>
+    // Chave da partida no ArquivoDeCasos. NonSerialized para o prefab nunca guardar um ID.
     [NonSerialized] public string idDaPartida;
     public string IdDaPartida
     {
@@ -64,7 +63,7 @@ public class GameManager : MonoBehaviour
     public RotaFinal rotaFinal = RotaFinal.Nenhuma;
     [Tooltip("Diferença mínima entre Opinião Pública e Opinião do Estado para a rota pender para um lado. " +
              "Abaixo disso, a rota é a C (equilíbrio). Mínimo 1: com 0, o empate iria para a rota A.")]
-    [Min(1)] public int margemDaRota = 12; // 13/11/2026: receitas pela metade; 12 mantém todo par de casos com 2+ rotas
+    [Min(1)] public int margemDaRota = 12; // 12 mantém todo par de casos com 2+ rotas possíveis
 
     [Header("Status Globais (HUD)")]
     public int capitalAtual = 0;
@@ -77,8 +76,7 @@ public class GameManager : MonoBehaviour
              "de cena e no save, e voltam para a grade assim que houver espaço.")]
     public List<Item> itensForaDaGrade = new List<Item>();
 
-    /// <summary>Histórico de uma publicação com SNAPSHOT dos valores aplicados: mudar receitas depois não altera
-    /// publicações já feitas. "legado" = veio de um save anterior à versão 4, sem esses detalhes.</summary>
+    // Snapshot dos valores: mudar receitas depois não altera publicações feitas. legado = save < v4, sem detalhes.
     [Serializable]
     public class PanfletoPublicado
     {
@@ -113,18 +111,14 @@ public class GameManager : MonoBehaviour
         [Tooltip("A penalidade já entrou nas barras (saves do curto período em que ela era cobrada na impressão). " +
                  "Falso = cobrada no fim da fase, que é o normal.")]
         public bool aplicada;
-        /// <summary>O que o EncerrarFase de fato tirou das barras (depois do limite 0–100), para o aviso pós-cutscene.</summary>
+        // Perda efetiva após o limite 0–100, para o aviso pós-cutscene.
         [NonSerialized] public Vector2Int perdaAplicada;
     }
 
-    /// <summary>
-    /// Perda do desmentido já aplicada nos números (a rota precisa dela) mas ainda não mostrada na HUD: a cutscene de
-    /// fim de fase cobre a tela, e a barra só deve descer depois dela, junto com o aviso (FimDeFase). A HUD exibe
-    /// valor − isto até <see cref="ExibirDesmentido"/>. Não vai para o save.
-    /// </summary>
+    // Perda já aplicada nos números (a rota depende dela) mas retida na HUD até o fim da cutscene; a HUD exibe
+    // valor − isto até ExibirDesmentido. Não vai para o save.
     [NonSerialized] public Vector2Int desmentidoNaoExibido;
 
-    /// <summary>Libera a perda segurada: a HUD anima as barras descendo até o valor real.</summary>
     public void ExibirDesmentido()
     {
         if (desmentidoNaoExibido == Vector2Int.zero) return;
@@ -167,13 +161,12 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject); // Torna o GameManager imortal
+        DontDestroyOnLoad(gameObject);
         VincularDependenciasLocais();
-        // Continuar do menu: preenche os dados do save antes de o inventário da cena restaurar os itens (Start).
+        // Aplica o save no Awake, antes de o inventário da cena restaurar os itens no Start.
         SistemaDeSave.AplicarPendente(this);
     }
 
-    // ARQUITETURA: Assina o evento nativo da Unity para troca de cenas
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -184,18 +177,14 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    // Gatilho automático disparado sempre que uma nova cena abre (ex: Fase2 -> Porao)
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log($"[SISTEMA] Cena '{scene.name}' carregada. Sincronizando HUD...");
-        // Reencontra as dependências locais da cena recém-carregada (GameManager é persistente entre cenas)
         VincularDependenciasLocais();
         IdDeInteracao.ValidarCena(scene);
-        // Força todas as UIs da nova cena a buscarem os valores salvos
         ForcarAtualizacaoUI();
     }
 
-    // Preenche inventoryManager/dialogueSystem com as instâncias da cena atual quando ainda não vinculadas
     private void VincularDependenciasLocais()
     {
         if (inventoryManager == null)
@@ -209,14 +198,13 @@ public class GameManager : MonoBehaviour
         OnStatusChanged?.Invoke();
     }
 
-    /// <summary>Regra de domínio da Mesa de Casos (vale mesmo se a UI deixar passar um clique): um caso por vez,
-    /// da fase atual e da rota travada, nunca um já concluído ou já escolhido antes.</summary>
+    // Regra de domínio da Mesa de Casos, independente da UI: um caso por vez, da fase e rota atuais, nunca repetido.
     public bool PodeAceitarCaso(CaseData caso, out string motivo)
     {
         motivo = null;
         if (caso == null) { motivo = "Nenhum caso selecionado."; return false; }
         if (casosConcluidos.Contains(caso)) { motivo = "Este caso já foi concluído."; return false; }
-        if (caso == casoEscolhido && CasoAtualEmAndamento) return true; // mesmo caso: nada a fazer
+        if (caso == casoEscolhido && CasoAtualEmAndamento) return true;
         if (CasoAtualEmAndamento)
         {
             motivo = $"Termine o caso atual antes de aceitar outro: {TituloDe(casoEscolhido)}";
@@ -229,8 +217,7 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    /// <summary>Filtro de rota da mesa (documento, "Filtro Dinâmico de Casos"). Antes da Fase 4 valem os casos sem rota;
-    /// na Fase 4, só o caso da rota travada — um caso sem rota nunca aparece junto dele.</summary>
+    // Antes da Fase 4 valem os casos sem rota; na Fase 4, só o da rota travada.
     public bool CasoDaRotaAtual(CaseData caso)
     {
         if (caso == null) return false;
@@ -238,12 +225,9 @@ public class GameManager : MonoBehaviour
         return caso.rota == rotaFinal;
     }
 
-    /// <summary>O tutorial (caso da Fase 1) terminou. Regra de progresso da Mesa de Casos e da porta do escritório:
-    /// não depende de o panfleto do tutorial ainda estar no inventário.</summary>
     public bool TutorialConcluido => faseAtual > 1 || casosConcluidos.Exists(c => c != null && c.fase == 1);
 
-    /// <summary>Aceita o caso. Falso se a regra de domínio recusar. Confirmar de novo o caso em andamento não
-    /// reinicia o relógio (o orçamento de horas já gasto continua valendo).</summary>
+    // Reconfirmar o caso em andamento não reinicia o relógio.
     public bool ConfirmarCaso(CaseData caso)
     {
         if (!PodeAceitarCaso(caso, out string motivo))
@@ -263,7 +247,6 @@ public class GameManager : MonoBehaviour
             casosJaSelecionados.Add(caso);
         Debug.Log($"Caso escolhido e salvo: {caso.caseTitle}");
 
-        // Documento (Tarefas Globais): pop-up quando um caso é escolhido e travado.
         AvisoNaTela.Mostrar($"Caso aceito: {TituloDe(caso)}");
         IniciarRelogio(caso);
         EntregarAlegacoesPendentes();
@@ -273,12 +256,10 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    /// <summary>Interação fictícia usada para registrar a entrega das alegações iniciais (uma vez por caso).</summary>
+    // Interação fictícia para registrar a entrega das alegações iniciais (uma vez por caso).
     public const string InteracaoAlegacoes = "mesa/alegacoes_do_cliente";
 
-    /// <summary>Entrega as cartas do cliente (só leitura, CaseData.alegacoesIniciais) do caso em andamento que ainda não
-    /// entraram no inventário. Chamado ao aceitar o caso e sempre que o inventário de uma cena é restaurado: com o
-    /// inventário cheio, fica para depois.</summary>
+    // Chamado ao aceitar o caso e a cada restauração do inventário: com inventário cheio, fica para depois.
     public void EntregarAlegacoesPendentes()
     {
         CaseData caso = casoEscolhido;
@@ -300,13 +281,8 @@ public class GameManager : MonoBehaviour
         if (faltou) AvisoNaTela.Mostrar("Inventário cheio: libere espaço para guardar a carta do cliente.");
     }
 
-    /// <summary>
-    /// Ao concluir um caso, o que só servia a ele sai do inventário (a grade tem 24 espaços e não há descarte):
-    /// - cartas do cliente: sempre;
-    /// - sobras de pistas e documentos de apoio: nos casos antes da Fase 4 (o caso da Fase 4 leva suas provas ao
-    ///   tribunal). O histórico (evidenciasObtidas, panfletosPublicados) continua guardando tudo.
-    /// Panfletos não têm caso e ficam.
-    /// </summary>
+    // A grade é limitada e não há descarte: cartas do cliente saem sempre; pistas e documentos só antes da Fase 4
+    // (que leva as provas ao tribunal). Panfletos não têm caso e ficam.
     private void ArquivarSobrasDoCaso(CaseData caso)
     {
         if (caso == null || inventoryManager == null) return;
@@ -319,8 +295,7 @@ public class GameManager : MonoBehaviour
     private static string TituloDe(CaseData caso) =>
         caso == null ? "-" : (string.IsNullOrWhiteSpace(caso.caseTitle) ? caso.name : caso.caseTitle).Trim();
 
-    /// <summary>Regra de domínio da prensa: só o caso em andamento pode ser publicado, e uma única vez.
-    /// A prensa checa isto ANTES de consumir as pistas.</summary>
+    // Só o caso em andamento, uma única vez. A prensa checa antes de consumir as pistas.
     public bool PodePublicarCaso(CaseData caso, out string motivo)
     {
         motivo = null;
@@ -332,8 +307,7 @@ public class GameManager : MonoBehaviour
 
     public bool FoiPublicado(CaseData caso) => caso != null && panfletosPublicados.Exists(p => p.caso == caso);
 
-    /// <summary>Publicação que imprimiu este panfleto (o da versão registrada na receita do caso), ou nulo: o tutorial usa
-    /// receita exata e não registra publicação.</summary>
+    // Nulo para o tutorial, que não registra publicação.
     public PanfletoPublicado PublicacaoDoPanfleto(Item panfleto)
     {
         if (panfleto == null) return null;
@@ -346,7 +320,7 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    /// <summary>Compatibilidade: registra a partir de uma versão da receita, sem pistas/suportes.</summary>
+    // Compatibilidade: registra a partir de uma versão da receita, sem pistas/suportes.
     public void RegistrarPanfletoDeCaso(CaseData caso, NivelDoPanfleto nivel, ReceitaDeCaso.Versao versao)
     {
         RegistrarPanfletoDeCaso(caso, new ResultadoDoPanfleto
@@ -361,8 +335,7 @@ public class GameManager : MonoBehaviour
         });
     }
 
-    /// <summary>Guarda a publicação (snapshot dos valores calculados e, se informado, do que foi de fato aplicado
-    /// depois do limite 0–100) e agenda a revelação, uma única vez por caso.</summary>
+    // aplicado = o que mudou de fato após o limite 0–100.
     public void RegistrarPanfletoDeCaso(CaseData caso, ResultadoDoPanfleto resultado, Vector3Int? aplicado = null)
     {
         if (resultado == null) return;
@@ -387,12 +360,11 @@ public class GameManager : MonoBehaviour
             agravamentoPovo = resultado.agravamentoPovo, agravamentoEstado = resultado.agravamentoEstado,
         });
 
-        // Fatos nunca gera revelação, com qualquer linha editorial: o sensacionalista só agrava uma mentira que existe.
+        // Fatos nunca gera revelação: o sensacionalista só agrava uma mentira que existe.
         if (resultado.nivel != NivelDoPanfleto.Fatos && resultado.TemRevelacao)
         {
-            // A penalidade é cobrada no fim da fase (EncerrarFase), e a barra só desce depois da cutscene, com o aviso
-            // (FimDeFase). Ganho e perda valem juntos contra o limite 0–100: se o ganho bateu no teto (povo 80 + 40 =
-            // 100, não 120), a perda guardada já desconta o que o teto comeu (80 → 100 → 75, não 55).
+            // Cobrada no EncerrarFase. Ganho e perda valem juntos contra o limite 0–100: se o ganho bateu no teto
+            // (80 + 40 = 100), a perda desconta o que o teto comeu (80 → 100 → 75, não 55).
             int perdaPovo = resultado.penalidadePovo, perdaEstado = resultado.penalidadeEstado;
             if (aplicado.HasValue)
             {
@@ -414,11 +386,9 @@ public class GameManager : MonoBehaviour
                   (resultado.suportes.Count > 0 ? $", com apoio de {string.Join(", ", resultado.suportes)}." : "."));
     }
 
-    /// <summary>Segundos do aviso de desmentido na tela, depois da cutscene de fim de fase: explica por que a barra caiu.</summary>
     public const float DuracaoDoAvisoDeDesmentido = 5f;
 
-    /// <summary>Perda a aplicar agora para a barra terminar onde terminaria se ganho e perda fossem somados antes do
-    /// limite 0–100: alvo = Clamp(valorAntesDoGanho + ganho + penalidade) e a perda é a distância do valor atual até ele.</summary>
+    // alvo = Clamp(valorAntesDoGanho + ganho + penalidade); retorna a distância do valor atual até o alvo.
     public static int PerdaContraOLimite(int valorAtual, int ganhoAplicado, int ganhoCalculado, int penalidade)
     {
         if (penalidade == 0) return 0;
@@ -431,16 +401,14 @@ public class GameManager : MonoBehaviour
 
     // ===== Evidências e Biblioteca =====
 
-    /// <summary>Registra que um item entrou no inventário (chamado pelo InventoryManager.AddItem). Vale para qualquer
-    /// item com itemID — assim um pré-requisito continua cumprido mesmo depois de o item ser gasto.</summary>
+    // Chamado pelo InventoryManager.AddItem: o pré-requisito continua cumprido mesmo depois de o item ser gasto.
     public void RegistrarEvidencia(Item item)
     {
         if (item == null || string.IsNullOrEmpty(item.itemID)) return;
         if (!evidenciasObtidas.Contains(item.itemID)) evidenciasObtidas.Add(item.itemID);
     }
 
-    /// <summary>O jogador já obteve esta evidência alguma vez (mesmo se a gastou). Saves antigos: vale o que ele tem
-    /// (grade, prensa ou mão).</summary>
+    // Fallback para saves antigos: o que o jogador tem agora (grade, prensa ou mão).
     public bool EvidenciaObtida(Item item) =>
         item != null && !string.IsNullOrEmpty(item.itemID) &&
         (evidenciasObtidas.Contains(item.itemID) || (inventoryManager != null && inventoryManager.PossuiEmQualquerLugar(item.itemID)));
@@ -450,8 +418,8 @@ public class GameManager : MonoBehaviour
         Disponivel,
         Comprada,
         JaObtida,              // o próprio documento já veio por outro caminho
-        ApoioEquivalente,      // outro documento já obtido ativa o mesmo reforço: comprar não mudaria nada
-        CasoNaoAceito,         // nenhum caso em andamento
+        ApoioEquivalente,      // outro documento já obtido ativa o mesmo reforço
+        CasoNaoAceito,
         OutroCasoEmAndamento,
         CasoConcluido,
         FaseBloqueada,
@@ -490,11 +458,10 @@ public class GameManager : MonoBehaviour
 
     private bool comprando;
 
-    /// <summary>Compra transacional: valida tudo, entrega o item e SÓ ENTÃO cobra. Sem crédito: capital negativo ou
-    /// menor que o preço recusa. Inventário cheio recusa sem cobrar. Cada oferta+caso é comprada uma vez.</summary>
+    // Transacional: entrega o item e só então cobra. Sem crédito; inventário cheio recusa sem cobrar.
     public ResultadoDaCompra ComprarNaBiblioteca(OfertaDaBiblioteca oferta, Func<Item, bool> entregar = null)
     {
-        if (comprando) return ResultadoDaCompra.Indisponivel; // clique repetido durante a mesma compra
+        if (comprando) return ResultadoDaCompra.Indisponivel; // reentrância por clique repetido
         comprando = true;
         try
         {
@@ -529,7 +496,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary>Devolve e limpa as revelações pendentes (quem chama aplica as penalidades).</summary>
+    // Quem chama aplica as penalidades.
     public List<RevelacaoPendente> ConsumirRevelacoes()
     {
         var lista = new List<RevelacaoPendente>(revelacoesPendentes);
@@ -537,7 +504,6 @@ public class GameManager : MonoBehaviour
         return lista;
     }
 
-    /// <summary>O que aconteceu ao fechar uma fase (a cutscene de fim de fase conta isso ao jogador).</summary>
     public class EncerramentoDeFase
     {
         public int fase;
@@ -545,12 +511,7 @@ public class GameManager : MonoBehaviour
         public List<RevelacaoPendente> revelacoes = new List<RevelacaoPendente>();
     }
 
-    /// <summary>
-    /// Fecha a fase atual, nesta ordem: os boatos publicados nela são cobrados (a perda entra nos números já, mas fica
-    /// em <see cref="desmentidoNaoExibido"/> até o FimDeFase mostrá-la depois da cutscene), as despesas são cobradas
-    /// e a fase avança. As penalidades vêm ANTES do avanço porque entrar na Fase 4 trava a rota pelas barras: a mentira
-    /// descoberta pesa na Definição de Rota (documento, Fase 4).
-    /// </summary>
+    // Ordem: boatos, despesas, avanço. Penalidades antes do avanço porque entrar na Fase 4 trava a rota pelas barras.
     public EncerramentoDeFase EncerrarFase()
     {
         var resultado = new EncerramentoDeFase { fase = faseAtual };
@@ -570,12 +531,11 @@ public class GameManager : MonoBehaviour
         return resultado;
     }
 
-    /// <summary>Usado pela Mesa de Casos (CaseSelectionUI) para bloquear cartões já escolhidos antes.</summary>
     public bool CasoJaFoiSelecionado(CaseData caso) => caso != null && casosJaSelecionados.Contains(caso);
 
     // ===== Progressão de Fases =====
 
-    /// <summary>Há um caso aceito cujo panfleto ainda não foi impresso: trava a mesa e libera a porta do escritório.</summary>
+    // Caso aceito sem panfleto impresso: trava a mesa e libera a porta do escritório.
     public bool CasoAtualEmAndamento => casoEscolhido != null && !casosConcluidos.Contains(casoEscolhido);
 
     public int CasosNecessariosNaFase =>
@@ -594,7 +554,6 @@ public class GameManager : MonoBehaviour
 
     public bool FaseConcluida => CasosConcluidosNaFase >= CasosNecessariosNaFase;
 
-    /// <summary>Chamado pela prensa ao imprimir o panfleto do caso. Falso se já estava concluído.</summary>
     public bool ConcluirCaso(CaseData caso)
     {
         if (caso == null || casosConcluidos.Contains(caso)) return false;
@@ -610,7 +569,7 @@ public class GameManager : MonoBehaviour
 
     // ===== Tempo de investigação e despesas =====
 
-    // O que já foi pago fica no registroDaInvestigacao, separado por caso: não precisa limpar aqui.
+    // O registroDaInvestigacao é separado por caso: não precisa limpar aqui.
     private void IniciarRelogio(CaseData caso)
     {
         if (caso == null) { horasDoCaso = horasRestantes = 0; return; }
@@ -624,7 +583,7 @@ public class GameManager : MonoBehaviour
         horasRestantes = horasDoCaso;
     }
 
-    /// <summary>Cobra as despesas da fase que terminou. Devolve o valor cobrado (o capital pode ficar negativo = dívida).</summary>
+    // O capital pode ficar negativo (dívida).
     public int PagarDespesasDaFase(int fase)
     {
         int valor = fase >= 1 && fase <= despesasPorFase.Length ? Mathf.Max(0, despesasPorFase[fase - 1]) : 0;
@@ -635,7 +594,6 @@ public class GameManager : MonoBehaviour
         return valor;
     }
 
-    /// <summary>Passa para a próxima fase. Falso se já está na última.</summary>
     public bool AvancarFase()
     {
         if (faseAtual >= UltimaFase) return false;
@@ -645,8 +603,7 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    /// <summary>Documento (Fase 4, "Definição de Rota"): Povo alto e Estado baixo = A; o contrário = B; equilíbrio = C.
-    /// Desnível ≥ margem → A; ≤ −margem → B; o resto → C.</summary>
+    // Desnível Povo − Estado ≥ margem → A; ≤ −margem → B; senão C.
     public RotaFinal CalcularRota()
     {
         int margem = MargemValida;
@@ -656,8 +613,7 @@ public class GameManager : MonoBehaviour
         return RotaFinal.C_Equilibrio;
     }
 
-    /// <summary>Margem usada no cálculo da rota. Uma margem 0 ou negativa (só possível por código) faria o empate
-    /// (desnível 0) cair na rota A; com o mínimo de 1, o empate fica na C, sem pender para nenhum lado.</summary>
+    // Mínimo 1: com margem 0 o empate cairia na rota A em vez da C.
     public int MargemValida
     {
         get
@@ -674,8 +630,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[FASES] Rota final travada: {rotaFinal} (Povo {opiniaoPublicaAtual} x Estado {opiniaoEstadoAtual}).");
     }
 
-    /// <summary>Aplica o impacto (Povo/Estado limitados a 0–100). Devolve o que mudou DE FATO (x = Povo, y = Estado,
-    /// z = Ouro), que o histórico da publicação guarda junto do valor calculado.</summary>
+    // Retorna a variação efetiva após o limite 0–100 (x = Povo, y = Estado, z = Ouro).
     public Vector3Int AplicarImpactoPanfleto(int impactoPublico, int impactoEstado, int ouro)
     {
         int povoAntes = opiniaoPublicaAtual, estadoAntes = opiniaoEstadoAtual;
@@ -687,7 +642,7 @@ public class GameManager : MonoBehaviour
         opiniaoEstadoAtual = Mathf.Clamp(opiniaoEstadoAtual, 0, 100);
 
         Debug.Log($"[PANFLETO] Povo: {opiniaoPublicaAtual} | Estado: {opiniaoEstadoAtual} | Ouro: {capitalAtual}");
-        ForcarAtualizacaoUI(); // Atualiza a tela imediatamente após o craft
+        ForcarAtualizacaoUI();
         return new Vector3Int(opiniaoPublicaAtual - povoAntes, opiniaoEstadoAtual - estadoAntes, ouro);
     }
 }

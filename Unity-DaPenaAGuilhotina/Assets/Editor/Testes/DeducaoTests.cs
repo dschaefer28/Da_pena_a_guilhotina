@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Dedução ativa (Prompt 4; escolha por par desde 17/10). Regras do quadro (Deducao) sobre um caso montado aqui: cada par
+/// Dedução ativa com escolha por par. Regras do quadro (Deducao) sobre um caso montado aqui: cada par
 /// decidido à parte, qualquer combinação aceita, a pista não escolhida descartada do inventário e do tribunal, nenhuma
 /// etiqueta que revele a verdade; o inventário real, o save v9 e os casos reais das Fases 2 a 4.
 /// </summary>
@@ -159,8 +159,7 @@ public class DeducaoTests
         StringAssert.Contains("não verificada", inv.RotuloDaPista(boato));
         StringAssert.DoesNotContain("boato", inv.RotuloDaPista(boato).Replace("não verificada", string.Empty));
 
-        // Caso sem dedução configurada (desde o Prompt 7 nenhum caso da campanha, mas a regra continua para conteúdo
-        // antigo ou novo ainda sem pares): vale a regra antiga.
+        // Caso sem pares configurados: vale a regra antiga.
         CaseData antigo = Criar<CaseData>("CasoAntigo");
         antigo.fase = 2;
         Item fatoAntigo = Pista("fato_antigo", antigo, Confiabilidade.Fato);
@@ -373,7 +372,7 @@ public class DeducaoTests
     [Test]
     public void CasosReais_FaseDois_CadaParFalaDoMesmoAssunto_EAVerdadeNaoApareceNoNome()
     {
-        // Os pares da Fase 2 (Prompt 7): o boato contradiz o fato do cliente e a calúnia contradiz o fato do objeto.
+        // Pares da Fase 2: o boato contradiz o fato do cliente e a calúnia contradiz o fato do objeto.
         // Uma palavra-chave comum confirma que as duas afirmações tratam do mesmo assunto.
         var esperado = new Dictionary<string, string[]>
         {

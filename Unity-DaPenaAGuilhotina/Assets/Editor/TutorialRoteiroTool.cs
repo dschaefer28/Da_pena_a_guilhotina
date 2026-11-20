@@ -7,12 +7,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Sincroniza as cenas da Fase 1 (Jogo e Porao) com o tutorial universal:
-///  - copia o roteiro padrão do código (TutorialManager.etapas) para o TutorialManager da cena Jogo;
-///  - faz as duas cenas usarem o popup/TutorialStepUI do prefab UI (o Porão tinha cópias próprias e
-///    o Jogo tinha overrides de tamanho/posição e um Canvas adicionado só na cena);
-///  - adiciona o PromptDeInteracao ao Player de cada cena.
-/// Rode DEPOIS de "1 - Aplicar layout do popup". Play Mode desligado e cena atual salva.
+/// Sincroniza as cenas da Fase 1 (Jogo e Porao) com o tutorial: aplica o roteiro padrão do código no
+/// TutorialManager, remove cópias e overrides locais para que o popup/TutorialStepUI venham do prefab UI e
+/// garante o PromptDeInteracao no Player.
+/// Rode DEPOIS de "1 - Aplicar layout do popup". Recusa Play Mode e cena suja.
 /// Menu: Ferramentas > Tutorial > 2.
 /// </summary>
 public static class TutorialRoteiroTool
@@ -87,7 +85,7 @@ public static class TutorialRoteiroTool
     {
         var log = new System.Text.StringBuilder();
 
-        // 1) Objetos do prefab apagados só nesta cena (Porão): voltam.
+        // 1) Objetos do prefab apagados na cena voltam.
         foreach (var removido in PrefabUtility.GetRemovedGameObjects(raizUI))
         {
             string nome = removido.assetGameObject != null ? removido.assetGameObject.name : "?";
@@ -98,7 +96,7 @@ public static class TutorialRoteiroTool
             }
         }
 
-        // 2) Cópias locais desses popups (adicionadas só na cena) somem: o prefab passa a mandar.
+        // 2) Cópias locais desses popups somem.
         Transform itens = raizUI.transform.Find("ItensPoupUp");
         if (itens != null)
         {
@@ -115,10 +113,8 @@ public static class TutorialRoteiroTool
             }
         }
 
-        // 3) Canvas/GraphicRaycaster adicionados na cena por cima dos popups: o prefab já tem os seus.
-        //    Ao ganhar o Canvas no prefab, a Unity marcou o do prefab como "removido" nesta instância e
-        //    manteve o da cena como "adicionado". Primeiro o do prefab volta (senão o GraphicRaycaster,
-        //    que exige um Canvas, impede tirar o duplicado); depois o duplicado sai.
+        // 3) Canvas duplicado: a Unity marcou o do prefab como "removido" e manteve o da cena como "adicionado".
+        //    O GraphicRaycaster exige Canvas, por isso a ordem abaixo.
         if (itens != null)
         {
             foreach (string nome in new[] { "PopupTutorial", "PopupItemRecebido" })
@@ -131,26 +127,25 @@ public static class TutorialRoteiroTool
                     if (PrefabUtility.IsAddedComponentOverride(c)) tinhaDuplicado = true;
                 if (!tinhaDuplicado) continue;
 
-                // a) o GraphicRaycaster (do prefab) sai por um instante, senão a Unity não deixa tirar o Canvas;
+                // a) tira o GraphicRaycaster, senão a Unity não deixa remover o Canvas;
                 GraphicRaycaster raycaster = go.GetComponent<GraphicRaycaster>();
                 if (raycaster != null) Object.DestroyImmediate(raycaster);
-                // b) o Canvas adicionado pela cena sai;
+                // b) remove o Canvas adicionado pela cena;
                 foreach (Canvas c in go.GetComponents<Canvas>())
                     if (PrefabUtility.IsAddedComponentOverride(c)) PrefabUtility.RevertAddedComponent(c, InteractionMode.AutomatedAction);
-                // c) Canvas e GraphicRaycaster do prefab voltam.
+                // c) restaura Canvas e GraphicRaycaster do prefab.
                 foreach (var removido in PrefabUtility.GetRemovedComponents(raizUI))
                     if (removido.containingInstanceGameObject == go) removido.Revert();
                 log.Append($" tirou Canvas duplicado de {nome};");
             }
         }
 
-        // 4) Layout dos popups e ligações do TutorialStepUI vêm do prefab (mantendo Revelacoes, que são da cena).
+        // 4) Layout e ligações vêm do prefab (Revelacoes ficam: são da cena).
         itens = raizUI.transform.Find("ItensPoupUp");
         if (itens != null)
         {
             int revertidos = 0;
-            // O próprio ItensPoupUp tinha posição/tamanho sobrescritos na cena (era um 100x100 deslocado);
-            // com o prefab em tela cheia, esse override vira um deslocamento de todos os popups.
+            // Override antigo de posição/tamanho do ItensPoupUp deslocaria todos os popups.
             if (PrefabUtility.IsPartOfPrefabInstance(itens) && PrefabUtility.HasPrefabInstanceAnyOverrides(itens.gameObject, false))
             {
                 PrefabUtility.RevertObjectOverride(itens.GetComponent<RectTransform>(), InteractionMode.AutomatedAction);
@@ -193,9 +188,8 @@ public static class TutorialRoteiroTool
         return log.ToString();
     }
 
-    // Quais botões mobile cada etapa revela, por cena. Ficam como override da instância (são objetos de
-    // cena, o prefab não pode apontar para eles). Reescrever a lista inteira evita o bug de a Unity perder
-    // as referências quando a lista do prefab muda de tamanho.
+    // Override da instância (o prefab não pode apontar para objetos de cena). Reescrever a lista inteira evita a
+    // Unity perder as referências quando a lista do prefab muda de tamanho.
     private static readonly (string etapaId, string caminho)[] RevelacoesJogo =
     {
         ("Joystick", "MobileControlsUI/TouchZone/ObjetosDesativar/JoystickBG"),
@@ -256,20 +250,18 @@ public static class TutorialRoteiroTool
                     tipoDeAvanco = e.tipoDeAvanco,
                     nomeDoEvento = e.nomeDoEvento,
                     nomeDaCena = e.nomeDaCena,
-                    salvarAoConcluir = e.salvarAoConcluir // sem isto o ponto de save do fim do tutorial sumia da cena
+                    salvarAoConcluir = e.salvarAoConcluir // ponto de save do fim do tutorial
                 });
             }
             Undo.RecordObject(alvo, "Aplicar roteiro padrão do tutorial");
             alvo.etapas = copia;
             alvo.dicaFatoBoato = padrao.dicaFatoBoato;
-            // Dicas de primeira vez (Prompt 7): também voltam ao texto padrão do código.
             alvo.dicaTempo = padrao.dicaTempo;
             alvo.dicaDeducao = padrao.dicaDeducao;
             alvo.dicaDespesas = padrao.dicaDespesas;
             alvo.dicaBiblioteca = padrao.dicaBiblioteca;
             alvo.dicaLinhaEditorial = padrao.dicaLinhaEditorial;
-            // Ligado, o tutorial recomeçava em todo início de jogo (inclusive no build). Para testar do
-            // zero, use o menu "3 - Resetar progresso".
+            // Ligado, reinicia o tutorial em todo início de jogo, inclusive no build. Use "3 - Resetar progresso".
             alvo.forcarReiniciar = false;
             EditorUtility.SetDirty(alvo);
         }
@@ -279,7 +271,7 @@ public static class TutorialRoteiroTool
         }
     }
 
-    // GerenciadorCena1.npcsParaSumir apontava para o prefab da Marie (asset) em vez do objeto da cena.
+    // Troca referências a assets de prefab em npcsParaSumir pelos objetos de mesmo nome na cena.
     private static string CorrigirReferenciasDoGerenciador(Scene cena)
     {
         GerenciadorCena1 g = Object.FindAnyObjectByType<GerenciadorCena1>(FindObjectsInactive.Include);
@@ -302,7 +294,7 @@ public static class TutorialRoteiroTool
         return corrigidos > 0 ? $" GerenciadorCena1: {corrigidos} referência(s) de NPC trocada(s) de prefab para objeto da cena;" : string.Empty;
     }
 
-    // Etapa "mesa_de_casos": uma cópia da seta do alçapão, acima da Mesa de Casos.
+    // Cópia da seta do alçapão, acima da Mesa de Casos.
     private const string EtapaSetaMesa = "mesa_de_casos";
     private const float AlturaSetaAcimaDaMesa = 0.9f;
 
@@ -327,7 +319,6 @@ public static class TutorialRoteiroTool
         return " seta da mesa criada;";
     }
 
-    // Tirar o "Forçar Reiniciar" do TutorialManager exige outro jeito de testar o tutorial do zero.
     [MenuItem("Ferramentas/Tutorial/3 - Resetar progresso (tutorial, cutscenes e dicas)")]
     public static void ResetarProgresso()
     {

@@ -4,19 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Documento (Fase 4, "Gatilho de Progressão"): Dupaty é o checkpoint da fase. Na Fase 4, falar com ele confere se o
-/// caso da ROTA travada foi concluído e se o panfleto dele pode ir ao tribunal (Avaliar); só então libera a ida.
-/// Antes da Fase 4 este objeto não responde, e o Dupaty segue com o comportamento normal.
-///
-/// O que é conferido (Prompt 6), tudo pelo histórico — a prensa consome as pistas, então nada depende do inventário:
-///  1. um caso da Fase 4 da rota travada concluído;
-///  2. a publicação dele registrada e o panfleto da versão impressa existente (é o panfleto que o tribunal mostra);
-///  3. as duas pistas impressas comprovadas no histórico de evidências (publicações de saves antigos, sem esse
-///     registro, não são barradas: nada é inventado);
-///  4. as evidências extras configuradas abaixo para o caso, se houver (obtidas alguma vez, mesmo gastas).
-///
-/// Fica num filho do Dupaty com um Collider2D (trigger) próprio: o NPCMovement dele é silenciado depois do
-/// tutorial (GerenciadorCena1), então o Player escolhe este interagível no lugar.
+/// Dupaty como checkpoint da Fase 4: só libera o tribunal se, pelo histórico (a prensa consome as pistas):
+///  1. um caso da Fase 4 da rota travada foi concluído;
+///  2. a publicação dele está registrada e o panfleto da versão impressa existe;
+///  3. as pistas impressas constam no histórico de evidências (publicações legadas não são barradas);
+///  4. as evidências extras configuradas para o caso foram obtidas (mesmo se gastas).
+/// Fica num filho do Dupaty com trigger próprio porque o NPCMovement dele é silenciado após o tutorial.
 /// </summary>
 public class CheckpointDoTribunal : MonoBehaviour, IInteractable
 {
@@ -72,7 +65,7 @@ public class CheckpointDoTribunal : MonoBehaviour, IInteractable
         }
     }
 
-    /// <summary>Confere se o tribunal pode começar e devolve o caso da Fase 4 que será julgado (ou null).</summary>
+    /// <summary>Devolve também o caso da Fase 4 que será julgado (ou null).</summary>
     public Situacao Avaliar(GameManager gm, out CaseData caso)
     {
         caso = null;
@@ -133,8 +126,7 @@ public class CheckpointDoTribunal : MonoBehaviour, IInteractable
             return;
         }
 
-        // Salva no escritório: quem continuar o jogo volta aqui e fala com o Dupaty de novo. O save leva o inventário
-        // inteiro, inclusive o que estiver guardado fora da grade (nada se perde na troca de cena).
+        // Salva no escritório: ao continuar, o jogador volta aqui e fala com o Dupaty de novo.
         SistemaDeSave.Salvar();
 
         Time.timeScale = 1f;

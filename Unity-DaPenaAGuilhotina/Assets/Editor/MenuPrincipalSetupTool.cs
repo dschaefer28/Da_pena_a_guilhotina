@@ -9,14 +9,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Cena "menu principal" (relatório de testes de 28/09, P0 1):
-/// - recria o botão CONTINUAR (removido no commit 27cfe24): cópia do JOGAR (mesma imagem, fonte, tamanho e som de
-///   clique), logo acima dele na coluna, OnClick em MenuPrincipalManager.Continuar e ligado ao campo "Botao Continuar";
-///   o MenuPrincipalManager só o mostra quando existe save;
-/// - cria a pergunta "Começar um novo jogo?" do JOGAR: cópia do painel de confirmação do SAIR, com SIM em
-///   ConfirmarNovoJogo e NÃO em FecharConfirmacaoNovoJogo, ligada aos campos do MenuPrincipalManager.
-/// Idempotente: o que já está ligado nos campos fica como está. Recusa rodar em Play Mode ou com cena suja;
-/// restaura a cena que estava aberta.
+/// Cena "menu principal": cria o botão CONTINUAR (cópia do JOGAR, acima dele; só aparece com save) e a confirmação
+/// "Começar um novo jogo?" (cópia da confirmação do SAIR), ligados ao MenuPrincipalManager.
+/// Idempotente: campos já ligados ficam. Recusa Play Mode e cena suja; restaura a cena aberta.
 /// Menu: Ferramentas > Menu principal > Recriar Continuar e confirmação do Novo Jogo
 /// </summary>
 public static class MenuPrincipalSetupTool
@@ -86,7 +81,6 @@ public static class MenuPrincipalSetupTool
             Undo.RegisterCreatedObjectUndo(botao, "Botão Continuar");
             botao.transform.SetSiblingIndex(jogar.transform.GetSiblingIndex());
 
-            // Mesmo espaçamento da coluna (JOGAR → CONFIGURAÇÃO), uma posição acima do JOGAR.
             var rtJogar = (RectTransform)jogar.transform;
             float passo = EspacamentoDaColuna(jogar);
             ((RectTransform)botao.transform).anchoredPosition = rtJogar.anchoredPosition + new Vector2(0f, passo);
@@ -152,7 +146,7 @@ public static class MenuPrincipalSetupTool
         return acao;
     }
 
-    // Título na moldura do painel copiado; o aviso é uma cópia menor do título, entre ele e os botões.
+    // O aviso é uma cópia menor do título.
     private static void EscreverTextos(GameObject painel)
     {
         TMP_Text titulo = null;
