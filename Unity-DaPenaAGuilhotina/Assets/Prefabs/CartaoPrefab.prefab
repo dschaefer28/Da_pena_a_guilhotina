@@ -1491,6 +1491,7 @@ GameObject:
   - component: {fileID: 2835600799205599535}
   - component: {fileID: 1567955189152494597}
   - component: {fileID: 2204731834328890049}
+  - component: {fileID: 9071047389842927765}
   m_Layer: 5
   m_Name: BotaoAceitar
   m_TagString: Untagged
@@ -1600,3 +1601,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &9071047389842927765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9058138077999129663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1

@@ -199,6 +199,8 @@ public class SuportesDaPrensaUI : MonoBehaviour
         var rt = (RectTransform)texto.transform;
         rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = new Vector2(14f, 4f); rt.offsetMax = new Vector2(-14f, -4f);
         if (comSprite) EstiloDeBotao.AjustarRotulo(texto);
-        return go.GetComponent<Button>();
+        var botao = go.GetComponent<Button>();
+        SomDeCliqueDoBotao.Garantir(botao);
+        return botao;
     }
 }

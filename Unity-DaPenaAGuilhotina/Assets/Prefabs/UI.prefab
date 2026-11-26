@@ -773,6 +773,7 @@ MonoBehaviour:
   duracaoDelta: 2.5
   corGanho: {r: 0.45, g: 0.85, b: 0.35, a: 1}
   corPerda: {r: 0.95, g: 0.35, b: 0.3, a: 1}
+  pausaEntreMudancas: 0.7
 --- !u!1 &1791514115190178016
 GameObject:
   m_ObjectHideFlags: 0
@@ -1036,6 +1037,7 @@ GameObject:
   - component: {fileID: 543773573376168079}
   - component: {fileID: 2087195078967926168}
   - component: {fileID: 8356531682112256786}
+  - component: {fileID: 9044167945847759246}
   m_Layer: 5
   m_Name: BotaoFechar
   m_TagString: Untagged
@@ -1157,6 +1159,25 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &9044167945847759246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2220515152892741777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &2308119029968663416
 GameObject:
   m_ObjectHideFlags: 0
@@ -5423,6 +5444,8 @@ MonoBehaviour:
     - texto: "O poder da Coroa caiu. Sob o Terror, sua pr\xF3xima defesa pode colocar
         sua pr\xF3pria vida em risco."
       duracao: 0
+  textoAvisoDesmentido: O panfleto sobre "{0}" foi desmentido nas ruas. Por causa
+    disso, {1}.
 --- !u!114 &6892228440637199434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7002,6 +7025,7 @@ GameObject:
   - component: {fileID: 2617419274963963839}
   - component: {fileID: 8660373038981791505}
   - component: {fileID: 4685912930240207443}
+  - component: {fileID: 5544984193155928895}
   m_Layer: 5
   m_Name: ConfigButton
   m_TagString: Untagged
@@ -7123,6 +7147,25 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5544984193155928895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7530812991521239522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &7623582669234404477
 GameObject:
   m_ObjectHideFlags: 0
@@ -7237,6 +7280,7 @@ GameObject:
   - component: {fileID: 6353748181081040333}
   - component: {fileID: 4256775568529049952}
   - component: {fileID: 3621855096563503437}
+  - component: {fileID: 4800433403568684008}
   m_Layer: 5
   m_Name: ResumirButton
   m_TagString: Untagged
@@ -7358,6 +7402,25 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4800433403568684008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7693181149477098690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &7776433841846458159
 GameObject:
   m_ObjectHideFlags: 0
@@ -7767,6 +7830,7 @@ GameObject:
   - component: {fileID: 7458031957414225875}
   - component: {fileID: 8939492838561886805}
   - component: {fileID: 8016565273859832992}
+  - component: {fileID: 2655861736976484507}
   m_Layer: 5
   m_Name: BotaoContinuar
   m_TagString: Untagged
@@ -7876,6 +7940,25 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2655861736976484507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8205771228361067140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &8339014959571993992
 GameObject:
   m_ObjectHideFlags: 0
@@ -7888,6 +7971,7 @@ GameObject:
   - component: {fileID: 5099875424294334904}
   - component: {fileID: 7779958821507701485}
   - component: {fileID: 8555990647639605367}
+  - component: {fileID: 1119412182274183500}
   m_Layer: 5
   m_Name: BotaoPular
   m_TagString: Untagged
@@ -7997,6 +8081,25 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1119412182274183500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8339014959571993992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &8360674117086465659
 GameObject:
   m_ObjectHideFlags: 0
@@ -8150,6 +8253,7 @@ GameObject:
   - component: {fileID: 7702020541275540481}
   - component: {fileID: 570673043238754123}
   - component: {fileID: 803169730903664252}
+  - component: {fileID: 8758204974634315744}
   m_Layer: 5
   m_Name: "Bot\xE3oVoltar"
   m_TagString: Untagged
@@ -8271,6 +8375,25 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8758204974634315744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8608013645000851669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &8674997311465466685
 GameObject:
   m_ObjectHideFlags: 0
@@ -8921,6 +9044,7 @@ GameObject:
   - component: {fileID: 511678457882745859}
   - component: {fileID: 3947134095336392871}
   - component: {fileID: 5245865961816240210}
+  - component: {fileID: 583910143973139454}
   m_Layer: 5
   m_Name: MenuButton
   m_TagString: Untagged
@@ -9042,6 +9166,25 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &583910143973139454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9206052021804802449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1001 &1689847871686695067
 PrefabInstance:
   m_ObjectHideFlags: 0

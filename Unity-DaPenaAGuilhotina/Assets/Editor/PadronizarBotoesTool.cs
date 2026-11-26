@@ -45,6 +45,10 @@ public static class PadronizarBotoesTool
         Undo.RecordObject(botao, "Padronizar botão");
         if (!EstiloDeBotao.Aplicar(fundo, botao)) return false;
 
+        if (botao.GetComponent<SomDeCliqueDoBotao>() == null)
+            Undo.AddComponent<SomDeCliqueDoBotao>(botao.gameObject);
+        SomDeCliqueDoBotao.Garantir(botao);
+
         var layout = botao.GetComponent<HorizontalOrVerticalLayoutGroup>();
         if (layout != null)
         {

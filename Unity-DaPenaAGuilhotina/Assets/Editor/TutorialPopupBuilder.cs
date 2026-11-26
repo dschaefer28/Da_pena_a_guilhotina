@@ -435,6 +435,7 @@ public static class TutorialPopupBuilder
         if (botao == null) botao = r.gameObject.AddComponent<Button>();
         botao.targetGraphic = alvo;
         botao.transition = Selectable.Transition.None;
+        SomDeCliqueDoBotao.Garantir(botao);
 
         TextMeshProUGUI rotulo = r.GetComponentInChildren<TextMeshProUGUI>(true);
         if (rotulo == null) rotulo = InventarioListaBuilder.CriarTexto("Texto", r, "Pular tutorial", 22f, TextAlignmentOptions.MidlineLeft, fonte);

@@ -67,6 +67,7 @@ public class VolumeDoAudioTests
                 StringAssert.Contains("musica", m.ToLowerInvariant(), "só trilha no volume da música");
             CollectionAssert.Contains(nomesEfeitos, "event:/crowdAmbience", "ambiente de multidão é efeito");
             CollectionAssert.Contains(nomesEfeitos, "event:/clique1");
+            CollectionAssert.Contains(nomesEfeitos, "event:/clique2", "som de clique dos botões é efeito");
             CollectionAssert.Contains(nomesEfeitos, "event:/P1Bravo", "vozes do Dialogo são efeito");
         }
         finally
@@ -134,6 +135,66 @@ public class VolumeDoAudioTests
             ConferirSliders(so.FindProperty("sliderMusica").objectReferenceValue as Slider,
                 so.FindProperty("sliderEfeitos").objectReferenceValue as Slider, menu,
                 nameof(MenuPrincipalManager.OnMusicaSliderChanged), nameof(MenuPrincipalManager.OnEfeitosSliderChanged));
+        }
+        finally
+        {
+            if (abriu) EditorSceneManager.CloseScene(cena, true);
+        }
+    }
+
+    [Test]
+    public void TodosOsBotoesDePrefabsEMenu_TemSomDeClique1Configurado()
+    {
+        FMOD.GUID guidEsperado = FMOD.GUID.Parse(SomDeCliqueDoBotao.GuidPadrao);
+        string[] prefabs =
+        {
+            "Assets/Prefabs/ButtonChoise.prefab",
+            "Assets/Prefabs/CartaoPrefab.prefab",
+            "Assets/Prefabs/MobileControlsUI.prefab",
+            "Assets/Prefabs/UI_Inventory.prefab",
+            "Assets/Prefabs/UI.prefab"
+        };
+
+        foreach (string caminho in prefabs)
+        {
+            var raiz = AssetDatabase.LoadAssetAtPath<GameObject>(caminho);
+            Assert.IsNotNull(raiz, caminho);
+            foreach (Button b in raiz.GetComponentsInChildren<Button>(true))
+            {
+                bool ehAreaDeDialogo = (b.name == "ButtonAvancar" || b.name == "TalkTextScrollView")
+                                       && b.transform.parent != null && b.transform.parent.name == "DialogePanel";
+                var som = b.GetComponent<SomDeCliqueDoBotao>();
+                if (ehAreaDeDialogo)
+                {
+                    Assert.IsNull(som, $"Área invisível {b.name} em {caminho} não deve tocar som de botão.");
+                }
+                else
+                {
+                    Assert.IsNotNull(som, $"Botão {b.name} em {caminho} está sem SomDeCliqueDoBotao.");
+                    Assert.IsTrue(som.enabled, $"SomDeCliqueDoBotao desativado em {b.name} ({caminho}).");
+                    Assert.AreEqual(guidEsperado, som.EventoClique.Guid, $"GUID incorreto em {b.name} ({caminho}).");
+                }
+            }
+        }
+
+        const string cenaMenu = "Assets/Scenes/menu principal.unity";
+        Scene cena = SceneManager.GetSceneByPath(cenaMenu);
+        bool abriu = false;
+        if (!cena.isLoaded) { cena = EditorSceneManager.OpenScene(cenaMenu, OpenSceneMode.Additive); abriu = true; }
+        try
+        {
+            int contados = 0;
+            foreach (GameObject r in cena.GetRootGameObjects())
+            {
+                foreach (Button b in r.GetComponentsInChildren<Button>(true))
+                {
+                    contados++;
+                    var som = b.GetComponent<SomDeCliqueDoBotao>();
+                    Assert.IsNotNull(som, $"Botão {b.name} no menu principal está sem SomDeCliqueDoBotao.");
+                    Assert.AreEqual(guidEsperado, som.EventoClique.Guid, $"GUID incorreto em {b.name} no menu principal.");
+                }
+            }
+            Assert.GreaterOrEqual(contados, 31, "Quantidade esperada de botões no menu principal.");
         }
         finally
         {

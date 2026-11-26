@@ -768,6 +768,7 @@ public class TribunalManager : MonoBehaviour
         }
         var texto = Texto("Rotulo", face, new Vector2(inicioTexto, 0.05f), new Vector2(0.97f, 0.95f), 28f, rotulo);
         if (comSprite) { texto.color = Color.white; EstiloDeBotao.ConfigurarTexto(texto); }
+        SomDeCliqueDoBotao.Garantir(botao);
         return botao;
     }
 

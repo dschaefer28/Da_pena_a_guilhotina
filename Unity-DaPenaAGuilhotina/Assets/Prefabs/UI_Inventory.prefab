@@ -1859,6 +1859,7 @@ GameObject:
   - component: {fileID: 876460283859094876}
   - component: {fileID: 8846896632836284427}
   - component: {fileID: 2187080643171151611}
+  - component: {fileID: 8182939426941276492}
   m_Layer: 5
   m_Name: BotaoFechar
   m_TagString: Untagged
@@ -1980,6 +1981,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b89726e26df180c478c156b722e014b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotaoFecharInventario
+--- !u!114 &8182939426941276492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969150637624387491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &979090663900250095
 GameObject:
   m_ObjectHideFlags: 0
@@ -5976,6 +5996,7 @@ GameObject:
   - component: {fileID: 3152970626756444094}
   - component: {fileID: 7775145593697272263}
   - component: {fileID: 3635293584770781886}
+  - component: {fileID: 2334210635301115428}
   m_Layer: 5
   m_Name: AbaPistas
   m_TagString: Untagged
@@ -6097,6 +6118,25 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2334210635301115428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2348572484274413349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &2354393817390129848
 GameObject:
   m_ObjectHideFlags: 0
@@ -11322,6 +11362,7 @@ GameObject:
   - component: {fileID: 2809220487724205666}
   - component: {fileID: 8924873284636811918}
   - component: {fileID: 7627658345730546639}
+  - component: {fileID: 1434342849146750358}
   m_Layer: 5
   m_Name: Misturar
   m_TagString: Untagged
@@ -11499,6 +11540,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotaoMisturarEstado
   alphaDesabilitado: 0.55
+--- !u!114 &1434342849146750358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5097821031891623908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &5121316531002494743
 GameObject:
   m_ObjectHideFlags: 0
@@ -14573,6 +14633,7 @@ GameObject:
   - component: {fileID: 296244791914476897}
   - component: {fileID: 8787166947665502971}
   - component: {fileID: 3932993980036141729}
+  - component: {fileID: 2894866111726387420}
   m_Layer: 5
   m_Name: AbaPanfletos
   m_TagString: Untagged
@@ -14694,6 +14755,25 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2894866111726387420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6353988352503332780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &6384706507948260058
 GameObject:
   m_ObjectHideFlags: 0

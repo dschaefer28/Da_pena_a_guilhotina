@@ -801,6 +801,7 @@ GameObject:
   - component: {fileID: 6019735914969798236}
   - component: {fileID: 3242361554690577399}
   - component: {fileID: 6076994130784838150}
+  - component: {fileID: 6517198400068681999}
   m_Layer: 5
   m_Name: InventoryButton
   m_TagString: Untagged
@@ -946,6 +947,25 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 1
+--- !u!114 &6517198400068681999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6076994130784838137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &7283027036231297884
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,6 +979,7 @@ GameObject:
   - component: {fileID: 3804711948175726932}
   - component: {fileID: 8736567357753795153}
   - component: {fileID: 7479168059314952813}
+  - component: {fileID: 4467830685378408792}
   m_Layer: 5
   m_Name: InteractButton
   m_TagString: Untagged
@@ -1092,6 +1113,25 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 1
+--- !u!114 &4467830685378408792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7283027036231297884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &8081194991470116072
 GameObject:
   m_ObjectHideFlags: 0
@@ -1251,6 +1291,7 @@ GameObject:
   - component: {fileID: 3294171803248714111}
   - component: {fileID: 7839596180442651345}
   - component: {fileID: 5175230741278448909}
+  - component: {fileID: 233613401502710959}
   m_Layer: 5
   m_Name: PauseButton
   m_TagString: Untagged
@@ -1397,3 +1438,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotaoDoCantoDaHud
   vaga: 0
+--- !u!114 &233613401502710959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8321938319943726507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1

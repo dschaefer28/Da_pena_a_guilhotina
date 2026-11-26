@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2497361322924562425}
   - component: {fileID: 1053129201931931345}
   - component: {fileID: 4777321108038524126}
+  - component: {fileID: 3390732809819658541}
   m_Layer: 5
   m_Name: ButtonChoise
   m_TagString: Untagged
@@ -148,6 +149,25 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &3390732809819658541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1035647721168800178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ee053e51c6ea044a4a8c96903b3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomDeCliqueDoBotao
+  eventoClique:
+    Guid:
+      Data1: -142718355
+      Data2: 1145436461
+      Data3: -787217512
+      Data4: -960738247
+    Path: event:/clique1
 --- !u!1 &1058614790005908154
 GameObject:
   m_ObjectHideFlags: 0

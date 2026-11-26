@@ -359,6 +359,7 @@ public class BibliotecaUI : MonoBehaviour
             texto.textWrappingMode = TextWrappingModes.NoWrap;
             EstiloDeBotao.AjustarRotulo(texto);
         }
+        SomDeCliqueDoBotao.Garantir(botao);
         return botao;
     }
 }

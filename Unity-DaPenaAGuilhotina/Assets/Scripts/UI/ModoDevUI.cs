@@ -303,6 +303,7 @@ public class ModoDevUI : MonoBehaviour
             rotuloRt.offsetMax = new Vector2(-10f, -4f);
         }
         botao.onClick.AddListener(acao);
+        SomDeCliqueDoBotao.Garantir(botao);
         return botao;
     }
 }

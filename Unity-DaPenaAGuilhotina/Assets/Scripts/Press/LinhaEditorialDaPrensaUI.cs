@@ -304,6 +304,8 @@ public class LinhaEditorialDaPrensaUI : MonoBehaviour
         v.childAlignment = TextAnchor.MiddleLeft;
         rotulo = Texto("Rotulo", go.transform, 27f);
         rotulo.alignment = TextAlignmentOptions.MidlineLeft;
-        return go.GetComponent<Button>();
+        var botao = go.GetComponent<Button>();
+        SomDeCliqueDoBotao.Garantir(botao);
+        return botao;
     }
 }
