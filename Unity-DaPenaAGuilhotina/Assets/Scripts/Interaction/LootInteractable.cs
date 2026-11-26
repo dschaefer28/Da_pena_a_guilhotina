@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 
 [System.Serializable]
@@ -34,6 +35,10 @@ public class LootInteractable : MonoBehaviour, IInteractable
     [Tooltip("Horas de investigação gastas ao vasculhar este objeto (RelogioDeInvestigacao), mesmo que não haja " +
              "nada útil para o caso: procurar no lugar errado também custa tempo.")]
     [Min(0)] public int custoEmHoras = 1;
+
+    [Header("Áudio (FMOD)")]
+    [Tooltip("Som tocado apenas quando uma pista é efetivamente coletada neste objeto (ex.: event:/Papel nos quadros de aviso da rua).")]
+    public EventReference somColeta;
 
     /// <summary>"cena/id" desta interação (ver IdDeInteracao).</summary>
     public string ChaveDaInteracao => IdDeInteracao.ChaveDaCena(this, idDaInteracao);
@@ -142,6 +147,7 @@ public class LootInteractable : MonoBehaviour, IInteractable
 
         if (foiGuardado)
         {
+            AudioSeguro.TocarUmaVez(somColeta, transform.position);
             Debug.Log($"Você encontrou: {itemCorreto.name}!");
             registro.RegistrarLoot(casoAtual, ChaveDaInteracao);
             if (destroyAfterLoot) Destroy(gameObject);

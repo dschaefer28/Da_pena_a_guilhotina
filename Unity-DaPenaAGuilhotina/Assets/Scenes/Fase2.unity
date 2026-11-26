@@ -162,6 +162,13 @@ MonoBehaviour:
   idDaInteracao: MuroDeCartazes
   destroyAfterLoot: 0
   custoEmHoras: 1
+  somColeta:
+    Guid:
+      Data1: -659901108
+      Data2: 1280686486
+      Data3: 2067449279
+      Data4: 576042140
+    Path: event:/Papel
 --- !u!61 &40192020
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1070,6 +1077,10 @@ PrefabInstance:
       value: 4285782522
       objectReference: {fileID: 0}
     - target: {fileID: 4435758163309159927, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
+      propertyPath: m_fontSize
+      value: 22.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435758163309159927, guid: 2225bda1241b6d744bf3da96dd65077f, type: 3}
       propertyPath: m_fontColor32.rgba
       value: 4294967295
       objectReference: {fileID: 0}
@@ -1714,7 +1725,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7374019664807440416, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -26.852491
+      value: -26.803503
       objectReference: {fileID: 0}
     - target: {fileID: 7374019664807440416, guid: b9c4c025eecff494985682f25b6bcd5c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2143,6 +2154,13 @@ MonoBehaviour:
   idDaInteracao: MesaDaTaverna
   destroyAfterLoot: 0
   custoEmHoras: 1
+  somColeta:
+    Guid:
+      Data1: -659901108
+      Data2: 1280686486
+      Data3: 2067449279
+      Data4: 576042140
+    Path: event:/Papel
 --- !u!61 &875504383
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2574,6 +2592,13 @@ MonoBehaviour:
   idDaInteracao: BancaDePanfletos
   destroyAfterLoot: 0
   custoEmHoras: 1
+  somColeta:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!61 &1391261067
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3752,7 +3777,7 @@ PrefabInstance:
       objectReference: {fileID: 904849422}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -26.852491
+      value: -26.803503
       objectReference: {fileID: 0}
     - target: {fileID: 1513389786556281164, guid: d560e88dbbdf5a14982d2e20e077ecd7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3949,6 +3974,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2723762736744794442, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_fontSize
+      value: 25.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019250607880888227, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
+      propertyPath: m_fontSize
+      value: 25.15
+      objectReference: {fileID: 0}
     - target: {fileID: 3242361554690577399, guid: d2793b8f4b95492418d71fa9667a3fcf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

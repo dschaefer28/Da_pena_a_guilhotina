@@ -162,6 +162,13 @@ MonoBehaviour:
   idDaInteracao: ParedeDeEditais
   destroyAfterLoot: 0
   custoEmHoras: 1
+  somColeta:
+    Guid:
+      Data1: -659901108
+      Data2: 1280686486
+      Data3: 2067449279
+      Data4: 576042140
+    Path: event:/Papel
 --- !u!61 &52528703
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2755,6 +2762,13 @@ MonoBehaviour:
   idDaInteracao: CaixaDeDenuncias
   destroyAfterLoot: 0
   custoEmHoras: 1
+  somColeta:
+    Guid:
+      Data1: -659901108
+      Data2: 1280686486
+      Data3: 2067449279
+      Data4: 576042140
+    Path: event:/Papel
 --- !u!61 &1305336175
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3141,6 +3155,13 @@ MonoBehaviour:
   idDaInteracao: ArquivoDaSecao
   destroyAfterLoot: 0
   custoEmHoras: 1
+  somColeta:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!61 &1558141053
 BoxCollider2D:
   m_ObjectHideFlags: 0

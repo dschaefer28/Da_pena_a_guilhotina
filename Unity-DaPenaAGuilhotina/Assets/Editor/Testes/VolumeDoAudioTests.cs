@@ -68,6 +68,7 @@ public class VolumeDoAudioTests
             CollectionAssert.Contains(nomesEfeitos, "event:/crowdAmbience", "ambiente de multidão é efeito");
             CollectionAssert.Contains(nomesEfeitos, "event:/clique1");
             CollectionAssert.Contains(nomesEfeitos, "event:/clique2", "som de clique dos botões é efeito");
+            CollectionAssert.Contains(nomesEfeitos, "event:/Papel", "som de papel dos quadros da rua é efeito");
             CollectionAssert.Contains(nomesEfeitos, "event:/P1Bravo", "vozes do Dialogo são efeito");
         }
         finally
@@ -199,6 +200,54 @@ public class VolumeDoAudioTests
         finally
         {
             if (abriu) EditorSceneManager.CloseScene(cena, true);
+        }
+    }
+
+    [Test]
+    public void QuadrosDeAvisoDaRua_TemSomDePapelConfigurado_EMesasNao()
+    {
+        FMOD.GUID guidPapel = FMOD.GUID.Parse("{d8aab54c-b996-4c55-bfc5-3a7b9cb45522}");
+        string[] cenasDeRua =
+        {
+            "Assets/Scenes/Fase2.unity",
+            "Assets/Scenes/Fase3.unity",
+            "Assets/Scenes/Fase4.unity"
+        };
+
+        foreach (string caminho in cenasDeRua)
+        {
+            Scene cena = SceneManager.GetSceneByPath(caminho);
+            bool abriu = false;
+            if (!cena.isLoaded) { cena = EditorSceneManager.OpenScene(caminho, OpenSceneMode.Additive); abriu = true; }
+            try
+            {
+                int quadros = 0;
+                int mesas = 0;
+                foreach (GameObject r in cena.GetRootGameObjects())
+                {
+                    foreach (LootInteractable loot in r.GetComponentsInChildren<LootInteractable>(true))
+                    {
+                        var sr = loot.GetComponentInChildren<SpriteRenderer>(true);
+                        bool ehQuadro = sr != null && sr.sprite != null && sr.sprite.name.ToLowerInvariant().Contains("quadro");
+                        if (ehQuadro)
+                        {
+                            quadros++;
+                            Assert.AreEqual(guidPapel, loot.somColeta.Guid, $"Quadro '{loot.name}' em {caminho} está sem o som event:/Papel.");
+                        }
+                        else
+                        {
+                            mesas++;
+                            Assert.IsTrue(loot.somColeta.IsNull, $"Objeto '{loot.name}' (não-quadro) em {caminho} não deve ter som de papel.");
+                        }
+                    }
+                }
+                Assert.AreEqual(2, quadros, $"Esperados 2 quadros de aviso na rua em {caminho}.");
+                Assert.GreaterOrEqual(mesas, 1, $"Esperada pelo menos 1 mesa/objeto não-quadro em {caminho}.");
+            }
+            finally
+            {
+                if (abriu) EditorSceneManager.CloseScene(cena, true);
+            }
         }
     }
 

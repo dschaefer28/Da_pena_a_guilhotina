@@ -951,6 +951,15 @@ public static class CampanhaSetupTool
             loot.pistasPossiveis.Add(new LootDeCaso { caso = caso, itemParaDar = AssetDatabase.LoadAssetAtPath<Item>(par.Value) });
             mudou = true; contagem.reacoesAdicionadas++;
         }
+        if (!string.IsNullOrEmpty(def.sprite) && def.sprite.ToLowerInvariant().Contains("quadro") && loot.somColeta.IsNull)
+        {
+            loot.somColeta = new FMODUnity.EventReference
+            {
+                Guid = FMOD.GUID.Parse("{d8aab54c-b996-4c55-bfc5-3a7b9cb45522}"),
+                Path = "event:/Papel"
+            };
+            mudou = true;
+        }
         if (mudou) EditorUtility.SetDirty(loot);
     }
 
