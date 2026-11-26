@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -259,6 +260,10 @@ public class GameManager : MonoBehaviour
     // Interação fictícia para registrar a entrega das alegações iniciais (uma vez por caso).
     public const string InteracaoAlegacoes = "mesa/alegacoes_do_cliente";
 
+    [Header("Áudio (FMOD)")]
+    [Tooltip("Som tocado ao receber itens iniciais da Mesa de Casos (ex.: event:/Pegaritem).")]
+    public EventReference somEntregaMesa;
+
     // Chamado ao aceitar o caso e a cada restauração do inventário: com inventário cheio, fica para depois.
     public void EntregarAlegacoesPendentes()
     {
@@ -266,6 +271,7 @@ public class GameManager : MonoBehaviour
         if (caso == null || !CasoAtualEmAndamento || caso.alegacoesIniciais == null || inventoryManager == null) return;
 
         bool faltou = false;
+        bool entregouAlgum = false;
         foreach (Item alegacao in caso.alegacoesIniciais)
         {
             if (alegacao == null || string.IsNullOrEmpty(alegacao.itemID)) continue;
@@ -274,10 +280,14 @@ public class GameManager : MonoBehaviour
             Item copia = alegacao.Clone();
             copia.itemAmt = 1;
             if (inventoryManager.AddItem(copia))
+            {
+                entregouAlgum = true;
                 registroDaInvestigacao.RegistrarRecompensa(caso, InteracaoAlegacoes, RegistroDaInvestigacao.EtapaReacao, alegacao.itemID);
+            }
             else
                 faltou = true;
         }
+        if (entregouAlgum) AudioSeguro.TocarUmaVez(somEntregaMesa);
         if (faltou) AvisoNaTela.Mostrar("Inventário cheio: libere espaço para guardar a carta do cliente.");
     }
 

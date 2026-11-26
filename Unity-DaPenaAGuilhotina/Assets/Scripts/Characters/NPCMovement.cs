@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -82,6 +83,10 @@ public class NPCMovement : MonoBehaviour, IInteractable
     [Header("Feedback e Eventos")]
     public GameObject visualIndicator;
     public UnityEvent OnDialogueComplete;
+
+    [Header("Áudio (FMOD)")]
+    [Tooltip("Som tocado quando este NPC entrega algum item/pista ao jogador no fim do diálogo (ex.: event:/Pegaritem).")]
+    public EventReference somEntregaItem;
 
     private List<Item> recompensasPendentes = new List<Item>();
     private CaseData casoDaConversa;
@@ -395,6 +400,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
 
         // Só registra o que entrou; com inventário cheio, o resto fica para a próxima conversa (já paga).
         bool faltouEntregar = false;
+        bool entregouAlgum = false;
         if (recompensasPendentes.Count > 0 && gm != null && gm.inventoryManager != null)
         {
             string interacao = ChaveDaInteracao;
@@ -407,6 +413,7 @@ public class NPCMovement : MonoBehaviour, IInteractable
                     recompensa.itemAmt = 1;
                     if (gm.inventoryManager.AddItem(recompensa))
                     {
+                        entregouAlgum = true;
                         gm.registroDaInvestigacao.RegistrarRecompensa(casoDaConversa, interacao, etapaDaConversa, itemPendente.itemID);
                         Debug.Log($"[SISTEMA] O NPC {gameObject.name} te entregou: {recompensa.name}");
                     }
@@ -414,6 +421,8 @@ public class NPCMovement : MonoBehaviour, IInteractable
                 }
             }
             finally { entregandoRecompensas = false; }
+            if (entregouAlgum)
+                AudioSeguro.TocarUmaVez(somEntregaItem, transform.position);
             if (faltouEntregar)
                 AvisoNaTela.Mostrar("Inventário cheio. Libere espaço e fale de novo para receber o que faltou.");
         }

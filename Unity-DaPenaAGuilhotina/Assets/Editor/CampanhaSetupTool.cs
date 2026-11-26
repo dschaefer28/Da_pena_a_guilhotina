@@ -906,6 +906,16 @@ public static class CampanhaSetupTool
             mudou = true; contagem.reacoesAdicionadas++;
         }
 
+        if (npc.somEntregaItem.IsNull)
+        {
+            npc.somEntregaItem = new FMODUnity.EventReference
+            {
+                Guid = FMOD.GUID.Parse("{efbfdc8d-448c-43cc-9582-339838f6ed9d}"),
+                Path = "event:/Pegaritem"
+            };
+            mudou = true;
+        }
+
         if (mudou)
         {
             EditorUtility.SetDirty(npc);
@@ -951,13 +961,12 @@ public static class CampanhaSetupTool
             loot.pistasPossiveis.Add(new LootDeCaso { caso = caso, itemParaDar = AssetDatabase.LoadAssetAtPath<Item>(par.Value) });
             mudou = true; contagem.reacoesAdicionadas++;
         }
-        if (!string.IsNullOrEmpty(def.sprite) && def.sprite.ToLowerInvariant().Contains("quadro") && loot.somColeta.IsNull)
+        if (loot.somColeta.IsNull)
         {
-            loot.somColeta = new FMODUnity.EventReference
-            {
-                Guid = FMOD.GUID.Parse("{d8aab54c-b996-4c55-bfc5-3a7b9cb45522}"),
-                Path = "event:/Papel"
-            };
+            bool ehQuadro = !string.IsNullOrEmpty(def.sprite) && def.sprite.ToLowerInvariant().Contains("quadro");
+            loot.somColeta = ehQuadro
+                ? new FMODUnity.EventReference { Guid = FMOD.GUID.Parse("{d8aab54c-b996-4c55-bfc5-3a7b9cb45522}"), Path = "event:/Papel" }
+                : new FMODUnity.EventReference { Guid = FMOD.GUID.Parse("{efbfdc8d-448c-43cc-9582-339838f6ed9d}"), Path = "event:/Pegaritem" };
             mudou = true;
         }
         if (mudou) EditorUtility.SetDirty(loot);

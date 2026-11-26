@@ -3157,11 +3157,11 @@ MonoBehaviour:
   custoEmHoras: 1
   somColeta:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -272638835
+      Data2: 1137460364
+      Data3: -1741454699
+      Data4: -1645349320
+    Path: event:/Pegaritem
 --- !u!61 &1558141053
 BoxCollider2D:
   m_ObjectHideFlags: 0

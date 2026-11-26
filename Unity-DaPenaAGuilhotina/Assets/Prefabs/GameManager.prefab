@@ -75,3 +75,10 @@ MonoBehaviour:
   escolhasDeDeducao: []
   inventoryManager: {fileID: 0}
   dialogueSystem: {fileID: 0}
+  somEntregaMesa:
+    Guid:
+      Data1: -272638835
+      Data2: 1137460364
+      Data3: -1741454699
+      Data4: -1645349320
+    Path: event:/Pegaritem

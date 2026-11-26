@@ -124,6 +124,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 6c1c1ed830eb85f47a44f2dc6488276f, type: 2}
     dialogoDepoisDaEntrega: {fileID: 11400000, guid: 3c4d74239c9fedf4fb3a707faf4d6671, type: 2}
     etapasComplementares: []
+  virarParaOJogador: 1
+  voltarADirecaoOriginal: 1
   visualIndicator: {fileID: 6668700232254436169}
   OnDialogueComplete:
     m_PersistentCalls:
@@ -140,6 +142,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  somEntregaItem:
+    Guid:
+      Data1: -272638835
+      Data2: 1137460364
+      Data3: -1741454699
+      Data4: -1645349320
+    Path: event:/Pegaritem
 --- !u!95 &6015262028971164213
 Animator:
   serializedVersion: 7

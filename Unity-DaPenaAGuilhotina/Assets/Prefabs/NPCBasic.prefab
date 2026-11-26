@@ -151,11 +151,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3737362528c1999449c92dc61130dc9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCMovement
+  idDaInteracao: 
+  nomeExibido: 
   canInteract: 1
   disableAfterDialogue: 1
+  custoEmHoras: 1
   dialogoPadrao: {fileID: 0}
   casoObrigatorio: {fileID: 0}
   reacoesDeCaso: []
+  virarParaOJogador: 1
+  voltarADirecaoOriginal: 1
   visualIndicator: {fileID: 0}
   OnDialogueComplete:
     m_PersistentCalls:
@@ -172,3 +177,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  somEntregaItem:
+    Guid:
+      Data1: -272638835
+      Data2: 1137460364
+      Data3: -1741454699
+      Data4: -1645349320
+    Path: event:/Pegaritem

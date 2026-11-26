@@ -69,6 +69,7 @@ public class VolumeDoAudioTests
             CollectionAssert.Contains(nomesEfeitos, "event:/clique1");
             CollectionAssert.Contains(nomesEfeitos, "event:/clique2", "som de clique dos botões é efeito");
             CollectionAssert.Contains(nomesEfeitos, "event:/Papel", "som de papel dos quadros da rua é efeito");
+            CollectionAssert.Contains(nomesEfeitos, "event:/Pegaritem", "som de pegar item de NPCs e mesas é efeito");
             CollectionAssert.Contains(nomesEfeitos, "event:/P1Bravo", "vozes do Dialogo são efeito");
         }
         finally
@@ -204,17 +205,37 @@ public class VolumeDoAudioTests
     }
 
     [Test]
-    public void QuadrosDeAvisoDaRua_TemSomDePapelConfigurado_EMesasNao()
+    public void QuadrosMesasENpcs_TemSonsDeColetaConfiguradosCorretamente()
     {
         FMOD.GUID guidPapel = FMOD.GUID.Parse("{d8aab54c-b996-4c55-bfc5-3a7b9cb45522}");
-        string[] cenasDeRua =
+        FMOD.GUID guidPegarItem = FMOD.GUID.Parse("{efbfdc8d-448c-43cc-9582-339838f6ed9d}");
+
+        string[] npcPrefabs =
         {
+            "Assets/Prefabs/NPCBasic.prefab",
+            "Assets/Prefabs/Charles Dupaty.prefab",
+            "Assets/Prefabs/Marie Bradier.prefab"
+        };
+        foreach (string p in npcPrefabs)
+        {
+            var npc = AssetDatabase.LoadAssetAtPath<GameObject>(p)?.GetComponentInChildren<NPCMovement>(true);
+            Assert.IsNotNull(npc, p);
+            Assert.AreEqual(guidPegarItem, npc.somEntregaItem.Guid, $"Prefab {p} sem event:/Pegaritem.");
+        }
+
+        var gmPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/GameManager.prefab")?.GetComponent<GameManager>();
+        Assert.IsNotNull(gmPrefab, "GameManager.prefab");
+        Assert.AreEqual(guidPegarItem, gmPrefab.somEntregaMesa.Guid, "GameManager.prefab sem event:/Pegaritem na mesa.");
+
+        string[] cenas =
+        {
+            "Assets/Scenes/Jogo.unity",
             "Assets/Scenes/Fase2.unity",
             "Assets/Scenes/Fase3.unity",
             "Assets/Scenes/Fase4.unity"
         };
 
-        foreach (string caminho in cenasDeRua)
+        foreach (string caminho in cenas)
         {
             Scene cena = SceneManager.GetSceneByPath(caminho);
             bool abriu = false;
@@ -223,8 +244,18 @@ public class VolumeDoAudioTests
             {
                 int quadros = 0;
                 int mesas = 0;
+                int npcs = 0;
                 foreach (GameObject r in cena.GetRootGameObjects())
                 {
+                    foreach (NPCMovement npc in r.GetComponentsInChildren<NPCMovement>(true))
+                    {
+                        npcs++;
+                        Assert.AreEqual(guidPegarItem, npc.somEntregaItem.Guid, $"NPC '{npc.name}' em {caminho} sem event:/Pegaritem.");
+                    }
+                    foreach (GameManager gm in r.GetComponentsInChildren<GameManager>(true))
+                    {
+                        Assert.AreEqual(guidPegarItem, gm.somEntregaMesa.Guid, $"GameManager em {caminho} sem event:/Pegaritem.");
+                    }
                     foreach (LootInteractable loot in r.GetComponentsInChildren<LootInteractable>(true))
                     {
                         var sr = loot.GetComponentInChildren<SpriteRenderer>(true);
@@ -237,12 +268,16 @@ public class VolumeDoAudioTests
                         else
                         {
                             mesas++;
-                            Assert.IsTrue(loot.somColeta.IsNull, $"Objeto '{loot.name}' (não-quadro) em {caminho} não deve ter som de papel.");
+                            Assert.AreEqual(guidPegarItem, loot.somColeta.Guid, $"Mesa '{loot.name}' em {caminho} está sem o som event:/Pegaritem.");
                         }
                     }
                 }
-                Assert.AreEqual(2, quadros, $"Esperados 2 quadros de aviso na rua em {caminho}.");
-                Assert.GreaterOrEqual(mesas, 1, $"Esperada pelo menos 1 mesa/objeto não-quadro em {caminho}.");
+                Assert.GreaterOrEqual(npcs, 2, $"Esperados NPCs configurados em {caminho}.");
+                if (caminho != "Assets/Scenes/Jogo.unity")
+                {
+                    Assert.AreEqual(2, quadros, $"Esperados 2 quadros de aviso na rua em {caminho}.");
+                    Assert.AreEqual(1, mesas, $"Esperada 1 mesa investigável em {caminho}.");
+                }
             }
             finally
             {

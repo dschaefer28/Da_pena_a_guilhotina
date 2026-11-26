@@ -115,6 +115,8 @@ MonoBehaviour:
   dialogoPadrao: {fileID: 0}
   casoObrigatorio: {fileID: 0}
   reacoesDeCaso: []
+  virarParaOJogador: 1
+  voltarADirecaoOriginal: 1
   visualIndicator: {fileID: 5888310018636433547}
   OnDialogueComplete:
     m_PersistentCalls:
@@ -143,6 +145,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  somEntregaItem:
+    Guid:
+      Data1: -272638835
+      Data2: 1137460364
+      Data3: -1741454699
+      Data4: -1645349320
+    Path: event:/Pegaritem
 --- !u!95 &2553852369905201342
 Animator:
   serializedVersion: 7
