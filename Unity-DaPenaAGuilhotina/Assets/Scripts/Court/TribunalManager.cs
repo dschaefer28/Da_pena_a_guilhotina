@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -49,6 +50,8 @@ public class TribunalManager : MonoBehaviour
         public string legendaReuCondenado;
         [Tooltip("Linhas seguintes da cutscene, iguais para os dois destinos do réu.")]
         public List<CutsceneLegendas.Linha> legendas = new List<CutsceneLegendas.Linha>();
+        [Tooltip("Arte da cutscene do final, atrás das legendas (Assets/Art/Cutscenes). Vazio = tela preta.")]
+        public Sprite imagem;
     }
 
     private class Prova
@@ -169,10 +172,39 @@ public class TribunalManager : MonoBehaviour
 
     public string cenaDoMenu = PauseMenu.CenaDoMenu;
 
+    [Header("Áudio (FMOD)")]
+    [Tooltip("Tocado a cada prova apresentada (substitui o clique genérico nesses botões).")]
+    public EventReference somDaProva = Evento("{6544a616-7446-4512-a25a-7784107f58c4}", "event:/tribunal1");
+    [Tooltip("Final A: tocado com a tela preta e a música parada, depois da arte do final.")]
+    public EventReference somDaGuilhotina = Evento("{52523c14-357d-4490-beac-0b1d08a7f09a}", "event:/guilhotina");
+    [Tooltip("Volume da música do tribunal (StudioEventEmitter da cena), multiplicado pelo volume de Música das opções.")]
+    [Range(0f, 1f)] public float volumeDaMusica = 0.6f;
+    [Tooltip("Final A: segundos de tela preta em silêncio antes da lâmina.")]
+    [Min(0f)] public float silencioAntesDaGuilhotina = 0.8f;
+    [Tooltip("Final A: segundos de tela preta depois do som, antes da tela de FIM.")]
+    [Min(0f)] public float pausaDepoisDaGuilhotina = 1.5f;
+
+    private static EventReference Evento(string guid, string caminho)
+    {
+        var e = new EventReference { Guid = FMOD.GUID.Parse(guid) };
+#if UNITY_EDITOR
+        e.Path = caminho;
+#endif
+        return e;
+    }
+
     [Header("Visual")]
     public TMP_FontAsset fonte;
     [Tooltip("Opcional: arte do salão. Vazio = fundo escuro liso.")]
     public Sprite fundo;
+    [Tooltip("Moldura da barra de irritação (Art/UI/Interface/barratribunal). Vazio = barra lisa.")]
+    public Sprite molduraDaBarra;
+    [Tooltip("Final A: escala da barra (moldura e preenchimento juntos) quando ela estoura.")]
+    [Min(1f)] public float escalaNoEstouro = 1.1f;
+
+    // Vão transparente da barratribunal (379x130 px): x 30..349, y 36..91 a partir de baixo.
+    private static readonly Vector2 VaoMin = new Vector2(30f / 379f, 36f / 130f);
+    private static readonly Vector2 VaoMax = new Vector2(349f / 379f, 91f / 130f);
 
     private static readonly Color CorTexto = new Color(0.91f, 0.85f, 0.71f);
     private static readonly Color CorPainel = new Color(0.10f, 0.07f, 0.06f, 0.92f);
@@ -214,6 +246,7 @@ public class TribunalManager : MonoBehaviour
         Debug.Log($"[TRIBUNAL] Rota {rota}, caso '{(caso != null ? caso.name : "-")}', réu {(reuAbsolvido ? "absolvido" : "condenado")}" +
                   (pelaPublicacao.HasValue ? " (pelo panfleto publicado)." : " (valor de teste: nenhum panfleto do caso publicado)."));
 
+        StartCoroutine(AjustarVolumeDaMusica());
         ColetarProvas(gm);
         totalDeArgumentos = Mathf.Clamp(provas.Count, 1, maxArgumentos);
         irritacao = IrritacaoInicial();
@@ -374,6 +407,7 @@ public class TribunalManager : MonoBehaviour
     {
         if (ocupado || vereditoIniciado || prova.botao == null || !prova.botao.interactable) return;
         FichaDaPista.Esconder(null);
+        AudioSeguro.TocarUmaVez(somDaProva);
         prova.botao.interactable = false;
         MarcarComoApresentada(prova);
         apresentados++;
@@ -513,9 +547,58 @@ public class TribunalManager : MonoBehaviour
             if (!string.IsNullOrWhiteSpace(doReu)) legendas.Add(new CutsceneLegendas.Linha { texto = doReu, duracao = 5f });
             if (desfecho.legendas != null) legendas.AddRange(desfecho.legendas);
         }
-        // terminarNoPreto: a tela final entra no mesmo frame e o tribunal não pisca entre as duas.
-        if (legendas.Count > 0) cutscene.Tocar(legendas, () => MostrarFim(desfecho), terminarNoPreto: true);
-        else MostrarFim(desfecho);
+        // Final A: depois da arte, tela preta, música parada e a lâmina; só então a tela de FIM.
+        Action aoTerminar = rota == RotaFinal.A_Guilhotina
+            ? () => StartCoroutine(Guilhotina(desfecho))
+            : (Action)(() => MostrarFim(desfecho));
+        // terminarNoPreto: a tela seguinte entra no mesmo frame e o tribunal não pisca entre as duas.
+        if (legendas.Count > 0) cutscene.Tocar(legendas, aoTerminar, terminarNoPreto: true, imagem: desfecho?.imagem);
+        else aoTerminar();
+    }
+
+    private IEnumerator Guilhotina(DesfechoDaRota desfecho)
+    {
+        // Criada sem yield antes: cobre o tribunal no mesmo frame em que a cutscene some.
+        RectTransform preto = Painel("TelaPreta", raiz, Vector2.zero, Vector2.one, Color.black);
+        PararMusica();
+        yield return new WaitForSecondsRealtime(silencioAntesDaGuilhotina);
+        yield return TocarEEsperar(somDaGuilhotina, 15f);
+        yield return new WaitForSecondsRealtime(pausaDepoisDaGuilhotina);
+        MostrarFim(desfecho);
+        Destroy(preto.gameObject);
+    }
+
+    // O emitter cria a instância no próprio Start, que pode rodar depois deste; espera até 2 s por ela.
+    private IEnumerator AjustarVolumeDaMusica()
+    {
+        var emitter = FindFirstObjectByType<FMODUnity.StudioEventEmitter>();
+        if (emitter == null) yield break;
+        for (float t = 0f; t < 2f && !emitter.EventInstance.isValid(); t += Time.unscaledDeltaTime) yield return null;
+        // Via VolumeDoAudio: um setVolume direto seria sobrescrito pelo volume de Música das opções.
+        if (emitter.EventInstance.isValid()) VolumeDoAudio.DefinirVolumeDaInstancia(emitter.EventInstance, volumeDaMusica);
+    }
+
+    private static void PararMusica()
+    {
+        foreach (var emitter in FindObjectsByType<FMODUnity.StudioEventEmitter>(FindObjectsSortMode.None))
+            if (emitter != null) emitter.Stop();
+    }
+
+    /// <summary>Toca o evento e espera ele acabar (no máximo `limite` segundos). Sem FMOD, segue em frente.</summary>
+    private static IEnumerator TocarEEsperar(EventReference evento, float limite)
+    {
+        if (!AudioSeguro.TentarCriar(evento, out FMOD.Studio.EventInstance instancia)) yield break;
+        instancia.start();
+        float t = 0f;
+        while (t < limite)
+        {
+            // O evento é stream: nos primeiros instantes pode ainda não ter saído de STOPPED.
+            if (instancia.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE estado) != FMOD.RESULT.OK) break;
+            if (estado == FMOD.Studio.PLAYBACK_STATE.STOPPED && t > 0.5f) break;
+            t += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        AudioSeguro.PararELiberar(ref instancia);
     }
 
     private IEnumerator AnimarBarra(float alvo)
@@ -536,18 +619,23 @@ public class TribunalManager : MonoBehaviour
         ocupado = estavaOcupado;
     }
 
-    // Final A: a barra treme e pisca no limite.
+    // Final A: a barra cresce, treme e pisca no limite. Moldura e preenchimento são filhos de barraMoldura,
+    // então crescem e tremem juntos; ela vai para a frente para não ficar por baixo da caixa de reação.
     private IEnumerator Explodir()
     {
+        barraMoldura.SetAsLastSibling();
         Vector2 posicao = barraMoldura.anchoredPosition;
         float t = 0f;
         while (t < 0.9f)
         {
             t += Time.unscaledDeltaTime;
+            float crescer = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / 0.25f));
+            barraMoldura.localScale = Vector3.one * Mathf.Lerp(1f, escalaNoEstouro, crescer);
             barraMoldura.anchoredPosition = posicao + UnityEngine.Random.insideUnitCircle * 12f;
             barraImagem.color = Mathf.PingPong(t * 8f, 1f) > 0.5f ? Color.white : CorFuria;
             yield return null;
         }
+        barraMoldura.localScale = Vector3.one * escalaNoEstouro;
         barraMoldura.anchoredPosition = posicao;
         barraImagem.color = CorFuria;
     }
@@ -642,7 +730,7 @@ public class TribunalManager : MonoBehaviour
             : "Tribunal Revolucionário";
         Texto("Titulo", raiz, new Vector2(0.05f, 0.9f), new Vector2(0.95f, 0.98f), 44f, titulo);
 
-        RectTransform bancada = Vazio("Bancada", raiz, new Vector2(0.15f, 0.64f), new Vector2(0.85f, 0.88f));
+        RectTransform bancada = Vazio("Bancada", raiz, new Vector2(0.15f, 0.71f), new Vector2(0.85f, 0.885f));
         var layout = bancada.gameObject.AddComponent<HorizontalLayoutGroup>();
         layout.spacing = 40f; layout.childAlignment = TextAnchor.MiddleCenter;
         layout.childControlWidth = layout.childControlHeight = true;
@@ -666,12 +754,9 @@ public class TribunalManager : MonoBehaviour
             Texto("Nome", cartao, new Vector2(0f, 0.02f), new Vector2(1f, 0.28f), 30f, juiz.nome);
         }
 
-        Texto("RotuloBarra", raiz, new Vector2(0.2f, 0.585f), new Vector2(0.8f, 0.625f), 26f, "Irritação da bancada");
-        barraMoldura = Painel("Barra", raiz, new Vector2(0.2f, 0.54f), new Vector2(0.8f, 0.58f), new Color(0.03f, 0.02f, 0.02f));
-        barraFill = Painel("Preenchimento", barraMoldura, Vector2.zero, new Vector2(0f, 1f), CorCalma);
-        barraImagem = barraFill.GetComponent<Image>();
+        MontarBarra();
 
-        RectTransform caixa = Painel("Reacao", raiz, new Vector2(0.1f, 0.36f), new Vector2(0.9f, 0.52f), CorPainel);
+        RectTransform caixa = Painel("Reacao", raiz, new Vector2(0.1f, 0.36f), new Vector2(0.9f, 0.50f), CorPainel);
         textoReacao = Texto("Texto", caixa, new Vector2(0.03f, 0.08f), new Vector2(0.97f, 0.92f), 30f, string.Empty);
         textoReacao.alignment = TextAlignmentOptions.MidlineLeft;
 
@@ -692,6 +777,9 @@ public class TribunalManager : MonoBehaviour
             Prova p = prova;
             p.botao = Botao("Prova", conteudo, Vector2.zero, Vector2.one, p.nome, p.icone);
             p.botao.onClick.AddListener(() => Apresentar(p));
+            // A prova tem som próprio (somDaProva, tocado em Apresentar); o clique genérico tocaria junto.
+            var clique = p.botao.GetComponent<SomDeCliqueDoBotao>();
+            if (clique != null) clique.enabled = false;
             if (!string.IsNullOrWhiteSpace(p.ficha)) p.botao.gameObject.AddComponent<FichaAoPassar>().texto = p.ficha;
         }
 
@@ -707,6 +795,41 @@ public class TribunalManager : MonoBehaviour
         cutscene = cutsceneGo.AddComponent<CutsceneLegendas>();
         cutscene.fonte = fonte;
         cutsceneGo.SetActive(true);
+    }
+
+    // barraMoldura é só o contêiner (é ele que treme e cresce no estouro); o preenchimento fica no vão da
+    // moldura, atrás dela, e os cantos arredondados do vão escondem as quinas do retângulo.
+    private void MontarBarra()
+    {
+        bool comMoldura = molduraDaBarra != null;
+        barraMoldura = comMoldura
+            ? Vazio("Barra", raiz, new Vector2(0.5f, 0.505f), new Vector2(0.5f, 0.695f))
+            : Vazio("Barra", raiz, new Vector2(0.2f, 0.58f), new Vector2(0.8f, 0.63f));
+        if (comMoldura)
+        {
+            var fitter = barraMoldura.gameObject.AddComponent<AspectRatioFitter>();
+            fitter.aspectMode = AspectRatioFitter.AspectMode.HeightControlsWidth;
+            fitter.aspectRatio = molduraDaBarra.rect.width / molduraDaBarra.rect.height;
+        }
+
+        RectTransform vao = Painel("Vao", barraMoldura, comMoldura ? VaoMin : Vector2.zero, comMoldura ? VaoMax : Vector2.one,
+            new Color(0.03f, 0.02f, 0.02f));
+        barraFill = Painel("Preenchimento", vao, Vector2.zero, new Vector2(0f, 1f), CorCalma);
+        barraImagem = barraFill.GetComponent<Image>();
+
+        if (comMoldura)
+        {
+            var moldura = Painel("Moldura", barraMoldura, Vector2.zero, Vector2.one, Color.white).GetComponent<Image>();
+            moldura.sprite = molduraDaBarra;
+            moldura.raycastTarget = false;
+        }
+
+        // O rótulo fica dentro do vão (cresce e treme junto); o contorno o mantém legível sobre o verde e o vermelho.
+        TextMeshProUGUI rotulo = Texto("Rotulo", barraMoldura, comMoldura ? VaoMin : Vector2.zero, comMoldura ? VaoMax : Vector2.one,
+            26f, "Irritação da bancada");
+        rotulo.outlineWidth = 0.25f;
+        rotulo.outlineColor = new Color32(0, 0, 0, 255);
+        rotulo.raycastTarget = false;
     }
 
     private static RectTransform Vazio(string nome, Transform pai, Vector2 min, Vector2 max)

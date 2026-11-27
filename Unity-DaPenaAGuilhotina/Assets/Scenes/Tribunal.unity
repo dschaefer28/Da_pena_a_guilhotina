@@ -440,6 +440,7 @@ MonoBehaviour:
       duracao: 5
     - texto: "A l\xE2mina cai. Suas palavras continuam nas ruas; voc\xEA, n\xE3o."
       duracao: 5
+    imagem: {fileID: 21300000, guid: cd4145bb1cd09034488fd818d4eb5b75, type: 3}
   - rota: 2
     titulo: 'Final B: O Tirano'
     vereditoReuAbsolvido: "{juiz}: As provas s\xE3o claras, e o Comit\xEA reconhece
@@ -457,6 +458,7 @@ MonoBehaviour:
     - texto: "Voc\xEA sobrevive e enriquece. Cada cabe\xE7a que rola paga um pouco
         do seu conforto."
       duracao: 5
+    imagem: {fileID: 21300000, guid: a6ec45a77a498bb459ee2411856e3c94, type: 3}
   - rota: 3
     titulo: 'Final C: O Esquecido'
     vereditoReuAbsolvido: "{juiz}: O acusado est\xE1 livre. Quanto ao impressor:
@@ -477,9 +479,29 @@ MonoBehaviour:
     - texto: "Voc\xEA imprimiu milhares de p\xE1ginas. Nenhuma delas guardou o seu
         nome."
       duracao: 5
+    imagem: {fileID: 21300000, guid: 6d4cb7f5c9a010d49a1162bc476981a3, type: 3}
   cenaDoMenu: menu principal
+  somDaProva:
+    Guid:
+      Data1: 1698997782
+      Data2: 1158837318
+      Data3: -2072552798
+      Data4: -1000833264
+    Path: event:/tribunal1
+  somDaGuilhotina:
+    Guid:
+      Data1: 1381121044
+      Data2: 1150301565
+      Data3: 487304382
+      Data4: -1695504632
+    Path: event:/guilhotina
+  volumeDaMusica: 0.6
+  silencioAntesDaGuilhotina: 0.8
+  pausaDepoisDaGuilhotina: 1.5
   fonte: {fileID: 11400000, guid: a91a1449d62a42e448e7dd949187627f, type: 2}
   fundo: {fileID: 0}
+  molduraDaBarra: {fileID: 21300000, guid: c8f630ba3b681d74699e5dacd7f7fd83, type: 3}
+  escalaNoEstouro: 1.1
 --- !u!4 &1916742306
 Transform:
   m_ObjectHideFlags: 0

@@ -50,7 +50,14 @@ public class CutsceneLegendas : MonoBehaviour
     [Tooltip("Largura máxima da coluna de texto (referência 1920×1080). Em telas estreitas, sobram 10% de margem de cada lado.")]
     [Min(400f)] public float larguraMaxima = 1300f;
 
+    [Header("Arte do final (Tocar com imagem)")]
+    [Tooltip("Opacidade da faixa escura sob as legendas quando há arte atrás.")]
+    [Range(0f, 1f)] public float opacidadeDaFaixa = 0.75f;
+
     private Coroutine emAndamento;
+    // Montada na primeira cutscene com imagem; fica atrás da legenda.
+    private CanvasGroup arte;
+    private Image arteImagem;
     private bool pularLinha;
     // Só o texto montado por código troca de layout; um texto ligado no Inspector fica como está.
     private bool layoutAutomatico;
@@ -105,21 +112,23 @@ public class CutsceneLegendas : MonoBehaviour
 
     /// <param name="fadeDeEntradaInstantaneo">Nasce preta; para cutscene que abre a cena (evita o cenário piscar).</param>
     /// <param name="terminarNoPreto">Sem fade de saída; para quando aoTerminar põe outra tela preta por cima.</param>
-    public void Tocar(List<Linha> linhas, Action aoTerminar = null, bool fadeDeEntradaInstantaneo = false, bool terminarNoPreto = false) =>
-        Iniciar(linhas, aoTerminar, fadeDeEntradaInstantaneo, false, terminarNoPreto);
+    /// <param name="imagem">Arte atrás das legendas (finais): entra em fade depois do preto e sai para o preto no fim.</param>
+    public void Tocar(List<Linha> linhas, Action aoTerminar = null, bool fadeDeEntradaInstantaneo = false, bool terminarNoPreto = false,
+                      Sprite imagem = null) =>
+        Iniciar(linhas, aoTerminar, fadeDeEntradaInstantaneo, false, terminarNoPreto, imagem);
 
     /// <summary>
     /// Fundo preto fixo; só o texto entra/sai em fade, bloco a bloco, por TempoDeLeitura após aparecer inteiro.
     /// Toque na entrada só a completa; na leitura, avança; na saída/intervalo é ignorado.
     /// </summary>
     public void TocarTransicao(List<Linha> linhas, Action aoTerminar = null, bool fadeDeEntradaInstantaneo = false) =>
-        Iniciar(linhas, aoTerminar, fadeDeEntradaInstantaneo, true, false);
+        Iniciar(linhas, aoTerminar, fadeDeEntradaInstantaneo, true, false, null);
 
-    private void Iniciar(List<Linha> linhas, Action aoTerminar, bool fadeDeEntradaInstantaneo, bool transicao, bool terminarNoPreto)
+    private void Iniciar(List<Linha> linhas, Action aoTerminar, bool fadeDeEntradaInstantaneo, bool transicao, bool terminarNoPreto, Sprite imagem)
     {
         if (linhas == null || linhas.Count == 0) { aoTerminar?.Invoke(); return; }
         if (emAndamento != null) StopCoroutine(emAndamento);
-        emAndamento = StartCoroutine(Rotina(linhas, aoTerminar, fadeDeEntradaInstantaneo, transicao, terminarNoPreto));
+        emAndamento = StartCoroutine(Rotina(linhas, aoTerminar, fadeDeEntradaInstantaneo, transicao, terminarNoPreto, imagem));
     }
 
     /// <summary>margem + palavras/ritmo, nunca menos que o mínimo nem que a duração da linha.</summary>
@@ -142,12 +151,15 @@ public class CutsceneLegendas : MonoBehaviour
         return total;
     }
 
-    private IEnumerator Rotina(List<Linha> linhas, Action aoTerminar, bool fadeDeEntradaInstantaneo, bool transicao, bool terminarNoPreto)
+    private IEnumerator Rotina(List<Linha> linhas, Action aoTerminar, bool fadeDeEntradaInstantaneo, bool transicao, bool terminarNoPreto, Sprite imagem)
     {
         EmExibicao = true;
         float escalaAnterior = Time.timeScale;
         Time.timeScale = 0f;
-        if (layoutAutomatico) AplicarLayout(transicao);
+        bool comArte = imagem != null && !transicao;
+        if (comArte) PrepararArte(imagem);
+        else if (arte != null) arte.gameObject.SetActive(false);
+        if (layoutAutomatico) AplicarLayout(transicao, comArte);
         fundo.gameObject.SetActive(true);
         fundo.blocksRaycasts = true;
         legenda.text = string.Empty;
@@ -155,6 +167,8 @@ public class CutsceneLegendas : MonoBehaviour
         // No início da cena ou sob a troca de cena, nasce preta: o fade cruzado fazia o cenário piscar.
         if (fadeDeEntradaInstantaneo || InicioDeCena || SceneTransitionManager.TelaCoberta) fundo.alpha = 1f;
         else yield return Fade(0f, 1f);
+
+        if (comArte) yield return FadeDaArte(0f, 1f);
 
         if (transicao) yield return BlocosDeTransicao(linhas);
         else
@@ -175,6 +189,11 @@ public class CutsceneLegendas : MonoBehaviour
 
         legenda.text = string.Empty;
         legenda.alpha = 1f;
+        if (comArte)
+        {
+            yield return FadeDaArte(1f, 0f);
+            arte.gameObject.SetActive(false);
+        }
         // Sem yield até aoTerminar: nenhum frame é renderizado entre um preto e outro.
         if (terminarNoPreto) fundo.alpha = 0f;
         else yield return Fade(1f, 0f);
@@ -259,6 +278,60 @@ public class CutsceneLegendas : MonoBehaviour
         fundo.alpha = para;
     }
 
+    private IEnumerator FadeDaArte(float de, float para)
+    {
+        float t = 0f;
+        arte.alpha = de;
+        while (t < duracaoFade)
+        {
+            t += Mathf.Min(Time.unscaledDeltaTime, PassoMaximoDoFade);
+            arte.alpha = Mathf.Lerp(de, para, t / duracaoFade);
+            yield return null;
+        }
+        arte.alpha = para;
+    }
+
+    // Arte inteira na tela (sem corte; sobra preto nas laterais ou em cima/baixo) e faixa escura sob as legendas.
+    private void PrepararArte(Sprite imagem)
+    {
+        if (arte == null)
+        {
+            var go = new GameObject("Arte", typeof(RectTransform), typeof(CanvasGroup));
+            go.layer = gameObject.layer;
+            go.transform.SetParent(fundo.transform, false);
+            Esticar((RectTransform)go.transform, Vector2.zero, Vector2.one);
+            // Logo atrás da legenda, na frente do fundo preto.
+            if (legenda.transform.parent == fundo.transform) go.transform.SetSiblingIndex(legenda.transform.GetSiblingIndex());
+            arte = go.GetComponent<CanvasGroup>();
+            arte.blocksRaycasts = false;
+            arte.interactable = false;
+
+            var img = new GameObject("Imagem", typeof(RectTransform), typeof(Image));
+            img.layer = go.layer;
+            img.transform.SetParent(go.transform, false);
+            Esticar((RectTransform)img.transform, Vector2.zero, Vector2.one);
+            arteImagem = img.GetComponent<Image>();
+            arteImagem.preserveAspect = true;
+            arteImagem.raycastTarget = false;
+
+            var faixa = new GameObject("Faixa", typeof(RectTransform), typeof(Image));
+            faixa.layer = go.layer;
+            faixa.transform.SetParent(go.transform, false);
+            Esticar((RectTransform)faixa.transform, Vector2.zero, new Vector2(1f, 0.24f));
+            var imgFaixa = faixa.GetComponent<Image>();
+            imgFaixa.color = new Color(0f, 0f, 0f, opacidadeDaFaixa);
+            imgFaixa.raycastTarget = false;
+        }
+        arteImagem.sprite = imagem;
+        arte.alpha = 0f;
+        arte.gameObject.SetActive(true);
+    }
+
+    private static void Esticar(RectTransform r, Vector2 min, Vector2 max)
+    {
+        r.anchorMin = min; r.anchorMax = max; r.offsetMin = r.offsetMax = Vector2.zero;
+    }
+
     private void Montar()
     {
         // Canvas aninhado no do prefab UI: a ordem só vale com overrideSorting e o RectTransform precisa cobrir o pai.
@@ -293,8 +366,8 @@ public class CutsceneLegendas : MonoBehaviour
         AplicarLayout(false);
     }
 
-    // Tocar: caixa 80% × 70% com auto size. Transição: tamanho fixo e coluna centralizada de até larguraMaxima.
-    private void AplicarLayout(bool transicao)
+    // Tocar: caixa 80% × 70% com auto size (com arte: na faixa de baixo). Transição: tamanho fixo e coluna centralizada de até larguraMaxima.
+    private void AplicarLayout(bool transicao, bool comArte = false)
     {
         RectTransform r = legenda.rectTransform;
         if (transicao)
@@ -307,7 +380,9 @@ public class CutsceneLegendas : MonoBehaviour
         }
         else
         {
-            r.anchorMin = new Vector2(0.1f, 0.15f); r.anchorMax = new Vector2(0.9f, 0.85f); r.offsetMin = r.offsetMax = Vector2.zero;
+            if (comArte) { r.anchorMin = new Vector2(0.08f, 0.03f); r.anchorMax = new Vector2(0.92f, 0.21f); }
+            else { r.anchorMin = new Vector2(0.1f, 0.15f); r.anchorMax = new Vector2(0.9f, 0.85f); }
+            r.offsetMin = r.offsetMax = Vector2.zero;
             legenda.fontSize = 40f;
             legenda.enableAutoSizing = true; legenda.fontSizeMin = 24f; legenda.fontSizeMax = 44f;
         }
